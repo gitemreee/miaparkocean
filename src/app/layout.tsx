@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { RegistryBadges } from "@/components/layout/RegistryBadges";
 import { WhatsappFab } from "@/components/layout/WhatsappFab";
 import { CookieConsent } from "@/components/layout/CookieConsent";
+import { SiteFrame } from "@/components/layout/SiteFrame";
 import { site } from "@/data/site";
 
 const display = Jost({
@@ -83,12 +84,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
-        <Header />
-        <main>{children}</main>
-        <RegistryBadges />
-        <Footer />
-        <WhatsappFab />
-        <CookieConsent />
+        <SiteFrame
+          header={<Header />}
+          footer={
+            <>
+              <RegistryBadges />
+              <Footer />
+            </>
+          }
+          floating={
+            <>
+              <WhatsappFab />
+              <CookieConsent />
+            </>
+          }
+        >
+          {children}
+        </SiteFrame>
       </body>
     </html>
   );
