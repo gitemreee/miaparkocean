@@ -54,7 +54,7 @@ export default function BasinAciklamasiPage() {
       <header className="container-luxe max-w-3xl pt-16 text-center md:pt-24">
         <span className="eyebrow text-accent">Lansman &amp; Basın Toplantısı</span>
         <h1 className="mx-auto mt-5 max-w-3xl font-display text-[2.2rem] font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl md:text-[3.4rem]">
-          İzmit&apos;in Yeni İncisi <span className="gilded">MİA PARK OCEAN</span> Lansmanına Hoş Geldiniz
+          İzmit&apos;in Yeni İncisi <span className="gilded">MİA PARK OCEAN</span> Basın Lansmanına Hoş Geldiniz
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-ink/70 sm:text-xl">
           Sizleri bu özel günde aramızda görmekten mutluluk duyuyor; Kocaeli&apos;ye değer katacak bu projeyi birlikte
