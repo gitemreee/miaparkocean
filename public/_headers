@@ -1,0 +1,13 @@
+# Netlify header kuralları (sürükle-bırak deploy'da da geçerli — out/ içine kopyalanır)
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/ocean-logo.webp
+  Cache-Control: public, max-age=31536000, immutable

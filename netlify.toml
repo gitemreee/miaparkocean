@@ -1,0 +1,26 @@
+# Netlify yapılandırması
+# Sürükle-bırak: önce `npm run build`, sonra oluşan `out/` klasörünü Netlify'a sürükleyin.
+# Git bağlarsanız aşağıdaki ayarlar otomatik kullanılır.
+
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Hash'li statik varlıklar uzun süre önbelleğe alınabilir
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
