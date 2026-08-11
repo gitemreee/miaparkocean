@@ -50,11 +50,15 @@ export default function BasinAciklamasiPage() {
         </div>
       </div>
 
-      {/* Başlık — ortalanmış hoş geldin girişi */}
-      <header className="container-luxe max-w-3xl pt-16 text-center md:pt-24">
+      {/* Başlık — ortalanmış hoş geldin girişi (3 satır) */}
+      <header className="container-luxe max-w-4xl pt-16 text-center md:pt-24">
         <span className="eyebrow text-accent">Lansman &amp; Basın Toplantısı</span>
-        <h1 className="mx-auto mt-5 max-w-3xl font-display text-[2.2rem] font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl md:text-[3.4rem]">
-          İzmit&apos;in Yeni İncisi <span className="gilded">MİA PARK OCEAN</span> Basın Lansmanına Hoş Geldiniz
+        <h1 className="mx-auto mt-5 max-w-4xl font-display text-[2.05rem] font-bold leading-[1.12] tracking-tight text-ink sm:text-[2.9rem] md:text-[3.25rem]">
+          İzmit&apos;in Yeni İncisi
+          <br />
+          <span className="gilded">MİA PARK OCEAN</span>
+          <br />
+          Basın Lansmanına Hoş Geldiniz
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-ink/70 sm:text-xl">
           Sizleri bu özel günde aramızda görmekten mutluluk duyuyor; Kocaeli&apos;ye değer katacak bu projeyi birlikte
