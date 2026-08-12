@@ -27,7 +27,7 @@ export default function BasinAciklamasiPage() {
   return (
     <div className="min-h-screen text-ink">
       {/* Üst marka bandı — okyanus gradyanı + logodaki dalga */}
-      <div className="section-dark relative">
+      <div className="section-dark wave-clip-end relative">
         <div className="container-luxe relative z-10 flex items-center justify-between pb-20 pt-7 md:pb-24">
           <Link href="/" className="inline-flex items-center gap-3" aria-label="MİA PARK OCEAN ana sayfa">
             <img src="/brand/mark-ocean-white.webp" alt="" aria-hidden="true" width={40} height={37} className="h-9 w-auto" />
@@ -41,7 +41,7 @@ export default function BasinAciklamasiPage() {
           </span>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          <WaveEdge className="h-[50px] md:h-[80px]" />
+          <WaveEdge fill={false} className="h-[52px] md:h-[84px]" />
         </div>
       </div>
 

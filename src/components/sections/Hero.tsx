@@ -66,7 +66,7 @@ export function Hero() {
       </h1>
 
       {/* Tam genişlik sahne */}
-      <div className="relative min-h-[68vh] overflow-hidden md:min-h-[92vh]">
+      <div className="wave-clip-end wave-h-hero relative min-h-[68vh] overflow-hidden md:min-h-[92vh]">
         {slides.map((s, i) => {
           // Yalnızca görünen ve bir sonraki kare basılır; kalanlar sıra
           // gelince yüklenir. Beş görselin tamamı baştan inmez.
@@ -163,9 +163,11 @@ export function Hero() {
           </div>
         </div>
 
-        {/* İmza: logodaki dalganın kendisi sahneyi sayfaya bağlar */}
+        {/* İmza: logodaki dalganın kendisi sahneyi sayfaya bağlar.
+            Sahne `.wave-clip-end` ile dalga şeklinde kesildiği için taban
+            dolgusuna gerek yok — altındaki sayfa olduğu gibi görünür. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          <WaveEdge className="h-[58px] md:h-[104px]" />
+          <WaveEdge fill={false} className="h-[58px] md:h-[104px]" />
         </div>
       </div>
 

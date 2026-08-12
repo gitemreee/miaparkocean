@@ -216,6 +216,13 @@ def main() -> None:
     )
     print("wave-mask-end.png")
 
+    # Aynı maskenin dikey aynası: ters çevrilmiş dalgayla BAŞLAYAN bölümler
+    # için (footer gibi). Bölümün üst kenarına verilir.
+    Image.open(OUT / "wave-mask-end.png").transpose(
+        Image.FLIP_TOP_BOTTOM
+    ).save(OUT / "wave-mask-start.png", optimize=True)
+    print("wave-mask-start.png")
+
     # ---------- 2b) Taban maskesi ----------
     # Yalnızca dalganın ALT siluetinin altı. Bölüm geçişlerinde sayfa zemini
     # buradan başlar; dalga kurdeleleri fotoğrafın üstüne biner ve
@@ -266,6 +273,9 @@ export const WAVE_MASK_BASE = "/brand/wave-mask-base.png";
  * bölüm dalga şeklinde biter, altındaki sayfa olduğu gibi görünür.
  */
 export const WAVE_MASK_END = "/brand/wave-mask-end.png";
+
+/** Aynısının dikey aynası — ters çevrilmiş dalgayla başlayan bölümler için. */
+export const WAVE_MASK_START = "/brand/wave-mask-start.png";
 
 /**
  * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları

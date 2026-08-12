@@ -45,7 +45,7 @@ export default function DavetiyePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
 
       {/* ---------- Üst: okyanus gradyanı + logodaki dalga ---------- */}
-      <header className="section-dark relative">
+      <header className="section-dark wave-clip-end relative">
         <div className="container-luxe relative z-10 pb-28 pt-16 text-center md:pb-36 md:pt-20">
           <span className="pill pill-light mx-auto w-fit tracking-[0.28em]">{launchEvent.kicker.toUpperCase()}</span>
 
@@ -62,7 +62,7 @@ export default function DavetiyePage() {
 
         {/* logodaki dalga sahneyi sayfaya bağlar */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          <WaveEdge className="h-[54px] md:h-[88px]" />
+          <WaveEdge fill={false} className="h-[52px] md:h-[84px]" />
         </div>
       </header>
 
@@ -174,8 +174,8 @@ export default function DavetiyePage() {
       </section>
 
       {/* ---------- Alt bant ---------- */}
-      <footer className="section-dark mt-20 md:mt-28">
-        <WaveEdge flip fill="linear-gradient(180deg,#e9f6f9,#f1fafb 60%,#f1fafb)" className="h-[50px] md:h-[80px]" />
+      <footer className="section-dark wave-clip-start mt-20 md:mt-28">
+        <WaveEdge flip fill={false} className="h-[52px] md:h-[84px]" />
 
         <div className="container-luxe relative z-10 py-12 text-center">
           <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>

@@ -585,6 +585,30 @@
   @media (min-width: 768px) {
     .wave-clip-end { --wave-h: 84px; }
   }
+  /* Bölümün ÜST kenarı ters çevrilmiş dalga şeklinde başlar (footer). */
+  .wave-clip-start {
+    --wave-h: 52px;
+    -webkit-mask-image: url("/brand/wave-mask-start.png"), linear-gradient(#000, #000);
+    mask-image: url("/brand/wave-mask-start.png"), linear-gradient(#000, #000);
+    -webkit-mask-size: 100% var(--wave-h), 100% calc(100% - var(--wave-h) + 1px);
+    mask-size: 100% var(--wave-h), 100% calc(100% - var(--wave-h) + 1px);
+    -webkit-mask-position: top center, bottom center;
+    mask-position: top center, bottom center;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+  }
+  @media (min-width: 768px) {
+    .wave-clip-start { --wave-h: 84px; }
+  }
+
+  /* Dalga yüksekliği değişkenleri — kesim ile şeridin aynı yükseklikte
+     olması şart, yoksa siluetler kaymaya başlar. */
+  .wave-h-hero { --wave-h: 58px; }
+  .wave-h-page { --wave-h: 52px; }
+  @media (min-width: 768px) {
+    .wave-h-hero { --wave-h: 104px; }
+    .wave-h-page { --wave-h: 92px; }
+  }
 
   .wave-divider {
     position: relative;

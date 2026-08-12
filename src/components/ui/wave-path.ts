@@ -29,6 +29,9 @@ export const WAVE_MASK_BASE = "/brand/wave-mask-base.png";
  */
 export const WAVE_MASK_END = "/brand/wave-mask-end.png";
 
+/** Aynısının dikey aynası — ters çevrilmiş dalgayla başlayan bölümler için. */
+export const WAVE_MASK_START = "/brand/wave-mask-start.png";
+
 /**
  * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları
  * dolu. Koyu fotoğraf üstünde alt katman olarak kullanılır.

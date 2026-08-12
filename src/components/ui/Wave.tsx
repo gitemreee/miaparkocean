@@ -15,8 +15,13 @@
 export { WAVE_IMAGE, WAVE_MASK, WAVE_MASK_SOLID, WAVE_RATIO } from "./wave-path";
 
 type WaveEdgeProps = {
-  /** Dalganın altını dolduran renk/gradyan — geçilen bölümün zemini. */
-  fill?: string;
+  /**
+   * Dalganın altını dolduran renk/gradyan — geçilen bölümün zemini.
+   * `false` verilirse taban çizilmez: bölüm `.wave-clip-end` ile zaten
+   * dalga şeklinde kesiliyorsa dolguya gerek yoktur (ve sabit bir renk
+   * sayfanın değişen tonunu hiçbir zaman tam tutturamaz).
+   */
+  fill?: string | false;
   /**
    * Dalganın KARŞI tarafındaki eriyen bant. Dalga, koyu fotoğraf ile açık
    * sayfa arasında sert bir kesim olarak durmasın diye o taraf yavaşça
@@ -71,7 +76,7 @@ export function WaveEdge({
       {/* Taban: sayfa zemini dalganın ALT siluetinden başlar. Kurdeleler
           fotoğrafın üstüne biner, araları gerçekten saydam kalır — şeffaf
           PNG gibi görünür, arkasında beyaz bir gövde olmaz. */}
-      <span className="wave-base absolute inset-0" style={{ backgroundImage: fill }} />
+      {fill && <span className="wave-base absolute inset-0" style={{ backgroundImage: fill }} />}
       {/* Üstte dalganın kendisi — kaynak grafiğin orijinal renkleri */}
       {ribbon && (
         <span className="wave-ribbon absolute inset-0" style={{ opacity: ribbonOpacity }} />

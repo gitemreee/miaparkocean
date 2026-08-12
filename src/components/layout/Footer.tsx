@@ -8,7 +8,7 @@ const socialIcons = { instagram: Instagram, facebook: Facebook, youtube: Youtube
 
 export function Footer() {
   return (
-    <footer className="section-dark">
+    <footer className="section-dark wave-clip-start">
       {/* Üstteki bölümden footer'a geçiş — logodaki dalganın kendisi.
           z-10: section-dark'ın radyal ışık katmanı dalganın üstünü
           soldurmasın. Ters çevrildiği için hem taban dolgusu hem eriyen
@@ -17,9 +17,12 @@ export function Footer() {
       <WaveEdge
         flip
         ribbonOpacity={0.85}
-        fill="linear-gradient(180deg,#e9f6f9,#f1fafb 60%,#f1fafb)"
-        haze="linear-gradient(180deg,rgba(91,171,195,0) 0%,rgba(75,161,190,0.3) 34%,rgba(46,133,168,0.62) 68%,rgba(24,110,146,0.85) 100%)"
-        hazeHeight="h-[260%]"
+        fill={false}
+        /* Sis yok: footer gradyanı zaten dalganın tonunda başlıyor, altında
+           da su altı katmanı var. Sis eklenirse z-10 yüzünden su altı
+           ışığının önüne geçiyor ve kutu bitiminde onu keserek çizgi
+           bırakıyor. */
+        haze={false}
         className="relative z-10 -mt-px h-[52px] md:h-[84px]"
       />
 
