@@ -84,7 +84,47 @@ def to_mask_png(alpha: np.ndarray, blur: float = 1.6) -> Image.Image:
     return Image.fromarray(np.dstack([np.full_like(a, 255)] * 3 + [a]), "RGBA")
 
 
-def unmatte_white(img: Image.Image) -> Image.Image:
+def _gauss1d(sigma: float) -> np.ndarray:
+    r = max(1, int(sigma * 3))
+    x = np.arange(-r, r + 1, dtype=np.float32)
+    k = np.exp(-(x**2) / (2 * sigma * sigma))
+    return k / k.sum()
+
+
+def _sep_blur(img: np.ndarray, sx: float, sy: float) -> np.ndarray:
+    """Ayrık yönlü Gauss bulanıklığı (yatay ve dikey sigma ayrı)."""
+    out = img
+    for axis, sigma in ((1, sx), (0, sy)):
+        if sigma <= 0:
+            continue
+        k = _gauss1d(sigma)
+        p = len(k) // 2
+        out = np.apply_along_axis(
+            lambda line: np.convolve(np.pad(line, p, mode="edge"), k, mode="valid"),
+            axis,
+            out,
+        )
+    return out
+
+
+def refine_alpha(alpha: np.ndarray) -> np.ndarray:
+    """
+    Kaba kesim maskesini temiz, pürüzsüz bir mata çevirir.
+
+    Kaynak grafiğin alfası elle yapılmış bir seçim: kenarda ±3 piksellik
+    tırtık ve basamaklar var, ekranda "pikselli" görünüyor. Dalga yatay
+    aktığı için bu gürültü DİKEY yöndedir. Alfayı akış yönünde geniş
+    (sigma 8), dikeyde dar (sigma 1.4) bir çekirdekle yumuşatıp ardından
+    smoothstep ile kenar keskinliğini geri getiriyoruz: eğrinin gidişi
+    korunur, tırtık kaybolur, geçiş düzgün yumuşatılmış olur.
+    """
+    a = alpha.astype(np.float32) / 255.0
+    b = _sep_blur(a, sx=8.0, sy=1.4)
+    t = np.clip((b - 0.5) / 0.30 + 0.5, 0.0, 1.0)
+    return (t * t * (3 - 2 * t) * 255.0).astype(np.float32)
+
+
+def unmatte_white(img: Image.Image, refined: np.ndarray) -> Image.Image:
     """
     Kenar yumuşatma piksellerindeki BEYAZ zemin kalıntısını temizler.
 
@@ -118,19 +158,10 @@ def unmatte_white(img: Image.Image) -> Image.Image:
     t = np.clip((k - 0.18) / 0.42, 0.0, 1.0)
     out_rgb = fixed * t + bled * (1.0 - t)
 
-    # Kesim kenarı boyalı ve tırtıklı; alfayı hafifçe yumuşatıyoruz ki
-    # koyu fotoğrafın üstünde benekli bir saçak bırakmasın. Şekil değişmez
-    # (yarıçap, 2332px genişlikte ekranda yarım pikselden küçük).
-    smooth_a = np.asarray(
-        Image.fromarray(alpha[:, :, 0].astype(np.uint8), "L").filter(
-            ImageFilter.GaussianBlur(1.4)
-        )
-    ).astype(np.float32)[:, :, None]
-
-    out_rgb = np.where(smooth_a > 0, out_rgb, 0)
-    return Image.fromarray(
-        np.dstack([out_rgb, smooth_a]).astype(np.uint8), "RGBA"
-    )
+    # Çıktı alfası, temizlenmiş mat
+    ra = refined[:, :, None]
+    out_rgb = np.where(ra > 0, out_rgb, 0)
+    return Image.fromarray(np.dstack([out_rgb, ra]).astype(np.uint8), "RGBA")
 
 
 def main() -> None:
@@ -139,14 +170,15 @@ def main() -> None:
     w, h = src.size
     print(f"kaynak {w}x{h}")
 
-    # ---------- 1) Şeridi yayınla (beyaz hale giderilmiş) ----------
-    clean = unmatte_white(src)
+    # ---------- 1) Matı temizle, şeridi yayınla ----------
+    refined = refine_alpha(np.asarray(src)[:, :, 3])
+    clean = unmatte_white(src, refined)
     clean.save(OUT / "wave.png", optimize=True)
     clean.save(OUT / "wave.webp", quality=95, method=6)
-    print(f"wave.png / wave.webp → {w}x{h} (beyaz hale giderildi)")
+    print(f"wave.png / wave.webp → {w}x{h} (mat temizlendi, beyaz hale giderildi)")
 
-    alpha = np.asarray(src)[:, :, 3]
-    solid = alpha > ALPHA_MIN
+    # Maskeler de temizlenmiş mattan türetilir
+    solid = refined > (ALPHA_MIN * 2)
 
     # Boya dokusundaki iğne deliklerini kapat; kurdele arasındaki geniş
     # boşluklar (dalganın karakteri) olduğu gibi kalır.

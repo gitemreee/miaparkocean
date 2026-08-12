@@ -76,11 +76,19 @@ def make_web(src: Path, dst: Path, width: int) -> None:
     print(f"  {dst.name:<26} {before:6.0f} → {kb(dst):5.0f} KB   {im.width}x{im.height}")
 
 
+# Bu boyutun altındaki video zaten sıkıştırılmış sayılır; tekrar kodlamak
+# kuşak kaybı yaratır. Betik birden çok kez çalıştırılabilsin diye gerekli.
+VIDEO_MAX_KB = 3000
+
+
 def reencode_video() -> None:
     if not VIDEO_SRC.exists():
         print("  video yok, atlandı")
         return
     before = kb(VIDEO_SRC)
+    if before <= VIDEO_MAX_KB:
+        print(f"  hero-tanitim.mp4          {before:6.0f} KB (zaten sıkıştırılmış)")
+        return
     tmp = VIDEO_SRC.with_suffix(".opt.mp4")
     subprocess.run(
         [

@@ -167,6 +167,33 @@ def whiteout(img: Image.Image) -> Image.Image:
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
+def open_counters(img: Image.Image, from_y: int) -> Image.Image:
+    """
+    Kelime markasındaki KAPALI harf gözlerini açar (O, A, P, R, B, Ö).
+
+    Zemin, köşelerden flood fill ile siliniyor; harflerin içinde kalan kapalı
+    boşluklara ulaşılamadığı için onlar opak kalıyordu. Beyaz zeminde fark
+    edilmiyordu (göz de beyazdı) ama koyu zeminli ters sürümde harfler dolu
+    görünüyor.
+
+    Göz pikselleri kaynağın zemin rengini taşır: neredeyse beyaz VE nötr
+    (kanallar arası fark yok). Harflerin turkuaz mürekkebi ve kenar
+    yumuşatması nötr olmadığı için etkilenmez. Sert kesme yerine beyazlığa
+    göre yumuşak azaltma yapılır; göz kenarları pürüzsüz kalır.
+    """
+    a = np.asarray(img.convert("RGBA")).astype(np.float32)
+    rgb, alpha = a[:, :, :3], a[:, :, 3]
+    lum = (0.2126 * rgb[:, :, 0] + 0.7152 * rgb[:, :, 1] + 0.0722 * rgb[:, :, 2]) / 255.0
+    neutral = (rgb.max(axis=2) - rgb.min(axis=2)) < 14
+
+    hole = np.clip((lum - 0.84) / 0.12, 0.0, 1.0) * neutral
+    hole[:from_y, :] = 0.0  # işaret bölgesine dokunma
+
+    out = a.copy()
+    out[:, :, 3] = alpha * (1.0 - hole)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
 def keyed_white(img: Image.Image) -> Image.Image:
     """Beyaz zeminli düz renkli logoyu koyu zemin için beyaza çevirir."""
     a = np.asarray(img.convert("RGBA")).astype(np.float32)
@@ -186,6 +213,13 @@ def main() -> None:
 
     gaps = find_gaps(trans)
     mark_end = gaps[0][0] + 6 if gaps else int(trans.height * 0.7)
+
+    # Kelime markasındaki kapalı harf gözlerini aç (beyaz zeminde görünüm
+    # değişmez; koyu zeminli ters sürümde harfler dolu görünmez).
+    trans = open_counters(trans, mark_end)
+    white = Image.new("RGBA", trans.size, (255, 255, 255, 255))
+    white.alpha_composite(trans)
+
     mark_trans = trans.crop((0, 0, trans.width, mark_end))
     mark_trans = mark_trans.crop(mark_trans.getbbox())
     mark_white = Image.new("RGBA", mark_trans.size, (255, 255, 255, 255))
