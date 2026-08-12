@@ -36,14 +36,14 @@ APP = os.path.join(ROOT, "src", "app")
 NAVY = (0, 9, 38)          # #000926 Deep Navy
 MIDNIGHT = (6, 26, 74)     # #061A4A
 SAPPHIRE = (15, 82, 186)   # #0F52BA
-FOREST = (11, 110, 79)     # #0B6E4F
-EVERGREEN = (1, 50, 32)    # #013220
+LOGO_BLUE = (12, 108, 144)  # #0C6C90  logonun kendi mavisi
+LOGO_MID = (24, 120, 156)   # #18789C
 BRAND_STOPS = [
     (0.0, NAVY),
-    (0.26, MIDNIGHT),
-    (0.62, SAPPHIRE),
-    (0.88, FOREST),
-    (1.0, EVERGREEN),
+    (0.24, MIDNIGHT),
+    (0.52, SAPPHIRE),
+    (0.78, LOGO_BLUE),
+    (1.0, LOGO_MID),
 ]
 
 

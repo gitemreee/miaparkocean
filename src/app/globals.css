@@ -1,15 +1,18 @@
 @import "tailwindcss";
 
 /* ============================================================
-   MİA PARK OCEAN — "Sapphire & Emerald" tasarım sistemi
+   MİA PARK OCEAN — "Deep Ocean" tasarım sistemi
 
-   Palet (verilen iki resmî palet):
+   Palet:
      MAVİ   Ice #D6E6F3 · Powder #A6C5D7 · Sapphire #0F52BA · Deep Navy #000926
-     YEŞİL  Mint Whisper #D1F2EB · Emerald #50C878 · Forest #0B6E4F · Evergreen #013220
+     LOGO   #005478 · #0C6C90 · #18789C · #48B4CC · #9CD8E4  (logodan örneklendi)
+     YEŞİL  Mint #D1F2EB · Emerald #50C878 · Forest #0B6E4F · Evergreen #013220
 
-   Zemin beyaz; derinlik lacivert-safir; canlılık zümrüt yeşili.
-   Tüm geçişler gradyanlı (Navy → Sapphire → Forest → Emerald).
+   Zemin beyaz. Tüm gradyan geçişleri MAVİ:
+     Deep Navy → Sapphire → logo mavisi → turkuaz.
+   Yeşil yalnızca güven/onay aksanıdır (rozet, onay işareti), gradyanlarda yer almaz.
    Logo hiçbir yerde renklendirilmez; daima beyaz zeminde durur.
+   Arka planda logodaki dalga sabit bir doku olarak akar (WaveBackdrop).
    ============================================================ */
 
 @theme {
@@ -18,6 +21,14 @@
   --color-powder: #a6c5d7;
   --color-sapphire: #0f52ba;
   --color-navy: #000926;
+
+  /* --- Logonun kendi mavileri (mark-ocean'dan örneklendi) --- */
+  --color-logo-deep: #005478;
+  --color-logo: #0c6c90;
+  --color-logo-mid: #18789c;
+  --color-logo-bright: #48b4cc;
+  --color-logo-light: #9cd8e4;
+  --color-logo-pale: #d8f0f0;
 
   /* --- Palet: yeşil --- */
   --color-mint: #d1f2eb;
@@ -51,22 +62,27 @@
   --color-aqua: #a6c5d7;
   --color-shallow: #d6e6f3;
 
-  /* --- Aksan: yeşil (CTA, onay) — beyaz metinle AA uyumlu --- */
-  --color-accent: #0b6e4f;
-  --color-accent-600: #013220;
-  --color-accent-500: #12885f;
-  --color-accent-300: #50c878;
-  --color-accent-200: #8fdca8;
-  --color-accent-tint: #d1f2eb;
+  /* --- Aksan: logo mavisi (CTA, etiket) — beyaz metinle AA uyumlu --- */
+  --color-accent: #0c6c90;
+  --color-accent-600: #005478;
+  --color-accent-500: #18789c;
+  --color-accent-300: #9cd8e4;
+  --color-accent-200: #c2e8f0;
+  --color-accent-tint: #e6f5fa;
+
+  /* --- İkincil aksan: yeşil (güven, onay, "faizsiz" rozetleri) --- */
   --color-jade: #0b6e4f;
+  --color-jade-600: #013220;
+  --color-jade-300: #50c878;
+  --color-jade-tint: #d1f2eb;
 
   /* --- Geriye dönük uyumluluk (eski bronz/kum adları safire bağlı) --- */
   --color-bronze: #0f52ba;
   --color-bronze-300: #3e77ce;
   --color-bronze-200: #a6c5d7;
   --color-bronze-100: #d6e6f3;
-  --color-sand: #d1f2eb;
-  --color-driftwood: #0b6e4f;
+  --color-sand: #d8f0f0;
+  --color-driftwood: #0c6c90;
 
   --font-display: var(--font-display-family), system-ui, -apple-system, sans-serif;
   --font-body: var(--font-body-family), system-ui, -apple-system, sans-serif;
@@ -81,16 +97,19 @@
     color-scheme: light;
 
     /* Marka gradyanları — bütün bileşenler bunları kullanır */
-    --gradient-ocean: linear-gradient(135deg, #000926 0%, #061a4a 26%, #0f52ba 62%, #0b6e4f 88%, #013220 100%);
-    --gradient-ocean-soft: linear-gradient(135deg, #061a4a 0%, #0f52ba 48%, #12885f 82%, #0b6e4f 100%);
-    --gradient-surf: linear-gradient(120deg, #0f52ba 0%, #12885f 58%, #50c878 100%);
-    --gradient-jade: linear-gradient(120deg, #12885f 0%, #0b6e4f 55%, #013220 100%);
-    --gradient-sapphire: linear-gradient(120deg, #061a4a 0%, #0f52ba 60%, #3e77ce 100%);
+    /* Derinden yüzeye: Deep Navy -> Sapphire -> logo mavisi -> turkuaz */
+    --gradient-ocean: linear-gradient(135deg, #000926 0%, #061a4a 24%, #0f52ba 52%, #0c6c90 78%, #18789c 100%);
+    --gradient-ocean-soft: linear-gradient(135deg, #061a4a 0%, #0f52ba 44%, #0c6c90 76%, #2490b4 100%);
+    --gradient-surf: linear-gradient(120deg, #0f52ba 0%, #0c6c90 54%, #48b4cc 100%);
+    --gradient-lagoon: linear-gradient(120deg, #18789c 0%, #48b4cc 52%, #9cd8e4 100%);
+    --gradient-sapphire: linear-gradient(120deg, #061a4a 0%, #0f52ba 60%, #2490b4 100%);
     --gradient-sky: linear-gradient(160deg, #ffffff 0%, #f3f8fc 42%, #d6e6f3 100%);
-    --gradient-mint: linear-gradient(160deg, #ffffff 0%, #f1fbf8 45%, #d1f2eb 100%);
+    --gradient-mint: linear-gradient(160deg, #ffffff 0%, #f4fbfd 45%, #d8f0f0 100%);
     --gradient-foam: linear-gradient(180deg, #ffffff 0%, #f3f8fc 55%, #e7f1f9 100%);
+    /* Yeşil yalnızca güven rozetlerinde */
+    --gradient-jade: linear-gradient(120deg, #12885f 0%, #0b6e4f 55%, #013220 100%);
     /* Metin gradyanı — her iki uç da beyaz üzerinde AA geçer */
-    --gradient-tide: linear-gradient(90deg, #0f52ba 0%, #12885f 62%, #0b6e4f 100%);
+    --gradient-tide: linear-gradient(90deg, #0f52ba 0%, #0c6c90 58%, #005478 100%);
   }
 
   html {
@@ -117,13 +136,13 @@
   }
   h1 { letter-spacing: -0.022em; }
 
-  ::selection { background-color: var(--color-emerald); color: #013220; }
+  ::selection { background-color: var(--color-logo-bright); color: #002a3c; }
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 4px; }
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: var(--color-paper-2); }
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #0f52ba, #0b6e4f);
+    background: linear-gradient(180deg, #0f52ba, #0c6c90);
     border-radius: 9999px;
     border: 2px solid var(--color-paper-2);
   }
@@ -152,7 +171,7 @@
 
   /* Yavaşça akan canlı gradyan — hero ve CTA bantları */
   .bg-gradient-flow {
-    background-image: linear-gradient(115deg, #000926, #061a4a, #0f52ba, #12885f, #50c878, #0b6e4f, #000926);
+    background-image: linear-gradient(115deg, #000926, #061a4a, #0f52ba, #0c6c90, #48b4cc, #18789c, #000926);
     background-size: 320% 320%;
     animation: tide 26s ease-in-out infinite;
   }
@@ -165,7 +184,7 @@
     color: transparent;
   }
   .gradient-text-light {
-    background-image: linear-gradient(90deg, #ffffff 0%, #d6e6f3 42%, #8fdca8 100%);
+    background-image: linear-gradient(94deg, #ffffff 0%, #c2e8f0 44%, #48b4cc 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -201,10 +220,11 @@
     color: var(--color-sapphire);
     border: 1px solid color-mix(in srgb, var(--color-sapphire) 22%, transparent);
   }
+  /* Güven/onay rozeti — yeşil ikincil aksan */
   .pill-jade {
-    background-color: var(--color-mint);
-    color: var(--color-accent-600);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 26%, transparent);
+    background-color: var(--color-jade-tint);
+    color: var(--color-jade-600);
+    border: 1px solid color-mix(in srgb, var(--color-jade) 26%, transparent);
   }
   .pill-light {
     background-color: color-mix(in srgb, #ffffff 12%, transparent);
@@ -231,7 +251,7 @@
   }
   .card-luxe:hover {
     transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--color-emerald) 46%, transparent);
+    border-color: color-mix(in srgb, var(--color-logo-bright) 55%, transparent);
     box-shadow: var(--shadow-glow);
   }
 
@@ -283,7 +303,7 @@
   .glow-jade {
     position: absolute;
     inset: -25%;
-    background: radial-gradient(closest-side, rgba(80, 200, 120, 0.26), transparent 70%);
+    background: radial-gradient(closest-side, rgba(72, 180, 204, 0.3), transparent 70%);
     filter: blur(46px);
     pointer-events: none;
   }
@@ -304,23 +324,23 @@
   }
   .btn-base:active { transform: translateY(1px) scale(0.99); }
 
-  /* Yeşil ana CTA */
+  /* Birincil CTA — safirden logo mavisine */
   .btn-jade {
-    background-image: linear-gradient(120deg, #12885f 0%, #0b6e4f 46%, #0f52ba 100%);
+    background-image: linear-gradient(120deg, #0f52ba 0%, #0c6c90 48%, #18789c 100%);
     background-size: 210% 100%;
     background-position: 0% 50%;
     color: #ffffff;
-    box-shadow: 0 14px 32px -16px rgba(11, 110, 79, 0.8);
+    box-shadow: 0 14px 32px -16px rgba(15, 82, 186, 0.8);
   }
-  .btn-jade:hover { background-position: 100% 50%; box-shadow: 0 20px 44px -18px rgba(15, 82, 186, 0.7); transform: translateY(-2px); }
+  .btn-jade:hover { background-position: 100% 50%; box-shadow: 0 20px 44px -18px rgba(12, 108, 144, 0.75); transform: translateY(-2px); }
 
-  /* Safir ikincil CTA */
+  /* İkincil CTA — derin lacivert */
   .btn-ocean {
-    background-image: linear-gradient(120deg, #061a4a 0%, #0f52ba 52%, #12885f 100%);
+    background-image: linear-gradient(120deg, #000926 0%, #061a4a 50%, #0f52ba 100%);
     background-size: 210% 100%;
     background-position: 0% 50%;
     color: #ffffff;
-    box-shadow: 0 14px 32px -16px rgba(15, 82, 186, 0.75);
+    box-shadow: 0 14px 32px -16px rgba(0, 9, 38, 0.7);
   }
   .btn-ocean:hover { background-position: 100% 50%; transform: translateY(-2px); }
 
@@ -403,11 +423,16 @@
     position: absolute;
     inset: 0;
     background-image: radial-gradient(circle at 16% 20%, rgba(214, 230, 243, 0.13), transparent 44%),
-                      radial-gradient(circle at 84% 76%, rgba(80, 200, 120, 0.16), transparent 46%);
+                      radial-gradient(circle at 84% 76%, rgba(72, 180, 204, 0.2), transparent 46%);
     pointer-events: none;
   }
   .section-soft { background-image: var(--gradient-sky); }
   .section-mint { background-image: var(--gradient-mint); }
+
+  /* Açık bölüm zeminleri — arkadaki dalga dokusunun hafifçe görünmesine
+     izin verecek kadar saydam. Metin kontrastı korunur. */
+  .surface-paper { background-color: rgba(255, 255, 255, 0.82); }
+  .surface-tint { background-color: rgba(240, 247, 252, 0.86); }
 }
 
 @layer utilities {
@@ -436,7 +461,7 @@
   100% { background-position: 180% 0; }
 }
 .animate-shimmer {
-  background-image: linear-gradient(90deg, transparent, rgba(214, 230, 243, 0.5), transparent);
+  background-image: linear-gradient(90deg, transparent, rgba(156, 216, 228, 0.55), transparent);
   background-size: 180% 100%;
   animation: shimmer 2.4s linear infinite;
 }

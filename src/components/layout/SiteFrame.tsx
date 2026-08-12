@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { PageTransition } from "./PageTransition";
+import { WaveBackdrop } from "./WaveBackdrop";
 
 // "Çıplak" rotalar: site header/footer/FAB gösterilmez
 // (basın açıklaması ve davetiye — QR ile paylaşılan bağımsız sayfalar).
@@ -18,10 +19,18 @@ export function SiteFrame({ header, footer, floating, children }: Props) {
   const pathname = usePathname() || "/";
   const bare = BARE_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
-  if (bare) return <>{children}</>;
+  if (bare) {
+    return (
+      <>
+        <WaveBackdrop />
+        {children}
+      </>
+    );
+  }
 
   return (
     <>
+      <WaveBackdrop />
       {header}
       <main>
         <PageTransition>{children}</PageTransition>

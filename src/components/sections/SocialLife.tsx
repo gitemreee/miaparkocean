@@ -6,7 +6,7 @@ import { amenities } from "@/data/amenities";
 
 export function SocialLife() {
   return (
-    <section className="bg-paper-2 py-20 md:py-28">
+    <section className="surface-tint py-20 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Sosyal Yaşam"

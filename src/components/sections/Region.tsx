@@ -5,7 +5,7 @@ import { regionIntro, press } from "@/data/region";
 
 export function Region() {
   return (
-    <section id="bolge" className="bg-pearl py-24 md:py-32">
+    <section id="bolge" className="surface-tint py-24 md:py-32">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Değerlenen Bölge"

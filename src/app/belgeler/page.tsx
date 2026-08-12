@@ -21,7 +21,7 @@ export default function BelgelerPage() {
         image="/images/facade-warm.webp"
       />
 
-      <section className="bg-paper py-16 md:py-24">
+      <section className="surface-paper py-16 md:py-24">
         <div className="container-luxe grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-start">
           {/* Belge listesi */}
           <div>

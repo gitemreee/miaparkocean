@@ -19,7 +19,7 @@ const OFFICIAL_DOCS = [
 
 export function RegistryBadges() {
   return (
-    <section aria-label="Resmî kayıt ve denetim" className="border-t border-ink/10 bg-paper-2">
+    <section aria-label="Resmî kayıt ve denetim" className="surface-tint border-t border-ink/10">
       <div className="container-luxe py-12 md:py-14">
         <div className="mx-auto max-w-2xl text-center">
           <div className="eyebrow inline-flex items-center gap-2 text-accent">

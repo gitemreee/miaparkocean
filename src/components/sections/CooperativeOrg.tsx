@@ -4,7 +4,7 @@ import { cooperativeOrg } from "@/data/cooperative";
 
 export function CooperativeOrg() {
   return (
-    <section id="kooperatif-hakkinda" className="bg-pearl py-24 md:py-32">
+    <section id="kooperatif-hakkinda" className="surface-tint py-24 md:py-32">
       <div className="container-luxe grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         {/* Logo + künye */}
         <Reveal>

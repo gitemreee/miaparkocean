@@ -5,7 +5,7 @@ import { trustSystem } from "@/data/cooperative";
 
 export function TrustSystem() {
   return (
-    <section id="guvence-sistemi" className="bg-pearl py-24 md:py-32">
+    <section id="guvence-sistemi" className="surface-tint py-24 md:py-32">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Güvence ve Denetim Sistemi"

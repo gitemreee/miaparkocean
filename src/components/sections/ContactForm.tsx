@@ -55,7 +55,7 @@ export function ContactForm() {
   const waHref = `https://wa.me/905400280041?text=${waMessage}`;
 
   return (
-    <section id="iletisim" className="bg-paper-2 py-20 md:py-28">
+    <section id="iletisim" className="surface-tint py-20 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           tone="light"

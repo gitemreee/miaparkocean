@@ -5,7 +5,7 @@ import { demographics } from "@/data/valuation";
 
 export function Demographics() {
   return (
-    <section id="demografi" className="bg-paper py-20 md:py-28">
+    <section id="demografi" className="surface-paper py-20 md:py-28">
       <div className="container-luxe">
         <SectionHeading eyebrow={demographics.eyebrow} title={demographics.title} lead={demographics.lead} />
 

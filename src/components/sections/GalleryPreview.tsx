@@ -6,7 +6,7 @@ import { GallerySlider } from "./GallerySlider";
 
 export function GalleryPreview() {
   return (
-    <section id="galeri" className="bg-paper py-20 md:py-28">
+    <section id="galeri" className="surface-paper py-20 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Galeri"

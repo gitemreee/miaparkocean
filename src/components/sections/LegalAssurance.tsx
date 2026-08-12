@@ -5,7 +5,7 @@ import { legalAssurance } from "@/data/cooperative";
 
 export function LegalAssurance() {
   return (
-    <section id="guvence" className="bg-paper py-20 md:py-28">
+    <section id="guvence" className="surface-paper py-20 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Yasal Güvence ve Denetim"

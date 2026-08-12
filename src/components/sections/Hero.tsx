@@ -44,7 +44,7 @@ export function Hero() {
   const active = slides[index];
 
   return (
-    <section className="relative bg-paper">
+    <section className="relative">
       <h1 className="sr-only">
         MİA PARK OCEAN — İzmit MİA Bölgesi konut projesi. Tasarrufa dayalı faizsiz finansman sistemiyle bankasız,
         faizsiz, kefilsiz; 60 ay vade.
@@ -74,8 +74,10 @@ export function Hero() {
           </div>
         ))}
 
-        {/* Okyanus perdesi — lacivert/safirden zümrüde */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,9,38,0.92)_0%,rgba(4,17,58,0.6)_38%,rgba(15,82,186,0.18)_68%,rgba(1,50,32,0.22)_100%)]" />
+        {/* Okyanus perdesi — lacivert/safirden zümrüde; metin okunurluğu için güçlü */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,9,38,0.95)_0%,rgba(2,14,46,0.82)_28%,rgba(6,26,74,0.55)_54%,rgba(15,82,186,0.3)_78%,rgba(1,50,32,0.38)_100%)]" />
+        {/* Soldan sağa yumuşak koyulaşma — başlık bloğunu taşır */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,9,38,0.55)_0%,rgba(0,9,38,0.18)_46%,transparent_72%)]" />
 
         <div className="container-luxe relative flex min-h-[86vh] flex-col justify-end pb-32 pt-32 md:min-h-[92vh] md:pb-40 md:pt-36">
           <motion.span

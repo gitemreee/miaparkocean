@@ -35,16 +35,16 @@ OUT = os.path.join(ROOT, "public", "etkinlik")
 NAVY = (0, 9, 38)
 MIDNIGHT = (6, 26, 74)
 SAPPHIRE = (15, 82, 186)
-FOREST = (11, 110, 79)
-EVERGREEN = (1, 50, 32)
-EMERALD = (80, 200, 120)
+LOGO_BLUE = (12, 108, 144)
+LOGO_MID = (24, 120, 156)
+LOGO_BRIGHT = (72, 180, 204)
+LOGO_LIGHT = (156, 216, 228)
 ICE = (214, 230, 243)
 POWDER = (166, 197, 215)
-MINT = (209, 242, 235)
 WHITE = (255, 255, 255)
 INK = (0, 9, 38)
 
-BRAND_STOPS = [(0.0, NAVY), (0.26, MIDNIGHT), (0.62, SAPPHIRE), (0.88, FOREST), (1.0, EVERGREEN)]
+BRAND_STOPS = [(0.0, NAVY), (0.24, MIDNIGHT), (0.52, SAPPHIRE), (0.78, LOGO_BLUE), (1.0, LOGO_MID)]
 
 # --- Etkinlik bilgisi (src/data/event.ts ile aynı) ---
 EVENT = {
@@ -243,7 +243,7 @@ def invitation_card(size=(1080, 1350), with_qr: bool = True, name: str = "daveti
     top_area = band_h - wave_h
     text(dr, (W / 2, top_area * 0.30), EVENT["kicker"], f_kicker, ICE, anchor="mm", spacing=int(11 * s))
     dr.text((W / 2, top_area * 0.52), EVENT["name"], font=f_event, fill=WHITE, anchor="ma")
-    line = gradient((int(150 * s), int(5 * s)), [(0.0, EMERALD), (0.5, ICE), (1.0, EMERALD)], angle=1.0)
+    line = gradient((int(150 * s), int(5 * s)), [(0.0, LOGO_BRIGHT), (0.5, ICE), (1.0, LOGO_BRIGHT)], angle=1.0)
     paste_rounded(card, line, (int(W / 2 - 75 * s), int(top_area * 0.52 + 78 * s)), int(3 * s))
 
     # --- Ölçüler: içerik yüksekliği u ile doğrusal, kalan alana göre çözülür ---
@@ -313,7 +313,7 @@ def invitation_card(size=(1080, 1350), with_qr: bool = True, name: str = "daveti
     # --- İletişim ---
     f_lbl = font("Manrope-700.ttf", int(22 * k))
     f_val = font("Manrope-600.ttf", int(32 * k))
-    text(dr, (W / 2, y + int(12 * k)), "İLETİŞİM", f_lbl, FOREST, anchor="mm", spacing=int(6 * k))
+    text(dr, (W / 2, y + int(12 * k)), "İLETİŞİM", f_lbl, LOGO_BLUE, anchor="mm", spacing=int(6 * k))
     dr.text((W / 2, y + int(38 * k)), f"{EVENT['host']} · {EVENT['phone']}", font=f_val, fill=INK, anchor="ma")
     y += contact_h + gap
 
