@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Ban, Percent, UserRoundX, CalendarClock, ShieldCheck } from "lucide-react";
+import { ArrowRight, Ban, Percent, UserRoundX, CalendarClock } from "lucide-react";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { WAVE_PATHS, WAVE_TILE } from "@/components/ui/Wave";
 
@@ -81,15 +81,6 @@ export function Hero() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,48,78,0.5)_0%,rgba(4,48,78,0.14)_44%,transparent_70%)]" />
 
         <div className="container-luxe relative flex min-h-[86vh] flex-col justify-end pb-32 pt-32 md:min-h-[92vh] md:pb-40 md:pt-36">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="pill pill-light mb-6 w-fit"
-          >
-            <ShieldCheck className="h-4 w-4" /> Yahya Kaptan Birlik Güvencesiyle
-          </motion.span>
-
           <div className="relative min-h-[8.5rem] sm:min-h-[11rem] md:min-h-[13.5rem]">
             <AnimatePresence mode="wait">
               <motion.div
