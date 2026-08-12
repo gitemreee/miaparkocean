@@ -2,7 +2,7 @@
 """
 MİA PARK OCEAN — Instagram "grid split" (ızgara bölme) seti.
 
-15 panel üretir; her panel 3 gönderiye bölünür → toplam 45 gönderi.
+Her panel 3 gönderiye bölünür; panel sayısı PANELS listesinden gelir.
 Profil ızgarasında her panel TEK BİR geniş görsel gibi görünür.
 
 ÖLÇÜ MANTIĞI
@@ -657,11 +657,7 @@ def panel_amenities() -> Image.Image:
     görünür. Marka mavisi üstünde tipografi hem net hem de ızgarada
     fotoğraf satırlarının arasına nefes koyuyor.
     """
-    p = gradient((PANEL_W, PANEL_H), [(0.0, (6, 58, 82)), (0.45, MIA_DEEP),
-                                      (1.0, (20, 108, 140))], angle=0.62)
-    # Her parçanın kendi ışığı — ızgarada üç ayrı sütun gibi dursun
-    for cx in tile_centers():
-        p.alpha_composite(glow(cx, 500, 1180, MIA_CYAN, 0.2))
+    p = blue("mid")
     dr = ImageDraw.Draw(p)
 
     line_center(dr, "SOSYAL DONATILAR", 258, 42, (*MIA_LIGHT, 235), 20)
@@ -675,23 +671,194 @@ def panel_amenities() -> Image.Image:
         ("Güven", ["7/24 güvenlik", "Kapalı otopark",
                    "Özel gece aydınlatması"]),
     ]
-    titles = [t for t, _ in cols]
-    items = [i for _, lst in cols for i in lst]
-
-    ft = fit_serif(dr, titles, TILE_TEXT_W, 140)
-    fi = sans(54)
-    while max(dr.textlength(t, font=fi) for t in items) > TILE_TEXT_W and fi.size > 32:
-        fi = sans(fi.size - 2)
-
-    for cx, (title, lst) in zip(tile_centers(), cols):
-        dr.text((cx, 516), title, font=ft, fill=WHITE, anchor="ms")
-        dr.line([cx - 100, 584, cx + 100, 584], fill=(*MIA_AQUA, 205), width=4)
-        for i, it in enumerate(lst):
-            dr.text((cx, 664 + i * 102), it, font=fi, fill=(*MIA_PALE, 240), anchor="ma")
+    col_list(dr, cols)
 
     line_center(dr, "Ortak alanların tamamı proje kapsamındadır.",
                 1152, 48, (*MIA_ICE, 238))
 
+    frame(p, shadow=False)
+    return p
+
+
+# ------------------------------------------------- mavi tipografik paneller
+# Fotoğraf panelleri arasında nefes açan, katalog bilgisi taşıyan satırlar.
+# Üç zemin tonu dönüşümlü kullanılır ki ardışık mavi satırlar birbirine
+# yapışmasın; en açığı bile beyaz metinle 4.9:1 kontrastın altına inmez.
+
+BLUE_GROUNDS = {
+    "deep": ([(0.0, (3, 30, 44)), (0.5, NAVY), (1.0, (8, 80, 112))], 0.32),
+    "mid": ([(0.0, (6, 58, 82)), (0.45, MIA_DEEP), (1.0, (20, 108, 140))], 0.62),
+    "soft": ([(0.0, (9, 86, 120)), (0.5, (20, 108, 140)), (1.0, MIA_DARK)], 0.5),
+}
+
+
+def blue(kind: str = "mid") -> Image.Image:
+    """Marka mavisi zemin + her parçaya bir ışık odağı."""
+    stops, angle = BLUE_GROUNDS[kind]
+    p = gradient((PANEL_W, PANEL_H), stops, angle=angle)
+    for cx in tile_centers():
+        p.alpha_composite(glow(cx, 500, 1180, MIA_CYAN, 0.2))
+    return p
+
+
+def col_list(dr, cols, title_size: int = 140, item_size: int = 54,
+             title_base: int = 516, rule_y: int = 584,
+             item_y: int = 664, lh: int = 102):
+    """Üç sütun: başlık, ince çizgi, altında maddeler."""
+    titles = [t for t, _ in cols]
+    items = [i for _, lst in cols for i in lst]
+    ft = fit_serif(dr, titles, TILE_TEXT_W, title_size)
+    fi = sans(item_size)
+    while max(dr.textlength(t, font=fi) for t in items) > TILE_TEXT_W and fi.size > 32:
+        fi = sans(fi.size - 2)
+    for cx, (title, lst) in zip(tile_centers(), cols):
+        dr.text((cx, title_base), title, font=ft, fill=WHITE, anchor="ms")
+        dr.line([cx - 100, rule_y, cx + 100, rule_y], fill=(*MIA_AQUA, 205), width=4)
+        for i, it in enumerate(lst):
+            dr.text((cx, item_y + i * lh), it, font=fi, fill=(*MIA_PALE, 240), anchor="ma")
+
+
+def unit_panel(kind: str, eyebrow: str, area: str, count: str,
+               word: str, cap: str, note: str) -> Image.Image:
+    """
+    Daire tipi vitrini — üç kardeş panel aynı kalıptan çıkar.
+
+    Parça 1 metrekare, parça 2 adet, parça 3 tipin karakteri. Zemin tonu
+    her tipte değişir, yoksa ızgarada üç satır birbirinin kopyası görünür.
+    """
+    p = blue(kind)
+    dr = ImageDraw.Draw(p)
+    line_center(dr, eyebrow, 262, 42, (*MIA_LIGHT, 235), 20)
+    word_row(dr, [area, count, word], ["BRÜT ALAN", "DAİRE", cap],
+             210, "600", base=760, cap_y=834, cap_size=46)
+    dr.line([PANEL_W / 2 - 90, 962, PANEL_W / 2 + 90, 962], fill=(*MIA_AQUA, 200), width=4)
+    line_center(dr, note, 1022, 50, (*MIA_ICE, 238))
+    frame(p, shadow=False)
+    return p
+
+
+# ── 16 · kimler için ───────────────────────────────────────────────────
+def panel_audience() -> Image.Image:
+    """Aynı projeden üç farklı beklentiye üç farklı cevap."""
+    p = blue("deep")
+    dr = ImageDraw.Draw(p)
+    line_center(dr, "KİMLER İÇİN?", 258, 42, (*MIA_LIGHT, 235), 20)
+    col_list(dr, [
+        ("İlk ev", ["1+0 · Brüt 28 m²", "Açık plan, geniş balkon",
+                    "Bakımı kolay düzen"]),
+        ("Yatırım", ["472 daire · en çok tip", "Merkezî konum",
+                     "Kompakt plan, kiralamaya uygun"]),
+        ("Aile", ["2+1 Bahçe Dubleks", "Brüt 100 m²",
+                  "Zemin katta kendi bahçesi"]),
+    ])
+    line_center(dr, "600 dairede dört farklı yaşam tipi.", 1112, 48, (*MIA_ICE, 238))
+    frame(p, shadow=False)
+    return p
+
+
+# ── 17 · daire künyesi ─────────────────────────────────────────────────
+def panel_spec() -> Image.Image:
+    """
+    Dört tipin tamamı, üç parçaya sığdırılmış.
+
+    Bahçe Loft da 1+1 ve 50 m² olduğu için orta parçaya alt satır olarak
+    giriyor; böylece hiçbir tip listenin dışında kalmıyor.
+    """
+    p = blue("mid")
+    dr = ImageDraw.Draw(p)
+    line_center(dr, "DAİRE KÜNYESİ", 258, 42, (*MIA_LIGHT, 235), 20)
+
+    rows = [("1+0", "BRÜT 28 m²", "472 daire", "PROJENİN %79'U"),
+            ("1+1", "BRÜT 50 m²", "96 daire", "1+1 BAHÇE LOFT · 16 DAİRE"),
+            ("2+1", "BRÜT 100 m²", "16 daire", "BAHÇE DUBLEKS")]
+    ft = fit_serif(dr, [r[0] for r in rows], TILE_TEXT_W, 230, "600")
+    fc = fit_track(dr, [r[1] for r in rows], TILE_TEXT_W, 48, 14)
+    fn = fit_track(dr, [r[3] for r in rows], TILE_TEXT_W, 38, 12)
+    for cx, (typ, area, cnt, note) in zip(tile_centers(), rows):
+        dr.text((cx, 640), typ, font=ft, fill=WHITE, anchor="ms")
+        track(dr, (cx, 706), area, fc, (*MIA_ICE, 248), 14, "ma")
+        dr.text((cx, 800), cnt, font=sans_sb(64), fill=(*MIA_PALE, 245), anchor="ma")
+        dr.line([cx - 90, 916, cx + 90, 916], fill=(*MIA_AQUA, 190), width=3)
+        track(dr, (cx, 956), note, fn, (*MIA_LIGHT, 235), 12, "ma")
+
+    line_center(dr, "Toplam 600 daire · 4 yaşam tipi.", 1094, 50, (*MIA_ICE, 238))
+    frame(p, shadow=False)
+    return p
+
+
+# ── 18 · bahçeli daireler ──────────────────────────────────────────────
+def panel_garden() -> Image.Image:
+    """32 bahçeli daire — sette hiç anlatılmamış en ayrıştırıcı özellik."""
+    p = blue("soft")
+    dr = ImageDraw.Draw(p)
+    line_center(dr, "BAHÇELİ DAİRELER", 262, 42, (*MIA_LIGHT, 238), 20)
+    word_row(dr, ["Bahçe Loft", "Bahçe Dubleks", "32 daire"],
+             ["1+1 · 50 m² · 16 DAİRE", "2+1 · 100 m² · 16 DAİRE",
+              "ZEMİN KATTA KENDİ BAHÇESİ"],
+             180, "500", base=740, cap_y=816, cap_size=44)
+    dr.line([PANEL_W / 2 - 90, 946, PANEL_W / 2 + 90, 946], fill=(*MIA_AQUA, 200), width=4)
+    line_center(dr, "Zemin katta kendi bahçeniz — apartmanda müstakil ev hissi.",
+                1006, 50, (*MIA_ICE, 238))
+    frame(p, shadow=False)
+    return p
+
+
+# ── 19 · 1+0 vitrini ───────────────────────────────────────────────────
+def panel_unit_1plus0() -> Image.Image:
+    return unit_panel("deep", "1+0 DAİRELER", "28 m²", "472", "Akıllı",
+                      "TASARIM, MAKSİMUM KONFOR",
+                      "Küçük ama nefes alan, bakımı kolay bir ev.")
+
+
+# ── 20 · 1+1 vitrini ───────────────────────────────────────────────────
+def panel_unit_1plus1() -> Image.Image:
+    return unit_panel("mid", "1+1 DAİRELER", "50 m²", "96", "Ferah",
+                      "KONFORLU VE FONKSİYONEL",
+                      "Yalnız ya da çift yaşayanlar için rahat bir düzen.")
+
+
+# ── 21 · 2+1 Bahçe Dubleks vitrini ─────────────────────────────────────
+def panel_unit_2plus1() -> Image.Image:
+    return unit_panel("soft", "2+1 BAHÇE DUBLEKS", "100 m²", "16", "Dubleks",
+                      "PROJENİN EN BÜYÜK TİPİ",
+                      "Bahçeniz, evinizin devamı.")
+
+
+# ── 22 · daire içi ─────────────────────────────────────────────────────
+def panel_interior() -> Image.Image:
+    p = blue("mid")
+    dr = ImageDraw.Draw(p)
+    line_center(dr, "DAİRE İÇİ", 258, 42, (*MIA_LIGHT, 235), 20)
+    col_list(dr, [
+        ("Açık plan", ["Ferah yaşam alanı", "Aydınlık ve konforlu",
+                       "Bakımı kolay düzen"]),
+        ("Geniş balkon", ["Doğayla iç içe", "Gün boyu ferah",
+                          "1+0 ve 1+1 dairelerde"]),
+        ("Modern mutfak", ["Fonksiyonel tasarım", "Pratik ve estetik",
+                           "Açık mutfak düzeni"]),
+    ])
+    line_center(dr, "Yüksek kaliteli iç mekân malzemeleri.", 1112, 48, (*MIA_ICE, 238))
+    frame(p, shadow=False)
+    return p
+
+
+# ── 23 · açık plan ─────────────────────────────────────────────────────
+def panel_openplan() -> Image.Image:
+    """
+    Balkon, mutfak ve yaşam alanı — her parçada bir mekân.
+
+    Balkon 1+0 ve 1+1'de var; zemin kattaki tipte yerini bahçe alıyor.
+    Bu yüzden "her dairede balkon" denmiyor, alt satır durumu söylüyor.
+    """
+    p = blue("deep")
+    dr = ImageDraw.Draw(p)
+    line_center(dr, "AÇIK PLAN", 262, 42, (*MIA_LIGHT, 235), 20)
+    word_row(dr, ["Balkon", "Mutfak", "Yaşam alanı"],
+             ["GENİŞ, DOĞAYLA İÇ İÇE", "AÇIK, YAŞAM ALANIYLA BÜTÜN",
+              "FERAH VE AYDINLIK"],
+             190, "500", base=740, cap_y=816, cap_size=44)
+    dr.line([PANEL_W / 2 - 90, 946, PANEL_W / 2 + 90, 946], fill=(*MIA_AQUA, 200), width=4)
+    line_center(dr, "Üçü tek bir ferah düzende buluşuyor.", 1006, 50, (*MIA_ICE, 238))
     frame(p, shadow=False)
     return p
 
@@ -712,6 +879,14 @@ PANELS = [
     ("13-gece", "Gece bile büyüleyici", panel_night),
     ("14-iletisim", "Dairenizi seçin", panel_contact),
     ("15-sosyal-donatilar", "Sosyal donatılar · ortak alanlar", panel_amenities),
+    ("16-kimler-icin", "Kimler için · ilk ev, yatırım, aile", panel_audience),
+    ("17-daire-kunyesi", "Daire künyesi · 4 yaşam tipi", panel_spec),
+    ("18-bahceli-daireler", "Zemin katta kendi bahçeniz", panel_garden),
+    ("19-daire-1plus0", "1+0 · 28 m² · 472 daire", panel_unit_1plus0),
+    ("20-daire-1plus1", "1+1 · 50 m² · 96 daire", panel_unit_1plus1),
+    ("21-daire-2plus1", "2+1 Bahçe Dubleks · 100 m² · 16 daire", panel_unit_2plus1),
+    ("22-daire-ici", "Daire içi · açık plan, balkon, mutfak", panel_interior),
+    ("23-acik-plan", "Balkon · mutfak · yaşam alanı", panel_openplan),
 ]
 
 
