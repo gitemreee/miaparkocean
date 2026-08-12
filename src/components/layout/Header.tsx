@@ -76,7 +76,7 @@ function DesktopNavItem({ label, href, submenu }: { label: string; href: string;
 
   if (!submenu) {
     return (
-      <Link href={href} className="font-display text-[0.98rem] tracking-[0.03em] text-ink/75 transition-colors hover:text-ink">
+      <Link href={href} className="whitespace-nowrap font-display text-[0.88rem] tracking-[0.01em] text-ink/75 transition-colors hover:text-ink">
         {label}
       </Link>
     );
@@ -109,7 +109,7 @@ function DesktopNavItem({ label, href, submenu }: { label: string; href: string;
         href={href}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={`inline-flex items-center gap-1 font-display text-[0.98rem] tracking-[0.03em] transition-colors ${open ? "text-ink" : "text-ink/75 hover:text-ink"}`}
+        className={`inline-flex items-center gap-1 whitespace-nowrap font-display text-[0.88rem] tracking-[0.01em] transition-colors ${open ? "text-ink" : "text-ink/75 hover:text-ink"}`}
       >
         {label}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -196,20 +196,20 @@ export function Header() {
     >
       {/* Gradyan saç çizgisi — marka rengini üstte tutar */}
       <div className="h-[3px] w-full bg-gradient-surf" aria-hidden="true" />
-      <div className={`container-luxe flex items-center justify-between transition-[padding] duration-300 ${solid ? "py-2.5" : "py-4"}`}>
+      <div className={`container-luxe flex items-center justify-between gap-6 transition-[padding] duration-300 xl:gap-8 ${solid ? "py-2.5" : "py-4"}`}>
         <Logo tone="dark" />
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-4 lg:flex xl:gap-6">
           {nav.map((item) => (
             <DesktopNavItem key={item.href} label={item.label} href={item.href} submenu={submenus[item.href]} />
           ))}
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
-          <a href={contact.phones[0].href} className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/80 transition-colors hover:text-accent">
+        <div className="hidden items-center gap-4 lg:flex xl:gap-5">
+          <a href={contact.phones[0].href} className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-ink/80 transition-colors hover:text-accent xl:inline-flex">
             <Phone className="h-4 w-4 text-accent" /> {contact.phones[0].label}
           </a>
-          <Link href="/iletisim" className="inline-flex items-center rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600">
+          <Link href="/iletisim" className="inline-flex items-center whitespace-nowrap rounded-full bg-accent px-5 py-2.5 text-[0.85rem] font-semibold text-white transition-colors hover:bg-accent-600 xl:px-6 xl:text-sm">
             Dairenizi Seçin
           </Link>
         </div>

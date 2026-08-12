@@ -34,11 +34,11 @@ export function Logo({ tone = "dark", className = "", compact = false }: LogoPro
         className="h-9 w-auto shrink-0 transition-transform duration-500 group-hover:scale-[1.04]"
       />
       <span className="flex flex-col leading-none">
-        <span className={`wordmark text-[1.02rem] tracking-[0.2em] ${textColor}`}>
+        <span className={`wordmark whitespace-nowrap text-[0.95rem] tracking-[0.18em] lg:text-[0.82rem] lg:tracking-[0.1em] ${textColor}`}>
           MİA PARK OCEAN
         </span>
         {!compact && (
-          <span className={`eyebrow mt-1.5 text-[0.53rem] tracking-[0.28em] ${subColor}`}>
+          <span className={`eyebrow mt-1.5 whitespace-nowrap text-[0.53rem] tracking-[0.28em] lg:text-[0.46rem] lg:tracking-[0.2em] ${subColor}`}>
             İzmit MİA Bölgesi
           </span>
         )}

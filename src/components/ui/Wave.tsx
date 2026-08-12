@@ -17,6 +17,14 @@ export { WAVE_IMAGE, WAVE_MASK, WAVE_MASK_SOLID, WAVE_RATIO } from "./wave-path"
 type WaveEdgeProps = {
   /** Dalganın altını dolduran renk/gradyan — geçilen bölümün zemini. */
   fill?: string;
+  /**
+   * Dalganın KARŞI tarafındaki eriyen bant. Dalga, koyu fotoğraf ile açık
+   * sayfa arasında sert bir kesim olarak durmasın diye o taraf yavaşça
+   * dalganın tonuna doğru erir. `false` verilirse çizilmez.
+   */
+  haze?: string | false;
+  /** Eriyen bandın yüksekliği (sarmalayıcının yüzdesi). */
+  hazeHeight?: string;
   /** Dalganın kendi renkli şeridi üstte görünsün mü? */
   ribbon?: boolean;
   /** Şeridin opaklığı (0–1). */
@@ -36,6 +44,8 @@ type WaveEdgeProps = {
  */
 export function WaveEdge({
   fill = "linear-gradient(180deg,#f4fbfd,#eef8fa 55%,#e8f6f9)",
+  haze = "linear-gradient(180deg,rgba(233,246,249,0) 0%,rgba(233,246,249,0.1) 34%,rgba(235,247,250,0.34) 60%,rgba(238,249,251,0.72) 82%,rgba(241,250,251,0.95) 100%)",
+  hazeHeight = "h-[260%]",
   ribbon = true,
   ribbonOpacity = 1,
   flip = false,
@@ -46,6 +56,18 @@ export function WaveEdge({
       className={`pointer-events-none relative w-full ${flip ? "rotate-180" : ""} ${className}`}
       aria-hidden="true"
     >
+      {/* Karşı taraftaki eriyen bant — saydamdan başlar, dalgaya yaklaştıkça
+          zeminin tonuna erir. Üst ucu saydam olduğu için hiçbir yerde çizgi
+          bırakmaz; dalga yapıştırılmış gibi değil, zeminden çıkıyormuş gibi
+          durur. Düz (flip yok) kullanımda bant dalga kutusunu da kaplar:
+          kutunun kendi saydam üst bölgesi fotoğrafı olduğu gibi gösterip
+          bandın bittiği yerde kesik yaratmasın. */}
+      {haze && (
+        <span
+          className={`absolute inset-x-0 ${flip ? "bottom-full" : "bottom-0"} ${hazeHeight}`}
+          style={{ backgroundImage: haze }}
+        />
+      )}
       {/* Taban: sayfa zemini dalganın ALT siluetinden başlar. Kurdeleler
           fotoğrafın üstüne biner, araları gerçekten saydam kalır — şeffaf
           PNG gibi görünür, arkasında beyaz bir gövde olmaz. */}

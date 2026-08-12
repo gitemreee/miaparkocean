@@ -577,15 +577,6 @@
     pointer-events: none;
   }
 
-  /* Dalgadan koyuya iniş — dalganın gövde tonu (#5babc3) aşağı doğru erir,
-     böylece dalga ile koyu zemin arasında kesik bir sınır kalmaz. */
-  .wave-fade {
-    background-image: linear-gradient(180deg,
-      rgba(91, 171, 195, 0.55) 0%,
-      rgba(45, 138, 173, 0.34) 28%,
-      rgba(26, 116, 150, 0.16) 58%,
-      transparent 100%);
-  }
   /* Kıyı bandı — koyu bölümden beyaza yumuşak çıkış */
   .section-shore { background-image: var(--gradient-shore); }
   .section-soft { background-image: var(--gradient-sky); }

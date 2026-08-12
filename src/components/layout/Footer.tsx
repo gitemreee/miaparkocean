@@ -10,22 +10,18 @@ export function Footer() {
   return (
     <footer className="section-dark">
       {/* Üstteki bölümden footer'a geçiş — logodaki dalganın kendisi.
-          Dalganın hemen altında, gövde tonundan koyuya eriyen bir bant var;
-          böylece sınır kesik değil, suya iniyormuş gibi kademeli. */}
-      <div className="relative">
-        <WaveEdge
-          flip
-          ribbonOpacity={0.85}
-          /* Ters çevrildiği için gradyan da ters okunur: görsel üst uç
-             sayfanın zeminiyle aynı tonda başlasın ki kesik oluşmasın. */
-          fill="linear-gradient(180deg,#e9f6f9,#f1fafb 60%,#f1fafb)"
-          className="-mt-px h-[52px] md:h-[84px]"
-        />
-        <div
-          className="wave-fade pointer-events-none absolute inset-x-0 top-full h-28 md:h-44"
-          aria-hidden="true"
-        />
-      </div>
+          z-10: section-dark'ın radyal ışık katmanı dalganın üstünü
+          soldurmasın. Ters çevrildiği için hem taban dolgusu hem eriyen
+          bant görsel olarak yer değiştirir: dolgu yukarıda sayfaya,
+          eriyen bant aşağıda koyu zemine bağlanır. */}
+      <WaveEdge
+        flip
+        ribbonOpacity={0.85}
+        fill="linear-gradient(180deg,#e9f6f9,#f1fafb 60%,#f1fafb)"
+        haze="linear-gradient(180deg,rgba(91,171,195,0) 0%,rgba(75,161,190,0.3) 34%,rgba(46,133,168,0.62) 68%,rgba(24,110,146,0.85) 100%)"
+        hazeHeight="h-[260%]"
+        className="relative z-10 -mt-px h-[52px] md:h-[84px]"
+      />
 
       <div className="container-luxe relative z-10 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
