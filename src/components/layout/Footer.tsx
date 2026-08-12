@@ -7,22 +7,32 @@ const socialIcons = { instagram: Instagram, facebook: Facebook, youtube: Youtube
 
 export function Footer() {
   return (
-    <footer className="bg-ocean text-cream">
-      <div className="container-luxe py-16">
+    <footer className="section-dark">
+      {/* Üstteki bölümden footer'a dalga geçişi */}
+      <div className="wave-divider -mt-px rotate-180" aria-hidden="true">
+        <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="h-[52px] w-full">
+          <path
+            d="M0 60 C 240 10, 480 96, 720 56 C 960 16, 1200 84, 1440 42 L1440 90 L0 90 Z"
+            fill="currentColor"
+            className="text-paper"
+          />
+        </svg>
+      </div>
+
+      <div className="container-luxe relative z-10 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Marka + yapımcı */}
           <div>
-            <div className="flex items-center gap-3">
-              <svg viewBox="0 0 40 42" className="h-10 w-10" aria-hidden="true">
-                <path d="M6 32V12l14 10 14-10v20" fill="none" stroke="#F4F1EA" strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" />
-                <path d="M20 22v10" fill="none" stroke="#F4F1EA" strokeWidth="2.4" strokeLinecap="round" />
-                <circle cx="20" cy="7.5" r="1.7" fill="#D71D28" />
-              </svg>
-              <div>
-                <div className="font-display text-xl tracking-[0.16em]">MİA PARK OCEAN</div>
-                <div className="eyebrow mt-1 text-[0.58rem] text-bronze-100/70">{site.region}</div>
-              </div>
-            </div>
+            {/* Logo daima beyaz zeminde: koyu footer'da beyaz plaket içinde durur */}
+            <Link href="/" aria-label="MİA PARK OCEAN ana sayfa" className="inline-block rounded-2xl bg-white p-5 shadow-[0_20px_50px_-26px_rgba(0,9,38,0.8)] transition-transform duration-500 hover:scale-[1.02]">
+              <img
+                src="/brand/logo-ocean-trim.webp"
+                alt="MİA PARK OCEAN — İzmit MİA Bölgesi"
+                width={196}
+                height={134}
+                className="h-auto w-[196px]"
+              />
+            </Link>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream/70">
               İzmit MİA Bölgesi'nde 600 daireden oluşan modern yaşam projesi. Tasarrufa dayalı faizsiz finansman, 60 ay vade ve %0 faiz ile.
             </p>

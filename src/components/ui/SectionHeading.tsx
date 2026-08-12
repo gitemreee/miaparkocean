@@ -11,7 +11,10 @@ type SectionHeadingProps = {
   className?: string;
 };
 
-// Birevim tarzı başlık: kırmızı etiket + kısa çizgi + kalın başlık + gri alt metin.
+/**
+ * Bölüm başlığı — gradyanlı mini dalga çizgisi + Marcellus başlık.
+ * `tone="dark"` koyu okyanus zeminlerde kullanılır.
+ */
 export function SectionHeading({
   eyebrow,
   title,
@@ -22,25 +25,31 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   const isDark = tone === "dark";
   const isCenter = align === "center";
-  const text = isDark ? "text-paper" : "text-ink";
-  const soft = isDark ? "text-paper/60" : "text-ink/55";
+  const text = isDark ? "text-cream" : "text-ink";
+  const soft = isDark ? "text-cream/65" : "text-ink/60";
+  const label = isDark ? "text-accent-300" : "text-accent";
 
   return (
     <div className={`${isCenter ? "mx-auto max-w-2xl text-center" : "max-w-2xl"} ${className}`}>
       {eyebrow && (
         <Reveal>
-          <div className={`flex items-center gap-2.5 ${isCenter ? "justify-center" : ""}`}>
-            <span className="h-0.5 w-6 rounded bg-accent" />
-            <span className="eyebrow text-accent">{eyebrow}</span>
+          <div className={`flex items-center gap-3 ${isCenter ? "justify-center" : ""}`}>
+            <span
+              className={`h-[3px] w-7 rounded-full ${isDark ? "bg-accent-300" : "bg-gradient-surf"}`}
+              aria-hidden="true"
+            />
+            <span className={`eyebrow ${label}`}>{eyebrow}</span>
           </div>
         </Reveal>
       )}
       <Reveal delay={0.05}>
-        <h2 className={`mt-4 text-3xl leading-[1.08] sm:text-4xl md:text-5xl ${text}`}>{title}</h2>
+        <h2 className={`mt-5 text-balance text-[2rem] leading-[1.08] sm:text-[2.6rem] md:text-[3.1rem] ${text}`}>
+          {title}
+        </h2>
       </Reveal>
       {lead && (
         <Reveal delay={0.1}>
-          <p className={`mt-4 text-base leading-relaxed md:text-lg ${soft}`}>{lead}</p>
+          <p className={`mt-5 text-pretty text-base leading-relaxed md:text-lg ${soft}`}>{lead}</p>
         </Reveal>
       )}
     </div>

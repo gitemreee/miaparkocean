@@ -21,11 +21,10 @@ export function PromoFilm() {
   }, [open]);
 
   return (
-    <section id="tanitim-filmi" className="relative overflow-hidden bg-ocean">
+    <section id="tanitim-filmi" className="section-dark relative overflow-hidden">
       <div className="absolute inset-0">
         <SmartImage src={promoVideo.poster} alt="MİA PARK OCEAN tanıtım filmi" sizes="100vw" className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-ocean/70" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ocean via-ocean/40 to-ocean/60" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,9,38,0.94)_0%,rgba(4,17,58,0.72)_44%,rgba(15,82,186,0.34)_78%,rgba(1,50,32,0.4)_100%)]" />
       </div>
 
       <div className="container-luxe relative z-10 flex min-h-[62vh] flex-col items-center justify-center py-24 text-center">
@@ -34,7 +33,7 @@ export function PromoFilm() {
           <span className="eyebrow text-bronze-100">Tanıtım Filmi</span>
         </div>
         <h2 className="mt-5 max-w-2xl text-4xl leading-tight text-cream md:text-5xl">
-          MİA PARK OCEAN'ı <span className="gilded">hareketle</span> keşfedin
+          MİA PARK OCEAN'ı <span className="gradient-text-light">hareketle</span> keşfedin
         </h2>
         <p className="mt-4 max-w-lg text-lg text-cream/75">{promoVideo.caption}</p>
 

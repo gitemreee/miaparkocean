@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Waves, Dumbbell, Flame, Baby, Car, Phone, Globe, Instagram, ShieldCheck } from "lucide-react";
 import { contact, socials } from "@/data/site";
+import { WAVE_PATHS } from "@/components/ui/Wave";
 
 export const metadata: Metadata = {
   title: "Basın Açıklaması — MİA PARK OCEAN",
@@ -20,40 +21,36 @@ const amenities = [
 
 const instagram = socials.find((s) => s.icon === "instagram");
 
-// MİA monogram (footer ile aynı) — açık zemin için mürekkep rengi.
-function MiaMonogram({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 40 42" className={className} aria-hidden="true">
-      <path d="M6 32V12l14 10 14-10v20" fill="none" stroke="#141414" strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" />
-      <path d="M20 22v10" fill="none" stroke="#141414" strokeWidth="2.4" strokeLinecap="round" />
-      <circle cx="20" cy="7.5" r="1.7" fill="#D71D28" />
-    </svg>
-  );
-}
+
 
 export default function BasinAciklamasiPage() {
   return (
     <div className="min-h-screen bg-paper text-ink">
-      {/* Üst marka bandı */}
-      <div className="border-b border-ink/10">
-        <div className="container-luxe flex items-center justify-between py-5">
-          <div className="flex items-center gap-3">
-            <MiaMonogram className="h-9 w-9" />
-            <div className="leading-none">
-              <div className="font-display text-lg font-semibold tracking-[0.16em]">MİA PARK OCEAN</div>
-              <div className="eyebrow mt-1 text-[0.54rem] text-ink/45">İzmit MİA Bölgesi</div>
-            </div>
-          </div>
-          <span className="pill hidden bg-accent-tint text-accent sm:inline-flex">
+      {/* Üst marka bandı — okyanus gradyanı + logodaki dalga */}
+      <div className="section-dark relative">
+        <div className="container-luxe relative z-10 flex items-center justify-between pb-20 pt-7 md:pb-24">
+          <Link href="/" className="inline-flex items-center gap-3 rounded-2xl bg-white px-4 py-3" aria-label="MİA PARK OCEAN ana sayfa">
+            <img src="/brand/mark-ocean-trim.webp" alt="" aria-hidden="true" width={40} height={37} className="h-9 w-auto" />
+            <span className="leading-none">
+              <span className="block font-display text-base tracking-[0.18em] text-ink">MİA PARK OCEAN</span>
+              <span className="eyebrow mt-1.5 block text-[0.5rem] tracking-[0.26em] text-ink/45">İzmit MİA Bölgesi</span>
+            </span>
+          </Link>
+          <span className="pill pill-light hidden sm:inline-flex">
             <ShieldCheck className="h-4 w-4" /> Basın Bülteni
           </span>
         </div>
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 bottom-0 block h-[38px] w-full md:h-[58px]" aria-hidden="true">
+          <path d={WAVE_PATHS.back} fill="#d6e6f3" opacity="0.5" />
+          <path d={WAVE_PATHS.mid} fill="#f3f8fc" opacity="0.85" />
+          <path d={WAVE_PATHS.front} fill="#ffffff" />
+        </svg>
       </div>
 
       {/* Başlık — ortalanmış hoş geldin girişi (3 satır) */}
-      <header className="container-luxe max-w-4xl pt-16 text-center md:pt-24">
+      <header className="container-luxe max-w-4xl pt-12 text-center md:pt-16">
         <span className="eyebrow text-accent">Lansman &amp; Basın Toplantısı</span>
-        <h1 className="mx-auto mt-5 max-w-4xl font-display text-[2.05rem] font-bold leading-[1.12] tracking-tight text-ink sm:text-[2.9rem] md:text-[3.25rem]">
+        <h1 className="mx-auto mt-5 max-w-4xl font-display text-[2.05rem] leading-[1.12] tracking-tight text-ink sm:text-[2.9rem] md:text-[3.25rem]">
           İzmit&apos;in Yeni İncisi
           <br />
           <span className="gilded">MİA PARK OCEAN</span>
@@ -76,7 +73,7 @@ export default function BasinAciklamasiPage() {
           şehrin tam merkezinde yepyeni bir yaşam alanı inşa ediyoruz.
         </p>
 
-        <h2 className="pt-4 font-display text-2xl font-bold text-ink">Şehrin Merkezinde, Modern ve Güvenli Bir Yaşam</h2>
+        <h2 className="pt-4 font-display text-2xl text-ink">Şehrin Merkezinde, Modern ve Güvenli Bir Yaşam</h2>
         <p>
           Toplam 10 dönüm arazi üzerine konumlandırılan projemiz, şehrin her yerine çok yakın olan eşsiz bir lokasyonda
           yer alıyor. Deprem gerçeğini asla unutmuyor, güvenliği her şeyin üstünde tutuyoruz. Bu doğrultuda, 8 katlı 4
@@ -90,7 +87,7 @@ export default function BasinAciklamasiPage() {
           kendine ait özel bahçesi bulunan loft dairelerimiz, müstakil ev konforunu rezidans ayrıcalığıyla birleştiriyor.
         </p>
 
-        <h2 className="pt-4 font-display text-2xl font-bold text-ink">
+        <h2 className="pt-4 font-display text-2xl text-ink">
           Ayrıcalıklı Sosyal Alanlar ve Doğayla İç İçe Bir Konsept
         </h2>
         <p>
@@ -113,7 +110,7 @@ export default function BasinAciklamasiPage() {
           gibi zengin sosyal donatılarımızla, sakinlerimizin yaşam kalitesini en üst düzeye çıkarıyoruz.
         </p>
 
-        <h2 className="pt-4 font-display text-2xl font-bold text-ink">Faiz Yok, Ara Ödeme Yok: 2 Yılda Teslim!</h2>
+        <h2 className="pt-4 font-display text-2xl text-ink">Faiz Yok, Ara Ödeme Yok: 2 Yılda Teslim!</h2>
         <p>
           Yahya Kaptan Birlik Yapı Kooperatifi olarak, herkesin bu prestijli projede yer alabilmesi için çok özel bir
           finansal model geliştirdik. Ev sahibi olmak veya yatırım yapmak isteyen vatandaşlarımızı ağır banka
@@ -150,10 +147,13 @@ export default function BasinAciklamasiPage() {
 
             {/* Logolar */}
             <div className="mt-9 flex flex-wrap items-center gap-x-12 gap-y-8 border-t border-ink/10 pt-9">
-              <div className="flex items-center gap-3">
-                <MiaMonogram className="h-14 w-14" />
-                <span className="font-display text-xl font-semibold tracking-[0.14em] text-ink">MİA PARK OCEAN</span>
-              </div>
+              <img
+                src="/brand/logo-ocean-trim.webp"
+                alt="MİA PARK OCEAN — İzmit MİA Bölgesi"
+                width={168}
+                height={115}
+                className="h-auto w-[168px]"
+              />
               <img src="/ykb-logo.png" alt="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="h-[4.5rem] w-auto" />
               <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" className="h-11 w-auto" width={160} height={36} />
             </div>

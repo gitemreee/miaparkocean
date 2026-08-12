@@ -1,50 +1,102 @@
 @import "tailwindcss";
 
 /* ============================================================
-   MİA PARK OCEAN — Birevim tarzı: beyaz + kalın siyah + kırmızı aksan
-   Temiz, ticari, güven odaklı; yuvarlak kartlar, canlı CTA.
+   MİA PARK OCEAN — "Sapphire & Emerald" tasarım sistemi
+
+   Palet (verilen iki resmî palet):
+     MAVİ   Ice #D6E6F3 · Powder #A6C5D7 · Sapphire #0F52BA · Deep Navy #000926
+     YEŞİL  Mint Whisper #D1F2EB · Emerald #50C878 · Forest #0B6E4F · Evergreen #013220
+
+   Zemin beyaz; derinlik lacivert-safir; canlılık zümrüt yeşili.
+   Tüm geçişler gradyanlı (Navy → Sapphire → Forest → Emerald).
+   Logo hiçbir yerde renklendirilmez; daima beyaz zeminde durur.
    ============================================================ */
 
 @theme {
+  /* --- Palet: mavi --- */
+  --color-ice: #d6e6f3;
+  --color-powder: #a6c5d7;
+  --color-sapphire: #0f52ba;
+  --color-navy: #000926;
+
+  /* --- Palet: yeşil --- */
+  --color-mint: #d1f2eb;
+  --color-emerald: #50c878;
+  --color-forest: #0b6e4f;
+  --color-evergreen: #013220;
+
+  /* --- Açık yüzeyler --- */
   --color-paper: #ffffff;
-  --color-paper-2: #f5f5f7;
-  --color-paper-3: #ececef;
-  --color-ink: #141414;
-  --color-ink-800: #232323;
-  --color-ink-700: #333333;
+  --color-paper-2: #f3f8fc;
+  --color-paper-3: #d6e6f3;
+  --color-foam: #f1fbf8;
+  --color-mist: #e7f1f9;
+  --color-pearl: #f3f8fc;
+  --color-cream: #f4f9fd;
+  --color-cream-200: #d6e6f3;
 
-  /* Kırmızı aksan (Birevim tarzı) — CTA ve vurgular */
-  --color-accent: #d71d28;
-  --color-accent-600: #b3151f;
-  --color-accent-300: #ec5b63;
-  --color-accent-tint: #fdeced;
+  /* --- Mürekkep (metin) — Deep Navy tabanlı --- */
+  --color-ink: #000926;
+  --color-ink-800: #0b1a3d;
+  --color-ink-700: #24365c;
+  --color-ink-600: #4a5b7d;
 
-  /* Geriye dönük uyumluluk — eski adlar yeni değerlere bağlı */
-  --color-ocean: #141414;
-  --color-ocean-800: #232323;
-  --color-ocean-700: #333333;
-  --color-ocean-600: #4a4a4a;
-  --color-cream: #ffffff;
-  --color-cream-200: #f0f0f2;
-  --color-pearl: #f5f5f7;
-  --color-sand: #d9c2a0;
-  --color-driftwood: #b3151f;
-  --color-aqua: #d71d28;
-  --color-bronze: #d71d28;
-  --color-bronze-300: #ec5b63;
-  --color-bronze-200: #f08a90;
-  --color-bronze-100: #f9c9cc;
+  /* --- Derinlik / koyu bölümler --- */
+  --color-abyss: #000926;
+  --color-ocean: #04113a;
+  --color-ocean-800: #061a4a;
+  --color-ocean-700: #0f52ba;
+  --color-ocean-600: #3e77ce;
+  --color-azure: #0f52ba;
+  --color-aqua: #a6c5d7;
+  --color-shallow: #d6e6f3;
 
-  --font-display: var(--font-cormorant), system-ui, -apple-system, sans-serif;
-  --font-body: var(--font-manrope), system-ui, -apple-system, sans-serif;
+  /* --- Aksan: yeşil (CTA, onay) — beyaz metinle AA uyumlu --- */
+  --color-accent: #0b6e4f;
+  --color-accent-600: #013220;
+  --color-accent-500: #12885f;
+  --color-accent-300: #50c878;
+  --color-accent-200: #8fdca8;
+  --color-accent-tint: #d1f2eb;
+  --color-jade: #0b6e4f;
 
-  --shadow-luxe: 0 30px 60px -30px rgba(20, 20, 20, 0.22);
-  --shadow-card: 0 16px 40px -24px rgba(20, 20, 20, 0.18);
+  /* --- Geriye dönük uyumluluk (eski bronz/kum adları safire bağlı) --- */
+  --color-bronze: #0f52ba;
+  --color-bronze-300: #3e77ce;
+  --color-bronze-200: #a6c5d7;
+  --color-bronze-100: #d6e6f3;
+  --color-sand: #d1f2eb;
+  --color-driftwood: #0b6e4f;
+
+  --font-display: var(--font-display-family), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-body-family), system-ui, -apple-system, sans-serif;
+
+  --shadow-luxe: 0 34px 70px -34px rgba(0, 9, 38, 0.38);
+  --shadow-card: 0 18px 44px -26px rgba(0, 9, 38, 0.28);
+  --shadow-glow: 0 0 0 1px rgba(15, 82, 186, 0.16), 0 24px 60px -30px rgba(15, 82, 186, 0.5);
 }
 
 @layer base {
-  :root { color-scheme: light; }
-  html { scroll-behavior: smooth; }
+  :root {
+    color-scheme: light;
+
+    /* Marka gradyanları — bütün bileşenler bunları kullanır */
+    --gradient-ocean: linear-gradient(135deg, #000926 0%, #061a4a 26%, #0f52ba 62%, #0b6e4f 88%, #013220 100%);
+    --gradient-ocean-soft: linear-gradient(135deg, #061a4a 0%, #0f52ba 48%, #12885f 82%, #0b6e4f 100%);
+    --gradient-surf: linear-gradient(120deg, #0f52ba 0%, #12885f 58%, #50c878 100%);
+    --gradient-jade: linear-gradient(120deg, #12885f 0%, #0b6e4f 55%, #013220 100%);
+    --gradient-sapphire: linear-gradient(120deg, #061a4a 0%, #0f52ba 60%, #3e77ce 100%);
+    --gradient-sky: linear-gradient(160deg, #ffffff 0%, #f3f8fc 42%, #d6e6f3 100%);
+    --gradient-mint: linear-gradient(160deg, #ffffff 0%, #f1fbf8 45%, #d1f2eb 100%);
+    --gradient-foam: linear-gradient(180deg, #ffffff 0%, #f3f8fc 55%, #e7f1f9 100%);
+    /* Metin gradyanı — her iki uç da beyaz üzerinde AA geçer */
+    --gradient-tide: linear-gradient(90deg, #0f52ba 0%, #12885f 62%, #0b6e4f 100%);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
 
   body {
     background-color: var(--color-paper);
@@ -52,18 +104,29 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 
-  /* Kalın, sıkı başlıklar (Birevim ExtraBold hissi) */
+  /* Marcellus tek ağırlıklıdır (400): vurgu kalınlıkla değil, ölçek ve
+     gradyan ile verilir — sentetik bold'dan kaçınılır. */
   h1, h2, h3, h4, h5 {
     font-family: var(--font-display);
-    font-weight: 700;
-    line-height: 1.06;
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.012em;
   }
+  h1 { letter-spacing: -0.022em; }
 
-  ::selection { background-color: var(--color-accent); color: #fff; }
-  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  ::selection { background-color: var(--color-emerald); color: #013220; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 4px; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-paper-2); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #0f52ba, #0b6e4f);
+    border-radius: 9999px;
+    border: 2px solid var(--color-paper-2);
+  }
 }
 
 @layer components {
@@ -77,19 +140,53 @@
     .container-luxe { padding-inline: 2rem; }
   }
 
-  /* Küçük kırmızı etiket */
+  /* ---------- Gradyan yüzeyler ---------- */
+  .bg-gradient-ocean { background-image: var(--gradient-ocean); }
+  .bg-gradient-ocean-soft { background-image: var(--gradient-ocean-soft); }
+  .bg-gradient-surf { background-image: var(--gradient-surf); }
+  .bg-gradient-jade { background-image: var(--gradient-jade); }
+  .bg-gradient-sapphire { background-image: var(--gradient-sapphire); }
+  .bg-gradient-sky { background-image: var(--gradient-sky); }
+  .bg-gradient-mint { background-image: var(--gradient-mint); }
+  .bg-gradient-foam { background-image: var(--gradient-foam); }
+
+  /* Yavaşça akan canlı gradyan — hero ve CTA bantları */
+  .bg-gradient-flow {
+    background-image: linear-gradient(115deg, #000926, #061a4a, #0f52ba, #12885f, #50c878, #0b6e4f, #000926);
+    background-size: 320% 320%;
+    animation: tide 26s ease-in-out infinite;
+  }
+
+  /* ---------- Gradyanlı metin ---------- */
+  .gradient-text {
+    background-image: var(--gradient-tide);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .gradient-text-light {
+    background-image: linear-gradient(90deg, #ffffff 0%, #d6e6f3 42%, #8fdca8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .gilded {
+    background-image: var(--gradient-tide);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+  }
+
+  /* ---------- Etiketler ---------- */
   .eyebrow {
     font-family: var(--font-body);
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     font-size: 0.72rem;
     font-weight: 700;
   }
 
-  /* Vurgu kelimesi — kırmızı, kalın */
-  .gilded { color: var(--color-accent); font-weight: 700; }
-
-  /* Pill etiket */
   .pill {
     display: inline-flex;
     align-items: center;
@@ -99,32 +196,257 @@
     font-size: 0.78rem;
     font-weight: 600;
   }
+  .pill-ocean {
+    background-color: color-mix(in srgb, var(--color-sapphire) 10%, transparent);
+    color: var(--color-sapphire);
+    border: 1px solid color-mix(in srgb, var(--color-sapphire) 22%, transparent);
+  }
+  .pill-jade {
+    background-color: var(--color-mint);
+    color: var(--color-accent-600);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 26%, transparent);
+  }
+  .pill-light {
+    background-color: color-mix(in srgb, #ffffff 12%, transparent);
+    color: var(--color-ice);
+    border: 1px solid color-mix(in srgb, #d6e6f3 26%, transparent);
+  }
 
-  .rule { height: 1px; background-color: color-mix(in srgb, var(--color-ink) 12%, transparent); }
-  .gold-rule { height: 1px; background-color: color-mix(in srgb, var(--color-ink) 12%, transparent); }
-  .gold-rule-solid { height: 2px; width: 2.5rem; background-color: var(--color-accent); border-radius: 2px; }
-  .glow-gold { display: none; }
+  /* ---------- Çizgiler ---------- */
+  .rule { height: 1px; background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-sapphire) 28%, transparent), transparent); }
+  .gold-rule { height: 1px; background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-sapphire) 28%, transparent), transparent); }
+  .gold-rule-solid {
+    height: 3px; width: 3rem; border-radius: 999px;
+    background-image: var(--gradient-surf);
+  }
 
-  /* Form girişleri */
+  /* ---------- Kartlar & cam yüzeyler ---------- */
+  .card-luxe {
+    position: relative;
+    border-radius: 1.25rem;
+    background: var(--color-paper);
+    border: 1px solid color-mix(in srgb, var(--color-sapphire) 12%, transparent);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
+  }
+  .card-luxe:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-emerald) 46%, transparent);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glass {
+    background-color: color-mix(in srgb, #ffffff 64%, transparent);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid color-mix(in srgb, #ffffff 60%, transparent);
+  }
+  .glass-dark {
+    background-color: color-mix(in srgb, #000926 46%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid color-mix(in srgb, #d6e6f3 20%, transparent);
+  }
+
+  /* Gradyan kenarlıklı kart */
+  .card-gradient-border {
+    position: relative;
+    border-radius: 1.25rem;
+    background: var(--color-paper);
+    z-index: 0;
+  }
+  .card-gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background-image: var(--gradient-surf);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0.45;
+    transition: opacity 0.35s;
+    z-index: -1;
+  }
+  .card-gradient-border:hover::before { opacity: 1; }
+
+  /* ---------- Işık halesi ---------- */
+  .glow-gold {
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(closest-side, rgba(15, 82, 186, 0.26), transparent 72%);
+    filter: blur(38px);
+    pointer-events: none;
+  }
+  .glow-jade {
+    position: absolute;
+    inset: -25%;
+    background: radial-gradient(closest-side, rgba(80, 200, 120, 0.26), transparent 70%);
+    filter: blur(46px);
+    pointer-events: none;
+  }
+
+  /* ---------- Butonlar ---------- */
+  .btn-base {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s, background-position 0.5s;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-base:active { transform: translateY(1px) scale(0.99); }
+
+  /* Yeşil ana CTA */
+  .btn-jade {
+    background-image: linear-gradient(120deg, #12885f 0%, #0b6e4f 46%, #0f52ba 100%);
+    background-size: 210% 100%;
+    background-position: 0% 50%;
+    color: #ffffff;
+    box-shadow: 0 14px 32px -16px rgba(11, 110, 79, 0.8);
+  }
+  .btn-jade:hover { background-position: 100% 50%; box-shadow: 0 20px 44px -18px rgba(15, 82, 186, 0.7); transform: translateY(-2px); }
+
+  /* Safir ikincil CTA */
+  .btn-ocean {
+    background-image: linear-gradient(120deg, #061a4a 0%, #0f52ba 52%, #12885f 100%);
+    background-size: 210% 100%;
+    background-position: 0% 50%;
+    color: #ffffff;
+    box-shadow: 0 14px 32px -16px rgba(15, 82, 186, 0.75);
+  }
+  .btn-ocean:hover { background-position: 100% 50%; transform: translateY(-2px); }
+
+  .btn-outline {
+    background-color: transparent;
+    color: var(--color-sapphire);
+    border: 1.5px solid color-mix(in srgb, var(--color-sapphire) 34%, transparent);
+  }
+  .btn-outline:hover {
+    background-color: color-mix(in srgb, var(--color-sapphire) 7%, transparent);
+    border-color: var(--color-sapphire);
+    transform: translateY(-2px);
+  }
+  .btn-outline-light {
+    background-color: color-mix(in srgb, #ffffff 10%, transparent);
+    color: #f4f9fd;
+    border: 1.5px solid color-mix(in srgb, #d6e6f3 42%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  .btn-outline-light:hover { background-color: color-mix(in srgb, #ffffff 20%, transparent); transform: translateY(-2px); }
+
+  /* Parlama efekti */
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.4) 50%, transparent 62%);
+    transform: translateX(-120%);
+    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+  }
+  .btn-shine:hover::after { transform: translateX(120%); }
+
+  /* ---------- Form girişleri ---------- */
   .form-input {
     width: 100%;
-    border-radius: 0.85rem;
-    border: 1px solid color-mix(in srgb, var(--color-ink) 14%, transparent);
+    border-radius: 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--color-sapphire) 20%, transparent);
     background-color: var(--color-paper);
-    padding: 0.8rem 1rem;
+    padding: 0.85rem 1rem;
     font-size: 0.95rem;
     color: var(--color-ink);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.22s, box-shadow 0.22s, background-color 0.22s;
   }
   .form-input::placeholder { color: color-mix(in srgb, var(--color-ink) 40%, transparent); }
   .form-input:focus {
     outline: none;
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px var(--color-accent-tint);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 14%, transparent);
   }
+  .form-label {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-700);
+    margin-bottom: 0.4rem;
+  }
+
+  /* ---------- Dalga ayırıcı ---------- */
+  .wave-divider {
+    position: relative;
+    display: block;
+    width: 100%;
+    line-height: 0;
+  }
+  .wave-divider svg { display: block; width: 100%; height: auto; }
+
+  /* ---------- Bölüm zeminleri ---------- */
+  .section-dark {
+    position: relative;
+    background-image: var(--gradient-ocean);
+    color: var(--color-cream);
+    overflow: hidden;
+  }
+  .section-dark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 16% 20%, rgba(214, 230, 243, 0.13), transparent 44%),
+                      radial-gradient(circle at 84% 76%, rgba(80, 200, 120, 0.16), transparent 46%);
+    pointer-events: none;
+  }
+  .section-soft { background-image: var(--gradient-sky); }
+  .section-mint { background-image: var(--gradient-mint); }
 }
 
-/* Kayar galeri (marquee) */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  .mask-fade-b { mask-image: linear-gradient(180deg, #000 62%, transparent 100%); }
+}
+
+/* ============================================================
+   Hareket
+   ============================================================ */
+
+@keyframes tide {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float { animation: float-slow 7s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+.animate-shimmer {
+  background-image: linear-gradient(90deg, transparent, rgba(214, 230, 243, 0.5), transparent);
+  background-size: 180% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.55; }
+  70%, 100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-pulse-ring { animation: pulse-ring 2.6s cubic-bezier(0.24, 0, 0.38, 1) infinite; }
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -134,11 +456,17 @@
   width: max-content;
   animation: marquee 55s linear infinite;
 }
-.marquee-wrap:hover .marquee-track {
-  animation-play-state: paused;
+.marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+@keyframes wave-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
+.wave-drift { animation: wave-drift 22s linear infinite; }
+.wave-drift-slow { animation: wave-drift 34s linear infinite reverse; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-  .marquee-track { animation: none; }
+  .marquee-track, .wave-drift, .wave-drift-slow, .bg-gradient-flow { animation: none; }
+  html { scroll-behavior: auto; }
 }

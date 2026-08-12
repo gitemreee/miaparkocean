@@ -1,9 +1,11 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { PageTransition } from "./PageTransition";
 
-// "Çıplak" rotalar: site header/footer/FAB gösterilmez (ör. basın açıklaması — QR ile paylaşılan bağımsız sayfa).
-const BARE_PREFIXES = ["/basin-aciklamasi"];
+// "Çıplak" rotalar: site header/footer/FAB gösterilmez
+// (basın açıklaması ve davetiye — QR ile paylaşılan bağımsız sayfalar).
+const BARE_PREFIXES = ["/basin-aciklamasi", "/davetiye"];
 
 type Props = {
   header: React.ReactNode;
@@ -21,7 +23,9 @@ export function SiteFrame({ header, footer, floating, children }: Props) {
   return (
     <>
       {header}
-      <main>{children}</main>
+      <main>
+        <PageTransition>{children}</PageTransition>
+      </main>
       {footer}
       {floating}
     </>

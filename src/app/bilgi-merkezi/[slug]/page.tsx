@@ -93,7 +93,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Kontrol listesi */}
         {a.checklist && a.checklist.length > 0 && (
-          <div className="mt-12 rounded-2xl bg-ocean p-8">
+          <div className="mt-12 rounded-2xl bg-gradient-ocean p-8">
             <h2 className="text-xl text-cream">Uygulama Kontrol Listesi</h2>
             <ul className="mt-5 space-y-3">
               {a.checklist.map((c) => (

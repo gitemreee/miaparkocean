@@ -31,7 +31,7 @@ export function Payment() {
             <Reveal delay={0.12}>
               <div className="mt-6 flex flex-wrap gap-2.5">
                 {payment.trio.map((t) => (
-                  <span key={t} className="inline-flex items-center gap-2 rounded-full bg-ocean px-5 py-2 text-sm font-medium text-cream">
+                  <span key={t} className="inline-flex items-center gap-2 rounded-full bg-gradient-sapphire px-5 py-2 text-sm font-medium text-cream">
                     <span className="h-1.5 w-1.5 rounded-full bg-bronze-300" />
                     {t}
                   </span>

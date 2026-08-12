@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-type Variant = "solid" | "outline" | "ghost";
+type Variant = "solid" | "ocean" | "outline" | "ghost";
 
 type ButtonLinkProps = {
   href: string;
@@ -11,13 +11,17 @@ type ButtonLinkProps = {
   external?: boolean;
 };
 
-const base =
-  "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold tracking-wide transition-colors duration-300";
+const base = "btn-base px-7 py-3.5 text-sm tracking-wide";
 
 const variants: Record<Variant, string> = {
-  solid: "bg-accent text-white hover:bg-accent-600",
-  outline: "border border-ink/20 text-ink hover:border-ink hover:bg-ink hover:text-white",
-  ghost: "border border-white/40 text-white hover:bg-white hover:text-ink",
+  /** Yeşil ana eylem */
+  solid: "btn-jade btn-shine",
+  /** Safir ikincil eylem */
+  ocean: "btn-ocean btn-shine",
+  /** Açık zeminde dış hatlı */
+  outline: "btn-outline",
+  /** Koyu zeminde dış hatlı */
+  ghost: "btn-outline-light",
 };
 
 export function ButtonLink({ href, children, variant = "solid", className = "", external = false }: ButtonLinkProps) {

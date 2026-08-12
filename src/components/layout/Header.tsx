@@ -182,8 +182,16 @@ export function Header() {
   const solid = scrolled || open;
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${solid ? "border-b border-ink/10 bg-paper/95 backdrop-blur" : "bg-transparent"}`}>
-      <div className="container-luxe flex items-center justify-between py-4">
+    // Logo daima beyaz zeminde durmalı: başlık her zaman beyaz kalır,
+    // kaydırınca yalnızca gölge ve yükseklik değişir.
+    <header
+      className={`fixed inset-x-0 top-0 z-50 bg-paper transition-shadow duration-300 ${
+        solid ? "shadow-[0_10px_30px_-22px_rgba(4,39,62,0.55)]" : ""
+      }`}
+    >
+      {/* Gradyan saç çizgisi — marka rengini üstte tutar */}
+      <div className="h-[3px] w-full bg-gradient-surf" aria-hidden="true" />
+      <div className={`container-luxe flex items-center justify-between transition-[padding] duration-300 ${solid ? "py-2.5" : "py-4"}`}>
         <Logo tone="dark" />
 
         <nav className="hidden items-center gap-7 lg:flex">

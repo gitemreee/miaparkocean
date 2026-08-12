@@ -51,7 +51,7 @@ export function Location() {
 
           {/* Harita */}
           <Reveal delay={0.1}>
-            <div className="overflow-hidden rounded-[2rem] border border-bronze/20 bg-ocean shadow-[var(--shadow-luxe)]">
+            <div className="overflow-hidden rounded-[2rem] border border-sapphire/20 bg-gradient-ocean shadow-[var(--shadow-luxe)]">
               <div className="flex items-center justify-between gap-3 border-b border-bronze/20 px-5 py-4">
                 <div className="flex items-center gap-2 text-cream">
                   <MapPin className="h-4 w-4 text-bronze-300" />
@@ -72,7 +72,7 @@ export function Location() {
                   href={mapConfig.googleDirections}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-ocean px-4 py-4 text-sm font-medium text-cream transition-colors hover:text-bronze-100"
+                  className="flex items-center justify-center gap-2 bg-gradient-sapphire px-4 py-4 text-sm font-medium text-cream transition-colors hover:text-bronze-100"
                 >
                   <Navigation className="h-4 w-4 text-bronze-300" /> Yol Tarifi (Google)
                 </a>
@@ -80,7 +80,7 @@ export function Location() {
                   href={mapConfig.yandex}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-ocean px-4 py-4 text-sm font-medium text-cream transition-colors hover:text-bronze-100"
+                  className="flex items-center justify-center gap-2 bg-gradient-sapphire px-4 py-4 text-sm font-medium text-cream transition-colors hover:text-bronze-100"
                 >
                   <ExternalLink className="h-4 w-4 text-bronze-300" /> Yandex Haritalar
                 </a>

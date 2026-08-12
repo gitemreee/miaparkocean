@@ -1,11 +1,15 @@
 import { TrendingUp, Info, ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
+import { WaveDivider } from "@/components/ui/Wave";
 import { valuation } from "@/data/valuation";
 
 export function Valuation() {
   return (
-    <section id="degerleme" className="bg-ink py-20 text-white md:py-28">
-      <div className="container-luxe">
+    <section id="degerleme" className="section-dark">
+      {/* Beyaz sayfadan okyanusa dalga geçişi */}
+      <WaveDivider tone="paper" flip className="h-[46px] md:h-[72px]" />
+
+      <div className="container-luxe relative z-10 py-16 text-white md:py-24">
         <Reveal>
           <div className="flex items-center gap-2.5">
             <span className="h-0.5 w-6 rounded bg-accent" />
@@ -25,8 +29,8 @@ export function Valuation() {
 
             <Reveal delay={0.1}>
               <div className="mt-9 flex flex-wrap items-end gap-x-4 gap-y-2">
-                <span className="font-display text-6xl font-bold leading-none text-white md:text-7xl">{valuation.headline.value}</span>
-                <span className="mb-1 font-display text-2xl font-semibold text-accent-300">{valuation.headline.unit}</span>
+                <span className="font-display text-6xl leading-none text-white md:text-7xl">{valuation.headline.value}</span>
+                <span className="mb-1 font-display text-2xl text-accent-300">{valuation.headline.unit}</span>
               </div>
               <p className="mt-2 text-sm uppercase tracking-wider text-white/50">{valuation.headline.label}</p>
             </Reveal>
@@ -86,7 +90,7 @@ export function Valuation() {
               <div className="rounded-2xl border border-white/12 bg-white/[0.06] p-6">
                 <div className="flex items-center gap-2">
                   <ArrowUpRight className="h-6 w-6 text-accent-300" />
-                  <div className="font-display text-4xl font-bold text-white md:text-5xl">{m.value}</div>
+                  <div className="font-display text-4xl text-white md:text-5xl">{m.value}</div>
                 </div>
                 <div className="mt-2 text-sm font-semibold text-white/85">{m.label}</div>
                 <div className="text-xs text-white/40">{m.note}</div>
@@ -101,6 +105,9 @@ export function Valuation() {
           </div>
         </Reveal>
       </div>
+
+      {/* Okyanustan beyaz sayfaya geri dönüş */}
+      <WaveDivider tone="paper" className="h-[46px] md:h-[72px]" />
     </section>
   );
 }

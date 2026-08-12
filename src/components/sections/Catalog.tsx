@@ -49,7 +49,7 @@ export function Catalog() {
               <div className="aspect-[1414/2000]">
                 <SmartImage src={catalogPages[i].src} alt={`Katalog — ${catalogPages[i].label}`} sizes="(max-width:1024px) 90vw, 40vw" className="h-full w-full object-cover" />
               </div>
-              <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-ocean/80 text-cream opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-sapphire text-cream opacity-0 transition-opacity group-hover:opacity-100">
                 <Maximize2 className="h-4 w-4" />
               </span>
             </button>

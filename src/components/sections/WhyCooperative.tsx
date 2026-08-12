@@ -19,7 +19,7 @@ export function WhyCooperative() {
           {whyCooperative.points.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
               <div className="flex h-full gap-5 rounded-2xl border border-ocean/8 bg-pearl p-7">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-ocean">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-surf">
                   <Icon name={p.icon} className="h-7 w-7 text-bronze-300" />
                 </span>
                 <div>
