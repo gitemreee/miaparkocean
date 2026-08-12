@@ -9,9 +9,6 @@ import { SocialLife } from "@/components/sections/SocialLife";
 import { GalleryPreview } from "@/components/sections/GalleryPreview";
 import { Catalog } from "@/components/sections/Catalog";
 import { Location } from "@/components/sections/Location";
-import { Valuation } from "@/components/sections/Valuation";
-import { Demographics } from "@/components/sections/Demographics";
-import { Region } from "@/components/sections/Region";
 import { WhyCooperative } from "@/components/sections/WhyCooperative";
 import { LegalAssurance } from "@/components/sections/LegalAssurance";
 import { CooperativeOrg } from "@/components/sections/CooperativeOrg";
@@ -39,9 +36,6 @@ export default function HomePage() {
       <GalleryPreview />
       <Catalog />
       <Location />
-      <Valuation />
-      <Demographics />
-      <Region />
       <WhyCooperative />
       <LegalAssurance />
       <CooperativeOrg />

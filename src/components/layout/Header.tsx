@@ -36,7 +36,10 @@ const submenus: Record<string, SubItem[]> = {
     { label: "Tüm Bilgi Merkezi", href: "/bilgi-merkezi", footer: true },
   ],
   "/bolgeler": [
-    { label: "İzmit MİA Bölgesi", href: "/bolge" },
+    { label: "İzmit MİA Bölgesi", href: "/bolge#bolge" },
+    { label: "Konum ve Ulaşım", href: "/bolge#lokasyon" },
+    { label: "Değerleme", href: "/bolge#degerleme" },
+    { label: "Bölge Demografisi", href: "/bolge#demografi" },
     { label: "İzmit Mahalleleri", href: "/bolgeler#izmit-mahalleleri" },
     { label: "Kocaeli İlçeleri", href: "/bolgeler#kocaeli-ilceleri" },
     { label: "Sakarya", href: "/bolgeler/sakarya" },

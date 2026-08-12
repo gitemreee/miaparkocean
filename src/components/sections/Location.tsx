@@ -1,4 +1,5 @@
-import { MapPin, Navigation, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { MapPin, Navigation, ExternalLink, ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
@@ -88,6 +89,14 @@ export function Location() {
             </div>
           </Reveal>
         </div>
+        <Reveal delay={0.15}>
+          <div className="mt-8 text-center">
+            <Link href="/bolge" className="btn-base btn-outline px-6 py-3 text-sm">
+              Bölge analizi, değerleme ve demografi
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
