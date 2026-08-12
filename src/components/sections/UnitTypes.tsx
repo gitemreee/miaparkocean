@@ -19,7 +19,7 @@ export function UnitTypes() {
           {units.map((u, i) => {
             return (
               <Reveal key={u.slug} delay={i * 0.1}>
-                <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-[var(--shadow-card)] transition-transform duration-300 hover:-translate-y-1">
+                <div className="card-luxe flex h-full flex-col overflow-hidden">
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <SmartImage src={u.image} alt={`${u.name} — MİA PARK OCEAN`} sizes="(max-width:1024px) 100vw, 33vw" className="h-full w-full object-cover" />
                   </div>

@@ -25,7 +25,7 @@ export function SocialLife() {
         <div className="mt-8 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-3">
           {amenities.map((a, i) => (
             <Reveal key={a.title} delay={(i % 3) * 0.07}>
-              <div className="group flex h-full flex-col gap-2.5 rounded-2xl border border-ink/8 bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-card)] md:flex-row md:items-start md:gap-4 md:p-6">
+              <div className="card-luxe group flex h-full flex-col gap-2.5 p-4 md:flex-row md:items-start md:gap-4 md:p-6">
                 <span className="icon-tile h-10 w-10 items-center justify-center rounded-xl md:h-12 md:w-12">
                   <Icon name={a.icon} className="h-5 w-5 md:h-6 md:w-6" />
                 </span>

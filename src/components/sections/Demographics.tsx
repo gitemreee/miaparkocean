@@ -26,7 +26,7 @@ export function Demographics() {
 
         {/* Yaş dağılımı çubuğu */}
         <Reveal delay={0.1}>
-          <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 md:p-6">
+          <div className="card-luxe mt-6 p-5 md:p-6">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-ink">Yaş Dağılımı</span>
               <span className="text-xs text-ink/45">İzmit</span>

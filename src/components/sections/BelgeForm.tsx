@@ -57,7 +57,7 @@ export function BelgeForm() {
   }
 
   return (
-    <form name="belge-talep" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={onSubmit} noValidate className="rounded-3xl border border-ink/8 bg-white p-7 shadow-[var(--shadow-card)] md:p-9">
+    <form name="belge-talep" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={onSubmit} noValidate className="card-luxe p-5 md:p-9">
       <input type="hidden" name="form-name" value="belge-talep" />
       <p className="hidden"><label>Boş bırakın: <input name="bot-field" /></label></p>
 

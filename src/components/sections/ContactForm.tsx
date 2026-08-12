@@ -197,7 +197,7 @@ export function ContactForm() {
                 </div>
               </a>
 
-              <div className="rounded-2xl border border-ink/10 bg-white p-5 md:p-6">
+              <div className="card-luxe p-5 md:p-6">
                 <ul className="space-y-5 text-sm">
                   {contact.phones.map((p) => (
                     <li key={p.href}>

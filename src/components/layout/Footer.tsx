@@ -30,17 +30,32 @@ export function Footer() {
               İzmit MİA Bölgesi'nde 600 daireden oluşan modern yaşam projesi. Tasarrufa dayalı faizsiz finansman, 60 ay vade ve %0 faiz ile.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-end gap-x-10 gap-y-6">
-              <div>
+            {/* Yapımcı ve satıcı yan yana: etiketler aynı hizada başlar,
+                logolar eşit yükseklikte bir bantta ortalanır. Optik ağırlıkları
+                denk olsun diye YKB (dar ve dikey) biraz daha büyük durur. */}
+            <div className="mt-8 grid max-w-md grid-cols-2 gap-x-6 sm:gap-x-10">
+              <div className="border-r border-cream/15 pr-6 sm:pr-10">
                 <div className="eyebrow text-logo-light">Yapımcı</div>
-                <a href="https://ykbkoop.com" target="_blank" rel="noopener noreferrer" aria-label="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="mt-3 inline-block transition-opacity hover:opacity-80">
-                  <YkbLogo className="h-16 w-auto text-cream" />
+                <a
+                  href="https://ykbkoop.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="S.S. Yahya Kaptan Birlik Yapı Kooperatifi"
+                  className="mt-4 flex h-14 items-center transition-opacity hover:opacity-80"
+                >
+                  <YkbLogo className="h-14 w-auto text-cream" />
                 </a>
               </div>
               <div>
                 <div className="eyebrow text-logo-light">{site.sellerRole}</div>
-                <a href="https://oceangayrimenkul41.com" target="_blank" rel="noopener noreferrer" aria-label="Ocean Gayrimenkul" className="mt-3 inline-flex h-16 items-center transition-opacity hover:opacity-80">
-                  <img src="/ocean-logo-white.webp" alt="Ocean Gayrimenkul" className="h-12 w-auto" width={180} height={75} />
+                <a
+                  href="https://oceangayrimenkul41.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Ocean Gayrimenkul"
+                  className="mt-4 flex h-14 items-center transition-opacity hover:opacity-80"
+                >
+                  <img src="/ocean-logo-white.webp" alt="Ocean Gayrimenkul" className="h-9 w-auto" width={180} height={75} />
                 </a>
               </div>
             </div>

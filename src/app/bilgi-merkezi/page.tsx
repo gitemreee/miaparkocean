@@ -47,7 +47,7 @@ export default function BilgiMerkeziPage() {
                     <Reveal key={a.slug} delay={(i % 3) * 0.06}>
                       <Link
                         href={`/bilgi-merkezi/${a.slug}`}
-                        className="group flex h-full flex-col rounded-2xl border border-ocean/8 bg-pearl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-bronze/40 hover:shadow-[var(--shadow-card)]"
+                        className="card-luxe group flex h-full flex-col p-5 md:p-6"
                       >
                         <div className="flex items-center gap-2">
                           <FileText className="h-4 w-4 text-bronze" />

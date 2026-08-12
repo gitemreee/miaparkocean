@@ -23,7 +23,7 @@ export function TrustSystem() {
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {trustSystem.controls.map((c, i) => (
             <Reveal key={c.n} delay={(i % 3) * 0.06}>
-              <div className="flex h-full gap-4 rounded-2xl border border-ocean/8 bg-cream p-6 transition-colors hover:border-bronze/40">
+              <div className="card-luxe flex h-full gap-3 p-4 md:gap-4 md:p-6">
                 <span className="font-display text-3xl leading-none text-bronze/40">
                   {String(c.n).padStart(2, "0")}
                 </span>
