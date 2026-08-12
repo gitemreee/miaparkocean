@@ -553,6 +553,26 @@
     mask-image: url("/brand/wave-mask-base.png");
   }
 
+  /* Bölümün ALT kenarı dalga şeklinde biter.
+     Sayfa zemini ekrana sabit bir gradyan olduğu için, dalganın altını sabit
+     bir renkle doldurmak her kaydırma konumunda tutmuyor ve ince bir çizgi
+     bırakıyordu. Bunun yerine bölümün KENDİSİNİ kesiyoruz: altındaki sayfa
+     olduğu gibi görünür, eşleştirilecek renk kalmaz. */
+  .wave-clip-end {
+    --wave-h: 52px;
+    -webkit-mask-image: url("/brand/wave-mask-end.png"), linear-gradient(#000, #000);
+    mask-image: url("/brand/wave-mask-end.png"), linear-gradient(#000, #000);
+    -webkit-mask-size: 100% var(--wave-h), 100% calc(100% - var(--wave-h) + 1px);
+    mask-size: 100% var(--wave-h), 100% calc(100% - var(--wave-h) + 1px);
+    -webkit-mask-position: bottom center, top center;
+    mask-position: bottom center, top center;
+    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-repeat: no-repeat, no-repeat;
+  }
+  @media (min-width: 768px) {
+    .wave-clip-end { --wave-h: 84px; }
+  }
+
   .wave-divider {
     position: relative;
     display: block;

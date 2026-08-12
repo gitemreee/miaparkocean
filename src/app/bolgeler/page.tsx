@@ -4,7 +4,7 @@ import { MapPin, Car, ArrowRight } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
-import { WaveDivider } from "@/components/ui/Wave";
+import { WaveDivider, WaveSectionEnd } from "@/components/ui/Wave";
 import { locations, locationGroups } from "@/data/locations";
 import { site } from "@/data/site";
 import { graph, breadcrumbJsonLd, abs } from "@/lib/seo";
@@ -101,8 +101,8 @@ export default function BolgelerPage() {
         );
       })}
 
-      <section className="section-dark">
-        <WaveDivider tone="paper" flip className="h-[52px] md:h-[84px]" />
+      <section className="section-dark wave-clip-end">
+        <WaveDivider flip className="h-[52px] md:h-[84px]" />
         <div className="container-luxe relative z-10 py-16 text-center md:py-20">
           <h2 className="mx-auto max-w-2xl text-balance text-3xl leading-tight text-cream md:text-4xl">
             Bölgenizi listede bulamadınız mı?
@@ -115,7 +115,7 @@ export default function BolgelerPage() {
             İletişime Geçin <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-        <WaveDivider tone="paper" className="h-[52px] md:h-[84px]" />
+        <WaveSectionEnd className="h-[52px] md:h-[84px]" />
       </section>
     </>
   );

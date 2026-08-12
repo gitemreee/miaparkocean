@@ -207,6 +207,15 @@ def main() -> None:
     )
     print("wave-mask.png")
 
+    # ---------- 2a) Bölüm sonu maskesi ----------
+    # Alt siluetin ÜSTÜ opak. Koyu bir bölümün ALT kenarına `mask-image`
+    # olarak verilince bölüm dalga şeklinde biter; altındaki sayfa olduğu
+    # gibi görünür, dolgu rengini sayfaya tutturmaya gerek kalmaz.
+    to_mask_png((np.arange(h)[:, None] <= bottom[None, :]) * 255).save(
+        OUT / "wave-mask-end.png", optimize=True
+    )
+    print("wave-mask-end.png")
+
     # ---------- 2b) Taban maskesi ----------
     # Yalnızca dalganın ALT siluetinin altı. Bölüm geçişlerinde sayfa zemini
     # buradan başlar; dalga kurdeleleri fotoğrafın üstüne biner ve
@@ -251,6 +260,12 @@ export const WAVE_MASK = "/brand/wave-mask.png";
  * saydam kalır.
  */
 export const WAVE_MASK_BASE = "/brand/wave-mask-base.png";
+
+/**
+ * Alt siluetin ÜSTÜ opak. Bir bölümün alt kenarına maske olarak verilince
+ * bölüm dalga şeklinde biter, altındaki sayfa olduğu gibi görünür.
+ */
+export const WAVE_MASK_END = "/brand/wave-mask-end.png";
 
 /**
  * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları

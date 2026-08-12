@@ -24,6 +24,12 @@ export const WAVE_MASK = "/brand/wave-mask.png";
 export const WAVE_MASK_BASE = "/brand/wave-mask-base.png";
 
 /**
+ * Alt siluetin ÜSTÜ opak. Bir bölümün alt kenarına maske olarak verilince
+ * bölüm dalga şeklinde biter, altındaki sayfa olduğu gibi görünür.
+ */
+export const WAVE_MASK_END = "/brand/wave-mask-end.png";
+
+/**
  * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları
  * dolu. Koyu fotoğraf üstünde alt katman olarak kullanılır.
  */

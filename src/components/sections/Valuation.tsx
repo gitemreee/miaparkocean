@@ -1,13 +1,13 @@
 import { TrendingUp, Info, ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
-import { WaveDivider } from "@/components/ui/Wave";
+import { WaveDivider, WaveSectionEnd } from "@/components/ui/Wave";
 import { valuation } from "@/data/valuation";
 
 export function Valuation() {
   return (
-    <section id="degerleme" className="section-dark">
+    <section id="degerleme" className="section-dark wave-clip-end">
       {/* Beyaz sayfadan okyanusa dalga geçişi */}
-      <WaveDivider tone="paper" flip className="h-[52px] md:h-[84px]" />
+      <WaveDivider flip className="h-[52px] md:h-[84px]" />
 
       <div className="container-luxe relative z-10 py-16 text-white md:py-24">
         <Reveal>
@@ -107,7 +107,7 @@ export function Valuation() {
       </div>
 
       {/* Okyanustan beyaz sayfaya geri dönüş */}
-      <WaveDivider tone="paper" className="h-[52px] md:h-[84px]" />
+      <WaveSectionEnd className="h-[52px] md:h-[84px]" />
     </section>
   );
 }

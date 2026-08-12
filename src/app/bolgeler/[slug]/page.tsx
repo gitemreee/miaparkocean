@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { MapPin, Car, ArrowRight, Phone, MessageCircle, ChevronRight, Check } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
-import { WaveDivider } from "@/components/ui/Wave";
+import { WaveDivider, WaveSectionEnd } from "@/components/ui/Wave";
 import { Faq } from "@/components/sections/Faq";
 import { locations, locationBySlug } from "@/data/locations";
 import { site, contact } from "@/data/site";
@@ -244,8 +244,8 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
       )}
 
       {/* Kapanış CTA */}
-      <section className="section-dark">
-        <WaveDivider tone="paper" flip className="h-[52px] md:h-[84px]" />
+      <section className="section-dark wave-clip-end">
+        <WaveDivider flip className="h-[52px] md:h-[84px]" />
         <div className="container-luxe relative z-10 py-16 text-center md:py-20">
           <span className="eyebrow text-ice/60">{loc.fullName}</span>
           <h2 className="mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight text-cream md:text-4xl">
@@ -265,7 +265,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
             </Link>
           </div>
         </div>
-        <WaveDivider tone="paper" className="h-[52px] md:h-[84px]" />
+        <WaveSectionEnd className="h-[52px] md:h-[84px]" />
       </section>
     </>
   );

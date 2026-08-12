@@ -43,7 +43,7 @@ type WaveEdgeProps = {
  * böylece konum sınıfları burada çakışmaz.
  */
 export function WaveEdge({
-  fill = "linear-gradient(180deg,#f4fbfd,#eef8fa 55%,#e8f6f9)",
+  fill = "linear-gradient(180deg,#eaf7fa,#f1fafb 55%,#f1fafb)",
   haze = "linear-gradient(180deg,rgba(233,246,249,0) 0%,rgba(233,246,249,0.1) 34%,rgba(235,247,250,0.34) 60%,rgba(238,249,251,0.72) 82%,rgba(241,250,251,0.95) 100%)",
   hazeHeight = "h-[260%]",
   ribbon = true,
@@ -80,17 +80,63 @@ export function WaveEdge({
   );
 }
 
-/** Geriye dönük ad — eski çağrı yerleri için. */
+/**
+ * Koyu bölümlerin kenarındaki dalga.
+ *
+ * `flip` = koyu bölüme GİRİŞ (üst kenar): eriyen bant koyu tarafta olmalı,
+ * yoksa dalganın hemen altında parlak bir şerit ve keskin bir çizgi kalır.
+ * `flip` yok = koyu bölümden ÇIKIŞ (alt kenar): eriyen bant açık tarafta,
+ * yani varsayılan.
+ */
 export function WaveDivider({
   flip = false,
   className = "h-[54px] md:h-[88px]",
 }: {
-  tone?: string;
   flip?: boolean;
   className?: string;
-  animated?: boolean;
 }) {
-  return <WaveEdge flip={flip} className={className} />;
+  return (
+    <WaveEdge
+      flip={flip}
+      className={className}
+      haze={
+        flip
+          ? "linear-gradient(180deg,rgba(91,171,195,0) 0%,rgba(70,156,187,0.32) 36%,rgba(40,128,165,0.66) 70%,rgba(18,104,140,0.92) 100%)"
+          : undefined
+      }
+      hazeHeight={flip ? "h-[300%]" : undefined}
+    />
+  );
+}
+
+/**
+ * Koyu bölümün ALT kenarı: bölüm `.wave-clip-end` ile dalga şeklinde kesilir,
+ * bu bileşen de kesim çizgisinin üzerine dalganın kendi renkli şeridini koyar.
+ * Şerit ve kesim aynı varlıktan geldiği için birebir hizalıdır.
+ *
+ * Bölümün `position: relative` olması gerekir (`.section-dark` zaten öyle).
+ */
+export function WaveSectionEnd({
+  className = "h-[52px] md:h-[84px]",
+}: {
+  className?: string;
+}) {
+  return (
+    <div
+      className={`pointer-events-none absolute inset-x-0 bottom-0 ${className}`}
+      aria-hidden="true"
+    >
+      {/* Koyu zemin dalgaya doğru açılsın diye yumuşak bir sis */}
+      <span
+        className="absolute inset-x-0 bottom-0 h-[300%]"
+        style={{
+          backgroundImage:
+            "linear-gradient(180deg,rgba(226,244,249,0) 0%,rgba(226,244,249,0.1) 40%,rgba(230,246,250,0.3) 70%,rgba(234,247,250,0.55) 100%)",
+        }}
+      />
+      <span className="wave-ribbon absolute inset-0" />
+    </div>
+  );
 }
 
 /** Serbest akan dalga şeridi — bant süslemesi. */
