@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Waves, Dumbbell, Flame, Baby, Car, Phone, Globe, Instagram, ShieldCheck } from "lucide-react";
 import { contact, socials } from "@/data/site";
-import { WAVE_PATHS } from "@/components/ui/Wave";
+import { WaveEdge } from "@/components/ui/Wave";
 
 export const metadata: Metadata = {
   title: "Basın Açıklaması — MİA PARK OCEAN",
@@ -29,22 +29,20 @@ export default function BasinAciklamasiPage() {
       {/* Üst marka bandı — okyanus gradyanı + logodaki dalga */}
       <div className="section-dark relative">
         <div className="container-luxe relative z-10 flex items-center justify-between pb-20 pt-7 md:pb-24">
-          <Link href="/" className="inline-flex items-center gap-3 rounded-2xl bg-white px-4 py-3" aria-label="MİA PARK OCEAN ana sayfa">
-            <img src="/brand/mark-ocean-trim.webp" alt="" aria-hidden="true" width={40} height={37} className="h-9 w-auto" />
+          <Link href="/" className="inline-flex items-center gap-3" aria-label="MİA PARK OCEAN ana sayfa">
+            <img src="/brand/mark-ocean-white.webp" alt="" aria-hidden="true" width={40} height={37} className="h-9 w-auto" />
             <span className="leading-none">
-              <span className="block font-display text-base tracking-[0.18em] text-ink">MİA PARK OCEAN</span>
-              <span className="eyebrow mt-1.5 block text-[0.5rem] tracking-[0.26em] text-ink/45">İzmit MİA Bölgesi</span>
+              <span className="block font-display text-base tracking-[0.18em] text-white">MİA PARK OCEAN</span>
+              <span className="eyebrow mt-1.5 block text-[0.5rem] tracking-[0.26em] text-white/55">İzmit MİA Bölgesi</span>
             </span>
           </Link>
           <span className="pill pill-light hidden sm:inline-flex">
             <ShieldCheck className="h-4 w-4" /> Basın Bülteni
           </span>
         </div>
-        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 bottom-0 block h-[38px] w-full md:h-[58px]" aria-hidden="true">
-          <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
-          <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
-          <path d={WAVE_PATHS.front} fill="#ffffff" />
-        </svg>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0">
+          <WaveEdge className="h-[38px] md:h-[58px]" />
+        </div>
       </div>
 
       {/* Başlık — ortalanmış hoş geldin girişi (3 satır) */}

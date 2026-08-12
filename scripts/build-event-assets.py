@@ -20,7 +20,6 @@ Kullanım:
 from __future__ import annotations
 
 import os
-import re
 
 import numpy as np
 import segno
@@ -64,10 +63,10 @@ EVENT = {
 QR_DAVETIYE = "https://miaparkocean.com/davetiye/"
 QR_BASIN = "https://miaparkocean.com/basin-aciklamasi/"
 
-# Sitedeki dalga siluetleri (src/components/ui/Wave.tsx ile aynı)
-WAVE_BACK = "M0,60 C130,60 200,46 380,54 C540,61 600,78 780,72 C960,66 1020,44 1200,52 C1310,57 1380,74 1440,86 L1440,120 L0,120 Z"
-WAVE_MID = "M0,74 C140,74 210,34 390,42 C550,49 610,68 790,62 C970,56 1030,28 1210,36 C1320,41 1385,62 1440,76 L1440,120 L0,120 Z"
-WAVE_FRONT = "M0,88 C160,88 220,18 400,26 C560,33 620,54 800,48 C980,42 1040,12 1220,20 C1330,25 1390,48 1440,62 L1440,120 L0,120 Z"
+# Dalga: logodan birebir kesilmiş varlıklar (scripts/build-wave.py üretir).
+# Baskı çıktıları da sitedeki dalganın AYNISINI kullanır.
+WAVE_MASK_PNG = os.path.join(ROOT, "public", "brand", "wave-mask.png")
+WAVE_PNG = os.path.join(ROOT, "public", "brand", "wave.png")
 
 
 # --------------------------------------------------------------------------
@@ -92,76 +91,40 @@ def gradient(size, stops=BRAND_STOPS, angle: float = 0.62) -> Image.Image:
     return Image.fromarray(arr.astype(np.uint8), "RGB").convert("RGBA")
 
 
-def parse_path(d: str, steps: int = 26) -> list[tuple[float, float]]:
-    """SVG M/C/L/Z yolunu poligon noktalarına çevirir (viewBox 1440x120)."""
-    tokens = re.findall(r"[MCLZ]|-?\d*\.?\d+", d)
-    pts: list[tuple[float, float]] = []
-    i, cur, cmd = 0, (0.0, 0.0), "M"
-    while i < len(tokens):
-        t = tokens[i]
-        if t in "MCLZ":
-            cmd = t
-            i += 1
-            if cmd == "Z":
-                break
-            continue
-        if cmd == "M":
-            cur = (float(tokens[i]), float(tokens[i + 1]))
-            pts.append(cur)
-            i += 2
-        elif cmd == "L":
-            cur = (float(tokens[i]), float(tokens[i + 1]))
-            pts.append(cur)
-            i += 2
-        elif cmd == "C":
-            p1 = (float(tokens[i]), float(tokens[i + 1]))
-            p2 = (float(tokens[i + 2]), float(tokens[i + 3]))
-            p3 = (float(tokens[i + 4]), float(tokens[i + 5]))
-            p0 = cur
-            for s in range(1, steps + 1):
-                u = s / steps
-                x = (1 - u) ** 3 * p0[0] + 3 * (1 - u) ** 2 * u * p1[0] + 3 * (1 - u) * u**2 * p2[0] + u**3 * p3[0]
-                y = (1 - u) ** 3 * p0[1] + 3 * (1 - u) ** 2 * u * p1[1] + 3 * (1 - u) * u**2 * p2[1] + u**3 * p3[1]
-                pts.append((x, y))
-            cur = p3
-            i += 6
-        else:
-            i += 1
-    return pts
+def wave_shape(width: int, height: int, flip: bool = False) -> Image.Image:
+    """Logodaki dalganın dolgulu maskesi (L kanalı), istenen boyutta."""
+    m = Image.open(WAVE_MASK_PNG).convert("RGBA").split()[3]
+    m = m.resize((width, height), Image.LANCZOS)
+    return m.transpose(Image.FLIP_TOP_BOTTOM) if flip else m
 
 
-def wave_layer(width: int, height: int, d: str, color, opacity: float = 1.0, flip: bool = False) -> Image.Image:
-    """Dalga siluetini istenen boyutta çizer (4x süper örnekleme ile pürüzsüz)."""
-    ss = 4
-    img = Image.new("RGBA", (width * ss, height * ss), (0, 0, 0, 0))
-    dr = ImageDraw.Draw(img)
-    poly = [(x / 1440 * width * ss, y / 120 * height * ss) for x, y in parse_path(d)]
-    dr.polygon(poly, fill=(*color, int(255 * opacity)))
-    img = img.resize((width, height), Image.LANCZOS)
-    return img.transpose(Image.FLIP_TOP_BOTTOM) if flip else img
+def wave_layer(width: int, height: int, color, opacity: float = 1.0, flip: bool = False) -> Image.Image:
+    """Dalgayı düz bir renkle boyar."""
+    img = Image.new("RGBA", (width, height), (*color, 255))
+    mask = wave_shape(width, height, flip)
+    img.putalpha(Image.eval(mask, lambda v: int(v * opacity)))
+    return img
 
 
 def wave_stack(width: int, height: int, colors=(ICE, (243, 248, 252), WHITE), flip: bool = False) -> Image.Image:
-    """Logodaki üç kurdele dizilimi."""
+    """Aynı dalganın üç katmanı — logodaki kurdele derinliğini verir."""
     layer = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    for d, c, o in ((WAVE_BACK, colors[0], 0.5), (WAVE_MID, colors[1], 0.85), (WAVE_FRONT, colors[2], 1.0)):
-        layer.alpha_composite(wave_layer(width, height, d, c, o, flip))
+    offsets = (int(height * 0.22), int(height * 0.11), 0)
+    for c, o, dy in zip(colors, (0.5, 0.85, 1.0), offsets):
+        piece = wave_layer(width, height, c, o, flip)
+        layer.alpha_composite(piece, (0, dy) if not flip else (0, 0))
     return layer
 
 
 def wave_band(width: int, wave_h: int, band_h: int) -> Image.Image:
-    """Üst kenarı logodaki dalga olan gradyan bant (sayfanın altına oturur).
-
-    Üç kurdele farklı opaklıkta üst üste binerek logodaki katmanlı dalgayı verir.
-    """
+    """Üst kenarı logodaki dalga olan gradyan bant (sayfanın altına oturur)."""
     total = wave_h + band_h
     out = Image.new("RGBA", (width, total), (0, 0, 0, 0))
     grad = gradient((width, total))
 
-    for d, opacity, offset in ((WAVE_BACK, 0.45, 0), (WAVE_MID, 0.7, int(wave_h * 0.12)), (WAVE_FRONT, 1.0, int(wave_h * 0.26))):
+    for opacity, offset in ((0.45, 0), (0.7, int(wave_h * 0.12)), (1.0, int(wave_h * 0.26))):
         mask = Image.new("L", (width, total), 0)
-        shape = wave_layer(width, wave_h, d, (255, 255, 255), 1.0)
-        mask.paste(shape.split()[3], (0, offset))
+        mask.paste(wave_shape(width, wave_h), (0, offset))
         ImageDraw.Draw(mask).rectangle([0, wave_h + offset, width, total], fill=255)
         layer = grad.copy()
         layer.putalpha(Image.eval(mask, lambda v: int(v * opacity)))

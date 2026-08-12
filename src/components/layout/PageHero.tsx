@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { SmartImage } from "@/components/ui/SmartImage";
-import { WAVE_PATHS } from "@/components/ui/Wave";
+import { WaveEdge } from "@/components/ui/Wave";
 
 type PageHeroProps = {
   eyebrow: string;
@@ -32,17 +32,10 @@ export function PageHero({ eyebrow, title, lead, image }: PageHeroProps) {
         {lead && <p className="mt-4 max-w-2xl text-pretty text-[0.95rem] leading-relaxed text-ice/80 md:mt-6 md:text-lg">{lead}</p>}
       </div>
 
-      {/* İmza dalga */}
-      <svg
-        viewBox="0 0 1440 120"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 bottom-0 block h-[42px] w-full md:h-[68px]"
-        aria-hidden="true"
-      >
-        <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
-        <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
-        <path d={WAVE_PATHS.front} fill="#ffffff" />
-      </svg>
+      {/* İmza dalga — logodaki dalganın kendisi */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0">
+        <WaveEdge className="h-[40px] md:h-[68px]" />
+      </div>
     </section>
   );
 }

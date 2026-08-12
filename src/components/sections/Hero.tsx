@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Ban, Percent, UserRoundX, CalendarClock } from "lucide-react";
 import { SmartImage } from "@/components/ui/SmartImage";
-import { WAVE_PATHS } from "@/components/ui/Wave";
+import { WaveEdge } from "@/components/ui/Wave";
 
 type Slide = {
   video?: string;
@@ -130,20 +130,15 @@ export function Hero() {
           </div>
         </div>
 
-        {/* İmza: logodaki dalga sahneyi beyaz sayfaya bağlar */}
+        {/* İmza: logodaki dalganın kendisi sahneyi sayfaya bağlar */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          {/* sabit dalga siluetı — logodaki kurdele dizilimi */}
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block h-[42px] w-full md:h-[72px]">
-            <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
-            <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
-            <path d={WAVE_PATHS.front} fill="#ffffff" />
-          </svg>
+          <WaveEdge className="h-[44px] md:h-[76px]" />
         </div>
       </div>
 
       {/* Avantaj kartları — dalganın üstüne biner */}
       <div className="container-luxe">
-        <div className="relative z-10 -mt-8 grid grid-cols-2 gap-3 md:-mt-14 md:grid-cols-4 md:gap-4">
+        <div className="relative z-10 -mt-6 grid grid-cols-2 gap-2.5 md:-mt-14 md:grid-cols-4 md:gap-4">
           {perks.map((p, i) => (
             <motion.div
               key={p.title}
@@ -151,13 +146,17 @@ export function Hero() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-              className="card-luxe p-5"
+              className="card-luxe p-3.5 md:p-5"
             >
-              <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl">
-                <p.icon className="h-5 w-5" strokeWidth={2} />
+              <span className="icon-tile h-9 w-9 items-center justify-center rounded-lg md:h-11 md:w-11 md:rounded-xl">
+                <p.icon className="h-4 w-4 md:h-5 md:w-5" strokeWidth={2} />
               </span>
-              <div className="mt-3.5 text-lg font-bold tracking-tight text-ink">{p.title}</div>
-              <div className="text-sm leading-relaxed text-ink/55">{p.text}</div>
+              <div className="mt-2.5 text-[0.95rem] font-bold leading-tight tracking-tight text-ink md:mt-3.5 md:text-lg">
+                {p.title}
+              </div>
+              <div className="mt-0.5 text-[0.78rem] leading-snug text-ink/55 md:text-sm md:leading-relaxed">
+                {p.text}
+              </div>
             </motion.div>
           ))}
         </div>

@@ -16,7 +16,6 @@ Kullanım:
 from __future__ import annotations
 
 import os
-import re
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -47,8 +46,9 @@ FOREST = (11, 110, 79)
 
 BRAND_STOPS = [(0.0, NAVY), (0.28, MIDNIGHT), (0.62, LOGO_BLUE), (0.85, LOGO_MID), (1.0, LOGO_BRIGHT)]
 
-WAVE_FRONT = "M0,88 C15,83 60,67 90,58 C120,49 150,41 180,36 C210,30 240,27 270,26 C300,25 330,29 360,30 C390,30 420,30 450,29 C480,28 510,26 540,24 C570,23 600,20 630,20 C660,20 690,25 720,26 C750,27 780,24 810,25 C840,26 870,32 900,33 C930,34 960,31 990,31 C1020,31 1050,33 1080,31 C1110,30 1140,25 1170,25 C1200,24 1230,27 1260,31 C1290,35 1320,41 1350,47 C1380,53 1425,62 1440,66 L1440,120 L0,120 Z"
-WAVE_MID_P = "M0,53 C15,49 60,36 90,30 C120,24 150,19 180,17 C210,16 240,21 270,21 C300,21 330,20 360,20 C390,19 420,19 450,17 C480,16 510,12 540,12 C570,12 600,15 630,16 C660,17 690,15 720,16 C750,17 780,21 810,22 C840,23 870,24 900,24 C930,24 960,24 990,22 C1020,21 1050,17 1080,17 C1110,17 1140,17 1170,20 C1200,22 1230,28 1260,33 C1290,38 1320,47 1350,50 C1380,54 1425,53 1440,54 L1440,120 L0,120 Z"
+# Dalga: logodan birebir kesilmiş maske (scripts/build-wave.py üretir).
+# Katalog da sitedeki dalganın AYNISINI kullanır.
+WAVE_MASK_PNG = os.path.join(ROOT, "public", "brand", "wave-mask.png")
 
 # ---------------------------------------------------------------- veri
 PROJECT = {
@@ -127,41 +127,14 @@ def gradient(size, stops=BRAND_STOPS, angle: float = 0.62) -> Image.Image:
     return Image.fromarray(arr.astype(np.uint8), "RGB").convert("RGBA")
 
 
-def parse_path(d: str, steps: int = 22):
-    tok = re.findall(r"[MCLZ]|-?\d*\.?\d+", d)
-    pts, i, cur, cmd = [], 0, (0.0, 0.0), "M"
-    while i < len(tok):
-        t = tok[i]
-        if t in "MCLZ":
-            cmd = t; i += 1
-            if cmd == "Z": break
-            continue
-        if cmd in "ML":
-            cur = (float(tok[i]), float(tok[i + 1])); pts.append(cur); i += 2
-        elif cmd == "C":
-            p1 = (float(tok[i]), float(tok[i + 1])); p2 = (float(tok[i + 2]), float(tok[i + 3])); p3 = (float(tok[i + 4]), float(tok[i + 5]))
-            p0 = cur
-            for s in range(1, steps + 1):
-                u = s / steps
-                pts.append((
-                    (1 - u) ** 3 * p0[0] + 3 * (1 - u) ** 2 * u * p1[0] + 3 * (1 - u) * u ** 2 * p2[0] + u ** 3 * p3[0],
-                    (1 - u) ** 3 * p0[1] + 3 * (1 - u) ** 2 * u * p1[1] + 3 * (1 - u) * u ** 2 * p2[1] + u ** 3 * p3[1],
-                ))
-            cur = p3; i += 6
-        else:
-            i += 1
-    return pts
-
-
-def wave(width: int, height: int, d: str, color, opacity: float = 1.0, flip: bool = False) -> Image.Image:
-    ss = 3
-    im = Image.new("RGBA", (width * ss, height * ss), (0, 0, 0, 0))
-    ImageDraw.Draw(im).polygon(
-        [(x / 1440 * width * ss, y / 120 * height * ss) for x, y in parse_path(d)],
-        fill=(*color, int(255 * opacity)),
-    )
-    im = im.resize((width, height), Image.LANCZOS)
-    return im.transpose(Image.FLIP_TOP_BOTTOM) if flip else im
+def wave(width: int, height: int, color, opacity: float = 1.0, flip: bool = False) -> Image.Image:
+    """Logodaki dalgayı istenen boyutta, istenen renkte çizer."""
+    mask = Image.open(WAVE_MASK_PNG).convert("RGBA").split()[3].resize((width, height), Image.LANCZOS)
+    if flip:
+        mask = mask.transpose(Image.FLIP_TOP_BOTTOM)
+    im = Image.new("RGBA", (width, height), (*color, 255))
+    im.putalpha(Image.eval(mask, lambda v: int(v * opacity)))
+    return im
 
 
 def photo(name: str, box, radius: int = 0) -> Image.Image:
@@ -222,8 +195,10 @@ def para(dr, xy, text, font, fill, max_w, leading):
     return y
 
 
-def logo_img(width: int) -> Image.Image:
-    im = Image.open(os.path.join(BRAND, "logo-ocean-trim.png")).convert("RGBA")
+def logo_img(width: int, on_dark: bool = False) -> Image.Image:
+    """Logo. Koyu mavi zeminde beyaz sürüm kullanılır (plaket yok)."""
+    name = "logo-ocean-white.png" if on_dark else "logo-ocean-trim.png"
+    im = Image.open(os.path.join(BRAND, name)).convert("RGBA")
     return im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
 
 
@@ -288,11 +263,9 @@ def page_cover():
     page.alpha_composite(scrim)
     dr = ImageDraw.Draw(page)
 
-    # beyaz logo plaketi
-    lg = logo_img(560)
-    plate = rounded((lg.width + 120, lg.height + 110), 40, WHITE)
-    plate.alpha_composite(lg, (60, 55))
-    page.alpha_composite(plate, ((W - plate.width) // 2, 430))
+    # Koyu zeminde logo beyaz durur — plaket yok
+    lg = logo_img(600, on_dark=True)
+    page.alpha_composite(lg, ((W - lg.width) // 2, 440))
 
     track(dr, (W / 2, 1180), PROJECT["tagline"].upper(), sans_b(30), LOGO_LIGHT, 9, anchor="ma")
     dr.text((W / 2, 1250), "Tasarrufa dayalı faizsiz finansmanla", font=sans(34), fill=(*ICE, 255), anchor="ma")
@@ -313,7 +286,7 @@ def page_cover():
 
     # alt dalga + künye
     band_h = 300
-    wv = wave(W, 150, WAVE_FRONT, WHITE, 1.0)
+    wv = wave(W, 150, WHITE, 1.0)
     page.alpha_composite(wv, (0, H - band_h - 150 + 4))
     dr.rectangle([0, H - band_h, W, H], fill=WHITE)
     y = H - band_h + 46

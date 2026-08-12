@@ -253,7 +253,8 @@
   .card-luxe {
     position: relative;
     border-radius: 1.25rem;
-    background: var(--color-paper);
+    /* Bembeyaz değil: logodaki turkuazdan beyaza çok hafif bir yıkama */
+    background-image: linear-gradient(168deg, rgba(255, 255, 255, 0.96), rgba(238, 249, 252, 0.9));
     border: 1px solid color-mix(in srgb, var(--color-sapphire) 12%, transparent);
     box-shadow: var(--shadow-card);
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
@@ -263,9 +264,11 @@
     border-color: color-mix(in srgb, var(--color-logo-bright) 55%, transparent);
     box-shadow: var(--shadow-glow);
   }
-  /* Dalga imzası — her kartın sağ üst köşesinde logodaki eğrinin bir parçası */
+  /* Dalga imzası — kartın sağ üst köşesinde logodaki dalganın kendisi.
+     Şeridin kendi pikselleri kullanılır; başka bir eğri çizilmez. */
   .card-luxe::after,
-  .card-gradient-border::after {
+  .card-gradient-border::after,
+  .card-wave-mark {
     content: "";
     position: absolute;
     right: 0;
@@ -273,17 +276,22 @@
     /* Kart genişliğine orantılı: küçük kartlarda köşeyi kaplamaz */
     width: 40%;
     max-width: 124px;
-    height: 24px;
+    height: 13px;
     border-top-right-radius: inherit;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%239cd8e4' stop-opacity='0'/%3E%3Cstop offset='0.45' stop-color='%2348b4cc' stop-opacity='0.34'/%3E%3Cstop offset='1' stop-color='%2318789c' stop-opacity='0.62'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0,0 L120,0 L120,34 C102,34 92,20 74,20 C54,20 44,36 24,36 C14,36 6,32 0,26 Z' fill='url(%23g)'/%3E%3C/svg%3E");
-    background-size: 100% 100%;
+    /* Dalganın kendi pikselleri — ince bir tepe çizgisi olarak */
+    background-image: url("/brand/wave.webp");
+    background-size: 200% 340%;
+    background-position: 100% 0;
     background-repeat: no-repeat;
+    /* Sola doğru eriyerek biter */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 62%);
+    mask-image: linear-gradient(90deg, transparent, #000 62%);
     pointer-events: none;
-    opacity: 0.85;
+    opacity: 0.6;
     transition: opacity 0.35s, width 0.35s;
   }
   .card-luxe:hover::after,
-  .card-gradient-border:hover::after { opacity: 1; width: 52%; }
+  .card-gradient-border:hover::after { opacity: 1; width: 44%; }
 
   .glass {
     background-color: color-mix(in srgb, #ffffff 64%, transparent);
@@ -303,7 +311,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 1.25rem;
-    background: var(--color-paper);
+    background-image: linear-gradient(168deg, rgba(255, 255, 255, 0.96), rgba(238, 249, 252, 0.9));
     z-index: 0;
   }
   .card-gradient-border::before {
@@ -462,7 +470,36 @@
     margin-bottom: 0.4rem;
   }
 
-  /* ---------- Dalga ayırıcı ---------- */
+  /* ---------- Dalga ----------
+     Sitedeki TEK dalga logonun altındaki dalgadır. `scripts/build-wave.py`
+     onu logodan birebir keser; buradaki iki sınıf o varlıkları taşır:
+       .wave-ribbon → şeridin kendisi (logodaki renkler)
+       .wave-fill   → aynı şeklin dolgulu maskesi (üst kenarı dalga, altı dolu)
+     Başka hiçbir yerde elle çizilmiş dalga eğrisi yoktur. */
+  .wave-ribbon {
+    background-image: url("/brand/wave.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .wave-fill,
+  .wave-solid {
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+  .wave-fill {
+    -webkit-mask-image: url("/brand/wave-mask.png");
+    mask-image: url("/brand/wave-mask.png");
+  }
+  .wave-solid {
+    -webkit-mask-image: url("/brand/wave-mask-solid.png");
+    mask-image: url("/brand/wave-mask-solid.png");
+  }
+
   .wave-divider {
     position: relative;
     display: block;
@@ -546,15 +583,17 @@
 }
 .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
 
-@keyframes wave-drift {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+/* Dalga kabarması — tek bir dalga görseli yerinde salınır. Uçları görüş
+   alanına girmediği için tekrar/derz oluşmaz; dalga hiç bozulmaz. */
+@keyframes wave-swell {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-4%, -6px, 0); }
 }
-.wave-drift { animation: wave-drift 22s linear infinite; }
-.wave-drift-slow { animation: wave-drift 34s linear infinite reverse; }
+.wave-swell { animation: wave-swell 26s ease-in-out infinite; }
+.wave-swell-slow { animation: wave-swell 38s ease-in-out infinite reverse; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-  .marquee-track, .wave-drift, .wave-drift-slow, .bg-gradient-flow { animation: none; }
+  .marquee-track, .wave-swell, .wave-swell-slow, .bg-gradient-flow { animation: none; }
   html { scroll-behavior: auto; }
 }

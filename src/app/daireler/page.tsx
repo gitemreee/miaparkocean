@@ -25,21 +25,21 @@ export default function DairelerPage() {
       />
 
       {/* Karşılaştırma şeridi */}
-      <section className="surface-tint border-b border-ocean/8 py-10">
-        <div className="container-luxe grid gap-4 sm:grid-cols-3">
+      <section className="surface-tint border-b border-ink/8 py-6 md:py-10">
+        <div className="container-luxe grid grid-cols-2 gap-2.5 md:gap-4 lg:grid-cols-4">
           {units.map((u, i) => (
             <Reveal key={u.slug} delay={i * 0.08}>
               <Link
                 href={`#${u.slug}`}
-                className="flex items-center justify-between rounded-2xl border border-ocean/10 bg-pearl px-6 py-5 transition-colors hover:border-bronze"
+                className="card-luxe flex h-full items-center justify-between gap-2 px-3.5 py-3 transition-colors md:px-5 md:py-4"
               >
                 <div>
-                  <div className="font-display text-2xl text-ocean">{u.type}</div>
-                  <div className="text-sm text-ocean/60">{u.name}</div>
+                  <div className="font-display text-lg leading-none text-ink md:text-2xl">{u.type}</div>
+                  <div className="mt-1 text-[0.72rem] leading-tight text-ink/55 md:text-sm">{u.name}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-display text-xl text-bronze">{u.area}</div>
-                  <div className="text-xs text-ocean/50">{u.count} adet</div>
+                  <div className="font-display text-[0.95rem] leading-none text-accent md:text-xl">{u.areaValue} m²</div>
+                  <div className="mt-1 text-[0.7rem] text-ink/50 md:text-xs">{u.count} adet</div>
                 </div>
               </Link>
             </Reveal>

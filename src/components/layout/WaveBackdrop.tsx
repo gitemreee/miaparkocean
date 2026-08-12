@@ -1,11 +1,14 @@
-import { WAVE_TILE } from "@/components/ui/Wave";
-
 /**
  * Site arka planı — logodaki dalga.
  *
- * Sabit (fixed) bir katman olarak tüm sayfanın arkasında durur; içerik
- * kaydıkça dalgalar yerinde kalır ve sayfaya sakin bir "okyanus zemini"
- * hissi verir. Bölüm zeminleri yarı saydam olduğu için doku hafifçe görünür.
+ * Üç katman da `/brand/wave.webp`'tir: logonun altındaki dalganın kendisi,
+ * hiç değiştirilmeden kesilmiş orijinal pikseller. Katmanlar farklı ölçek ve
+ * yükseklikte, çok yavaş yatay salınımla akar; uçları hiçbir zaman ekrana
+ * girmediği için ek/derz görünmez.
+ *
+ * Sabit (fixed) durur; içerik kaydıkça dalgalar yerinde kalır ve sayfaya
+ * sakin bir "okyanus zemini" hissi verir. Bölüm zeminleri yarı saydam olduğu
+ * için doku hafifçe görünür.
  *
  * Tamamen dekoratiftir: tıklama almaz, ekran okuyucuya görünmez.
  */
@@ -21,43 +24,25 @@ export function WaveBackdrop() {
       aria-hidden="true"
     >
       {/* Üst yumuşak ışık */}
-      <div className="absolute -top-1/4 left-1/2 h-[70vh] w-[120vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.75),transparent)]" />
+      <div className="absolute -top-1/4 left-1/2 h-[70vh] w-[120vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.7),transparent)]" />
 
-      {/* Katman 1 — en açık, yavaş */}
-      <div className="absolute inset-x-0 top-[16%] h-[28vh] opacity-55">
-        <div className="wave-drift-slow absolute inset-0 w-[200%]">
-          <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-            <path d={WAVE_TILE} fill="#cbe9f1" />
-            <g transform="translate(1440 0)">
-              <path d={WAVE_TILE} fill="#cbe9f1" />
-            </g>
-          </svg>
-        </div>
+      {/* Katman 1 — en yüksek, en soluk */}
+      <div className="absolute inset-x-0 top-[13%] h-[26vh] overflow-hidden">
+        <span className="wave-ribbon wave-swell-slow absolute -left-[24%] top-0 h-full w-[152%] opacity-25" />
       </div>
 
-      {/* Katman 2 — orta ton */}
-      <div className="absolute inset-x-0 top-[44%] h-[32vh] opacity-50">
-        <div className="wave-drift absolute inset-0 w-[200%]">
-          <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-            <path d={WAVE_TILE} fill="#b6e2ee" />
-            <g transform="translate(1440 0)">
-              <path d={WAVE_TILE} fill="#b6e2ee" />
-            </g>
-          </svg>
-        </div>
+      {/* Katman 2 — orta */}
+      <div className="absolute inset-x-0 top-[42%] h-[30vh] overflow-hidden">
+        <span className="wave-ribbon wave-swell absolute -left-[38%] top-0 h-full w-[178%] opacity-22" />
       </div>
 
-      {/* Katman 3 — en koyu turkuaz, altta */}
-      <div className="absolute inset-x-0 bottom-0 h-[34vh] opacity-45">
-        <div className="wave-drift-slow absolute inset-0 w-[200%]">
-          <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-            <path d={WAVE_TILE} fill="#9cd8e4" />
-            <g transform="translate(1440 0)">
-              <path d={WAVE_TILE} fill="#9cd8e4" />
-            </g>
-          </svg>
-        </div>
+      {/* Katman 3 — altta, en belirgin */}
+      <div className="absolute inset-x-0 bottom-0 h-[34vh] overflow-hidden">
+        <span className="wave-ribbon wave-swell-slow absolute -left-[16%] top-0 h-full w-[136%] opacity-30" />
       </div>
+
+      {/* Beyaza doğru yumuşak kapanış — dalgalar metnin altında kalır */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.42),rgba(255,255,255,0.12)_38%,rgba(255,255,255,0.34)_72%,rgba(255,255,255,0.6))]" />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { CalendarDays, Clock, MapPin, Phone, Globe, ArrowRight, Waves, Dumbbell,
 import { launchEvent } from "@/data/event";
 import { contact, site } from "@/data/site";
 import { RsvpForm } from "@/components/sections/RsvpForm";
-import { WAVE_PATHS, WAVE_TILE } from "@/components/ui/Wave";
+import { WaveEdge } from "@/components/ui/Wave";
 
 export const metadata: Metadata = {
   title: "Davetiye — MİA PARK OCEAN Lansman & Basın Toplantısı",
@@ -60,37 +60,21 @@ export default function DavetiyePage() {
           </p>
         </div>
 
-        {/* akan kurdele + sabit dalga: logodaki dalganın sayfaya geçişi */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0" aria-hidden="true">
-          <div className="relative h-[38px] w-full overflow-hidden md:h-[56px]">
-            <div className="wave-drift-slow absolute inset-0 w-[200%]">
-              <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-                <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
-                <g transform="translate(1440 0)">
-                  <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
-                </g>
-              </svg>
-            </div>
-          </div>
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="-mt-px block h-[42px] w-full md:h-[64px]">
-            <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
-            <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
-            <path d={WAVE_PATHS.front} fill="#ffffff" />
-          </svg>
+        {/* logodaki dalga sahneyi sayfaya bağlar */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0">
+          <WaveEdge className="h-[42px] md:h-[64px]" />
         </div>
       </header>
 
-      {/* ---------- Logo plaketi — dalganın üstüne biner ---------- */}
-      <div className="container-luxe relative z-20 -mt-16 md:-mt-20">
-        <div className="mx-auto w-fit rounded-3xl bg-white px-10 py-8 shadow-[0_30px_70px_-34px_rgba(0,9,38,0.5)]">
-          <img
-            src="/brand/logo-ocean-trim.webp"
-            alt={`${launchEvent.project} — ${launchEvent.region}`}
-            width={230}
-            height={158}
-            className="h-auto w-[190px] md:w-[230px]"
-          />
-        </div>
+      {/* ---------- Logo — dalganın üstüne biner ---------- */}
+      <div className="container-luxe relative z-20 -mt-10 md:-mt-14">
+        <img
+          src="/brand/logo-ocean-trim.webp"
+          alt={`${launchEvent.project} — ${launchEvent.region}`}
+          width={230}
+          height={158}
+          className="mx-auto h-auto w-[170px] md:w-[230px]"
+        />
       </div>
 
       {/* ---------- Etkinlik künyesi ---------- */}
@@ -191,11 +175,7 @@ export default function DavetiyePage() {
 
       {/* ---------- Alt bant ---------- */}
       <footer className="section-dark mt-20 md:mt-28">
-        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block h-[42px] w-full rotate-180 md:h-[64px]" aria-hidden="true">
-          <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
-          <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
-          <path d={WAVE_PATHS.front} fill="#ffffff" />
-        </svg>
+        <WaveEdge flip className="h-[42px] md:h-[64px]" />
 
         <div className="container-luxe relative z-10 py-12 text-center">
           <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>

@@ -2,35 +2,28 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, Globe, Instagram, Facebook, Youtube } from "lucide-react";
 import { site, contact, socials, nav, secondaryNav } from "@/data/site";
 import { YkbLogo } from "./YkbLogo";
+import { WaveEdge } from "@/components/ui/Wave";
 
 const socialIcons = { instagram: Instagram, facebook: Facebook, youtube: Youtube } as const;
 
 export function Footer() {
   return (
     <footer className="section-dark">
-      {/* Üstteki bölümden footer'a dalga geçişi */}
-      <div className="wave-divider -mt-px rotate-180" aria-hidden="true">
-        <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="h-[52px] w-full">
-          <path
-            d="M0 60 C 240 10, 480 96, 720 56 C 960 16, 1200 84, 1440 42 L1440 90 L0 90 Z"
-            fill="currentColor"
-            className="text-paper"
-          />
-        </svg>
-      </div>
+      {/* Üstteki bölümden footer'a geçiş — logodaki dalganın kendisi */}
+      <WaveEdge flip ribbon={false} className="-mt-px h-[42px] md:h-[58px]" />
 
       <div className="container-luxe relative z-10 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Marka + yapımcı */}
           <div>
-            {/* Logo daima beyaz zeminde: koyu footer'da beyaz plaket içinde durur */}
-            <Link href="/" aria-label="MİA PARK OCEAN ana sayfa" className="inline-block rounded-2xl bg-white p-5 shadow-[0_20px_50px_-26px_rgba(0,9,38,0.8)] transition-transform duration-500 hover:scale-[1.02]">
+            {/* Koyu mavi zeminde logo beyaz durur — şekli değişmez, boyası beyaz */}
+            <Link href="/" aria-label="MİA PARK OCEAN ana sayfa" className="inline-block transition-transform duration-500 hover:scale-[1.02]">
               <img
-                src="/brand/logo-ocean-trim.webp"
+                src="/brand/logo-ocean-white.webp"
                 alt="MİA PARK OCEAN — İzmit MİA Bölgesi"
-                width={196}
-                height={134}
-                className="h-auto w-[196px]"
+                width={210}
+                height={144}
+                className="h-auto w-[176px] md:w-[210px]"
               />
             </Link>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream/70">
@@ -46,8 +39,8 @@ export function Footer() {
               </div>
               <div>
                 <div className="eyebrow text-logo-light">{site.sellerRole}</div>
-                <a href="https://oceangayrimenkul41.com" target="_blank" rel="noopener noreferrer" aria-label="Ocean Gayrimenkul" className="mt-3 inline-flex h-[4.2rem] items-center rounded-xl bg-white px-6 transition-opacity hover:opacity-90">
-                  <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" className="h-9 w-auto" width={180} height={40} />
+                <a href="https://oceangayrimenkul41.com" target="_blank" rel="noopener noreferrer" aria-label="Ocean Gayrimenkul" className="mt-3 inline-flex h-16 items-center transition-opacity hover:opacity-80">
+                  <img src="/ocean-logo-white.webp" alt="Ocean Gayrimenkul" className="h-12 w-auto" width={180} height={75} />
                 </a>
               </div>
             </div>

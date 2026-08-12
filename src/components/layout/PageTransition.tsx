@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { WAVE_PATHS } from "@/components/ui/Wave";
+import "@/components/ui/Wave";
 
 /**
  * Sayfa geçişi — "dalga geliyor".
@@ -39,21 +39,21 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
           <div key={sweep} className="pointer-events-none fixed inset-0 z-[90] overflow-hidden" aria-hidden="true">
             {WAVE_LAYERS.map((layer, i) => (
               <motion.div
-                key={layer.d}
+                key={layer.flat}
                 className="absolute inset-x-0 top-0 h-full will-change-transform"
                 initial={{ y: "116%" }}
                 animate={{ y: "-106%" }}
                 transition={{ duration: 1.05, delay: i * 0.075, ease: [0.7, 0, 0.28, 1] }}
               >
-                {/* Öne geçen dalga kenarı */}
-                <svg
-                  viewBox="0 0 1440 120"
-                  preserveAspectRatio="none"
-                  className="absolute bottom-full left-0 h-[10vh] w-full"
-                  style={{ transform: "scaleY(-1)" }}
-                >
-                  <path d={layer.d} fill={layer.flat} opacity={layer.opacity} />
-                </svg>
+                {/* Öne geçen dalga kenarı — logodaki dalganın maskesi */}
+                <span
+                  className="wave-solid absolute bottom-full left-0 h-[9vh] w-full"
+                  style={{
+                    backgroundImage: layer.fill,
+                    opacity: layer.opacity,
+                    transform: "scaleY(-1)",
+                  }}
+                />
                 {/* Dalganın gövdesi */}
                 <div className="absolute inset-0" style={{ backgroundImage: layer.fill, opacity: layer.opacity }} />
               </motion.div>
@@ -74,9 +74,9 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Logodaki kurdele sırası: önde açık safir-zümrüt, arkada derin lacivert.
+// Üç katman da aynı dalga; renkleri logodaki maviden lacivere derinleşir.
 const WAVE_LAYERS = [
-  { d: WAVE_PATHS.back, fill: "linear-gradient(135deg,#3e77ce,#12885f)", flat: "#3e77ce", opacity: 0.5 },
-  { d: WAVE_PATHS.mid, fill: "linear-gradient(135deg,#0f52ba,#0b6e4f)", flat: "#0f52ba", opacity: 0.78 },
-  { d: WAVE_PATHS.front, fill: "linear-gradient(135deg,#000926,#04113a 55%,#013220)", flat: "#04113a", opacity: 1 },
+  { fill: "linear-gradient(135deg,#48b4cc,#18789c)", flat: "#48b4cc", opacity: 0.5 },
+  { fill: "linear-gradient(135deg,#0f52ba,#0c6c90)", flat: "#0f52ba", opacity: 0.78 },
+  { fill: "linear-gradient(135deg,#000926,#04304e 55%,#0a5578)", flat: "#04113a", opacity: 1 },
 ];

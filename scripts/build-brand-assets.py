@@ -150,6 +150,41 @@ def rounded(img: Image.Image, radius: int) -> Image.Image:
     return out
 
 
+def whiteout(img: Image.Image) -> Image.Image:
+    """
+    Koyu mavi zemin için ters (beyaz) sürüm.
+
+    Şekil hiç değişmez: yalnızca boya beyaza çevrilir. Orijinaldeki açık-koyu
+    oyunu alfaya taşınır — parlak yüzeyler tam beyaz, koyu konturlar hafif
+    saydam beyaz olur; böylece M'nin ve kulelerin iç ayrımı kaybolmaz.
+    """
+    a = np.asarray(img.convert("RGBA")).astype(np.float32)
+    rgb, alpha = a[:, :, :3], a[:, :, 3]
+
+    lum = (0.2126 * rgb[:, :, 0] + 0.7152 * rgb[:, :, 1] + 0.0722 * rgb[:, :, 2]) / 255.0
+    inside = alpha > 8
+    if inside.any():
+        lo, hi = np.percentile(lum[inside], [4, 96])
+        lum = np.clip((lum - lo) / max(hi - lo, 1e-3), 0.0, 1.0)
+
+    out = np.zeros_like(a)
+    out[:, :, 0:3] = 255.0
+    out[:, :, 3] = alpha * (0.52 + 0.48 * lum)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
+def keyed_white(img: Image.Image) -> Image.Image:
+    """Beyaz zeminli düz renkli logoyu koyu zemin için beyaza çevirir."""
+    a = np.asarray(img.convert("RGBA")).astype(np.float32)
+    rgb, alpha = a[:, :, :3], a[:, :, 3]
+    lum = (0.2126 * rgb[:, :, 0] + 0.7152 * rgb[:, :, 1] + 0.0722 * rgb[:, :, 2]) / 255.0
+    ink = np.clip((0.92 - lum) / 0.72, 0.0, 1.0)
+    out = np.zeros_like(a)
+    out[:, :, 0:3] = 255.0
+    out[:, :, 3] = np.minimum(alpha, ink * 255.0)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     print("Logo hazırlanıyor (renk değiştirilmiyor)…")
@@ -166,6 +201,17 @@ def main() -> None:
     save(fit(trans, 1200), "logo-ocean-trim")
     save(fit(mark_white, 640), "mark-ocean")
     save(fit(mark_trans, 640), "mark-ocean-trim")
+
+    print("Ters (beyaz) sürüm — koyu mavi zemin için…")
+    save(fit(whiteout(trans), 1200), "logo-ocean-white")
+    save(fit(whiteout(mark_trans), 640), "mark-ocean-white")
+
+    # Satıcı logosu da koyu zeminde beyaz durur (YKB ile aynı davranış)
+    seller = Image.open(os.path.join(ROOT, "public", "ocean-logo.webp")).convert("RGBA")
+    sw = keyed_white(seller)
+    sw.save(os.path.join(ROOT, "public", "ocean-logo-white.png"), optimize=True)
+    sw.save(os.path.join(ROOT, "public", "ocean-logo-white.webp"), quality=95, method=6)
+    print(f"  ocean-logo-white: {sw.width}x{sw.height}")
 
     print("Favicon / uygulama ikonları (beyaz zemin)…")
     for size, name in [(512, "icon-512"), (192, "icon-192"), (180, "apple-touch-icon")]:
