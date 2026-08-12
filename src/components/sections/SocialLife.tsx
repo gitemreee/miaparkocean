@@ -26,7 +26,7 @@ export function SocialLife() {
           {amenities.map((a, i) => (
             <Reveal key={a.title} delay={(i % 3) * 0.07}>
               <div className="group flex h-full items-start gap-4 rounded-2xl border border-ink/8 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-card)]">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-tint text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+                <span className="icon-tile h-12 w-12 items-center justify-center rounded-xl">
                   <Icon name={a.icon} className="h-6 w-6" />
                 </span>
                 <div>

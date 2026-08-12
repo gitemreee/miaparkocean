@@ -74,10 +74,11 @@ export function Hero() {
           </div>
         ))}
 
-        {/* Okyanus perdesi — lacivert/safirden zümrüde; metin okunurluğu için güçlü */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,9,38,0.95)_0%,rgba(2,14,46,0.82)_28%,rgba(6,26,74,0.55)_54%,rgba(15,82,186,0.3)_78%,rgba(1,50,32,0.38)_100%)]" />
-        {/* Soldan sağa yumuşak koyulaşma — başlık bloğunu taşır */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,9,38,0.55)_0%,rgba(0,9,38,0.18)_46%,transparent_72%)]" />
+        {/* Okyanus perdesi — render'ı boğmayacak kadar hafif.
+            Metin okunurluğu, alttaki yoğun bant ve sol taraftaki yumuşak
+            koyulaşmayla sağlanır; görselin gökyüzü ve mimarisi açık kalır. */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,48,78,0.88)_0%,rgba(6,55,90,0.6)_26%,rgba(12,108,144,0.24)_52%,transparent_78%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,48,78,0.5)_0%,rgba(4,48,78,0.14)_44%,transparent_70%)]" />
 
         <div className="container-luxe relative flex min-h-[86vh] flex-col justify-end pb-32 pt-32 md:min-h-[92vh] md:pb-40 md:pt-36">
           <motion.span
@@ -141,28 +142,28 @@ export function Hero() {
         {/* İmza: logodaki dalga sahneyi beyaz sayfaya bağlar */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
           {/* akan kurdele */}
-          <div className="relative h-[46px] w-full overflow-hidden md:h-[70px]">
+          <div className="relative h-[30px] w-full overflow-hidden md:h-[52px]">
             <div className="wave-drift-slow absolute inset-0 w-[200%]">
               <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-                <path d={WAVE_TILE} fill="#d6e6f3" opacity="0.42" />
+                <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
                 <g transform="translate(1440 0)">
-                  <path d={WAVE_TILE} fill="#d6e6f3" opacity="0.42" />
+                  <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
                 </g>
               </svg>
             </div>
             <div className="wave-drift absolute inset-0 w-[200%]">
               <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-                <path d={WAVE_TILE} fill="#ffffff" opacity="0.6" />
+                <path d={WAVE_TILE} fill="#ffffff" opacity="0.72" />
                 <g transform="translate(1440 0)">
-                  <path d={WAVE_TILE} fill="#ffffff" opacity="0.6" />
+                  <path d={WAVE_TILE} fill="#ffffff" opacity="0.72" />
                 </g>
               </svg>
             </div>
           </div>
           {/* sabit dalga siluetı — logodaki kurdele dizilimi */}
           <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="-mt-px block h-[48px] w-full md:h-[76px]">
-            <path d={WAVE_PATHS.back} fill="#d6e6f3" opacity="0.5" />
-            <path d={WAVE_PATHS.mid} fill="#f3f8fc" opacity="0.85" />
+            <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
+            <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
             <path d={WAVE_PATHS.front} fill="#ffffff" />
           </svg>
         </div>
@@ -180,7 +181,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
               className="card-luxe p-5"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-surf text-white shadow-[0_10px_24px_-12px_rgba(15,82,186,0.8)]">
+              <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl">
                 <p.icon className="h-5 w-5" strokeWidth={2} />
               </span>
               <div className="mt-3.5 text-lg font-bold tracking-tight text-ink">{p.title}</div>

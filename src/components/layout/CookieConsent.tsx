@@ -38,7 +38,7 @@ export function CookieConsent() {
       className="fixed bottom-4 left-4 z-50 w-[min(22rem,calc(100vw-7rem))] rounded-2xl border border-ink/12 bg-white p-5 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.35)]"
     >
       <div className="flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-tint text-accent">
+        <span className="icon-tile h-9 w-9 items-center justify-center rounded-full">
           <Cookie className="h-5 w-5" />
         </span>
         <h2 className="text-[0.95rem] font-bold text-ink">Çerezleri kullanıyoruz</h2>

@@ -41,8 +41,8 @@ export default function BasinAciklamasiPage() {
           </span>
         </div>
         <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 bottom-0 block h-[38px] w-full md:h-[58px]" aria-hidden="true">
-          <path d={WAVE_PATHS.back} fill="#d6e6f3" opacity="0.5" />
-          <path d={WAVE_PATHS.mid} fill="#f3f8fc" opacity="0.85" />
+          <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
+          <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
           <path d={WAVE_PATHS.front} fill="#ffffff" />
         </svg>
       </div>
@@ -99,7 +99,7 @@ export default function BasinAciklamasiPage() {
         <ul className="grid gap-3 sm:grid-cols-2">
           {amenities.map((a) => (
             <li key={a.label} className="flex items-center gap-3 rounded-xl border border-ink/10 bg-paper-2 px-4 py-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-tint text-accent">
+              <span className="icon-tile h-9 w-9 items-center justify-center rounded-full">
                 <a.icon className="h-5 w-5" strokeWidth={2} />
               </span>
               <span className="font-medium text-ink">{a.label}</span>

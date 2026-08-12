@@ -65,16 +65,16 @@ export default function DavetiyePage() {
           <div className="relative h-[38px] w-full overflow-hidden md:h-[56px]">
             <div className="wave-drift-slow absolute inset-0 w-[200%]">
               <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-                <path d={WAVE_TILE} fill="#d6e6f3" opacity="0.4" />
+                <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
                 <g transform="translate(1440 0)">
-                  <path d={WAVE_TILE} fill="#d6e6f3" opacity="0.4" />
+                  <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
                 </g>
               </svg>
             </div>
           </div>
           <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="-mt-px block h-[42px] w-full md:h-[64px]">
-            <path d={WAVE_PATHS.back} fill="#d6e6f3" opacity="0.5" />
-            <path d={WAVE_PATHS.mid} fill="#f3f8fc" opacity="0.85" />
+            <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
+            <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
             <path d={WAVE_PATHS.front} fill="#ffffff" />
           </svg>
         </div>
@@ -102,7 +102,7 @@ export default function DavetiyePage() {
             { icon: MapPin, label: "Yer", value: launchEvent.venue, sub: launchEvent.city },
           ].map((item) => (
             <div key={item.label} className="card-luxe p-6 text-center">
-              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-surf text-white">
+              <span className="icon-tile mx-auto h-11 w-11 items-center justify-center rounded-xl">
                 <item.icon className="h-5 w-5" />
               </span>
               <div className="eyebrow mt-4 text-[0.6rem] text-ink/45">{item.label}</div>
@@ -192,8 +192,8 @@ export default function DavetiyePage() {
       {/* ---------- Alt bant ---------- */}
       <footer className="section-dark mt-20 md:mt-28">
         <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block h-[42px] w-full rotate-180 md:h-[64px]" aria-hidden="true">
-          <path d={WAVE_PATHS.back} fill="#d6e6f3" opacity="0.5" />
-          <path d={WAVE_PATHS.mid} fill="#f3f8fc" opacity="0.85" />
+          <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
+          <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
           <path d={WAVE_PATHS.front} fill="#ffffff" />
         </svg>
 

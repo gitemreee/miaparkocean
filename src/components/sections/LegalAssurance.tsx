@@ -17,7 +17,7 @@ export function LegalAssurance() {
           {legalAssurance.cards.map((c, i) => (
             <Reveal key={c.title} delay={(i % 3) * 0.08}>
               <div className="group h-full rounded-2xl border border-ink/10 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[var(--shadow-card)]">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-tint text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+                <span className="icon-tile h-12 w-12 items-center justify-center rounded-xl">
                   <Icon name={c.icon} className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 text-xl font-bold text-ink">{c.title}</h3>

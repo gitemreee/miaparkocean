@@ -126,7 +126,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           <Reveal>
             <aside className="card-gradient-border p-7 shadow-[var(--shadow-card)]">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-surf text-white">
+                <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl">
                   <Car className="h-5 w-5" />
                 </span>
                 <div>
@@ -181,7 +181,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
             {loc.highlights.map((h, i) => (
               <Reveal key={h.title} delay={i * 0.06}>
                 <div className="card-luxe flex h-full items-start gap-4 p-6">
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-surf text-white">
+                  <span className="icon-tile mt-0.5 h-9 w-9 items-center justify-center rounded-lg">
                     <Check className="h-4.5 w-4.5" strokeWidth={2.5} />
                   </span>
                   <div>

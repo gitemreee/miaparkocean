@@ -46,7 +46,7 @@ export function RsvpForm() {
       noValidate
     >
       <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-surf text-white">
+        <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl">
           <Users className="h-5 w-5" />
         </span>
         <div>

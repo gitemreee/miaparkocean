@@ -97,19 +97,26 @@
     color-scheme: light;
 
     /* Marka gradyanları — bütün bileşenler bunları kullanır */
-    /* Derinden yüzeye: Deep Navy -> Sapphire -> logo mavisi -> turkuaz */
-    --gradient-ocean: linear-gradient(135deg, #000926 0%, #061a4a 24%, #0f52ba 52%, #0c6c90 78%, #18789c 100%);
-    --gradient-ocean-soft: linear-gradient(135deg, #061a4a 0%, #0f52ba 44%, #0c6c90 76%, #2490b4 100%);
-    --gradient-surf: linear-gradient(120deg, #0f52ba 0%, #0c6c90 54%, #48b4cc 100%);
-    --gradient-lagoon: linear-gradient(120deg, #18789c 0%, #48b4cc 52%, #9cd8e4 100%);
-    --gradient-sapphire: linear-gradient(120deg, #061a4a 0%, #0f52ba 60%, #2490b4 100%);
-    --gradient-sky: linear-gradient(160deg, #ffffff 0%, #f3f8fc 42%, #d6e6f3 100%);
-    --gradient-mint: linear-gradient(160deg, #ffffff 0%, #f4fbfd 45%, #d8f0f0 100%);
-    --gradient-foam: linear-gradient(180deg, #ffffff 0%, #f3f8fc 55%, #e7f1f9 100%);
+    /* Derinden sığa: logonun kendi mavileri. Koyu uç eskisinden belirgin
+       şekilde açık; açık uç turkuaza, oradan beyaza doğru gider. */
+    --gradient-ocean: linear-gradient(145deg, #04304e 0%, #0a5578 28%, #0c6c90 56%, #157e9e 80%, #1a8bab 100%);
+    --gradient-ocean-soft: linear-gradient(145deg, #0a5578 0%, #0c6c90 40%, #18789c 72%, #3aa7c2 100%);
+    /* Büyük koyu yüzeyler (footer, koyu bölümler): derin kalır, parlak
+       turkuaza kaçmaz — uzun alanlarda metin kontrastı korunur. */
+    --gradient-deep: linear-gradient(168deg, #04304e 0%, #073f63 34%, #0a5578 66%, #0c6c90 100%);
+    --gradient-surf: linear-gradient(125deg, #0f52ba 0%, #0c6c90 46%, #18789c 74%, #48b4cc 100%);
+    --gradient-lagoon: linear-gradient(125deg, #18789c 0%, #48b4cc 52%, #9cd8e4 100%);
+    --gradient-sapphire: linear-gradient(125deg, #0a4a86 0%, #0f52ba 48%, #2490b4 100%);
+    /* Beyaza açılan geçişler */
+    --gradient-sky: linear-gradient(165deg, #ffffff 0%, #f6fbfe 40%, #e4f2fa 100%);
+    --gradient-mint: linear-gradient(165deg, #ffffff 0%, #f6fcfd 45%, #dff2f6 100%);
+    --gradient-foam: linear-gradient(180deg, #ffffff 0%, #f6fbfe 55%, #ecf6fb 100%);
+    /* Turkuazdan beyaza — açık bölüm kenarları */
+    --gradient-shore: linear-gradient(180deg, #9cd8e4 0%, #d8f0f0 45%, #ffffff 100%);
     /* Yeşil yalnızca güven rozetlerinde */
     --gradient-jade: linear-gradient(120deg, #12885f 0%, #0b6e4f 55%, #013220 100%);
     /* Metin gradyanı — her iki uç da beyaz üzerinde AA geçer */
-    --gradient-tide: linear-gradient(90deg, #0f52ba 0%, #0c6c90 58%, #005478 100%);
+    --gradient-tide: linear-gradient(90deg, #0f52ba 0%, #0c6c90 55%, #157e9e 100%);
   }
 
   html {
@@ -171,7 +178,7 @@
 
   /* Yavaşça akan canlı gradyan — hero ve CTA bantları */
   .bg-gradient-flow {
-    background-image: linear-gradient(115deg, #000926, #061a4a, #0f52ba, #0c6c90, #48b4cc, #18789c, #000926);
+    background-image: linear-gradient(115deg, #04304e, #0a5578, #0f52ba, #0c6c90, #48b4cc, #18789c, #04304e);
     background-size: 320% 320%;
     animation: tide 26s ease-in-out infinite;
   }
@@ -254,6 +261,27 @@
     border-color: color-mix(in srgb, var(--color-logo-bright) 55%, transparent);
     box-shadow: var(--shadow-glow);
   }
+  /* Dalga imzası — her kartın sağ üst köşesinde logodaki eğrinin bir parçası */
+  .card-luxe::after,
+  .card-gradient-border::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    /* Kart genişliğine orantılı: küçük kartlarda köşeyi kaplamaz */
+    width: 40%;
+    max-width: 124px;
+    height: 24px;
+    border-top-right-radius: inherit;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%239cd8e4' stop-opacity='0'/%3E%3Cstop offset='0.45' stop-color='%2348b4cc' stop-opacity='0.34'/%3E%3Cstop offset='1' stop-color='%2318789c' stop-opacity='0.62'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0,0 L120,0 L120,34 C102,34 92,20 74,20 C54,20 44,36 24,36 C14,36 6,32 0,26 Z' fill='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: 0.85;
+    transition: opacity 0.35s, width 0.35s;
+  }
+  .card-luxe:hover::after,
+  .card-gradient-border:hover::after { opacity: 1; width: 52%; }
 
   .glass {
     background-color: color-mix(in srgb, #ffffff 64%, transparent);
@@ -271,6 +299,7 @@
   /* Gradyan kenarlıklı kart */
   .card-gradient-border {
     position: relative;
+    overflow: hidden;
     border-radius: 1.25rem;
     background: var(--color-paper);
     z-index: 0;
@@ -291,6 +320,35 @@
     z-index: -1;
   }
   .card-gradient-border:hover::before { opacity: 1; }
+
+  /* ---------- İkon karosu ---------- */
+  /* Koyu gradyan kutular ağır duruyordu: açık turkuaz karo + derin teal ikon.
+     Hem daha okunur hem sayfanın genel maviliğini hafifletiyor. */
+  .icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 0.9rem;
+    background-image: linear-gradient(140deg, #f4fbfd 0%, #ddf1f7 55%, #c6e9f2 100%);
+    color: #0c6c90;
+    border: 1px solid color-mix(in srgb, #48b4cc 30%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 18px -12px rgba(12, 108, 144, 0.55);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s, border-color 0.3s;
+  }
+  .group:hover .icon-tile,
+  .icon-tile:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, #48b4cc 60%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 14px 26px -14px rgba(12, 108, 144, 0.6);
+  }
+  /* Koyu zeminlerde */
+  .icon-tile-dark {
+    background-image: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(156, 216, 228, 0.14));
+    color: #d8f0f0;
+    border: 1px solid rgba(156, 216, 228, 0.34);
+    box-shadow: none;
+  }
 
   /* ---------- Işık halesi ---------- */
   .glow-gold {
@@ -414,7 +472,7 @@
   /* ---------- Bölüm zeminleri ---------- */
   .section-dark {
     position: relative;
-    background-image: var(--gradient-ocean);
+    background-image: var(--gradient-deep);
     color: var(--color-cream);
     overflow: hidden;
   }
@@ -422,10 +480,12 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle at 16% 20%, rgba(214, 230, 243, 0.13), transparent 44%),
-                      radial-gradient(circle at 84% 76%, rgba(72, 180, 204, 0.2), transparent 46%);
+    background-image: radial-gradient(circle at 14% 18%, rgba(156, 216, 228, 0.2), transparent 46%),
+                      radial-gradient(circle at 86% 78%, rgba(72, 180, 204, 0.28), transparent 48%);
     pointer-events: none;
   }
+  /* Kıyı bandı — koyu bölümden beyaza yumuşak çıkış */
+  .section-shore { background-image: var(--gradient-shore); }
   .section-soft { background-image: var(--gradient-sky); }
   .section-mint { background-image: var(--gradient-mint); }
 

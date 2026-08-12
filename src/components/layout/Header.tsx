@@ -73,7 +73,7 @@ function DesktopNavItem({ label, href, submenu }: { label: string; href: string;
 
   if (!submenu) {
     return (
-      <Link href={href} className="text-sm font-medium tracking-wide text-ink/70 transition-colors hover:text-ink">
+      <Link href={href} className="font-display text-[0.98rem] tracking-[0.03em] text-ink/75 transition-colors hover:text-ink">
         {label}
       </Link>
     );
@@ -106,7 +106,7 @@ function DesktopNavItem({ label, href, submenu }: { label: string; href: string;
         href={href}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={`inline-flex items-center gap-1 text-sm font-medium tracking-wide transition-colors ${open ? "text-ink" : "text-ink/70 hover:text-ink"}`}
+        className={`inline-flex items-center gap-1 font-display text-[0.98rem] tracking-[0.03em] transition-colors ${open ? "text-ink" : "text-ink/75 hover:text-ink"}`}
       >
         {label}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -133,7 +133,7 @@ function DesktopNavItem({ label, href, submenu }: { label: string; href: string;
                     href={sub.href}
                     role="menuitem"
                     onClick={() => setOpen(false)}
-                    className="mt-1 flex items-center justify-between gap-6 whitespace-nowrap rounded-xl border-t border-ink/10 px-3.5 pb-2.5 pt-3 text-sm font-semibold text-accent transition-colors hover:bg-accent-tint"
+                    className="mt-1 flex items-center justify-between gap-6 whitespace-nowrap rounded-xl border-t border-ink/10 px-3.5 pb-2.5 pt-3 font-display text-[0.95rem] text-accent transition-colors hover:bg-accent-tint"
                   >
                     <span>{sub.label}</span>
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -144,7 +144,7 @@ function DesktopNavItem({ label, href, submenu }: { label: string; href: string;
                     href={sub.href}
                     role="menuitem"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-between gap-6 whitespace-nowrap rounded-xl px-3.5 py-2.5 text-sm font-medium text-ink/75 transition-colors hover:bg-accent-tint hover:text-accent"
+                    className="flex items-center justify-between gap-6 whitespace-nowrap rounded-xl px-3.5 py-2.5 font-display text-[0.95rem] text-ink/75 transition-colors hover:bg-accent-tint hover:text-accent"
                   >
                     <span>{sub.label}</span>
                     {sub.hint && <span className="text-xs font-normal text-ink/40">{sub.hint}</span>}
@@ -223,7 +223,7 @@ export function Header() {
               const submenu = submenus[item.href];
               if (!submenu) {
                 return (
-                  <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-ink/8 py-3.5 text-lg font-medium tracking-tight text-ink">
+                  <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-ink/8 py-4 font-display text-[1.35rem] tracking-[0.01em] text-ink">
                     {item.label}
                   </Link>
                 );
@@ -235,7 +235,7 @@ export function Header() {
                     type="button"
                     onClick={() => setMobileSub(isOpen ? null : item.href)}
                     aria-expanded={isOpen}
-                    className="flex w-full items-center justify-between py-3.5 text-lg font-medium tracking-tight text-ink"
+                    className="flex w-full items-center justify-between py-4 font-display text-[1.35rem] tracking-[0.01em] text-ink"
                   >
                     {item.label}
                     <ChevronDown className={`h-5 w-5 text-ink/60 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -255,7 +255,7 @@ export function Header() {
                               key={sub.href}
                               href={sub.href}
                               onClick={() => setOpen(false)}
-                              className={`flex items-center justify-between gap-4 py-2.5 pl-4 text-base ${sub.footer ? "font-semibold text-accent" : "text-ink/70"}`}
+                              className={`flex items-center justify-between gap-4 py-2.5 pl-4 font-display text-[1.02rem] ${sub.footer ? "text-accent" : "text-ink/70"}`}
                             >
                               <span>{sub.label}</span>
                               {sub.hint ? <span className="text-xs text-ink/40">{sub.hint}</span> : sub.footer ? <ArrowRight className="h-4 w-4" aria-hidden="true" /> : null}

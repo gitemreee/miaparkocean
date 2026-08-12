@@ -21,9 +21,14 @@ export function Counter({ value, durationMs = 1400, className }: CounterProps) {
     const start = performance.now();
     const tick = (now: number) => {
       const p = Math.min((now - start) / durationMs, 1);
+      if (p >= 1) {
+        // Son kareyi yuvarlamaya bırakma: hedef değeri birebir yaz.
+        setDisplay(value);
+        return;
+      }
       const eased = 1 - Math.pow(1 - p, 3);
       setDisplay(Math.round(eased * value));
-      if (p < 1) raf = requestAnimationFrame(tick);
+      raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);

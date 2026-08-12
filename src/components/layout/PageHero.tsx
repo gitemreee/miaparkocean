@@ -39,8 +39,8 @@ export function PageHero({ eyebrow, title, lead, image }: PageHeroProps) {
         className="pointer-events-none absolute inset-x-0 bottom-0 block h-[42px] w-full md:h-[68px]"
         aria-hidden="true"
       >
-        <path d={WAVE_PATHS.back} fill="#d6e6f3" opacity="0.5" />
-        <path d={WAVE_PATHS.mid} fill="#f3f8fc" opacity="0.85" />
+        <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
+        <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
         <path d={WAVE_PATHS.front} fill="#ffffff" />
       </svg>
     </section>

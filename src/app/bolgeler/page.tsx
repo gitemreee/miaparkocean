@@ -76,7 +76,7 @@ export default function BolgelerPage() {
                       className="card-luxe group flex h-full flex-col p-6"
                     >
                       <div className="flex items-start justify-between gap-4">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-surf text-white">
+                        <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl">
                           <MapPin className="h-5 w-5" />
                         </span>
                         <span className="pill pill-ocean text-[0.7rem]">

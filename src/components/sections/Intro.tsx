@@ -54,7 +54,7 @@ export function Intro() {
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {highlights.map((h, i) => (
               <Reveal as="li" key={h.text} delay={0.12 + i * 0.05} className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-tint text-accent">
+                <span className="icon-tile h-10 w-10 items-center justify-center rounded-xl">
                   <Icon name={h.icon} className="h-5 w-5" />
                 </span>
                 <span className="pt-1.5 text-sm leading-relaxed text-ink/75">{h.text}</span>
