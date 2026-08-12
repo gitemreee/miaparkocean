@@ -18,45 +18,16 @@ import { CooperativeOrg } from "@/components/sections/CooperativeOrg";
 import { Faq } from "@/components/sections/Faq";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { faq } from "@/data/faq";
-import { units } from "@/data/units";
-import { site } from "@/data/site";
+import { graph, faqJsonLd, developerJsonLd } from "@/lib/seo";
 
-const residenceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ApartmentComplex",
-  name: site.name,
-  description: site.description,
-  url: site.url,
-  numberOfAccommodationUnits: 600,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "İzmit",
-    addressRegion: "Kocaeli",
-    addressCountry: "TR",
-  },
-  geo: { "@type": "GeoCoordinates", latitude: 40.736667, longitude: 29.944889 },
-  containsPlace: units.map((u) => ({
-    "@type": "Accommodation",
-    name: u.name,
-    floorSize: { "@type": "QuantitativeValue", value: u.areaValue, unitCode: "MTK" },
-  })),
-};
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faq.map((f) => ({
-    "@type": "Question",
-    name: f.question,
-    acceptedAnswer: { "@type": "Answer", text: f.answer },
-  })),
-};
+// Proje ve satıcı düğümleri layout'ta site geneli yayınlanır; burada yalnızca
+// ana sayfaya özel SSS ve yapımcı bilgisi eklenir.
+const jsonLd = graph(developerJsonLd, faqJsonLd(faq));
 
 export default function HomePage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(residenceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero />
       <Stats />
       <Intro />

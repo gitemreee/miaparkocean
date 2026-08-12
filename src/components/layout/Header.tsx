@@ -35,11 +35,13 @@ const submenus: Record<string, SubItem[]> = {
     { label: "Vergi ve Hukuki Bilgilendirme", href: "/bilgi-merkezi#vergi" },
     { label: "Tüm Bilgi Merkezi", href: "/bilgi-merkezi", footer: true },
   ],
-  "/bolge": [
-    { label: "Bölge", href: "/bolge#bolge" },
-    { label: "Konum", href: "/bolge#lokasyon" },
-    { label: "Değerleme", href: "/bolge#degerleme" },
-    { label: "Demografi", href: "/bolge#demografi" },
+  "/bolgeler": [
+    { label: "İzmit MİA Bölgesi", href: "/bolge" },
+    { label: "İzmit Mahalleleri", href: "/bolgeler#izmit-mahalleleri" },
+    { label: "Kocaeli İlçeleri", href: "/bolgeler#kocaeli-ilceleri" },
+    { label: "Sakarya", href: "/bolgeler/sakarya" },
+    { label: "İstanbul", href: "/bolgeler/istanbul" },
+    { label: "Tüm Bölgeler", href: "/bolgeler", footer: true },
   ],
 };
 

@@ -8,6 +8,8 @@ import { WhatsappFab } from "@/components/layout/WhatsappFab";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { SiteFrame } from "@/components/layout/SiteFrame";
 import { site, contact } from "@/data/site";
+import { verification } from "@/data/verification";
+import { graph, sellerJsonLd, projectJsonLd } from "@/lib/seo";
 
 // Marcellus: logodaki Trajan tarzı serif kelime markasının devamı.
 const display = Marcellus({
@@ -68,7 +70,18 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   alternates: { canonical: site.url },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  // Doğrulama kodları src/data/verification.ts içinde tutulur.
+  // Boş bırakılan alanlar sayfaya hiç yazılmaz.
+  verification: {
+    ...(verification.google ? { google: verification.google } : {}),
+    ...(verification.yandex ? { yandex: verification.yandex } : {}),
+    ...(verification.bing ? { other: { "msvalidate.01": verification.bing } } : {}),
+  },
 };
 
 export const viewport: Viewport = {
@@ -76,32 +89,15 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
-  "@id": `${site.url}#seller`,
-  name: site.seller,
+// Site geneli kimlik — tüm sayfalarda yayınlanır, iç sayfalar @id ile referans verir.
+const siteJsonLd = graph(sellerJsonLd, projectJsonLd, {
+  "@type": "WebSite",
+  "@id": `${site.url}#website`,
   url: site.url,
-  logo: `${site.url}/brand/logo-ocean.png`,
-  image: `${site.url}/og-image.jpg`,
-  description: `${site.name} projesinin tek yetkili satıcısı.`,
-  areaServed: ["İzmit", "Kocaeli", "Sakarya", "İstanbul"],
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Ömerağa Mah. Abdurrahman Yüksel Cad. Bana Bak Ap. No:15/4",
-    addressLocality: "İzmit",
-    addressRegion: "Kocaeli",
-    postalCode: "41300",
-    addressCountry: "TR",
-  },
-  telephone: contact.phones.map((p) => p.href.replace("tel:", "")),
-  email: contact.email,
-  sameAs: [
-    "https://instagram.com/miaparkocean",
-    "https://facebook.com/miaparkocean",
-    "https://youtube.com/@miaparkocean",
-  ],
-};
+  name: site.name,
+  inLanguage: "tr-TR",
+  publisher: { "@id": `${site.url}#seller` },
+});
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -109,7 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
         <SiteFrame
           header={<Header />}

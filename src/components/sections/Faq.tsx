@@ -10,18 +10,24 @@ type FaqProps = {
   items?: FaqItem[];
   eyebrow?: string;
   title?: React.ReactNode;
+  lead?: string;
 };
 
-export function Faq({ items = faq, eyebrow = "Aklınızdaki Sorular", title }: FaqProps) {
+export function Faq({
+  items = faq,
+  eyebrow = "Aklınızdaki Sorular",
+  title,
+  lead = "Kooperatif modeli, güvence ve proje hakkında en çok merak edilenleri topladık.",
+}: FaqProps) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="sss" className="bg-cream py-24 md:py-32">
+    <section id="sss" className="surface-tint py-24 md:py-32">
       <div className="container-luxe">
         <SectionHeading
           eyebrow={eyebrow}
           title={title ?? <>Sıkça sorulan <span className="gilded">sorular</span></>}
-          lead="Kooperatif modeli, güvence ve proje hakkında en çok merak edilenleri topladık."
+          lead={lead}
         />
 
         <div className="mx-auto mt-14 max-w-3xl divide-y divide-ocean/10 border-y border-ocean/10">

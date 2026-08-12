@@ -52,13 +52,14 @@ export const nav = [
   { label: "Neden Kooperatif?", href: "/kooperatif" },
   { label: "Bilgi Merkezi", href: "/bilgi-merkezi" },
   { label: "Belgeler", href: "/belgeler" },
-  { label: "Bölge", href: "/bolge" },
+  { label: "Bölgeler", href: "/bolgeler" },
   { label: "İletişim", href: "/iletisim" },
 ] as const;
 
 // İkincil bağlantılar (footer)
 export const secondaryNav = [
   { label: "Galeri", href: "/galeri" },
+  { label: "İzmit MİA Bölgesi", href: "/bolge" },
   { label: "Online Katalog", href: "/#katalog" },
   { label: "Belgeler", href: "/belgeler" },
   { label: "Güven ve Denetim", href: "/kooperatif#guvence-sistemi" },

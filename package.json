@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "images": "node scripts/optimize-images.mjs"
+    "images": "node scripts/optimize-images.mjs",
+    "brand": "python scripts/build-brand-assets.py",
+    "etkinlik": "python scripts/build-event-assets.py",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
