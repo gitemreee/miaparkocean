@@ -23,7 +23,7 @@
  */
 
 export const verification = {
-  google: "", // örn: "abcDEF123..."
+  google: "jWOZf9MhYA3b8mGfc_6NIqbA9vtbU_N8oL2PfuSI458",
   bing: "",
   yandex: "",
 } as const;

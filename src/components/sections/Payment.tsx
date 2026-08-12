@@ -85,11 +85,13 @@ export function Payment() {
           </div>
         </div>
 
-        <Reveal delay={0.1}>
-          <p className="mx-auto mt-12 max-w-3xl text-center text-xs leading-relaxed text-ocean/45">
-            {payment.note}
-          </p>
-        </Reveal>
+        {payment.note && (
+          <Reveal delay={0.1}>
+            <p className="mx-auto mt-12 max-w-3xl text-center text-xs leading-relaxed text-ocean/45">
+              {payment.note}
+            </p>
+          </Reveal>
+        )}
       </div>
     </section>
   );

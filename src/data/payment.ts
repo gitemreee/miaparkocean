@@ -39,7 +39,8 @@ export const payment = {
       text: "Kooperatif kâr amacı gütmez. Araya müteahhit kârı girmediği için konutu maliyetine yakın bir fiyata alırsınız.",
     },
   ],
-  note:
-    "Ödeme örnekleri temsilidir; enflasyonun taksitlerin gerçek değerine etkisi ekonomik koşullara göre değişebilir. Size özel güncel peşinat ve taksit planı için satış ekibimizle görüşebilirsiniz.",
+  // Dipnot kaldırıldı. Yeniden göstermek isterseniz buraya metni yazmanız
+  // yeterli; boş veya tanımsızsa bölümde hiç render edilmez.
+  note: "",
   cta: "WhatsApp'tan randevu alın",
 };
