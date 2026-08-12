@@ -22,6 +22,10 @@ export type Location = {
   fullName: string;
   type: LocationType;
   parent: string;
+  /** Türkçe ayrılma hâli eki — "Yahya Kaptan'dan" (ünlü/ünsüz uyumu elle doğrulandı) */
+  abl: string;
+  /** Türkçe bulunma hâli eki — "Yahya Kaptan'da" */
+  loc: string;
   /** SEO başlığı */
   title: string;
   description: string;
@@ -51,6 +55,8 @@ export const locations: Location[] = [
     fullName: "Yahya Kaptan Mahallesi",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'dan",
+    loc: "'da",
     title: "Yahya Kaptan Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Yahya Kaptan Mahallesi'nde konut arayanlar için İzmit MİA Bölgesi'ndeki MİA PARK OCEAN: faizsiz kooperatif modeli, 1+0, 1+1 ve 2+1 bahçe dubleks seçenekleri.",
@@ -94,6 +100,8 @@ export const locations: Location[] = [
     fullName: "Yenişehir Mahallesi",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'den",
+    loc: "'de",
     title: "Yenişehir Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
       "İzmit Yenişehir'de yeni konut arayanlara MİA PARK OCEAN: MİA Bölgesi'nde 660 daire, faizsiz kooperatif finansmanı, 60 ay vade.",
@@ -136,6 +144,8 @@ export const locations: Location[] = [
     fullName: "Ömerağa Mahallesi",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'dan",
+    loc: "'da",
     title: "Ömerağa Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
       "İzmit'in merkez mahallesi Ömerağa'dan MİA PARK OCEAN'a: satış ofisimiz Ömerağa'da, proje MİA Bölgesi'nde. Faizsiz kooperatif modeli.",
@@ -174,6 +184,8 @@ export const locations: Location[] = [
     fullName: "Alikahya (Fatih ve Atatürk Mahalleleri)",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'dan",
+    loc: "'da",
     title: "Alikahya Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Alikahya'da konut arayanlara MİA PARK OCEAN alternatifi: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 60 ay vade, 660 daire.",
@@ -212,6 +224,8 @@ export const locations: Location[] = [
     fullName: "Karabaş Mahallesi",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'tan",
+    loc: "'ta",
     title: "Karabaş Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
       "İzmit Karabaş'ta konut arayanlara MİA PARK OCEAN: sahil ve merkeze yakın MİA Bölgesi'nde faizsiz kooperatif projesi.",
@@ -250,6 +264,8 @@ export const locations: Location[] = [
     fullName: "Cedit Mahallesi",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'ten",
+    loc: "'te",
     title: "Cedit Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
       "İzmit Cedit'te yeni konut arayanlara MİA PARK OCEAN: MİA Bölgesi'nde bankasız, faizsiz, kefilsiz kooperatif modeli.",
@@ -288,6 +304,8 @@ export const locations: Location[] = [
     fullName: "Kozluk Mahallesi",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'tan",
+    loc: "'ta",
     title: "Kozluk Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
       "İzmit Kozluk'ta konut arayanlar için MİA PARK OCEAN: merkeze yakın MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi.",
@@ -326,6 +344,8 @@ export const locations: Location[] = [
     fullName: "Bekirpaşa",
     type: "mahalle",
     parent: "İzmit",
+    abl: "'dan",
+    loc: "'da",
     title: "Bekirpaşa Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Bekirpaşa'da konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz, kefilsiz kooperatif projesi, 60 ay vade.",
@@ -368,6 +388,8 @@ export const locations: Location[] = [
     fullName: "Başiskele",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'den",
+    loc: "'de",
     title: "Başiskele Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Başiskele'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi, 60 ay vade.",
@@ -406,6 +428,8 @@ export const locations: Location[] = [
     fullName: "Kartepe",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'den",
+    loc: "'de",
     title: "Kartepe Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Kartepe'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif modeli, 1+0, 1+1 ve 2+1 bahçe dubleks.",
@@ -444,6 +468,8 @@ export const locations: Location[] = [
     fullName: "Derince",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'den",
+    loc: "'de",
     title: "Derince Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Derince'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde bankasız, faizsiz kooperatif projesi.",
@@ -482,6 +508,8 @@ export const locations: Location[] = [
     fullName: "Körfez",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'den",
+    loc: "'de",
     title: "Körfez Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Körfez ilçesinde konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi.",
@@ -520,6 +548,8 @@ export const locations: Location[] = [
     fullName: "Gölcük",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'ten",
+    loc: "'te",
     title: "Gölcük Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Gölcük'te konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde fore kazık temelli, faizsiz kooperatif projesi.",
@@ -558,6 +588,8 @@ export const locations: Location[] = [
     fullName: "Gebze",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'den",
+    loc: "'de",
     title: "Gebze Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Gebze'de konut ve yatırım arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, uygun giriş maliyeti.",
@@ -596,6 +628,8 @@ export const locations: Location[] = [
     fullName: "Darıca",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'dan",
+    loc: "'da",
     title: "Darıca Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Darıca'da konut arayanlara MİA PARK OCEAN alternatifi: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 60 ay vade.",
@@ -634,6 +668,8 @@ export const locations: Location[] = [
     fullName: "Çayırova",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'dan",
+    loc: "'da",
     title: "Çayırova Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Çayırova'da konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde bankasız, faizsiz, kefilsiz kooperatif projesi.",
@@ -672,6 +708,8 @@ export const locations: Location[] = [
     fullName: "Karamürsel",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'den",
+    loc: "'de",
     title: "Karamürsel Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Karamürsel'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi.",
@@ -710,6 +748,8 @@ export const locations: Location[] = [
     fullName: "Kandıra",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'dan",
+    loc: "'da",
     title: "Kandıra Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Kandıra'da konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz, kefilsiz kooperatif projesi.",
@@ -748,6 +788,8 @@ export const locations: Location[] = [
     fullName: "Dilovası",
     type: "ilce",
     parent: "Kocaeli",
+    abl: "'ndan",
+    loc: "'nda",
     title: "Dilovası Satılık Daire ve Yeni Konut Projeleri",
     description:
       "Dilovası'nda konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, geniş yeşil alanlar.",
@@ -790,6 +832,8 @@ export const locations: Location[] = [
     fullName: "Sakarya (Adapazarı ve çevresi)",
     type: "il",
     parent: "Marmara",
+    abl: "'dan",
+    loc: "'da",
     title: "Sakarya'dan İzmit'e Konut Yatırımı — MİA PARK OCEAN",
     description:
       "Sakarya'dan İzmit MİA Bölgesi'ne yatırım: MİA PARK OCEAN'da faizsiz kooperatif modeli, 60 ay vade, 1+0, 1+1 ve 2+1 bahçe dubleks.",
@@ -832,6 +876,8 @@ export const locations: Location[] = [
     fullName: "İstanbul (Anadolu Yakası ve çevresi)",
     type: "il",
     parent: "Marmara",
+    abl: "'dan",
+    loc: "'da",
     title: "İstanbul'dan İzmit'e Konut Yatırımı — MİA PARK OCEAN",
     description:
       "İstanbul'dan Kocaeli'ye yatırım: MİA PARK OCEAN'da faizsiz kooperatif modeli, İstanbul'a göre erişilebilir m² maliyeti, 60 ay vade.",

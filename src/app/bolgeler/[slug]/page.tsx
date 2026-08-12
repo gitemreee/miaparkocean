@@ -79,8 +79,8 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
         eyebrow={`${loc.parent} · ${typeLabel}`}
         title={
           <>
-            {loc.name}&apos;
-            {loc.type === "il" ? "dan" : "den"} <span className="gradient-text-light">MİA PARK OCEAN</span>
+            {loc.name}
+            {loc.abl} <span className="gradient-text-light">MİA PARK OCEAN</span>
           </>
         }
         lead={loc.description}
@@ -111,9 +111,8 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
               <span className="eyebrow text-accent">{loc.fullName}</span>
             </div>
             <h2 className="mt-5 text-balance text-[1.9rem] leading-tight text-ink md:text-[2.5rem]">
-              {loc.fullName}&apos;
-              {loc.type === "il" ? "de" : "nde"} konut arayanlar için{" "}
-              <span className="gilded">MİA Bölgesi</span>
+              {loc.name}
+              {loc.loc} konut arayanlar için <span className="gilded">MİA Bölgesi</span>
             </h2>
 
             <div className="mt-7 space-y-5 text-pretty text-[1.02rem] leading-relaxed text-ink/70">
@@ -205,7 +204,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
             {loc.name} için <span className="gilded">merak edilenler</span>
           </>
         }
-        lead={`${loc.fullName} sakinlerinin MİA PARK OCEAN hakkında en çok sorduğu sorular ve net cevapları.`}
+        lead={`${loc.name}${loc.loc} yaşayanların MİA PARK OCEAN hakkında en çok sorduğu sorular ve net cevapları.`}
       />
 
       {/* Yakın bölgeler — iç bağlantı ağı */}
@@ -250,7 +249,8 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
         <div className="container-luxe relative z-10 py-16 text-center md:py-20">
           <span className="eyebrow text-ice/60">{loc.fullName}</span>
           <h2 className="mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight text-cream md:text-4xl">
-            {loc.name}&apos;{loc.type === "il" ? "den" : "den"} gelin, daireleri yerinde görün
+            {loc.name}
+            {loc.abl} gelin, daireleri yerinde görün
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-pretty leading-relaxed text-ice/75">
             Satış ofisimiz İzmit merkezde, Ömerağa Mahallesi&apos;nde. Randevu oluşturun, daire tiplerini ve resmî

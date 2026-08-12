@@ -3,7 +3,7 @@
 İzmit MİA Bölgesi'nde S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen 660 daireli **MİA PARK OCEAN** projesinin tanıtım + güven odaklı web sitesi. Tek yetkili satıcı: **Ocean Gayrimenkul**.
 
 **Yığın:** Next.js 15 (App Router, statik export) · Tailwind CSS v4 · TypeScript · Framer Motion · lucide-react
-**Tasarım dili:** "Gilded Horizon" — lacivert / altın / krem, ince hatlar, geniş boşluklar (bkz. kaynak `design-philosophy.md`).
+**Tasarım dili:** "Deep Ocean" — beyaz zemin, mavi gradyan geçişler, logodaki dalga sitenin imzası.
 
 ---
 
@@ -11,12 +11,64 @@
 
 ```bash
 npm install          # bağımlılıkları kur
-npm run images       # kaynak render'ları public/images'e WebP olarak üretir (sharp)
 npm run dev          # geliştirme sunucusu → http://localhost:3000
 npm run build        # statik export → out/ klasörü
 ```
 
-> `npm run images` yalnızca görselleri yeniden üretmek gerektiğinde çalıştırılır. Kaynak klasör: `C:\Users\emrey\Desktop\MIA PARK OCEAN`. Yeni görsel eklemek için `scripts/optimize-images.mjs` içindeki listeyi düzenleyin.
+Yardımcı komutlar:
+
+| Komut | Ne yapar |
+|---|---|
+| `npm run images` | Kaynak render'ları `public/images`'e WebP olarak üretir (sharp) |
+| `npm run brand` | Logo varlıklarını, favicon'ları ve OG görselini yeniden üretir |
+| `npm run etkinlik` | Davetiye kartlarını ve masa QR etiketlerini yeniden üretir |
+| `npm run indexnow` | Yeni/güncel sayfaları Bing ve Yandex'e bildirir |
+
+`brand` ve `etkinlik` komutları Python gerektirir: `pip install pillow numpy segno`
+
+---
+
+## Tasarım Sistemi
+
+Tüm renk ve gradyan tanımları **tek yerde**: `src/app/globals.css`.
+
+### Palet
+
+| Rol | Ad | HEX |
+|---|---|---|
+| Zemin | Beyaz | `#FFFFFF` |
+| Açık yüzey | Ice Blue | `#D6E6F3` |
+| Orta ton | Powder Blue | `#A6C5D7` |
+| Vurgu | Sapphire | `#0F52BA` |
+| Derinlik | Deep Navy | `#000926` |
+| **Logo mavisi** | logodan örneklendi | `#005478` · `#0C6C90` · `#18789C` · `#48B4CC` · `#9CD8E4` |
+| İkincil aksan | Emerald / Forest | `#50C878` · `#0B6E4F` |
+
+**Tüm gradyan geçişleri mavidir:** `Deep Navy → Sapphire → logo mavisi → turkuaz`.
+Yeşil yalnızca güven/onay rozetlerinde kullanılır (`.pill-jade`), gradyanlarda yer almaz.
+
+### Tipografi
+
+- **Marcellus** (400) — başlıklar. Logodaki Trajan tarzı serifin devamı; tek ağırlıktır, kalınlaştırılmaz.
+- **Manrope** (300–800) — gövde ve arayüz.
+
+### Dalga — markanın imzası
+
+Logonun altındaki dalga sitenin tekrar eden motifidir. SVG yolları
+`src/components/ui/Wave.tsx` içinde tek kaynakta tutulur ve dört yerde kullanılır:
+
+1. **Bölüm geçişleri** — `<WaveDivider />`
+2. **Hero alt kenarı** — akan kurdele + sabit siluet
+3. **Sayfa geçişi** — `PageTransition`: rota değişince dalga ekranı süpürerek geçer
+4. **Arka plan** — `WaveBackdrop`: sabit, çok hafif dalga dokusu tüm sayfanın arkasında
+
+Açık bölüm zeminleri (`.surface-paper`, `.surface-tint`) yarı saydamdır ki arkadaki
+dalga hafifçe görünsün.
+
+### Logo kuralı
+
+**Logo hiçbir yerde renklendirilmez ve daima beyaz zeminde durur.** Koyu bölümlerde
+beyaz bir plaketin içine alınır. Ayrıntı: `social-media/01-marka-kiti.md`.
 
 ---
 
@@ -24,106 +76,112 @@ npm run build        # statik export → out/ klasörü
 
 ```
 src/
-  app/                 # sayfalar (App Router)
-    page.tsx           # ana sayfa (14 bölüm)
-    daireler/          # daire tipleri
-    kooperatif/        # neden kooperatif + güvence + YKB + güven sistemi
-    bilgi-merkezi/     # kooperatif bilgi merkezi (index + [slug] makale şablonu)
-    bolge/             # İzmit MİA bölgesi + basında
-    galeri/            # kategorili galeri
-    iletisim/          # iletişim formu
-    kvkk/              # KVKK aydınlatma metni
-    sitemap.ts, robots.ts, icon.svg
+  app/
+    page.tsx              # ana sayfa
+    daireler/             # daire tipleri
+    kooperatif/           # neden kooperatif + güvence + YKB
+    bilgi-merkezi/        # kooperatif bilgi merkezi (index + [slug])
+    bolge/                # İzmit MİA bölgesi + basında
+    bolgeler/             # YEREL SEO: index + [slug] (mahalle/ilçe/il)
+    belgeler/ galeri/ iletisim/ kvkk/ cerez-politikasi/
+    davetiye/             # gizli — lansman davetiyesi + RSVP (QR ile paylaşılır)
+    basin-aciklamasi/     # gizli — basın bülteni (QR ile paylaşılır)
+    llms.txt/             # GEO — yapay zekâ motorları için proje künyesi
+    sitemap.ts, robots.ts, icon.png
   components/
-    layout/            # Header, Footer, Logo, YkbLogo, PageHero, WhatsappFab
-    sections/          # tüm sayfa bölümleri (Hero, Payment, Location, Catalog, PromoFilm, TrustSystem, ...)
-    ui/                # Reveal, SmartImage, SectionHeading, Counter, Button, Icon
-  data/                # TÜM METİN İÇERİĞİ BURADA (aşağıya bakın)
-  lib/kb.ts            # bilgi merkezi yardımcıları
+    layout/               # Header, Footer, Logo, PageHero, PageTransition, WaveBackdrop
+    sections/             # sayfa bölümleri (Hero, Payment, Location, RsvpForm, ...)
+    ui/                   # Wave, Reveal, SmartImage, SectionHeading, Button, Counter
+  data/                   # TÜM METİN İÇERİĞİ BURADA
+  lib/
+    seo.ts                # JSON-LD üreticileri (tek kaynak)
+    kb.ts                 # bilgi merkezi yardımcıları
+public/
+  brand/                  # logo varlıkları
+  etkinlik/               # davetiye kartları, masa QR etiketleri, tekil QR'lar
+  images/ videos/
+brand-source/             # kaynak logo + fontlar (üretim girdisi)
+scripts/                  # varlık üreticileri + indexnow
+docs/                     # SEO denetimi ve kurulum rehberleri
+social-media/             # marka kiti, içerik takvimi, gönderi metinleri
 ```
+
+---
 
 ## İçerik Nasıl Güncellenir? (kod bilmeden)
 
-Tüm metinler `src/data/` altındaki dosyalarda. Component'ler bu veriyi otomatik listeler.
+Tüm metinler `src/data/` altındadır.
 
 | Ne değişecek | Dosya |
 |---|---|
-| İletişim, telefon, adres, menü | `data/site.ts` |
+| İletişim, telefon, adres, menü, sosyal medya | `data/site.ts` |
+| **Lansman etkinliği** (tarih, yer, program, sorumlu) | `data/event.ts` |
+| **Bölge sayfaları** (mahalle/ilçe içerikleri) | `data/locations.ts` |
+| **Arama motoru doğrulama kodları** | `data/verification.ts` |
 | Daire tipleri, m², adet, özellikler | `data/units.ts` |
-| Ödeme modeli (faizsiz finansman metni) | `data/payment.ts` |
+| Ödeme modeli | `data/payment.ts` |
 | Sosyal donatılar | `data/amenities.ts` |
-| Lokasyon mesafeleri ve **harita koordinatı** | `data/location.ts` |
-| Değerlenen bölge + **Basında MİA haberleri** | `data/region.ts` |
-| Kooperatif güven kartları, güven sistemi, YKB künyesi | `data/cooperative.ts` |
+| Lokasyon mesafeleri ve harita koordinatı | `data/location.ts` |
+| Değerlenen bölge + basında MİA haberleri | `data/region.ts` |
+| Kooperatif güven kartları, YKB künyesi | `data/cooperative.ts` |
 | Sıkça Sorulan Sorular | `data/faq.ts` |
 | Galeri görselleri | `data/gallery.ts` |
-| **Katalog sayfaları + Tanıtım filmi linki** | `data/media.ts` |
-| Bilgi Merkezi makaleleri | `data/articles.ts` |
-| Bilgi Merkezi kısa rehberleri | `data/guides.ts` |
+| Katalog sayfaları + tanıtım filmi | `data/media.ts` |
 
-**Yeni haber eklemek:** `data/region.ts` → `press` dizisine `{ title, source, date, href, verified: true }` ekleyin.
-**Yeni SSS eklemek:** `data/faq.ts` → diziye `{ category, question, answer }` ekleyin.
-**Yeni makale eklemek:** `data/articles.ts` → diziye bir `Article` ekleyin; sayfa otomatik oluşur.
-**Tanıtım filmi eklemek:** `data/media.ts` → `promoVideo.url` alanına YouTube/Vimeo **embed** linki yazın (örn. `https://www.youtube.com/embed/XXXX`). Boşken bölüm "Çok Yakında" gösterir.
+`data/event.ts` değiştikten sonra `npm run etkinlik` çalıştırın — davetiye kartları
+ve QR etiketleri aynı veriden yeniden üretilir, tutarsızlık olmaz.
 
 ---
 
-## Deploy
+## Yerel SEO ve GEO
 
-Statik export (`out/`) her yerde barındırılabilir.
+- **20 bölge sayfası:** 8 İzmit mahallesi, 10 Kocaeli ilçesi, Sakarya ve İstanbul.
+  Her sayfanın içeriği benzersizdir (şablon metin yoktur).
+- **Yapısal veri:** `src/lib/seo.ts` üzerinden `@graph`; düğümler `@id` ile bağlıdır.
+- **GEO:** `/llms.txt` üretici yapay zekâ motorlarına proje künyesini ve
+  "doğruluk notları"nı sunar.
+- **Dizine gönderim:** `docs/GSC-BING-KURULUM.md`
+- **Denetim raporu:** `docs/SEO-AUDIT.md`
 
-### Netlify — Sürükle & Bırak (önerilen, en kolay)
-
-1. Bilgisayarınızda projeyi derleyin:
-   ```bash
-   npm run build
-   ```
-   Bu, proje kökünde bir **`out/`** klasörü oluşturur.
-2. [app.netlify.com/drop](https://app.netlify.com/drop) adresini açın.
-3. **`out` klasörünü** tarayıcıdaki alana sürükleyip bırakın. Site birkaç saniyede yayına girer.
-4. Sonraki güncellemelerde: tekrar `npm run build` → yeni `out/` klasörünü aynı yere sürükleyin.
-
-> Önemli: Netlify'a **`out` klasörünü** sürükleyin (projenin tamamını değil). Cache header'ları ve 404 sayfası `out/` içine hazır gelir (`_headers`, `404.html`).
-
-**Alan adı:** Netlify'da site ayarlarından `miaparkocean.com` alan adını bağlayabilirsiniz (Domain settings → Add custom domain).
-
-**Form:** İletişim formu Netlify Forms (`data-netlify="true"`) ile otomatik yakalanır; gönderimler Netlify panelinde **Forms → "iletisim"** altında görünür. (Netlify dışı hosting'de form **WhatsApp yedeği** ile çalışmaya devam eder.)
-
-### Diğer seçenekler
-
-- **Netlify (Git):** Repo'yu bağlayın; `netlify.toml` build ayarlarını (`npm run build`, publish `out`) otomatik okur.
-- **Vercel:** Framework Next.js olarak algılanır; export ayarı hazırdır.
-- **Klasik hosting (cPanel/FTP):** `out/` içeriğini `public_html`'e yükleyin.
-
-> Not: `public/mia-park-ocean-katalog.pdf` ~22 MB'dır (indirilebilir katalog). Gerekmezse silinebilir; buton `data/media.ts` üzerinden yönetilir.
+> **Önemli:** Proje yalnızca İzmit MİA Bölgesi'ndedir. Diğer il/ilçe sayfalarında
+> orada proje varmış izlenimi verilmez; Sakarya ve İstanbul sayfalarında bu durum
+> SSS içinde açıkça belirtilir.
 
 ---
 
-## ⚠️ [DOĞRULANACAK] — Yayın Öncesi Netleştirilecekler
+## Gizli Sayfalar (QR ile paylaşılan)
 
-Aşağıdaki bilgiler kaynak dosyalarda **elde olmadığı için işaretlenmiştir**. Yayına almadan önce doğru verilerle güncelleyin:
+| Sayfa | İçerik |
+|---|---|
+| `/davetiye/` | Lansman davetiyesi, program ve WhatsApp'a giden katılım formu |
+| `/basin-aciklamasi/` | Basın bülteni tam metni |
 
-1. **Daire toplamı:** Broşür kapağında tipler 500+134+16 = **650** ediyor ancak başlıkta **660** yazıyor. Kesin dağılım netleştirilmeli. (`data/project.ts`, `data/units.ts`)
-2. **S.S. Yahya Kaptan Birlik Yapı Kooperatifi künyesi:** ortak sayısı, kuruluş sicil no, MERSİS, yönetim kurulu. (`data/cooperative.ts` → `cooperativeOrg.facts`)
-3. **YKB logosu:** İnline paylaşıldı, diskte dosya yoktu → **SVG olarak yeniden çizildi** (`components/layout/YkbLogo.tsx`). Birebir marka dosyası varsa `public/` altına konup değiştirilebilir. Not: resmi logoda unvan "YAHYAKAPTAN BİRLİK" (bitişik) yazıyor; sitede "Yahya Kaptan" kullanıldı — tercih edilen yazım teyit edilmeli.
-4. **Basında MİA haberleri:** `data/region.ts` içindeki 3 kart örnek başlıktır (`verified: false`). Gerçek haber linkleriyle güncellenmeli.
-5. **Tanıtım filmi:** `data/media.ts` → `promoVideo.url` boş. Film linki gelince eklenecek.
-6. **Harita konumu:** Kullanıcının verdiği koordinat kullanıldı (40.736667, 29.944889 · PWPV+MX6). Satış ofisi pin'i teyit edilebilir. (`data/location.ts`, `data/site.ts`)
-7. **İnşaat aşaması / teslim tarihi:** SSS'de iletişime yönlendiriliyor; net bilgi gelince eklenmeli. (`data/faq.ts`)
-8. **KVKK:** Veri sorumlusunun tam ticaret unvanı, MERSİS ve tebligat adresi. (`app/kvkk/page.tsx`)
-9. **Katalog PDF:** Şu an 8 sayfalık broşür PDF'i kullanılıyor; nihai katalog PDF'i ile değiştirilebilir (`public/mia-park-ocean-katalog.pdf`).
+Her ikisi de `noindex, nofollow` ve `robots.txt` ile taramaya kapalıdır; site
+header/footer'ı gösterilmez (`SiteFrame` → `BARE_PREFIXES`).
 
-### Hukuki / Finansal Teyit (önemli)
-
-- **"Tasarrufa Dayalı Faizsiz Finansman Sistemi"** ifadesi kullanıcı direktifiyle konumlandırılmıştır. Bu terim Türkiye'de BDDK denetimli (7292 sayılı Kanun) düzenli bir modeldir; kooperatif yapısıyla ilişkisi ve kullanım hakkı **avukat/mali müşavir onayı** gerektirir.
-- Sitede resmi içerik dosyasındaki **yasak ifadeler** kullanılmamıştır ("devlet garantisi", "kesin teslim", "asla ek ödeme çıkmaz", "tam vergiden muaf", "garantili getiri" vb.).
-- Kesinleşmemiş kooperatif uygulamaları makalelerde "**proje politikası olarak öngörülmektedir**" notuyla etiketlenmiştir.
-- Nihai metinler; kooperatifler hukuku avukatı, SMMM/YMM ve teknik müşavir tarafından proje özelinde kontrol edilmelidir.
+Baskıya hazır QR etiketleri: `public/etkinlik/masa-qr-davetiye.png` ve
+`masa-qr-basin.png` (A5, 300 dpi).
 
 ---
 
-## Sonraki Adımlar (opsiyonel)
+## Yayına Alma
 
-- Üye Portalı ve Belge Merkezi mockup ekranları (içerik dosyası bölüm 10) — ileride eklenebilir.
-- Çok dilli yapı (EN / DE / AR) — veri katmanı buna uygun kurgulanmıştır.
-- GA4 / Meta Pixel — id gelince `app/layout.tsx`'e eklenir.
+Netlify (sürükle-bırak veya Git bağlantısı):
+
+```bash
+npm run build     # out/ klasörü üretilir
+```
+
+`netlify.toml` yapılandırması hazırdır. Yayından sonra:
+
+```bash
+npm run indexnow  # Bing ve Yandex'e bildir
+```
+
+---
+
+## Formlar
+
+Site statik export olduğu için sunucu tarafı yoktur. Tüm formlar
+(iletişim, katılım bildirimi) doldurulan bilgiyi **ön-doldurulmuş bir WhatsApp
+mesajına** çevirip ilgili numaraya yönlendirir.
