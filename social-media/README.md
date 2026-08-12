@@ -13,6 +13,16 @@ Bu klasör, projenin sosyal medya iletişiminin tek kaynağıdır. Tasarımcı, 
 | [`06-gorsel-brief.md`](./06-gorsel-brief.md) | Şablon ölçüleri ve tasarım brief'leri |
 | [`07-lansman-plani.md`](./07-lansman-plani.md) | 21 Ağustos lansmanı — gün gün paylaşım planı |
 
+## Instagram ızgara seti
+
+[`instagram/`](./instagram/) — 14 geniş panel, her biri 3 gönderiye bölünmüş:
+**42 gönderi.** Profil ızgarasında her satır tek bir geniş görsel gibi görünür.
+Paylaşım sırası ve sabitleme yönergesi için
+[`instagram/README.md`](./instagram/README.md); profilin tamamının maketi
+`instagram/IZGARA-ONIZLEME.jpg`. Yeniden üretmek için:
+
+    npm run instagram
+
 ## Hazır görseller
 
 Baskıya ve paylaşıma hazır varlıklar `public/etkinlik/` klasöründedir:

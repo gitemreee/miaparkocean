@@ -15,7 +15,8 @@
     "optimize": "python scripts/optimize-assets.py",
     "etkinlik": "python scripts/build-event-assets.py",
     "indexnow": "node scripts/indexnow.mjs",
-    "katalog": "python scripts/build-catalog.py"
+    "katalog": "python scripts/build-catalog.py",
+    "instagram": "python scripts/build-instagram-grid.py"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
