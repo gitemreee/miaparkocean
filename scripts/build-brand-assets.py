@@ -74,7 +74,18 @@ def load_logo() -> tuple[Image.Image, Image.Image]:
 
     soft = np.clip((dist - 11) / 13.0, 0, 1)
     alpha = np.where(visited, (soft * 255).astype(np.uint8), np.uint8(255))
-    transparent = Image.fromarray(np.dstack([np.asarray(im), alpha.astype(np.uint8)]), "RGBA")
+
+    # Kenar yumuşatma pikselleri kaynaktaki gri zeminin rengini taşıyor
+    # (~#DEE7EB). Beyaz plakete bindirildiğinde bu, logonun etrafında gri bir
+    # hale bırakıyordu. Kısmi saydam pikselleri saydamlıkları oranında beyaza
+    # çekiyoruz: hale beyazlaşır, logonun kendi rengi bozulmaz.
+    rgb = np.asarray(im).astype(np.float32)
+    a01 = (alpha.astype(np.float32) / 255.0)[:, :, None]
+    rgb = rgb * a01 + 255.0 * (1 - a01)
+
+    transparent = Image.fromarray(
+        np.dstack([rgb.astype(np.uint8), alpha.astype(np.uint8)]), "RGBA"
+    )
     transparent = transparent.crop(transparent.getbbox())
 
     white = Image.new("RGBA", transparent.size, (255, 255, 255, 255))

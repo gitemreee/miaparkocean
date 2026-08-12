@@ -47,7 +47,7 @@ const sections = [
 
 export default function CerezPolitikasiPage() {
   return (
-    <div className="bg-cream pt-32 pb-24">
+    <div className="surface-paper pt-32 pb-24">
       <div className="container-luxe max-w-3xl">
         <div className="flex items-center gap-3">
           <span className="gold-rule-solid w-8" />

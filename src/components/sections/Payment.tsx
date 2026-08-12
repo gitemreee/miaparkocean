@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 
 export function Payment() {
   return (
-    <section id="odeme" className="bg-cream-200 py-14 md:py-28">
+    <section id="odeme" className="surface-tint py-14 md:py-28">
       <div className="container-luxe">
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           {/* Sol: başlık + iddia */}

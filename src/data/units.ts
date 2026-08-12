@@ -95,9 +95,9 @@ export const units: Unit[] = [
       { title: "Bahçeye Direkt Çıkış", text: "Yaşam alanından bir adımda bahçeye; iç ve dış mekân tek parça." },
       { title: "Ayrı Yatak Odası", text: "Yatak odasının ayrılması düzenli ve konforlu bir kullanım sağlar." },
     ],
-    image: "/images/loft-living.webp",
+    image: "/images/unit-2plus1-c.webp",
     planImage: "/images/unit-1plus1-plan.webp",
-    interiorImages: ["/images/loft-living.webp", "/images/unit-1plus1-a.webp", "/images/unit-1plus1-c.webp"],
+    interiorImages: ["/images/unit-2plus1-c.webp", "/images/unit-1plus1-b.webp", "/images/unit-2plus1-b.webp"],
   },
   {
     slug: "2-plus-1-bahce-dubleks",

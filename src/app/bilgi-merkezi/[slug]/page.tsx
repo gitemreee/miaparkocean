@@ -42,7 +42,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <article className="bg-cream pt-28 pb-24">
+    <article className="surface-paper pt-28 pb-24">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="container-luxe max-w-3xl">
         {/* Breadcrumb */}

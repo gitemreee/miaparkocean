@@ -7,7 +7,7 @@ import { whyCooperative } from "@/data/cooperative";
 
 export function WhyCooperative() {
   return (
-    <section id="neden-kooperatif" className="bg-cream py-14 md:py-28">
+    <section id="neden-kooperatif" className="surface-tint py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Neden Kooperatif?"

@@ -25,7 +25,7 @@ export default function DairelerPage() {
       />
 
       {/* Karşılaştırma şeridi */}
-      <section className="border-b border-ocean/8 bg-cream py-10">
+      <section className="surface-tint border-b border-ocean/8 py-10">
         <div className="container-luxe grid gap-4 sm:grid-cols-3">
           {units.map((u, i) => (
             <Reveal key={u.slug} delay={i * 0.08}>

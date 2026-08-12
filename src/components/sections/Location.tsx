@@ -7,7 +7,7 @@ import { distances, locationIntro, locationTags, mapConfig } from "@/data/locati
 
 export function Location() {
   return (
-    <section id="lokasyon" className="bg-cream py-14 md:py-28">
+    <section id="lokasyon" className="surface-paper py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Lokasyon"

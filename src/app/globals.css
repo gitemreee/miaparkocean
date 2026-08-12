@@ -125,7 +125,9 @@
   }
 
   body {
-    background-color: var(--color-paper);
+    /* Bembeyaz değil: WaveBackdrop'un turkuaz→beyaz yıkaması altta durur,
+       bu renk yalnızca o katman yüklenene kadarki taban. */
+    background-color: #f4fbfd;
     color: var(--color-ink);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
@@ -489,10 +491,11 @@
   .section-soft { background-image: var(--gradient-sky); }
   .section-mint { background-image: var(--gradient-mint); }
 
-  /* Açık bölüm zeminleri — arkadaki dalga dokusunun hafifçe görünmesine
-     izin verecek kadar saydam. Metin kontrastı korunur. */
-  .surface-paper { background-color: rgba(255, 255, 255, 0.82); }
-  .surface-tint { background-color: rgba(240, 247, 252, 0.86); }
+  /* Açık bölüm zeminleri — hiçbir yer bembeyaz değil: arkadaki
+     turkuaz→beyaz dokunun görünmesine izin verecek kadar saydam.
+     Metin kontrastı korunur (mürekkep #000926, en koyu zemin bile > 12:1). */
+  .surface-paper { background-color: rgba(255, 255, 255, 0.5); }
+  .surface-tint { background-color: rgba(236, 248, 251, 0.44); }
 }
 
 @layer utilities {

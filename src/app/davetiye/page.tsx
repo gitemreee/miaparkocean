@@ -41,7 +41,7 @@ const eventJsonLd = {
 
 export default function DavetiyePage() {
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen text-ink">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
 
       {/* ---------- Üst: okyanus gradyanı + logodaki dalga ---------- */}

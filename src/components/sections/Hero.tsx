@@ -51,7 +51,7 @@ export function Hero() {
       </h1>
 
       {/* Tam genişlik sahne */}
-      <div className="relative min-h-[86vh] overflow-hidden md:min-h-[92vh]">
+      <div className="relative min-h-[68vh] overflow-hidden md:min-h-[92vh]">
         {slides.map((s, i) => (
           <div
             key={s.image + i}
@@ -80,8 +80,8 @@ export function Hero() {
         <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,48,78,0.88)_0%,rgba(6,55,90,0.6)_26%,rgba(12,108,144,0.24)_52%,transparent_78%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,48,78,0.5)_0%,rgba(4,48,78,0.14)_44%,transparent_70%)]" />
 
-        <div className="container-luxe relative flex min-h-[86vh] flex-col justify-end pb-32 pt-32 md:min-h-[92vh] md:pb-40 md:pt-36">
-          <div className="relative min-h-[8.5rem] sm:min-h-[11rem] md:min-h-[13.5rem]">
+        <div className="container-luxe relative flex min-h-[68vh] flex-col justify-end pb-24 pt-28 md:min-h-[92vh] md:pb-40 md:pt-36">
+          <div className="relative min-h-[6.5rem] sm:min-h-[10rem] md:min-h-[13.5rem]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={index}
@@ -92,7 +92,7 @@ export function Hero() {
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="eyebrow text-ice/75">{active.kicker}</p>
-                <h2 className="mt-4 max-w-3xl font-display text-[2.85rem] leading-[1] text-white sm:text-6xl md:text-[4.6rem]">
+                <h2 className="mt-4 max-w-3xl font-display text-[2.15rem] leading-[1.04] text-white sm:text-5xl md:text-[4.6rem]">
                   {active.line1}{" "}
                   <span className="gradient-text-light">{active.accent}</span>
                 </h2>
@@ -100,22 +100,22 @@ export function Hero() {
             </AnimatePresence>
           </div>
 
-          <p className="mt-6 max-w-lg text-lg leading-relaxed text-ice/85">
+          <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-ice/85 md:mt-6 md:text-lg">
             Bankaya, faize ya da kefile gerek kalmadan; tasarruf esaslı faizsiz finansmanla ev sahibi olun.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/iletisim" className="btn-base btn-jade btn-shine group px-8 py-4 text-sm">
+          <div className="mt-6 flex flex-wrap items-center gap-2.5 md:mt-8 md:gap-3">
+            <Link href="/iletisim" className="btn-base btn-jade btn-shine group px-6 py-3 text-sm md:px-8 md:py-4">
               Dairenizi Seçin
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-            <Link href="/kooperatif" className="btn-base btn-outline-light px-8 py-4 text-sm">
+            <Link href="/kooperatif" className="btn-base btn-outline-light px-6 py-3 text-sm md:px-8 md:py-4">
               Neden Kooperatif?
             </Link>
           </div>
 
           {/* Slide göstergeleri */}
-          <div className="mt-10 flex gap-2">
+          <div className="mt-7 flex gap-2 md:mt-10">
             {slides.map((s, i) => (
               <button
                 key={s.image + i}

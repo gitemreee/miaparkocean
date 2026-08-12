@@ -25,7 +25,7 @@ const instagram = socials.find((s) => s.icon === "instagram");
 
 export default function BasinAciklamasiPage() {
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen text-ink">
       {/* Üst marka bandı — okyanus gradyanı + logodaki dalga */}
       <div className="section-dark relative">
         <div className="container-luxe relative z-10 flex items-center justify-between pb-20 pt-7 md:pb-24">
@@ -125,7 +125,7 @@ export default function BasinAciklamasiPage() {
       </article>
 
       {/* Alt: iletişim + logolar */}
-      <footer className="border-t border-ink/10 bg-paper-2">
+      <footer className="surface-tint border-t border-ink/10">
         <div className="container-luxe py-12">
           <div className="mx-auto max-w-3xl">
             <div className="eyebrow text-accent">İletişim</div>

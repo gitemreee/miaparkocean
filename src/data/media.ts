@@ -3,7 +3,7 @@
 // Katalog görselleri sürümü — broşür sayfaları değişince artır.
 // /images/* immutable (1 yıl) cache'lendiği için, aynı dosya adıyla içerik değişince
 // eski sürüm tarayıcıda kalır; ?v= ile yeni URL üretip cache-bust ederiz.
-const CATALOG_V = "3";
+const CATALOG_V = "4";
 export const catalogPages = [
   { src: `/images/catalog-1.webp?v=${CATALOG_V}`, label: "Kapak" },
   { src: `/images/catalog-2.webp?v=${CATALOG_V}`, label: "Proje" },
@@ -13,7 +13,7 @@ export const catalogPages = [
   { src: `/images/catalog-6.webp?v=${CATALOG_V}`, label: "1+1 Daire" },
   { src: `/images/catalog-7.webp?v=${CATALOG_V}`, label: "2+1 Bahçe Dubleks" },
   { src: `/images/catalog-8.webp?v=${CATALOG_V}`, label: "Sosyal Yaşam" },
-  { src: `/images/catalog-9.webp?v=${CATALOG_V}`, label: "Lokasyon & Yatırım" },
+  { src: `/images/catalog-9.webp?v=${CATALOG_V}`, label: "Lokasyon & Değerleme" },
   { src: `/images/catalog-10.webp?v=${CATALOG_V}`, label: "İletişim" },
 ];
 
