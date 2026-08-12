@@ -23,6 +23,15 @@ export function Footer() {
         className="relative z-10 -mt-px h-[52px] md:h-[84px]"
       />
 
+      {/* Su altı derinliği: yüzeyden süzülen ışık ve kabarcıklar. Işık
+          fiziksel olarak yüzeye yakındır, o yüzden katman yalnızca üst
+          bölgeyi kaplar ve aşağı doğru eriyerek biter — mobilde uzayan
+          footer'da doku gerilip düzleşmez. */}
+      <div
+        className="underwater pointer-events-none absolute inset-x-0 top-0 h-[300px] opacity-25 md:h-[480px]"
+        aria-hidden="true"
+      />
+
       <div className="container-luxe relative z-10 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* Marka + yapımcı */}
@@ -37,7 +46,7 @@ export function Footer() {
                 className="h-auto w-[176px] md:w-[210px]"
               />
             </Link>
-            <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream/70">
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream/85">
               İzmit MİA Bölgesi'nde 600 daireden oluşan modern yaşam projesi. Tasarrufa dayalı faizsiz finansman, 60 ay vade ve %0 faiz ile.
             </p>
 
@@ -78,14 +87,14 @@ export function Footer() {
             <ul className="mt-5 space-y-3">
               {nav.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="font-display text-[0.98rem] text-cream/80 transition-colors hover:text-white">
+                  <Link href={item.href} className="font-display text-[0.98rem] text-cream/90 transition-colors hover:text-white">
                     {item.label}
                   </Link>
                 </li>
               ))}
               {secondaryNav.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="font-display text-[0.98rem] text-cream/80 transition-colors hover:text-white">
+                  <Link href={item.href} className="font-display text-[0.98rem] text-cream/90 transition-colors hover:text-white">
                     {item.label}
                   </Link>
                 </li>
@@ -96,7 +105,7 @@ export function Footer() {
           {/* İletişim */}
           <div>
             <div className="eyebrow text-logo-light">İletişim</div>
-            <ul className="mt-5 space-y-4 text-sm text-cream/80">
+            <ul className="mt-5 space-y-4 text-sm text-cream/90">
               {contact.phones.map((p) => (
                 <li key={p.href}>
                   <a href={p.href} className="inline-flex items-center gap-3 hover:text-white">
@@ -141,7 +150,7 @@ export function Footer() {
         </div>
 
         <div className="gold-rule mt-14" />
-        <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-cream/50 sm:flex-row">
+        <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-cream/65 sm:flex-row">
           <span>© {new Date().getFullYear()} MİA PARK OCEAN · {site.developer}</span>
           <span>Tek Yetkili Satıcı: {site.seller}</span>
         </div>
