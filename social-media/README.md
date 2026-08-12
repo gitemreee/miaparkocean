@@ -15,8 +15,8 @@ Bu klasör, projenin sosyal medya iletişiminin tek kaynağıdır. Tasarımcı, 
 
 ## Instagram ızgara seti
 
-[`instagram/`](./instagram/) — 14 geniş panel, her biri 3 gönderiye bölünmüş:
-**42 gönderi.** Profil ızgarasında her satır tek bir geniş görsel gibi görünür.
+[`instagram/`](./instagram/) — 15 geniş panel, her biri 3 gönderiye bölünmüş:
+**45 gönderi.** Profil ızgarasında her satır tek bir geniş görsel gibi görünür.
 Paylaşım sırası ve sabitleme yönergesi için
 [`instagram/README.md`](./instagram/README.md); profilin tamamının maketi
 `instagram/IZGARA-ONIZLEME.jpg`. Yeniden üretmek için:

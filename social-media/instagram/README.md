@@ -7,7 +7,7 @@ betiği çalıştırın:
 
 ## Ne var burada
 
-* `01-…` … `14-…` — her klasör TEK bir geniş görselin üç parçası.
+* `01-…` … `15-sosyal-donatilar` — her klasör TEK bir geniş görselin üç parçası.
   Profil ızgarasında bu üç parça yan yana gelip tek kare gibi görünür.
 * `_izgara-gorunumu.jpg` — o panelin ızgarada nasıl görüneceği.
 * `IZGARA-ONIZLEME.jpg` — profilin tamamının maketi (en yeni üstte).
@@ -20,7 +20,7 @@ betiği çalıştırın:
    koyduğu için satır bu sırayla soldan sağa dizilir.
 2. Bir paneli bitirmeden diğerine geçmeyin; yarım kalan satır ızgarayı
    bozar.
-3. Panel klasörlerini numara sırasıyla ilerletin (01 → 14).
+3. Panel klasörlerini numara sırasıyla ilerletin (01 → 15).
 4. `01-karsidan-sabit` klasörünün üç parçasını **sabitleyin**. Instagram
    üç gönderi sabitlemeye izin verir; böylece o panel her zaman en üst
    satırda tek bir geniş görsel olarak durur.

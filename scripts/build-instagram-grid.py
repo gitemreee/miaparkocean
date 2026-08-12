@@ -2,7 +2,7 @@
 """
 MİA PARK OCEAN — Instagram "grid split" (ızgara bölme) seti.
 
-14 panel üretir; her panel 3 gönderiye bölünür → toplam 42 gönderi.
+15 panel üretir; her panel 3 gönderiye bölünür → toplam 45 gönderi.
 Profil ızgarasında her panel TEK BİR geniş görsel gibi görünür.
 
 ÖLÇÜ MANTIĞI
@@ -648,6 +648,54 @@ def panel_contact() -> Image.Image:
     return p
 
 
+# ── 15 · sosyal donatılar · tipografik ─────────────────────────────────
+def panel_amenities() -> Image.Image:
+    """
+    Ortak alanların dökümü — üç başlık, üç liste.
+
+    Fotoğraf yok: donatı listesi render'ın üstünde okunmaz, kalabalık
+    görünür. Marka mavisi üstünde tipografi hem net hem de ızgarada
+    fotoğraf satırlarının arasına nefes koyuyor.
+    """
+    p = gradient((PANEL_W, PANEL_H), [(0.0, (6, 58, 82)), (0.45, MIA_DEEP),
+                                      (1.0, (20, 108, 140))], angle=0.62)
+    # Her parçanın kendi ışığı — ızgarada üç ayrı sütun gibi dursun
+    for cx in tile_centers():
+        p.alpha_composite(glow(cx, 500, 1180, MIA_CYAN, 0.2))
+    dr = ImageDraw.Draw(p)
+
+    line_center(dr, "SOSYAL DONATILAR", 258, 42, (*MIA_LIGHT, 235), 20)
+
+    # 3 / 4 / 3 — uzun sütun ortada dursun, ızgarada dengeli görünüyor
+    cols = [
+        ("Açık alan", ["Geniş peyzaj alanları", "Dekoratif süs havuzları",
+                       "Yürüyüş ve dinlenme yolları"]),
+        ("Yaşam", ["Merkezi avlu", "Sosyal ve spor alanları",
+                   "Çocuk oyun parkı", "Bahçeli zemin daireler"]),
+        ("Güven", ["7/24 güvenlik", "Kapalı otopark",
+                   "Özel gece aydınlatması"]),
+    ]
+    titles = [t for t, _ in cols]
+    items = [i for _, lst in cols for i in lst]
+
+    ft = fit_serif(dr, titles, TILE_TEXT_W, 140)
+    fi = sans(54)
+    while max(dr.textlength(t, font=fi) for t in items) > TILE_TEXT_W and fi.size > 32:
+        fi = sans(fi.size - 2)
+
+    for cx, (title, lst) in zip(tile_centers(), cols):
+        dr.text((cx, 516), title, font=ft, fill=WHITE, anchor="ms")
+        dr.line([cx - 100, 584, cx + 100, 584], fill=(*MIA_AQUA, 205), width=4)
+        for i, it in enumerate(lst):
+            dr.text((cx, 664 + i * 102), it, font=fi, fill=(*MIA_PALE, 240), anchor="ma")
+
+    line_center(dr, "Ortak alanların tamamı proje kapsamındadır.",
+                1152, 48, (*MIA_ICE, 238))
+
+    frame(p, shadow=False)
+    return p
+
+
 PANELS = [
     ("01-karsidan-sabit", "Karşıdan görünüm · sabitlenecek", panel_entrance),
     ("02-sifir-faiz", "%0 faiz · 60 ay vade", panel_zero),
@@ -663,6 +711,7 @@ PANELS = [
     ("12-lokasyon", "Konum avantajı", panel_location),
     ("13-gece", "Gece bile büyüleyici", panel_night),
     ("14-iletisim", "Dairenizi seçin", panel_contact),
+    ("15-sosyal-donatilar", "Sosyal donatılar · ortak alanlar", panel_amenities),
 ]
 
 
@@ -685,7 +734,7 @@ betiği çalıştırın:
 
 ## Ne var burada
 
-* `01-…` … `14-…` — her klasör TEK bir geniş görselin üç parçası.
+* `01-…` … `{son}` — her klasör TEK bir geniş görselin üç parçası.
   Profil ızgarasında bu üç parça yan yana gelip tek kare gibi görünür.
 * `_izgara-gorunumu.jpg` — o panelin ızgarada nasıl görüneceği.
 * `IZGARA-ONIZLEME.jpg` — profilin tamamının maketi (en yeni üstte).
@@ -698,7 +747,7 @@ betiği çalıştırın:
    koyduğu için satır bu sırayla soldan sağa dizilir.
 2. Bir paneli bitirmeden diğerine geçmeyin; yarım kalan satır ızgarayı
    bozar.
-3. Panel klasörlerini numara sırasıyla ilerletin (01 → 14).
+3. Panel klasörlerini numara sırasıyla ilerletin (01 → {no}).
 4. `01-karsidan-sabit` klasörünün üç parçasını **sabitleyin**. Instagram
    üç gönderi sabitlemeye izin verir; böylece o panel her zaman en üst
    satırda tek bir geniş görsel olarak durur.
@@ -761,7 +810,7 @@ def main() -> None:
     print(f"  IZGARA-ONIZLEME.jpg {board.width}x{board.height}")
 
     with open(os.path.join(OUT, "README.md"), "w", encoding="utf-8") as f:
-        f.write(README)
+        f.write(README.format(son=PANELS[-1][0], no=f"{len(PANELS):02d}"))
     print(f"  README.md · {len(PANELS)} panel = {len(PANELS) * 3} gönderi")
 
 
