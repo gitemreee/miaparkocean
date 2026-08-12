@@ -38,7 +38,7 @@ export default function DairelerPage() {
                   <div className="mt-1 text-[0.72rem] leading-tight text-ink/55 md:text-sm">{u.name}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-display text-[0.95rem] leading-none text-accent md:text-xl">{u.areaValue} m²</div>
+                  <div className="font-display whitespace-nowrap text-[0.95rem] leading-none text-accent md:text-xl">{u.areaValue} m²</div>
                   <div className="mt-1 text-[0.7rem] text-ink/50 md:text-xs">{u.count} adet</div>
                 </div>
               </Link>

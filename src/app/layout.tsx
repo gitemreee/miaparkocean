@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Marcellus, Manrope } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -11,12 +11,14 @@ import { site, contact } from "@/data/site";
 import { verification } from "@/data/verification";
 import { graph, sellerJsonLd, projectJsonLd } from "@/lib/seo";
 
-// Marcellus: logodaki Trajan tarzı serif kelime markasının devamı.
-const display = Marcellus({
+// Fraunces: logodaki serif kelime markasıyla akraba, ama 100-900 ağırlık
+// skalası ve optik boyut ekseni var. Marcellus tek ağırlıklıydı; başlıklar
+// vurgu kuramıyor, küçük boyutlarda inceleşiyordu.
+const display = Fraunces({
   subsets: ["latin", "latin-ext"],
-  weight: "400",
   variable: "--font-display-family",
   display: "swap",
+  axes: ["SOFT", "opsz"],
 });
 
 // Manrope: uzun Türkçe metinlerde yüksek okunabilirlik.

@@ -213,7 +213,7 @@ def invitation_card(size=(1080, 1350), with_qr: bool = True, name: str = "daveti
     card.alpha_composite(wave_stack(W, wave_h), (0, band_h - wave_h))
 
     f_kicker = font("Manrope-700.ttf", int(30 * s))
-    f_event = font("Marcellus-400.ttf", int(58 * s))
+    f_event = font("Fraunces-500.ttf", int(58 * s))
     top_area = band_h - wave_h
     text(dr, (W / 2, top_area * 0.30), EVENT["kicker"], f_kicker, ICE, anchor="mm", spacing=int(11 * s))
     dr.text((W / 2, top_area * 0.52), EVENT["name"], font=f_event, fill=WHITE, anchor="ma")
@@ -268,9 +268,9 @@ def invitation_card(size=(1080, 1350), with_qr: bool = True, name: str = "daveti
     )
     card.alpha_composite(box, (box_x, y))
 
-    f_date = font("Marcellus-400.ttf", int(64 * k))
+    f_date = font("Fraunces-500.ttf", int(64 * k))
     f_sub = font("Manrope-600.ttf", int(28 * k))
-    f_venue = font("Marcellus-400.ttf", int(42 * k))
+    f_venue = font("Fraunces-500.ttf", int(42 * k))
     f_city = font("Manrope-700.ttf", int(23 * k))
 
     dr.text((W / 2, y + int(44 * k)), EVENT["date"], font=f_date, fill=SAPPHIRE, anchor="ma")
@@ -343,7 +343,7 @@ def table_card(target: str, headline: str, caption: str, name: str, size=(1748, 
     card.alpha_composite(wave_stack(W, wave_h), (0, band_h - wave_h))
 
     dr = ImageDraw.Draw(card)
-    f_head = font("Marcellus-400.ttf", int(84 * s))
+    f_head = font("Fraunces-500.ttf", int(84 * s))
     f_kick = font("Manrope-700.ttf", int(34 * s))
     text(dr, (W / 2, int(120 * s)), EVENT["region"], f_kick, ICE, spacing=int(13 * s))
     dr.text((W / 2, int(200 * s)), headline, font=f_head, fill=WHITE, anchor="ma")

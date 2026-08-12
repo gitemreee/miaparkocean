@@ -156,15 +156,37 @@
     overflow-x: hidden;
   }
 
-  /* Marcellus tek ağırlıklıdır (400): vurgu kalınlıkla değil, ölçek ve
-     gradyan ile verilir — sentetik bold'dan kaçınılır. */
+  /* Fraunces değişken bir seriftir: ağırlık ve optik boyut ekseni var.
+     Büyük başlıklar display optiğinde ve daha ince (zarafet), küçük
+     başlıklar metin optiğinde ve daha kalın (netlik) çalışır. SOFT ekseni
+     uçları hafifçe yumuşatır; markanın dalga hissiyle uyumlu. */
   h1, h2, h3, h4, h5 {
     font-family: var(--font-display);
-    font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.012em;
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.014em;
+    font-variation-settings: "SOFT" 25, "opsz" 24;
   }
-  h1 { letter-spacing: -0.022em; }
+  h1, h2 {
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+    font-variation-settings: "SOFT" 30, "opsz" 96;
+  }
+  /* Kart başlıkları gibi küçük kullanımlar: metin optiği, daha net */
+  h3, h4, h5 { font-variation-settings: "SOFT" 20, "opsz" 14; }
+
+  .font-display {
+    font-variation-settings: "SOFT" 25, "opsz" 40;
+  }
+
+  /* Başlıktaki kelime markası: logonun oyma kapitallerini yankılar —
+     ince, yüksek kontrastlı display optiği, geniş harf aralığı. */
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-variation-settings: "SOFT" 30, "opsz" 144;
+  }
 
   ::selection { background-color: var(--color-logo-bright); color: #002a3c; }
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 4px; }

@@ -34,7 +34,7 @@ export function Logo({ tone = "dark", className = "", compact = false }: LogoPro
         className="h-9 w-auto shrink-0 transition-transform duration-500 group-hover:scale-[1.04]"
       />
       <span className="flex flex-col leading-none">
-        <span className={`font-display text-[1.02rem] font-semibold tracking-[0.2em] ${textColor}`}>
+        <span className={`wordmark text-[1.02rem] tracking-[0.2em] ${textColor}`}>
           MİA PARK OCEAN
         </span>
         {!compact && (

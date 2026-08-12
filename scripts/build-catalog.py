@@ -117,7 +117,7 @@ def f(name: str, size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(os.path.join(FONTS, name), size)
 
 
-def serif(s): return f("Marcellus-400.ttf", s)
+def serif(s): return f("Fraunces-500.ttf", s)
 def sans(s): return f("Manrope-400.ttf", s)
 def sans_sb(s): return f("Manrope-600.ttf", s)
 def sans_b(s): return f("Manrope-700.ttf", s)

@@ -32,7 +32,7 @@ export default function BasinAciklamasiPage() {
           <Link href="/" className="inline-flex items-center gap-3" aria-label="MİA PARK OCEAN ana sayfa">
             <img src="/brand/mark-ocean-white.webp" alt="" aria-hidden="true" width={40} height={37} className="h-9 w-auto" />
             <span className="leading-none">
-              <span className="block font-display text-base tracking-[0.18em] text-white">MİA PARK OCEAN</span>
+              <span className="wordmark block text-base tracking-[0.18em] text-white">MİA PARK OCEAN</span>
               <span className="eyebrow mt-1.5 block text-[0.5rem] tracking-[0.26em] text-white/55">İzmit MİA Bölgesi</span>
             </span>
           </Link>
