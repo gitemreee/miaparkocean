@@ -17,13 +17,15 @@ export function Region() {
         />
 
         {/* Avantajlar */}
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-3 md:mt-14 md:gap-5 lg:grid-cols-4">
           {regionIntro.advantages.map((a, i) => (
             <Reveal key={a.title} delay={i * 0.08}>
-              <div className="h-full rounded-2xl border border-ocean/8 bg-cream p-5 md:p-6">
-                <TrendingUp className="h-6 w-6 text-bronze" strokeWidth={1.4} />
-                <h3 className="mt-4 text-lg text-ocean">{a.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ocean/70">{a.text}</p>
+              <div className="card-luxe h-full p-4 md:p-6">
+                <span className="icon-tile h-9 w-9 items-center justify-center rounded-lg md:h-11 md:w-11 md:rounded-xl">
+                  <TrendingUp className="h-4 w-4 md:h-5 md:w-5" strokeWidth={2} />
+                </span>
+                <h3 className="mt-3 text-[0.98rem] leading-snug text-ocean md:mt-4 md:text-lg">{a.title}</h3>
+                <p className="mt-1.5 text-[0.8rem] leading-relaxed text-ocean/70 md:mt-2 md:text-sm">{a.text}</p>
               </div>
             </Reveal>
           ))}

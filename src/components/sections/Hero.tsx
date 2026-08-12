@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Ban, Percent, UserRoundX, CalendarClock } from "lucide-react";
 import { SmartImage } from "@/components/ui/SmartImage";
-import { WAVE_PATHS, WAVE_TILE } from "@/components/ui/Wave";
+import { WAVE_PATHS } from "@/components/ui/Wave";
 
 type Slide = {
   video?: string;
@@ -132,27 +132,8 @@ export function Hero() {
 
         {/* İmza: logodaki dalga sahneyi beyaz sayfaya bağlar */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          {/* akan kurdele */}
-          <div className="relative h-[30px] w-full overflow-hidden md:h-[52px]">
-            <div className="wave-drift-slow absolute inset-0 w-[200%]">
-              <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-                <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
-                <g transform="translate(1440 0)">
-                  <path d={WAVE_TILE} fill="#c6e9f2" opacity="0.32" />
-                </g>
-              </svg>
-            </div>
-            <div className="wave-drift absolute inset-0 w-[200%]">
-              <svg viewBox="0 0 2880 140" preserveAspectRatio="none" className="h-full w-full">
-                <path d={WAVE_TILE} fill="#ffffff" opacity="0.72" />
-                <g transform="translate(1440 0)">
-                  <path d={WAVE_TILE} fill="#ffffff" opacity="0.72" />
-                </g>
-              </svg>
-            </div>
-          </div>
           {/* sabit dalga siluetı — logodaki kurdele dizilimi */}
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="-mt-px block h-[48px] w-full md:h-[76px]">
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block h-[42px] w-full md:h-[72px]">
             <path d={WAVE_PATHS.back} fill="#dff0f7" opacity="0.6" />
             <path d={WAVE_PATHS.mid} fill="#f2fafd" opacity="0.9" />
             <path d={WAVE_PATHS.front} fill="#ffffff" />

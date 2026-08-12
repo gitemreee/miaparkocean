@@ -9,14 +9,16 @@ export function Demographics() {
       <div className="container-luxe">
         <SectionHeading eyebrow={demographics.eyebrow} title={demographics.title} lead={demographics.lead} />
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-3 md:mt-12 md:gap-4 lg:grid-cols-4">
           {demographics.tiles.map((t, i) => (
             <Reveal key={t.label} delay={i * 0.07}>
-              <div className="h-full rounded-2xl border border-ink/10 bg-white p-5 md:p-6">
-                <Users className="h-6 w-6 text-accent" />
-                <div className="mt-4 font-display text-4xl font-bold text-ink">{t.value}</div>
-                <div className="mt-1 text-sm font-semibold text-ink/80">{t.label}</div>
-                <div className="text-xs text-ink/45">{t.note}</div>
+              <div className="card-luxe h-full p-4 md:p-6">
+                <span className="icon-tile h-9 w-9 items-center justify-center rounded-lg md:h-11 md:w-11 md:rounded-xl">
+                  <Users className="h-4 w-4 md:h-5 md:w-5" />
+                </span>
+                <div className="mt-3 font-display text-[1.6rem] leading-none text-ink md:mt-4 md:text-4xl">{t.value}</div>
+                <div className="mt-1.5 text-[0.82rem] font-semibold leading-snug text-ink/80 md:text-sm">{t.label}</div>
+                <div className="text-[0.7rem] text-ink/45 md:text-xs">{t.note}</div>
               </div>
             </Reveal>
           ))}

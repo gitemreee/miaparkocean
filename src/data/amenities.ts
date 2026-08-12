@@ -16,4 +16,5 @@ export const amenities: Amenity[] = [
   { icon: "Car", title: "Kapalı Otopark", text: "Aracınızı güvenle bırakabileceğiniz geniş kapalı otopark." },
   { icon: "ShieldCheck", title: "7/24 Güvenlik", text: "Gece gündüz kesintisiz güvenlik; aklınız arkada kalmıyor." },
   { icon: "Dumbbell", title: "Sosyal ve Spor Alanları", text: "Spor yapmak, dinlenmek ve vakit geçirmek için ayrılmış alanlar." },
+  { icon: "Baby", title: "Çocuk Oyun Parkı", text: "Çocukların güvenle oynayabileceği, gözünüzün önünde bir oyun alanı." },
 ];
