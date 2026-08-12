@@ -13,7 +13,7 @@ MİA PARK OCEAN | İzmit
 
 **Bio (150 karakter):**
 ```
-İzmit MİA Bölgesi'nde 660 daire 🌊
+İzmit MİA Bölgesi'nde 600 daire 🌊
 Bankasız · Faizsiz · Kefilsiz · 60 ay vade
 S.S. Yahya Kaptan Birlik Yapı Kooperatifi
 📍 Satış ofisi: İzmit merkez
@@ -39,14 +39,14 @@ MİA PARK OCEAN — İzmit MİA Bölgesi
 
 **Kısa açıklama (255 karakter):**
 ```
-İzmit MİA Bölgesi'nde S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından inşa edilen 660 daireli yaşam projesi. Tasarrufa dayalı faizsiz finansman: bankasız, faizsiz, kefilsiz, 60 ay vade. Tek yetkili satıcı: Ocean Gayrimenkul.
+İzmit MİA Bölgesi'nde S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından inşa edilen 600 daireli yaşam projesi. Tasarrufa dayalı faizsiz finansman: bankasız, faizsiz, kefilsiz, 60 ay vade. Tek yetkili satıcı: Ocean Gayrimenkul.
 ```
 
 **Uzun açıklama:**
 ```
 MİA PARK OCEAN, İzmit'in yeni gelişim aksı MİA Bölgesi'nde yükseliyor.
 
-• 4 blok, zemin + 7 kat, toplam 660 daire
+• 4 blok, zemin + 7 kat, toplam 600 daire
 • 1+0, 1+1 ve bahçeli 2+1 dubleks seçenekleri
 • Temeller tamamen fore kazık sistemiyle inşa ediliyor
 • Kapalı yüzme havuzu, fitness, sauna ve Türk hamamı, çocuk oyun parkı, kapalı otopark
@@ -79,7 +79,7 @@ MİA PARK OCEAN
 
 Proje tanıtım filmleri, daire turları, inşaat ilerleme videoları ve kooperatif modelini anlatan bilgilendirme içerikleri burada.
 
-660 daire · 4 blok · 1+0, 1+1, 2+1 bahçe dubleks
+600 daire · 4 blok · 1+0, 1+1, 2+1 bahçe dubleks
 Bankasız, faizsiz, kefilsiz · 60 ay vade
 
 Yapımcı: S.S. Yahya Kaptan Birlik Yapı Kooperatifi
@@ -96,7 +96,7 @@ Tek yetkili satıcı: Ocean Gayrimenkul
 
 **Bio (80 karakter):**
 ```
-İzmit MİA Bölgesi'nde 660 daire 🌊
+İzmit MİA Bölgesi'nde 600 daire 🌊
 Bankasız · Faizsiz · 60 ay vade
 ```
 

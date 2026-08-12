@@ -104,7 +104,7 @@ export const locations: Location[] = [
     loc: "'de",
     title: "Yenişehir Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "İzmit Yenişehir'de yeni konut arayanlara MİA PARK OCEAN: MİA Bölgesi'nde 660 daire, faizsiz kooperatif finansmanı, 60 ay vade.",
+      "İzmit Yenişehir'de yeni konut arayanlara MİA PARK OCEAN: MİA Bölgesi'nde 600 daire, faizsiz kooperatif finansmanı, 60 ay vade.",
     drive: "3-5 dakika",
     intro: [
       "Yenişehir, İzmit'in D-100 aksına yakın, son yıllarda yeni yapı stokunun hızla arttığı mahallelerinden. Şehir merkezine yakınlığı ve ana yollara kolay bağlantısı, mahalleyi hem oturum hem yatırım açısından hareketli tutuyor.",
@@ -188,7 +188,7 @@ export const locations: Location[] = [
     loc: "'da",
     title: "Alikahya Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "Alikahya'da konut arayanlara MİA PARK OCEAN alternatifi: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 60 ay vade, 660 daire.",
+      "Alikahya'da konut arayanlara MİA PARK OCEAN alternatifi: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 60 ay vade, 600 daire.",
     drive: "8-12 dakika",
     intro: [
       "Alikahya, İzmit'in doğusunda son on yılda en hızlı büyüyen bölgelerden biri. Yeni konut alanları, stadyum ve sanayi istihdamının etkisiyle nüfusu sürekli artıyor.",
@@ -308,7 +308,7 @@ export const locations: Location[] = [
     loc: "'ta",
     title: "Kozluk Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "İzmit Kozluk'ta konut arayanlar için MİA PARK OCEAN: merkeze yakın MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi.",
+      "İzmit Kozluk'ta konut arayanlar için MİA PARK OCEAN: merkeze yakın MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi.",
     drive: "5-8 dakika",
     intro: [
       "Kozluk, İzmit merkezinin batısında, sahil bandına ve şehir içi ana arterlere yakın bir mahalle. Merkeze yürüme mesafesinde olması günlük hayatı kolaylaştırıyor.",
@@ -324,7 +324,7 @@ export const locations: Location[] = [
     faq: [
       {
         q: "MİA PARK OCEAN'da hangi daire tipleri var?",
-        a: "Projede 1+0, 1+1 ve zemin katlarda kendine ait özel bahçesi bulunan 2+1 loft/dubleks daireler bulunmaktadır. Toplam 660 daire, 8 katlı 4 blokta yer alır.",
+        a: "Projede 1+0, 1+1 ve zemin katlarda kendine ait özel bahçesi bulunan 2+1 loft/dubleks daireler bulunmaktadır. Toplam 600 daire, 8 katlı 4 blokta yer alır.",
       },
       {
         q: "Kozluk'tan projeye mesafe nedir?",
@@ -392,7 +392,7 @@ export const locations: Location[] = [
     loc: "'de",
     title: "Başiskele Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "Başiskele'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi, 60 ay vade.",
+      "Başiskele'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi, 60 ay vade.",
     drive: "12-18 dakika",
     intro: [
       "Başiskele, körfezin güney kıyısında yer alan, doğayla iç içe yapısı ve villa/bahçeli konut dokusuyla öne çıkan bir ilçe. Son yıllarda İzmit merkezden taşınan ailelerin tercih ettiği bölgelerden biri hâline geldi.",
@@ -512,7 +512,7 @@ export const locations: Location[] = [
     loc: "'de",
     title: "Körfez Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "Körfez ilçesinde konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi.",
+      "Körfez ilçesinde konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi.",
     drive: "18-25 dakika",
     intro: [
       "Körfez, Kocaeli'nin sanayi ağırlıklı ilçelerinden; rafineri ve petrokimya tesisleriyle güçlü bir istihdam yapısına sahip.",
@@ -712,7 +712,7 @@ export const locations: Location[] = [
     loc: "'de",
     title: "Karamürsel Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "Karamürsel'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 660 daireli faizsiz kooperatif projesi.",
+      "Karamürsel'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi.",
     drive: "35-45 dakika",
     intro: [
       "Karamürsel, körfezin güneybatı ucunda, sahil şeridi ve sakin yaşam temposuyla öne çıkan bir ilçe. Yazlık konut talebi ilçede belirgin.",
@@ -772,7 +772,7 @@ export const locations: Location[] = [
       },
       {
         q: "Projede kaç daire var?",
-        a: "MİA PARK OCEAN 4 bloktan oluşur ve toplam 660 daire içerir. Bloklar zemin + 7 kat olmak üzere 8 katlıdır.",
+        a: "MİA PARK OCEAN 4 bloktan oluşur ve toplam 600 daire içerir. Bloklar zemin + 7 kat olmak üzere 8 katlıdır.",
       },
       {
         q: "Randevu almadan satış ofisine gidebilir miyim?",

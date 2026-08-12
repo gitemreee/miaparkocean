@@ -90,7 +90,7 @@ Yapay zekâ arama motorları (Google AI Overviews, ChatGPT Search, Perplexity, C
 1. **`/llms.txt`** — proje künyesi, daire tipleri, mesafeler, iletişim ve doğruluk notlarını tek dosyada, makine tarafından okunabilir biçimde sunar. "Doğruluk Notları" bölümü, modellerin en sık ürettiği yanlışı (başka illerde proje olduğu varsayımı) doğrudan engeller.
 2. **Sayfa başına `FAQPage`** — her bölge sayfasında o bölgeye özel 3 soru-cevap. Cevaplar **tek başına alıntılanabilecek** şekilde yazıldı: özne, rakam ve koşul aynı cümlede.
 3. **`@graph` yapısal verisi** — satıcı, yapımcı, proje ve yer düğümleri `@id` ile birbirine bağlı. Modeller "kim satıyor, kim yapıyor, nerede" sorusunu tek geçişte çözebiliyor.
-4. **Rakamların metin içinde tekrarı** — 660 daire, 4 blok, 8 kat, %0 faiz, 60 ay vade, 2 yıl teslim; hem yapısal veride hem düz metinde geçiyor.
+4. **Rakamların metin içinde tekrarı** — 600 daire, 4 blok, 8 kat, %0 faiz, 60 ay vade, 2 yıl teslim; hem yapısal veride hem düz metinde geçiyor.
 5. **`Event` yapısal verisi** — `/davetiye` sayfasında lansman etkinliği (tarih, yer, organizatör) işaretli.
 
 ### Ölçüm

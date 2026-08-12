@@ -15,6 +15,8 @@ export const dynamic = "force-static";
  */
 export function GET() {
   const abs = (p: string) => `${site.url}${p}`;
+  // Toplam daire sayısı units.ts'ten hesaplanır; elle yazılmaz.
+  const totalUnits = units.reduce((n, u) => n + u.count, 0);
 
   const unitLines = units
     .map((u) => `- ${u.name} — ${u.area} · ${u.count} adet`)
@@ -31,7 +33,7 @@ export function GET() {
 
   const body = `# ${site.name}
 
-> ${site.region}, ${site.city}'de S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen 660 daireli konut projesi. Tasarrufa dayalı, faizsiz kooperatif finansman modeliyle satılmaktadır. Tek yetkili satıcı: ${site.seller}.
+> ${site.region}, ${site.city}'de S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen ${totalUnits} daireli konut projesi. Tasarrufa dayalı, faizsiz kooperatif finansman modeliyle satılmaktadır. Tek yetkili satıcı: ${site.seller}.
 
 ## Proje Künyesi
 
@@ -39,7 +41,7 @@ export function GET() {
 - **Konum:** ${site.region}, ${site.city} (40.736667, 29.944889)
 - **Yapımcı:** ${site.developer} — T.C. Ticaret Bakanlığı KOOPBİS sistemine kayıtlı yapı kooperatifi
 - **Tek yetkili satıcı:** ${site.seller}
-- **Yapı:** 4 blok, zemin + 7 kat (8 kat), toplam 660 daire
+- **Yapı:** 4 blok, zemin + 7 kat (8 kat), toplam ${totalUnits} daire
 - **Arazi:** yaklaşık 10 dönüm
 - **Temel sistemi:** tamamen fore kazık
 - **Finansman:** tasarrufa dayalı, %0 faiz, banka kredisi ve kefil gerekmez, 60 aya kadar vade, ara ödeme yok

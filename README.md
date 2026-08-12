@@ -1,6 +1,6 @@
 # MİA PARK OCEAN — Web Sitesi
 
-İzmit MİA Bölgesi'nde S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen 660 daireli **MİA PARK OCEAN** projesinin tanıtım + güven odaklı web sitesi. Tek yetkili satıcı: **Ocean Gayrimenkul**.
+İzmit MİA Bölgesi'nde S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen 600 daireli **MİA PARK OCEAN** projesinin tanıtım + güven odaklı web sitesi. Tek yetkili satıcı: **Ocean Gayrimenkul**.
 
 **Yığın:** Next.js 15 (App Router, statik export) · Tailwind CSS v4 · TypeScript · Framer Motion · lucide-react
 **Tasarım dili:** "Deep Ocean" — beyaz zemin, mavi gradyan geçişler, logodaki dalga sitenin imzası.

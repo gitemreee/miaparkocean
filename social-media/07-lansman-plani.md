@@ -105,7 +105,7 @@ QR yüksek hata düzeltme (H) seviyesindedir — %30'a kadar bozulmada bile okun
 Fiziksel klasör veya QR ile dijital:
 
 1. Basın bülteni (yazılı) — `/basin-aciklamasi` sayfasının çıktısı
-2. Proje künyesi tek sayfa (660 daire, 4 blok, tipler, donatılar, finansman)
+2. Proje künyesi tek sayfa (600 daire, 4 blok, tipler, donatılar, finansman)
 3. Yüksek çözünürlüklü render'lar (USB veya indirme bağlantısı)
 4. Logo dosyaları — `public/brand/`
 5. Yetkili iletişim: Ocean Gayrimenkul · 0540 028 00 41

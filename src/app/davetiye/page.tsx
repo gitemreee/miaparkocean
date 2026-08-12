@@ -172,7 +172,7 @@ export default function DavetiyePage() {
             {launchEvent.project} · <span className="gilded">{launchEvent.region}</span>
           </h2>
           <p className="mt-5 text-pretty leading-relaxed text-ink/65">
-            4 blok, 660 daire. 1+0, 1+1 ve 2+1 bahçe dublekslerden oluşan, geniş sosyal donatılı modern yaşam projesi.
+            4 blok, 600 daire. 1+0, 1+1 ve 2+1 bahçe dublekslerden oluşan, geniş sosyal donatılı modern yaşam projesi.
           </p>
 
           <ul className="mt-9 flex flex-wrap justify-center gap-2.5">

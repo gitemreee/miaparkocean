@@ -55,7 +55,9 @@ export const projectJsonLd = {
   url: site.url,
   description: site.description,
   image: [abs("/images/hero-courtyard-dusk.webp"), abs("/images/aerial-pools.webp"), abs("/og-image.jpg")],
-  numberOfAccommodationUnits: 660,
+  // Toplam daire sayısı units.ts'ten hesaplanır — elle yazılmaz ki
+  // daire dağılımı değiştiğinde toplam kaymasın.
+  numberOfAccommodationUnits: units.reduce((n, u) => n + u.count, 0),
   numberOfBuildings: 4,
   numberOfFloors: 8,
   address: {

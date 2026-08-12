@@ -124,7 +124,7 @@ SVG yolları: `src/components/ui/Wave.tsx` → `WAVE_PATHS`.
 |---|---|
 | Net, sakin, güven veren | Bağırgan, acele ettiren |
 | "Bankasız, faizsiz, kefilsiz" | "Kaçırma!", "Son fırsat!" |
-| Rakamla konuşan (660 daire, 60 ay) | Belirsiz abartı ("en iyi", "eşsiz fırsat") |
+| Rakamla konuşan (600 daire, 60 ay) | Belirsiz abartı ("en iyi", "eşsiz fırsat") |
 | Kooperatif modelini açıklayan | Modeli gizleyen |
 | Türkçe karakterleri doğru kullanan | "MIA" (doğrusu **MİA**) |
 
