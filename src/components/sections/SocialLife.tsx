@@ -6,7 +6,7 @@ import { amenities } from "@/data/amenities";
 
 export function SocialLife() {
   return (
-    <section className="surface-tint py-20 md:py-28">
+    <section className="surface-tint py-12 md:py-24">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Sosyal Yaşam"
@@ -22,16 +22,16 @@ export function SocialLife() {
           </div>
         </Reveal>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-3">
           {amenities.map((a, i) => (
             <Reveal key={a.title} delay={(i % 3) * 0.07}>
-              <div className="group flex h-full items-start gap-4 rounded-2xl border border-ink/8 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-card)]">
-                <span className="icon-tile h-12 w-12 items-center justify-center rounded-xl">
-                  <Icon name={a.icon} className="h-6 w-6" />
+              <div className="group flex h-full flex-col gap-2.5 rounded-2xl border border-ink/8 bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-card)] md:flex-row md:items-start md:gap-4 md:p-6">
+                <span className="icon-tile h-10 w-10 items-center justify-center rounded-xl md:h-12 md:w-12">
+                  <Icon name={a.icon} className="h-5 w-5 md:h-6 md:w-6" />
                 </span>
                 <div>
-                  <h3 className="text-lg font-bold text-ink">{a.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{a.text}</p>
+                  <h3 className="text-[0.95rem] font-bold leading-snug text-ink md:text-lg">{a.title}</h3>
+                  <p className="mt-1 text-[0.8rem] leading-relaxed text-ink/60 md:mt-1.5 md:text-sm">{a.text}</p>
                 </div>
               </div>
             </Reveal>

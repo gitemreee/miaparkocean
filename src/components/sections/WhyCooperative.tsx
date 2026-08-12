@@ -7,7 +7,7 @@ import { whyCooperative } from "@/data/cooperative";
 
 export function WhyCooperative() {
   return (
-    <section id="neden-kooperatif" className="bg-cream py-24 md:py-32">
+    <section id="neden-kooperatif" className="bg-cream py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Neden Kooperatif?"
@@ -18,13 +18,13 @@ export function WhyCooperative() {
         <div className="mt-16 grid gap-6 md:grid-cols-2">
           {whyCooperative.points.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
-              <div className="flex h-full gap-5 rounded-2xl border border-ocean/8 bg-pearl p-7">
-                <span className="icon-tile h-14 w-14 items-center justify-center rounded-2xl">
-                  <Icon name={p.icon} className="h-7 w-7" />
+              <div className="flex h-full gap-3.5 rounded-2xl md:gap-5 border border-ocean/8 bg-pearl p-4 md:p-7">
+                <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl md:h-14 md:w-14 md:rounded-2xl">
+                  <Icon name={p.icon} className="h-5 w-5 md:h-7 md:w-7" />
                 </span>
                 <div>
-                  <h3 className="text-xl text-ocean">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ocean/70">{p.text}</p>
+                  <h3 className="text-[1.02rem] leading-snug text-ocean md:text-xl">{p.title}</h3>
+                  <p className="mt-1.5 text-[0.82rem] leading-relaxed text-ocean/70 md:mt-2 md:text-sm">{p.text}</p>
                 </div>
               </div>
             </Reveal>

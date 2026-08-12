@@ -8,7 +8,7 @@ export function Region() {
   const verifiedPress = press.filter((p) => p.verified && p.href !== "#");
 
   return (
-    <section id="bolge" className="surface-tint py-24 md:py-32">
+    <section id="bolge" className="surface-tint py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Değerlenen Bölge"
@@ -20,7 +20,7 @@ export function Region() {
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {regionIntro.advantages.map((a, i) => (
             <Reveal key={a.title} delay={i * 0.08}>
-              <div className="h-full rounded-2xl border border-ocean/8 bg-cream p-6">
+              <div className="h-full rounded-2xl border border-ocean/8 bg-cream p-5 md:p-6">
                 <TrendingUp className="h-6 w-6 text-bronze" strokeWidth={1.4} />
                 <h3 className="mt-4 text-lg text-ocean">{a.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ocean/70">{a.text}</p>
@@ -54,7 +54,7 @@ export function Region() {
               {verifiedPress.map((item, i) => (
                 <Reveal key={item.title} delay={i * 0.08}>
                   <a href={item.href} target="_blank" rel="noopener noreferrer" className="block h-full">
-                    <div className="card-luxe flex h-full flex-col p-6">
+                    <div className="card-luxe flex h-full flex-col p-5 md:p-6">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium uppercase tracking-wider text-bronze">{item.source}</span>
                         <span className="text-xs text-ocean/40">{item.date}</span>

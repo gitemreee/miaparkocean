@@ -5,7 +5,7 @@ import { legalAssurance } from "@/data/cooperative";
 
 export function LegalAssurance() {
   return (
-    <section id="guvence" className="surface-paper py-20 md:py-28">
+    <section id="guvence" className="surface-paper py-12 md:py-24">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Yasal Güvence ve Denetim"
@@ -13,15 +13,15 @@ export function LegalAssurance() {
           lead={legalAssurance.lead}
         />
 
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-2 gap-3 md:mt-14 md:gap-5 lg:grid-cols-3">
           {legalAssurance.cards.map((c, i) => (
             <Reveal key={c.title} delay={(i % 3) * 0.08}>
-              <div className="group h-full rounded-2xl border border-ink/10 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[var(--shadow-card)]">
-                <span className="icon-tile h-12 w-12 items-center justify-center rounded-xl">
-                  <Icon name={c.icon} className="h-6 w-6" />
+              <div className="group h-full rounded-2xl border border-ink/10 bg-white p-4 transition-all md:p-7 duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[var(--shadow-card)]">
+                <span className="icon-tile h-10 w-10 items-center justify-center rounded-xl md:h-12 md:w-12">
+                  <Icon name={c.icon} className="h-5 w-5 md:h-6 md:w-6" />
                 </span>
-                <h3 className="mt-5 text-xl font-bold text-ink">{c.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink/60">{c.text}</p>
+                <h3 className="mt-3 text-[0.98rem] font-bold leading-snug text-ink md:mt-5 md:text-xl">{c.title}</h3>
+                <p className="mt-1.5 text-[0.8rem] leading-relaxed text-ink/60 md:mt-3 md:text-sm">{c.text}</p>
               </div>
             </Reveal>
           ))}

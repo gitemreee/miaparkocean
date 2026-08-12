@@ -63,7 +63,7 @@ export default function BolgelerPage() {
           <section
             key={group.type}
             id={group.type === "mahalle" ? "izmit-mahalleleri" : group.type === "ilce" ? "kocaeli-ilceleri" : "komsu-iller"}
-            className={gi % 2 === 0 ? "surface-paper py-20 md:py-24" : "surface-tint py-20 md:py-24"}
+            className={gi % 2 === 0 ? "surface-paper py-12 md:py-22" : "surface-tint py-12 md:py-22"}
           >
             <div className="container-luxe">
               <SectionHeading eyebrow={group.title} title={group.title} lead={group.lead} />
@@ -73,7 +73,7 @@ export default function BolgelerPage() {
                   <Reveal key={l.slug} delay={i * 0.04}>
                     <Link
                       href={`/bolgeler/${l.slug}`}
-                      className="card-luxe group flex h-full flex-col p-6"
+                      className="card-luxe group flex h-full flex-col p-5 md:p-6"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <span className="icon-tile h-11 w-11 items-center justify-center rounded-xl">

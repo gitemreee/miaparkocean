@@ -218,12 +218,12 @@ export function Header() {
 
       <div className={`lg:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`} aria-hidden={!open}>
         <div className={`border-t border-ink/10 bg-paper transition-[max-height,opacity] duration-500 ${open ? "max-h-[85vh] overflow-y-auto opacity-100" : "max-h-0 overflow-hidden opacity-0"}`}>
-          <nav className="container-luxe flex flex-col py-4">
+          <nav className="container-luxe flex flex-col py-2">
             {nav.map((item) => {
               const submenu = submenus[item.href];
               if (!submenu) {
                 return (
-                  <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-ink/8 py-4 font-display text-[1.35rem] tracking-[0.01em] text-ink">
+                  <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-ink/8 py-2.5 font-display text-[1.08rem] tracking-[0.01em] text-ink">
                     {item.label}
                   </Link>
                 );
@@ -235,10 +235,10 @@ export function Header() {
                     type="button"
                     onClick={() => setMobileSub(isOpen ? null : item.href)}
                     aria-expanded={isOpen}
-                    className="flex w-full items-center justify-between py-4 font-display text-[1.35rem] tracking-[0.01em] text-ink"
+                    className="flex w-full items-center justify-between py-2.5 font-display text-[1.08rem] tracking-[0.01em] text-ink"
                   >
                     {item.label}
-                    <ChevronDown className={`h-5 w-5 text-ink/60 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                    <ChevronDown className={`h-4 w-4 text-ink/50 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
                   <AnimatePresence initial={false}>
                     {isOpen && (
@@ -255,7 +255,7 @@ export function Header() {
                               key={sub.href}
                               href={sub.href}
                               onClick={() => setOpen(false)}
-                              className={`flex items-center justify-between gap-4 py-2.5 pl-4 font-display text-[1.02rem] ${sub.footer ? "text-accent" : "text-ink/70"}`}
+                              className={`flex items-center justify-between gap-4 py-2 pl-4 font-display text-[0.95rem] ${sub.footer ? "text-accent" : "text-ink/70"}`}
                             >
                               <span>{sub.label}</span>
                               {sub.hint ? <span className="text-xs text-ink/40">{sub.hint}</span> : sub.footer ? <ArrowRight className="h-4 w-4" aria-hidden="true" /> : null}
@@ -268,11 +268,11 @@ export function Header() {
                 </div>
               );
             })}
-            <div className="mt-4 flex flex-col gap-3">
-              <a href={contact.whatsapp.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-ink/25 px-5 py-3 text-sm font-medium text-ink">
+            <div className="mt-3 flex flex-col gap-2.5 pb-3">
+              <a href={contact.whatsapp.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-ink/25 px-5 py-2.5 text-sm font-medium text-ink">
                 {contact.whatsapp.label}
               </a>
-              <Link href="/iletisim" onClick={() => setOpen(false)} className="inline-flex items-center justify-center rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white">
+              <Link href="/iletisim" onClick={() => setOpen(false)} className="btn-base btn-jade px-5 py-2.5 text-sm">
                 Dairenizi Seçin
               </Link>
             </div>

@@ -4,7 +4,7 @@ import { projectStats as stats } from "@/data/project";
 
 export function Stats() {
   return (
-    <section className="surface-paper py-14 md:py-16">
+    <section className="surface-paper py-10 md:py-14">
       <div className="container-luxe">
         <div className="grid grid-cols-2 gap-y-10 rounded-3xl border border-ink/10 bg-white py-10 md:grid-cols-5">
           {stats.map((s, i) => (

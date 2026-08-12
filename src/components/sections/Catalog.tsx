@@ -29,7 +29,7 @@ export function Catalog() {
   }, [full]);
 
   return (
-    <section id="katalog" className="surface-tint py-24 md:py-32">
+    <section id="katalog" className="surface-tint py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Online Katalog"

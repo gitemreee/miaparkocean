@@ -5,14 +5,14 @@ import { demographics } from "@/data/valuation";
 
 export function Demographics() {
   return (
-    <section id="demografi" className="surface-paper py-20 md:py-28">
+    <section id="demografi" className="surface-paper py-12 md:py-24">
       <div className="container-luxe">
         <SectionHeading eyebrow={demographics.eyebrow} title={demographics.title} lead={demographics.lead} />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {demographics.tiles.map((t, i) => (
             <Reveal key={t.label} delay={i * 0.07}>
-              <div className="h-full rounded-2xl border border-ink/10 bg-white p-6">
+              <div className="h-full rounded-2xl border border-ink/10 bg-white p-5 md:p-6">
                 <Users className="h-6 w-6 text-accent" />
                 <div className="mt-4 font-display text-4xl font-bold text-ink">{t.value}</div>
                 <div className="mt-1 text-sm font-semibold text-ink/80">{t.label}</div>
@@ -24,7 +24,7 @@ export function Demographics() {
 
         {/* Yaş dağılımı çubuğu */}
         <Reveal delay={0.1}>
-          <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-6">
+          <div className="mt-6 rounded-2xl border border-ink/10 bg-white p-5 md:p-6">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-ink">Yaş Dağılımı</span>
               <span className="text-xs text-ink/45">İzmit</span>

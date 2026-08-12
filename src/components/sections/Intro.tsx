@@ -6,7 +6,7 @@ import { highlights } from "@/data/project";
 
 export function Intro() {
   return (
-    <section className="bg-cream py-24 md:py-32">
+    <section className="bg-cream py-14 md:py-28">
       <div className="container-luxe grid items-center gap-14 lg:grid-cols-[1.3fr_1fr]">
         {/* Görsel — büyük */}
         <Reveal className="order-2 lg:order-1">

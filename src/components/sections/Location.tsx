@@ -7,7 +7,7 @@ import { distances, locationIntro, locationTags, mapConfig } from "@/data/locati
 
 export function Location() {
   return (
-    <section id="lokasyon" className="bg-cream py-24 md:py-32">
+    <section id="lokasyon" className="bg-cream py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Lokasyon"
@@ -22,16 +22,16 @@ export function Location() {
         <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-stretch">
           {/* Mesafeler */}
           <div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2.5 md:gap-3">
               {distances.map((d, i) => (
                 <Reveal key={d.place} delay={i * 0.05}>
-                  <div className="group flex items-center gap-4 rounded-2xl border border-ink/10 bg-white px-5 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-card)]">
-                    <span className="icon-tile h-12 w-12 items-center justify-center rounded-xl">
-                      <Icon name={d.icon} className="h-5 w-5" />
+                  <div className="group flex items-center gap-2.5 rounded-2xl border border-ink/10 bg-white px-3 py-3 transition-all md:gap-4 md:px-5 md:py-4 duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-card)]">
+                    <span className="icon-tile h-9 w-9 items-center justify-center rounded-lg md:h-12 md:w-12 md:rounded-xl">
+                      <Icon name={d.icon} className="h-4 w-4 md:h-5 md:w-5" />
                     </span>
                     <div>
-                      <div className="font-display text-2xl font-bold leading-none text-ink">{d.time}</div>
-                      <div className="mt-1 text-sm text-ink/60">{d.place}</div>
+                      <div className="font-display text-lg leading-none text-ink md:text-2xl">{d.time}</div>
+                      <div className="mt-0.5 text-[0.75rem] leading-tight text-ink/60 md:mt-1 md:text-sm">{d.place}</div>
                     </div>
                   </div>
                 </Reveal>

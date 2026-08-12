@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* İçindekiler */}
         {hasToc && (
-          <div className="mb-10 rounded-2xl border border-ocean/10 bg-pearl p-6">
+          <div className="mb-10 rounded-2xl border border-ocean/10 bg-pearl p-5 md:p-6">
             <div className="eyebrow text-ocean/50">İçindekiler</div>
             <ul className="mt-3 space-y-2">
               {a.sections.map((s, i) => (
@@ -93,7 +93,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Kontrol listesi */}
         {a.checklist && a.checklist.length > 0 && (
-          <div className="mt-12 rounded-2xl bg-gradient-ocean p-8">
+          <div className="mt-12 rounded-2xl bg-gradient-ocean p-5 md:p-8">
             <h2 className="text-xl text-cream">Uygulama Kontrol Listesi</h2>
             <ul className="mt-5 space-y-3">
               {a.checklist.map((c) => (
@@ -110,7 +110,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Mia Park Ocean politika notu */}
         {a.mpoNote && (
-          <div className="mt-8 flex gap-3 rounded-2xl border border-bronze/25 bg-bronze/5 p-6">
+          <div className="mt-8 flex gap-3 rounded-2xl border border-bronze/25 bg-bronze/5 p-5 md:p-6">
             <Info className="mt-0.5 h-5 w-5 shrink-0 text-bronze" />
             <p className="text-sm leading-relaxed text-ocean/70">{mpoPolicyNote}</p>
           </div>

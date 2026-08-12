@@ -7,15 +7,15 @@ import { units } from "@/data/units";
 
 export function UnitTypes() {
   return (
-    <section id="daireler" className="surface-paper py-20 md:py-28">
+    <section id="daireler" className="surface-paper py-12 md:py-24">
       <div className="container-luxe">
         <SectionHeading
           eyebrow="Daire Tipleri"
           title={<>Size <span className="gilded">uygun daireyi</span> seçin</>}
-          lead="1+0 stüdyodan bahçeli 2+1 dublekse kadar üç farklı daire; ihtiyacınıza ve bütçenize göre seçebileceğiniz üç yaşam biçimi."
+          lead="1+0 stüdyodan bahçeli 2+1 dublekse kadar dört farklı daire; ihtiyacınıza ve bütçenize göre seçebileceğiniz dört yaşam biçimi."
         />
 
-        <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-2 items-stretch gap-3 md:mt-14 md:gap-6 lg:grid-cols-4">
           {units.map((u, i) => {
             return (
               <Reveal key={u.slug} delay={i * 0.1}>
@@ -24,20 +24,23 @@ export function UnitTypes() {
                     <SmartImage src={u.image} alt={`${u.name} — MİA PARK OCEAN`} sizes="(max-width:1024px) 100vw, 33vw" className="h-full w-full object-cover" />
                   </div>
 
-                  <div className="flex flex-1 flex-col p-7">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-lg bg-accent-tint px-2.5 py-1 text-sm font-bold text-accent">{u.type}</span>
-                      <span className="text-sm text-ink/50">{u.count} adet</span>
+                  <div className="flex flex-1 flex-col p-4 md:p-6">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-lg bg-accent-tint px-2 py-0.5 text-xs font-bold text-accent md:px-2.5 md:py-1 md:text-sm">
+                        {u.type}
+                      </span>
+                      <span className="text-xs text-ink/50 md:text-sm">{u.count} adet</span>
                     </div>
-                    <div className="mt-4 flex items-end gap-1.5">
-                      <span className="font-display text-5xl font-bold text-ink">{u.areaValue}</span>
-                      <span className="mb-1.5 text-lg font-semibold text-ink/50">m²</span>
-                      <span className="mb-2 text-xs font-medium text-ink/40">brüt</span>
+                    <div className="mt-2.5 flex items-end gap-1 md:mt-4 md:gap-1.5">
+                      <span className="font-display text-3xl text-ink md:text-5xl">{u.areaValue}</span>
+                      <span className="mb-0.5 text-sm font-semibold text-ink/50 md:mb-1.5 md:text-lg">m²</span>
+                      <span className="mb-1 hidden text-xs font-medium text-ink/40 md:mb-2 md:inline">brüt</span>
                     </div>
-                    <h3 className="mt-1 text-xl font-bold text-ink">{u.name}</h3>
-                    <p className="mt-1 text-sm font-semibold text-accent">{u.tagline}</p>
+                    <h3 className="mt-1 text-[0.98rem] font-bold leading-snug text-ink md:text-xl">{u.name}</h3>
+                    <p className="mt-1 text-xs font-semibold text-accent md:text-sm">{u.tagline}</p>
 
-                    <ul className="mt-5 space-y-2.5">
+                    {/* Özellik listesi mobilde gizli — kart yüksekliğini üçe katlıyordu */}
+                    <ul className="mt-5 hidden space-y-2.5 md:block">
                       {u.features.slice(0, 4).map((f) => (
                         <li key={f} className="flex items-start gap-2.5 text-sm text-ink/70">
                           <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" strokeWidth={2.5} /> {f}
@@ -45,12 +48,14 @@ export function UnitTypes() {
                       ))}
                     </ul>
 
-                    <div className="mt-6 flex-1" />
+                    <div className="mt-3 flex-1 md:mt-6" />
                     <Link
                       href={`/daireler#${u.slug}`}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
+                      className="btn-base btn-jade px-3 py-2.5 text-xs md:px-6 md:py-3.5 md:text-sm"
                     >
-                      Detayları İncele <ArrowRight className="h-4 w-4" />
+                      <span className="md:hidden">İncele</span>
+                      <span className="hidden md:inline">Detayları İncele</span>
+                      <ArrowRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     </Link>
                   </div>
                 </div>

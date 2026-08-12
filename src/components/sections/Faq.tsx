@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import Link from "next/link";
+import { Plus, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { faq, type FaqItem } from "@/data/faq";
@@ -11,6 +12,10 @@ type FaqProps = {
   eyebrow?: string;
   title?: React.ReactNode;
   lead?: string;
+  /** Gösterilecek soru sayısı; fazlası için "tümünü gör" bağlantısı çıkar */
+  limit?: number;
+  /** Tüm soruların bulunduğu sayfa */
+  moreHref?: string;
 };
 
 export function Faq({
@@ -18,11 +23,15 @@ export function Faq({
   eyebrow = "Aklınızdaki Sorular",
   title,
   lead = "Kooperatif modeli, güvence ve proje hakkında en çok merak edilenleri topladık.",
+  limit,
+  moreHref,
 }: FaqProps) {
   const [open, setOpen] = useState<number | null>(0);
+  const shown = limit ? items.slice(0, limit) : items;
+  const hasMore = Boolean(limit && moreHref && items.length > limit);
 
   return (
-    <section id="sss" className="surface-tint py-24 md:py-32">
+    <section id="sss" className="surface-tint py-14 md:py-28">
       <div className="container-luxe">
         <SectionHeading
           eyebrow={eyebrow}
@@ -30,8 +39,8 @@ export function Faq({
           lead={lead}
         />
 
-        <div className="mx-auto mt-14 max-w-3xl divide-y divide-ocean/10 border-y border-ocean/10">
-          {items.map((item, i) => {
+        <div className="mx-auto mt-10 max-w-3xl divide-y divide-ocean/10 border-y border-ocean/10 md:mt-14">
+          {shown.map((item, i) => {
             const isOpen = open === i;
             return (
               <div key={item.question}>
@@ -67,6 +76,15 @@ export function Faq({
             );
           })}
         </div>
+
+        {hasMore && (
+          <div className="mt-8 text-center">
+            <Link href={moreHref!} className="btn-base btn-outline px-7 py-3.5 text-sm">
+              Tüm sorular ({items.length})
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

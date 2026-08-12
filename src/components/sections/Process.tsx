@@ -7,7 +7,7 @@ const icons: Record<string, LucideIcon> = { Wallet, CalendarClock, HardHat, KeyR
 
 export function Process() {
   return (
-    <section id="surec" className="surface-tint py-20 md:py-28">
+    <section id="surec" className="surface-tint py-12 md:py-24">
       <div className="container-luxe">
         <SectionHeading eyebrow={processIntro.eyebrow} title={processIntro.title} lead={processIntro.lead} />
 

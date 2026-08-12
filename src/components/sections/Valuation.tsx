@@ -87,7 +87,7 @@ export function Valuation() {
         <div className="mt-12 grid gap-4 sm:grid-cols-3">
           {valuation.changes.map((m, i) => (
             <Reveal key={m.label} delay={i * 0.08}>
-              <div className="rounded-2xl border border-white/12 bg-white/[0.06] p-6">
+              <div className="rounded-2xl border border-white/12 bg-white/[0.06] p-5 md:p-6">
                 <div className="flex items-center gap-2">
                   <ArrowUpRight className="h-6 w-6 text-accent-300" />
                   <div className="font-display text-4xl text-white md:text-5xl">{m.value}</div>

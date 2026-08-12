@@ -45,7 +45,7 @@ export default function HomePage() {
       <WhyCooperative />
       <LegalAssurance />
       <CooperativeOrg />
-      <Faq />
+      <Faq limit={6} moreHref="/bilgi-merkezi" />
       <ContactForm />
     </>
   );

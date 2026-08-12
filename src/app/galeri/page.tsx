@@ -17,7 +17,7 @@ export default function GaleriPage() {
         lead="Dış mekân, sosyal alanlar, iç mekân ve kat planlarıyla projeyi yakından görün."
         image="/images/aerial-pools.webp"
       />
-      <section className="bg-cream py-20 md:py-28">
+      <section className="bg-cream py-12 md:py-24">
         <div className="container-luxe">
           <GalleryGrid showFilter />
         </div>

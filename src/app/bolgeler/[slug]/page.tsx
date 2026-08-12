@@ -103,7 +103,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
       </nav>
 
       {/* Özet + giriş */}
-      <section className="surface-paper py-16 md:py-24">
+      <section className="surface-paper py-11 md:py-20">
         <div className="container-luxe grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:items-start">
           <div>
             <div className="flex items-center gap-3">
@@ -168,7 +168,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
       </section>
 
       {/* Öne çıkanlar */}
-      <section className="surface-tint py-16 md:py-24">
+      <section className="surface-tint py-11 md:py-20">
         <div className="container-luxe">
           <div className="mx-auto max-w-2xl text-center">
             <span className="eyebrow text-accent">Öne Çıkanlar</span>
@@ -180,7 +180,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
             {loc.highlights.map((h, i) => (
               <Reveal key={h.title} delay={i * 0.06}>
-                <div className="card-luxe flex h-full items-start gap-4 p-6">
+                <div className="card-luxe flex h-full items-start gap-4 p-5 md:p-6">
                   <span className="icon-tile mt-0.5 h-9 w-9 items-center justify-center rounded-lg">
                     <Check className="h-4.5 w-4.5" strokeWidth={2.5} />
                   </span>
@@ -209,7 +209,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
 
       {/* Yakın bölgeler — iç bağlantı ağı */}
       {nearby.length > 0 && (
-        <section className="surface-tint py-16 md:py-20">
+        <section className="surface-tint py-11 md:py-18">
           <div className="container-luxe">
             <div className="mx-auto max-w-2xl text-center">
               <span className="eyebrow text-accent">Yakın Bölgeler</span>

@@ -55,7 +55,7 @@ export function ContactForm() {
   const waHref = `https://wa.me/905400280041?text=${waMessage}`;
 
   return (
-    <section id="iletisim" className="surface-tint py-20 md:py-28">
+    <section id="iletisim" className="surface-tint py-12 md:py-24">
       <div className="container-luxe">
         <SectionHeading
           tone="light"
@@ -197,7 +197,7 @@ export function ContactForm() {
                 </div>
               </a>
 
-              <div className="rounded-2xl border border-ink/10 bg-white p-6">
+              <div className="rounded-2xl border border-ink/10 bg-white p-5 md:p-6">
                 <ul className="space-y-5 text-sm">
                   {contact.phones.map((p) => (
                     <li key={p.href}>

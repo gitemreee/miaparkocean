@@ -10,7 +10,7 @@ export function UnitDetail({ unit, index }: { unit: Unit; index: number }) {
   return (
     <section
       id={unit.slug}
-      className={`scroll-mt-24 py-20 md:py-28 ${index % 2 === 1 ? "bg-pearl" : "bg-cream"}`}
+      className={`scroll-mt-24 py-12 md:py-24 ${index % 2 === 1 ? "bg-pearl" : "bg-cream"}`}
     >
       <div className="container-luxe grid items-center gap-12 lg:grid-cols-2">
         {/* Görsel */}

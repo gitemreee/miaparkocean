@@ -22,7 +22,7 @@ export default function BilgiMerkeziPage() {
         image="/images/facade-warm.webp"
       />
 
-      <section className="bg-cream py-20 md:py-28">
+      <section className="bg-cream py-12 md:py-24">
         <div className="container-luxe space-y-16">
           {kbCategories.map((cat) => {
             const items = articlesByCategory(cat.key);
