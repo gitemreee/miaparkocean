@@ -67,10 +67,19 @@ def edge(mask: np.ndarray, which: str) -> np.ndarray:
     return out
 
 
+# Maskeler CSS'te `mask-size: 100% 100%` ile esnetiliyor; kaynak çözünürlük
+# gerekmiyor. Bu genişlik 2x ekranda bile yeterli ve dosyayı küçük tutuyor.
+MASK_WIDTH = 1200
+
+
 def to_mask_png(alpha: np.ndarray, blur: float = 1.6) -> Image.Image:
     img = Image.fromarray(alpha.astype(np.uint8), "L").filter(
         ImageFilter.GaussianBlur(blur)
     )
+    if img.width > MASK_WIDTH:
+        img = img.resize(
+            (MASK_WIDTH, round(img.height * MASK_WIDTH / img.width)), Image.LANCZOS
+        )
     a = np.asarray(img)
     return Image.fromarray(np.dstack([np.full_like(a, 255)] * 3 + [a]), "RGBA")
 

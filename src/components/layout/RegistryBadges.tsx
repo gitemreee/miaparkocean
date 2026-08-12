@@ -38,7 +38,7 @@ export function RegistryBadges() {
           {/* KOOPBİS */}
           <div className="flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:min-w-[9.5rem]">
             <span className="flex h-10 items-center">
-              <LogoImage src="/koopbis-logo.png" alt="KOOPBİS — Kooperatif Bilgi Sistemi" className="h-7 w-auto rounded-md">
+              <LogoImage src="/koopbis-logo.webp" alt="KOOPBİS — Kooperatif Bilgi Sistemi" className="h-7 w-auto rounded-md">
                 <KoopbisLogo className="h-7 w-auto rounded-md" />
               </LogoImage>
             </span>
@@ -58,7 +58,7 @@ export function RegistryBadges() {
           {/* Yapımcı — YKB */}
           <div className="flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:min-w-[9.5rem]">
             <span className="flex h-10 items-center">
-              <LogoImage src="/ykb-logo.png" alt="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="h-10 w-auto">
+              <LogoImage src="/ykb-logo.webp" alt="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="h-10 w-auto">
                 <YkbLogo className="h-9 w-auto text-ink" />
               </LogoImage>
             </span>

@@ -35,11 +35,26 @@ const perks = [
 
 export function Hero() {
   const [index, setIndex] = useState(0);
+  // Video ilk boyamayı bekletmesin: sayfa yerleşene kadar <video> hiç
+  // basılmaz, yerine poster görseli durur. Bu sırada asıl içerik iner.
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setIndex((i) => (i + 1) % slides.length), slides[index].duration);
     return () => clearTimeout(t);
   }, [index]);
+
+  useEffect(() => {
+    const idle =
+      typeof window !== "undefined" && "requestIdleCallback" in window
+        ? window.requestIdleCallback
+        : (cb: () => void) => window.setTimeout(cb, 600);
+    const id = idle(() => setVideoReady(true));
+    return () => {
+      if ("cancelIdleCallback" in window) window.cancelIdleCallback(id as number);
+      else clearTimeout(id as number);
+    };
+  }, []);
 
   const active = slides[index];
 
@@ -52,27 +67,45 @@ export function Hero() {
 
       {/* Tam genişlik sahne */}
       <div className="relative min-h-[68vh] overflow-hidden md:min-h-[92vh]">
-        {slides.map((s, i) => (
-          <div
-            key={s.image + i}
-            className={`absolute inset-0 transition-opacity duration-[1200ms] ${i === index ? "opacity-100" : "opacity-0"}`}
-          >
-            {s.video ? (
-              <video
-                src={s.video}
-                poster={s.poster ?? s.image}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                className="h-full w-full scale-105 object-cover"
-              />
-            ) : (
-              <SmartImage src={s.image} alt={s.kicker} sizes="100vw" className="h-full w-full scale-105 object-cover" />
-            )}
-          </div>
-        ))}
+        {slides.map((s, i) => {
+          // Yalnızca görünen ve bir sonraki kare basılır; kalanlar sıra
+          // gelince yüklenir. Beş görselin tamamı baştan inmez.
+          const near = i === index || i === (index + 1) % slides.length;
+          return (
+            <div
+              key={s.image + i}
+              className={`absolute inset-0 transition-opacity duration-[1200ms] ${i === index ? "opacity-100" : "opacity-0"}`}
+            >
+              {s.video ? (
+                videoReady ? (
+                  <video
+                    src={s.video}
+                    /* poster küçük varyant: video inerken tam boy görsel iki kez inmesin */
+                    poster={(s.poster ?? s.image).replace(".webp", "-sm.webp")}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="none"
+                    className="h-full w-full scale-105 object-cover"
+                  />
+                ) : (
+                  <SmartImage
+                    src={s.poster ?? s.image}
+                    alt={s.kicker}
+                    priority
+                    sizes="100vw"
+                    className="h-full w-full scale-105 object-cover"
+                  />
+                )
+              ) : (
+                near && (
+                  <SmartImage src={s.image} alt={s.kicker} sizes="100vw" className="h-full w-full scale-105 object-cover" />
+                )
+              )}
+            </div>
+          );
+        })}
 
         {/* Okyanus perdesi — render'ı boğmayacak kadar hafif.
             En altta perde geri açılır: dalga koyu bir bandın değil, görselin

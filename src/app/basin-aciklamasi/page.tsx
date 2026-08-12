@@ -152,7 +152,7 @@ export default function BasinAciklamasiPage() {
                 height={115}
                 className="h-auto w-[168px]"
               />
-              <img src="/ykb-logo.png" alt="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="h-[4.5rem] w-auto" />
+              <img src="/ykb-logo.webp" alt="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="h-[4.5rem] w-auto" />
               <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" className="h-11 w-auto" width={160} height={36} />
             </div>
 

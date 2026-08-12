@@ -31,6 +31,8 @@ export function LogoImage({ src, alt, className = "", children }: Props) {
         ref={ref}
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         aria-hidden={!loaded}
         className={loaded ? className : "hidden"}
         onLoad={() => setLoaded(true)}
