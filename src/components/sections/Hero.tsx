@@ -21,7 +21,7 @@ type Slide = {
 const slides: Slide[] = [
   { video: "/videos/hero-tanitim.mp4", image: "/images/night-gate.webp", poster: "/images/entrance-gate.webp", duration: 9000, kicker: "İzmit MİA Bölgesi", line1: "Lüks artık", accent: "ulaşılabilir." },
   { image: "/images/hero-courtyard-dusk.webp", duration: 6000, kicker: "Yaşamınızın Yeni Merkezi", line1: "Hayatın yeni", accent: "merkezi." },
-  { image: "/images/entrance-gate.webp", duration: 6000, kicker: "600 Daire · 3 Yaşam Tipi", line1: "Her detayıyla", accent: "ayrıcalıklı." },
+  { image: "/images/entrance-gate.webp", duration: 6000, kicker: "600 Daire · 4 Yaşam Tipi", line1: "Her detayıyla", accent: "ayrıcalıklı." },
   { image: "/images/courtyard-pools.webp", duration: 6000, kicker: "Merkezi Avlu · Süs Havuzları", line1: "Sosyal yaşam", accent: "kapınızda." },
   { image: "/images/night-gate.webp", duration: 6000, kicker: "Gece Aydınlatması", line1: "Gece bile", accent: "büyüleyici." },
 ];

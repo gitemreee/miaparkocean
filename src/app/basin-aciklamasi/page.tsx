@@ -83,7 +83,7 @@ export default function BasinAciklamasiPage() {
         <p>
           Modern mimarisiyle Kocaeli&apos;nin silüetine değer katacak Mia Park Ocean, eşsiz deniz ve şehir manzaralı
           daireleriyle ferah bir yaşam vaat ediyor. Toplamda 600 rezidanstan oluşan projemizde; her ihtiyaca ve bütçeye
-          uygun 1+0, 1+1 ve 2+1 daire seçeneklerimiz bulunuyor. Özellikle giriş katlarımızda tasarladığımız, her birinin
+          uygun 1+0, 1+1, 1+1 bahçe loft ve 2+1 daire seçeneklerimiz bulunuyor. Özellikle giriş katlarımızda tasarladığımız, her birinin
           kendine ait özel bahçesi bulunan loft dairelerimiz, müstakil ev konforunu rezidans ayrıcalığıyla birleştiriyor.
         </p>
 

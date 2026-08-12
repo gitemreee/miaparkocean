@@ -14,7 +14,7 @@ Kullanıma hazır 24 metin. Hashtag setleri için bkz. [`05-hashtag-setleri.md`]
 İzmit'in yeni yaşam merkezi yükseliyor. 🌊
 
 MİA PARK OCEAN, İzmit MİA Bölgesi'nde 4 blok ve 600 daireyle hayat buluyor.
-Zemin + 7 kat. 1+0, 1+1 ve bahçeli 2+1 dubleks seçenekleri.
+Zemin + 7 kat. 1+0, 1+1, bahçeli 1+1 loft ve bahçeli 2+1 dubleks seçenekleri.
 
 Şehrin merkezinde, ana yolların yanı başında; ama içeri girdiğinizde
 kendi sakin dünyanızda.
@@ -318,7 +318,7 @@ Kısa, tek soruya tek cevap. Görselde soru, açıklamada cevap.
 | Kooperatiften daire almak güvenli mi? | KOOPBİS kaydı, 1163 sayılı kanun, e-Devlet takibi |
 | Tapumu ne zaman alırım? | İskân sonrası ferdileşme ile |
 | Kaç daire var? | 600 daire, 4 blok, zemin + 7 kat |
-| Hangi daire tipleri var? | 1+0, 1+1, bahçeli 2+1 dubleks |
+| Hangi daire tipleri var? | 1+0, 1+1, 1+1 bahçe loft, 2+1 bahçe dubleks |
 | Peşinat ne kadar? | Tipe ve plana göre değişir — satış ofisinden randevu |
 | Teslim ne zaman? | Kooperatif 2 yıl içinde teslimi taahhüt ediyor |
 | Kefil gerekiyor mu? | Hayır. Banka, faiz ve kefil yok |

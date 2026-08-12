@@ -59,7 +59,7 @@ export const locations: Location[] = [
     loc: "'da",
     title: "Yahya Kaptan Mahallesi Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "Yahya Kaptan Mahallesi'nde konut arayanlar için İzmit MİA Bölgesi'ndeki MİA PARK OCEAN: faizsiz kooperatif modeli, 1+0, 1+1 ve 2+1 bahçe dubleks seçenekleri.",
+      "Yahya Kaptan Mahallesi'nde konut arayanlar için İzmit MİA Bölgesi'ndeki MİA PARK OCEAN: faizsiz kooperatif modeli, 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks seçenekleri.",
     drive: "2-4 dakika",
     intro: [
       "Yahya Kaptan, İzmit'in planlı toplu konut dokusuyla öne çıkan, geniş bulvarları ve olgunlaşmış yeşil alanlarıyla bilinen mahallelerinden biri. Uzun yıllardır aileler tarafından tercih edilmesi, mahalleyi İzmit'in en oturmuş yaşam alanlarından biri hâline getirdi.",
@@ -313,18 +313,18 @@ export const locations: Location[] = [
     intro: [
       "Kozluk, İzmit merkezinin batısında, sahil bandına ve şehir içi ana arterlere yakın bir mahalle. Merkeze yürüme mesafesinde olması günlük hayatı kolaylaştırıyor.",
       "Mahallede yeni konut arzı sınırlı; bu nedenle geniş sosyal donatılı bir siteye geçmek isteyenler MİA Bölgesi gibi gelişim akslarına yöneliyor.",
-      "MİA PARK OCEAN, Kozluk'tan birkaç dakika uzaklıkta; merkeze yakınlığı korurken 1+0, 1+1 ve 2+1 bahçe dubleks seçenekleri sunuyor.",
+      "MİA PARK OCEAN, Kozluk'tan birkaç dakika uzaklıkta; merkeze yakınlığı korurken 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks seçenekleri sunuyor.",
     ],
     highlights: [
       { title: "Merkeze yürüme mesafesi", text: "İzmit çarşısı ve sahil bandına yakın konum." },
       { title: "Sınırlı yeni arz", text: "Mahallede yeni proje stoğunun az olması, çevre akslara yöneltiyor." },
-      { title: "Daire çeşitliliği", text: "Projede 1+0, 1+1 ve bahçeli 2+1 dubleks seçenekleri." },
+      { title: "Daire çeşitliliği", text: "Projede 1+0, 1+1, bahçeli 1+1 loft ve bahçeli 2+1 dubleks seçenekleri." },
       { title: "Kısa mesafe", text: "MİA Bölgesi'ne araçla yaklaşık 5-8 dakika." },
     ],
     faq: [
       {
         q: "MİA PARK OCEAN'da hangi daire tipleri var?",
-        a: "Projede 1+0, 1+1 ve zemin katlarda kendine ait özel bahçesi bulunan 2+1 loft/dubleks daireler bulunmaktadır. Toplam 600 daire, 8 katlı 4 blokta yer alır.",
+        a: "Projede dört tip vardır: 1+0, 1+1, zemin katta özel bahçeli 1+1 Bahçe Loft ve yine bahçeli 2+1 Bahçe Dubleks. Toplam 600 daire, 8 katlı 4 blokta yer alır.",
       },
       {
         q: "Kozluk'tan projeye mesafe nedir?",
@@ -416,7 +416,7 @@ export const locations: Location[] = [
       },
       {
         q: "Bahçeli daire arıyorum, projede seçenek var mı?",
-        a: "Evet. Zemin katlardaki 2+1 loft/dubleks dairelerin her birinin kendine ait özel bahçesi bulunur. Bu tip, müstakil ev konforu arayan ancak site güvenliği ve donatısından vazgeçmek istemeyenler için tasarlanmıştır.",
+        a: "Evet. Zemin katlardaki 1+1 Bahçe Loft ve 2+1 Bahçe Dubleks dairelerin her birinin kendine ait özel bahçesi bulunur. Bu tip, müstakil ev konforu arayan ancak site güvenliği ve donatısından vazgeçmek istemeyenler için tasarlanmıştır.",
       },
     ],
     nearby: ["izmit-yahya-kaptan", "kocaeli-kartepe", "kocaeli-golcuk", "izmit-alikahya"],
@@ -432,7 +432,7 @@ export const locations: Location[] = [
     loc: "'de",
     title: "Kartepe Satılık Daire ve Yeni Konut Projeleri",
     description:
-      "Kartepe'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif modeli, 1+0, 1+1 ve 2+1 bahçe dubleks.",
+      "Kartepe'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif modeli, 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks.",
     drive: "12-20 dakika",
     intro: [
       "Kartepe, Sapanca Gölü kıyısı ve Kartepe zirvesiyle Kocaeli'nin doğa turizmi merkezi. İlçe, hem yazlık hem daimi konut talebiyle hareketli bir piyasaya sahip.",
@@ -836,7 +836,7 @@ export const locations: Location[] = [
     loc: "'da",
     title: "Sakarya'dan İzmit'e Konut Yatırımı — MİA PARK OCEAN",
     description:
-      "Sakarya'dan İzmit MİA Bölgesi'ne yatırım: MİA PARK OCEAN'da faizsiz kooperatif modeli, 60 ay vade, 1+0, 1+1 ve 2+1 bahçe dubleks.",
+      "Sakarya'dan İzmit MİA Bölgesi'ne yatırım: MİA PARK OCEAN'da faizsiz kooperatif modeli, 60 ay vade, 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks.",
     drive: "45-60 dakika",
     intro: [
       "Sakarya, TEM Otoyolu üzerinden Kocaeli'ye komşu; Adapazarı merkezden İzmit'e günlük gidiş-geliş yapan çalışan ve öğrenci sayısı hayli yüksek.",

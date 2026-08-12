@@ -13,7 +13,7 @@ export const faq: FaqItem[] = [
     category: "proje",
     question: "MİA PARK OCEAN'da hangi daire tipleri var?",
     answer:
-      "Projede üç yaşam tipi sunulur: 1+0 (brüt 28 m², 472 adet), 1+1 (brüt 50 m², 112 adet) ve 2+1 Bahçe Dubleks (brüt 100 m², 16 adet). Toplamda 600 daire yer alır.",
+      "Projede dört yaşam tipi sunulur: 1+0 (brüt 28 m², 472 adet), 1+1 (brüt 50 m², 96 adet), 1+1 Bahçe Loft (brüt 50 m², 16 adet) ve 2+1 Bahçe Dubleks (brüt 100 m², 16 adet). Toplamda 600 daire yer alır.",
   },
   {
     category: "proje",

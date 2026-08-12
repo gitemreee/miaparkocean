@@ -47,7 +47,7 @@ MİA PARK OCEAN — İzmit MİA Bölgesi
 MİA PARK OCEAN, İzmit'in yeni gelişim aksı MİA Bölgesi'nde yükseliyor.
 
 • 4 blok, zemin + 7 kat, toplam 600 daire
-• 1+0, 1+1 ve bahçeli 2+1 dubleks seçenekleri
+• 1+0, 1+1, bahçeli 1+1 loft ve bahçeli 2+1 dubleks seçenekleri
 • Temeller tamamen fore kazık sistemiyle inşa ediliyor
 • Kapalı yüzme havuzu, fitness, sauna ve Türk hamamı, çocuk oyun parkı, kapalı otopark
 • D-100'e 1 dk, şehir merkezine ve şehir hastanesine 5 dk, üniversiteye 10 dk
@@ -79,7 +79,7 @@ MİA PARK OCEAN
 
 Proje tanıtım filmleri, daire turları, inşaat ilerleme videoları ve kooperatif modelini anlatan bilgilendirme içerikleri burada.
 
-600 daire · 4 blok · 1+0, 1+1, 2+1 bahçe dubleks
+600 daire · 4 blok · 1+0, 1+1, 1+1 bahçe loft, 2+1 bahçe dubleks
 Bankasız, faizsiz, kefilsiz · 60 ay vade
 
 Yapımcı: S.S. Yahya Kaptan Birlik Yapı Kooperatifi
@@ -119,7 +119,7 @@ Merhaba, MİA PARK OCEAN'a hoş geldiniz 🌊
 İzmit MİA Bölgesi'ndeki projemiz hakkında bilgi almak için buradasınız.
 Size en hızlı şekilde dönüş yapabilmemiz için lütfen belirtin:
 
-1️⃣ İlgilendiğiniz daire tipi (1+0 / 1+1 / 2+1 bahçe dubleks)
+1️⃣ İlgilendiğiniz daire tipi (1+0 / 1+1 / 1+1 bahçe loft / 2+1 bahçe dubleks)
 2️⃣ Oturum mu, yatırım mı?
 3️⃣ Size ne zaman ulaşabiliriz?
 

@@ -9,7 +9,7 @@ import { units } from "@/data/units";
 import { faq } from "@/data/faq";
 
 export const metadata: Metadata = {
-  title: "Daire Tipleri — 1+0, 1+1, 2+1 Bahçe Dubleks",
+  title: "Daire Tipleri — 1+0, 1+1, 1+1 Bahçe Loft, 2+1 Bahçe Dubleks",
   description:
     "MİA PARK OCEAN daire tipleri: 1+0 (28 m²), 1+1 (50 m²) ve 2+1 Bahçe Dubleks (100 m²). Kat planları, özellikler ve fiyat avantajları.",
 };
