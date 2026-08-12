@@ -17,9 +17,9 @@ export function WaveBackdrop() {
     <div
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
       style={{
-        // Logodaki turkuazdan beyaza yıkama — sayfanın hiçbir yeri bembeyaz kalmaz
+        // Buz mavisinden beyaza yıkama — sayfanın hiçbir yeri bembeyaz kalmaz
         backgroundImage:
-          "linear-gradient(178deg, #ffffff 0%, #f2fbfd 16%, #e2f4f8 38%, #d3edf4 58%, #e6f6fa 78%, #f7fcfe 100%)",
+          "linear-gradient(178deg, #ffffff 0%, #f4fcfd 16%, #e4f6fa 38%, #d2f0f6 58%, #e9f8fb 78%, #f8fdfe 100%)",
       }}
       aria-hidden="true"
     >
@@ -28,17 +28,17 @@ export function WaveBackdrop() {
 
       {/* Katman 1 — en yüksek, en soluk */}
       <div className="absolute inset-x-0 top-[13%] h-[26vh] overflow-hidden">
-        <span className="wave-ribbon wave-swell-slow absolute -left-[24%] top-0 h-full w-[152%] opacity-25" />
+        <span className="wave-ribbon wave-swell-slow absolute -left-[24%] top-0 h-full w-[152%] opacity-[0.18] blur-[2px]" />
       </div>
 
       {/* Katman 2 — orta */}
       <div className="absolute inset-x-0 top-[42%] h-[30vh] overflow-hidden">
-        <span className="wave-ribbon wave-swell absolute -left-[38%] top-0 h-full w-[178%] opacity-22" />
+        <span className="wave-ribbon wave-swell absolute -left-[38%] top-0 h-full w-[178%] opacity-[0.16] blur-[3px]" />
       </div>
 
       {/* Katman 3 — altta, en belirgin */}
       <div className="absolute inset-x-0 bottom-0 h-[34vh] overflow-hidden">
-        <span className="wave-ribbon wave-swell-slow absolute -left-[16%] top-0 h-full w-[136%] opacity-30" />
+        <span className="wave-ribbon wave-swell-slow absolute -left-[16%] top-0 h-full w-[136%] opacity-[0.22] blur-[2px]" />
       </div>
 
       {/* Beyaza doğru yumuşak kapanış — dalgalar metnin altında kalır */}

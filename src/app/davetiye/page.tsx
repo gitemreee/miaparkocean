@@ -62,7 +62,7 @@ export default function DavetiyePage() {
 
         {/* logodaki dalga sahneyi sayfaya bağlar */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          <WaveEdge className="h-[42px] md:h-[64px]" />
+          <WaveEdge className="h-[54px] md:h-[88px]" />
         </div>
       </header>
 
@@ -175,7 +175,7 @@ export default function DavetiyePage() {
 
       {/* ---------- Alt bant ---------- */}
       <footer className="section-dark mt-20 md:mt-28">
-        <WaveEdge flip className="h-[42px] md:h-[64px]" />
+        <WaveEdge flip className="h-[50px] md:h-[80px]" />
 
         <div className="container-luxe relative z-10 py-12 text-center">
           <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>

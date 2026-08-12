@@ -7,7 +7,7 @@ export function Valuation() {
   return (
     <section id="degerleme" className="section-dark">
       {/* Beyaz sayfadan okyanusa dalga geçişi */}
-      <WaveDivider tone="paper" flip className="h-[46px] md:h-[72px]" />
+      <WaveDivider tone="paper" flip className="h-[52px] md:h-[84px]" />
 
       <div className="container-luxe relative z-10 py-16 text-white md:py-24">
         <Reveal>
@@ -107,7 +107,7 @@ export function Valuation() {
       </div>
 
       {/* Okyanustan beyaz sayfaya geri dönüş */}
-      <WaveDivider tone="paper" className="h-[46px] md:h-[72px]" />
+      <WaveDivider tone="paper" className="h-[52px] md:h-[84px]" />
     </section>
   );
 }

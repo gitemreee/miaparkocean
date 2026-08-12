@@ -1,0 +1,17 @@
+CLAUDE / SITE BUILDER NOTU - MIA PARK OCEAN
+
+1) Dalga grafiğini yeniden çizmeye çalışma. Şu asset'i doğrudan kullan:
+   mia-park-ocean-wave-transparent.webp
+   (PNG yedeği: mia-park-ocean-wave-transparent.png)
+
+2) Dalga şeffaf arka planlıdır. Hero, section separator veya logo altı dekor olarak kullanılabilir.
+
+3) Renk sistemi için mia-brand.css dosyasındaki --mia-gradient ve --mia-metallic değişkenlerini kullan.
+
+4) Ana renk ailesi:
+   #095678 / #1A7496 / #2C94B4 / #48ABC5 / #6EBDD0 / #92D1DF / #B8E4EC / #DDF7FA
+
+5) Premium görünüm için düz turkuaz kullanma; koyu petrol mavisi -> okyanus mavisi -> buz mavisi yansımaları olan metalik geçişi kullan.
+
+Önerilen kullanım:
+<img src="/assets/mia-park-ocean-wave-transparent.webp" class="mia-wave" alt="" aria-hidden="true" />

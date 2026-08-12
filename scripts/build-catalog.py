@@ -30,21 +30,32 @@ W, H = 1654, 2339
 M = 118  # kenar boşluğu
 
 # --- Palet (globals.css ile aynı) ---
-NAVY = (4, 48, 78)
-MIDNIGHT = (10, 85, 120)
-SAPPHIRE = (15, 82, 186)
-LOGO_BLUE = (12, 108, 144)
-LOGO_MID = (24, 120, 156)
-LOGO_BRIGHT = (72, 180, 204)
-LOGO_LIGHT = (156, 216, 228)
-ICE = (214, 230, 243)
-MIST = (236, 246, 251)
-INK = (0, 9, 38)
-INK_SOFT = (74, 91, 125)
+# Marka renk ailesi (marka paketi · mia-brand.css)
+MIA_DEEP = (9, 86, 120)      # #095678
+MIA_DARK = (26, 116, 150)    # #1A7496
+MIA_OCEAN = (44, 148, 180)   # #2C94B4
+MIA_CYAN = (72, 171, 197)    # #48ABC5
+MIA_AQUA = (110, 189, 208)   # #6EBDD0
+MIA_LIGHT = (146, 209, 223)  # #92D1DF
+MIA_PALE = (184, 228, 236)   # #B8E4EC
+MIA_ICE = (221, 247, 250)    # #DDF7FA
+
+NAVY = (4, 40, 58)
+MIDNIGHT = MIA_DEEP
+SAPPHIRE = MIA_DEEP
+LOGO_BLUE = MIA_DEEP
+LOGO_MID = MIA_DARK
+LOGO_BRIGHT = MIA_CYAN
+LOGO_LIGHT = MIA_LIGHT
+ICE = MIA_PALE
+MIST = (240, 250, 252)
+INK = (4, 40, 58)
+INK_SOFT = (82, 113, 126)
 WHITE = (255, 255, 255)
 FOREST = (11, 110, 79)
 
-BRAND_STOPS = [(0.0, NAVY), (0.28, MIDNIGHT), (0.62, LOGO_BLUE), (0.85, LOGO_MID), (1.0, LOGO_BRIGHT)]
+# Metalik geçiş: koyu petrol → okyanus → buz mavisi
+BRAND_STOPS = [(0.0, NAVY), (0.22, MIA_DEEP), (0.48, MIA_DARK), (0.74, MIA_OCEAN), (1.0, MIA_CYAN)]
 
 # Dalga: logodan birebir kesilmiş maske (scripts/build-wave.py üretir).
 # Katalog da sitedeki dalganın AYNISINI kullanır.

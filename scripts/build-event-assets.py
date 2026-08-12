@@ -31,19 +31,30 @@ BRAND = os.path.join(ROOT, "public", "brand")
 OUT = os.path.join(ROOT, "public", "etkinlik")
 
 # --- Palet (globals.css ile birebir) ---
-NAVY = (0, 9, 38)
-MIDNIGHT = (6, 26, 74)
-SAPPHIRE = (15, 82, 186)
-LOGO_BLUE = (12, 108, 144)
-LOGO_MID = (24, 120, 156)
-LOGO_BRIGHT = (72, 180, 204)
-LOGO_LIGHT = (156, 216, 228)
-ICE = (214, 230, 243)
-POWDER = (166, 197, 215)
-WHITE = (255, 255, 255)
-INK = (0, 9, 38)
+# Marka renk ailesi (marka paketi · mia-brand.css)
+MIA_DEEP = (9, 86, 120)      # #095678
+MIA_DARK = (26, 116, 150)    # #1A7496
+MIA_OCEAN = (44, 148, 180)   # #2C94B4
+MIA_CYAN = (72, 171, 197)    # #48ABC5
+MIA_AQUA = (110, 189, 208)   # #6EBDD0
+MIA_LIGHT = (146, 209, 223)  # #92D1DF
+MIA_PALE = (184, 228, 236)   # #B8E4EC
+MIA_ICE = (221, 247, 250)    # #DDF7FA
 
-BRAND_STOPS = [(0.0, NAVY), (0.24, MIDNIGHT), (0.52, SAPPHIRE), (0.78, LOGO_BLUE), (1.0, LOGO_MID)]
+NAVY = (4, 40, 58)
+MIDNIGHT = (6, 64, 90)
+SAPPHIRE = MIA_DEEP
+LOGO_BLUE = MIA_DEEP
+LOGO_MID = MIA_DARK
+LOGO_BRIGHT = MIA_CYAN
+LOGO_LIGHT = MIA_LIGHT
+ICE = MIA_PALE
+POWDER = MIA_LIGHT
+WHITE = (255, 255, 255)
+INK = (4, 40, 58)
+
+# Metalik geçiş: koyu petrol → okyanus → buz mavisi
+BRAND_STOPS = [(0.0, NAVY), (0.22, MIDNIGHT), (0.5, MIA_DEEP), (0.76, MIA_DARK), (1.0, MIA_OCEAN)]
 
 # --- Etkinlik bilgisi (src/data/event.ts ile aynı) ---
 EVENT = {

@@ -17,10 +17,10 @@ export { WAVE_IMAGE, WAVE_MASK, WAVE_MASK_SOLID, WAVE_RATIO } from "./wave-path"
 type WaveEdgeProps = {
   /** Dalganın altını dolduran renk/gradyan — geçilen bölümün zemini. */
   fill?: string;
-  /** Kurdele aralarını dolduran alt katman (fotoğraf sızmasın diye). */
-  base?: string;
-  /** Logodaki turkuaz şerit de üstte görünsün mü? */
+  /** Dalganın kendi renkli şeridi üstte görünsün mü? */
   ribbon?: boolean;
+  /** Şeridin opaklığı (0–1). */
+  ribbonOpacity?: number;
   /** Dalga aşağı baksın (bir üstteki bölüme bağlanır). */
   flip?: boolean;
   className?: string;
@@ -35,22 +35,25 @@ type WaveEdgeProps = {
  * böylece konum sınıfları burada çakışmaz.
  */
 export function WaveEdge({
-  fill = "linear-gradient(180deg,#e4f4f9,#f2fafc 40%,#fbfeff 72%,#ffffff)",
-  base = "linear-gradient(180deg,#8fcede,#b9e2ec 55%,#d8f0f5)",
-  ribbon = false,
+  fill = "linear-gradient(180deg,#e9f7fa,#f6fcfd 46%,#ffffff)",
+  ribbon = true,
+  ribbonOpacity = 1,
   flip = false,
-  className = "h-[44px] md:h-[70px]",
+  className = "h-[54px] md:h-[88px]",
 }: WaveEdgeProps) {
   return (
     <div
       className={`pointer-events-none relative w-full ${flip ? "rotate-180" : ""} ${className}`}
       aria-hidden="true"
     >
-      {/* Alt katman: boşluksuz siluet — kurdele aralarından fotoğraf sızmaz */}
-      <span className="wave-solid absolute inset-0" style={{ backgroundImage: base }} />
-      {/* Üst katman: dalganın kendi kurdeleleri */}
-      <span className="wave-fill absolute inset-0" style={{ backgroundImage: fill }} />
-      {ribbon && <span className="wave-ribbon absolute inset-0 opacity-40" />}
+      {/* Taban: dalganın boşluksuz silueti, bir sonraki bölümün zemininde.
+          Üst kenarı birebir dalga olduğu için fotoğrafla sayfa arasındaki
+          sınır dalgayı izler. */}
+      <span className="wave-solid absolute inset-0" style={{ backgroundImage: fill }} />
+      {/* Üstte dalganın kendisi — kaynak grafiğin orijinal renkleri */}
+      {ribbon && (
+        <span className="wave-ribbon absolute inset-0" style={{ opacity: ribbonOpacity }} />
+      )}
     </div>
   );
 }
@@ -58,7 +61,7 @@ export function WaveEdge({
 /** Geriye dönük ad — eski çağrı yerleri için. */
 export function WaveDivider({
   flip = false,
-  className = "h-[44px] md:h-[70px]",
+  className = "h-[54px] md:h-[88px]",
 }: {
   tone?: string;
   flip?: boolean;
@@ -97,7 +100,7 @@ export function WaveGradient({
       flip={flip}
       ribbon={false}
       className={className}
-      fill="linear-gradient(125deg,#0f52ba,#0c6c90 46%,#18789c 74%,#48b4cc)"
+      fill="linear-gradient(115deg,#095678,#1a7496 22%,#2c94b4 46%,#48abc5 68%,#6ebdd0)"
     />
   );
 }

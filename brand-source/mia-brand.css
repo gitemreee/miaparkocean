@@ -1,0 +1,50 @@
+/* Mia Park Ocean - logo-derived brand colors */
+:root {
+  --mia-deep: #095678;
+  --mia-dark: #1A7496;
+  --mia-ocean: #2C94B4;
+  --mia-cyan: #48ABC5;
+  --mia-aqua: #6EBDD0;
+  --mia-light: #92D1DF;
+  --mia-pale: #B8E4EC;
+  --mia-ice: #DDF7FA;
+
+  --mia-gradient: linear-gradient(135deg,
+    #095678 0%,
+    #1A7496 18%,
+    #2C94B4 34%,
+    #48ABC5 50%,
+    #6EBDD0 65%,
+    #92D1DF 78%,
+    #B8E4EC 90%,
+    #DDF7FA 100%);
+
+  /* Reflective / metallic treatment closer to the logo */
+  --mia-metallic: linear-gradient(110deg,
+    #075878 0%,
+    #1A7496 10%,
+    #48ABC5 20%,
+    #B8E4EC 31%,
+    #F1FCFD 38%,
+    #6EBDD0 49%,
+    #2C94B4 58%,
+    #095678 68%,
+    #48ABC5 79%,
+    #DDF7FA 90%,
+    #2C94B4 100%);
+}
+
+/* Example */
+.mia-gradient-text {
+  background: var(--mia-metallic);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mia-wave {
+  display: block;
+  width: min(100%, 1100px);
+  height: auto;
+  object-fit: contain;
+}

@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-MİA PARK OCEAN — logodaki dalgayı birebir çıkarır.
+MİA PARK OCEAN — dalga varlıkları.
 
-Sitenin imzası logonun altındaki dalgadır. Bu betik o dalgayı
-`public/brand/mark-ocean-trim.png` içinden HİÇ DEĞİŞTİRMEDEN keser:
+Dalga YENİDEN ÇİZİLMEZ. Kaynak, marka paketinden gelen hazır grafiktir:
 
-  public/brand/wave.png / .webp   → dalga şeridi (şeffaf, orijinal pikseller)
-  public/brand/wave-mask.png      → aynı şeklin dolgulu maskesi (CSS mask-image)
-  public/brand/wave-mask-solid.png → aynı şeklin boşluksuz silueti
-  src/components/ui/wave-path.ts  → varlık yolları
+  brand-source/wave-source.png   (mia-park-ocean-wave-transparent.png)
 
-Silueti bulma kuralı: her sütunda y >= 460'tan sonra BAŞLAYAN ilk opak koşu
-dalganın üst kenarıdır (daha yukarıda başlayan uzun koşular M harfinin ve
-kulelerin gövdesidir). Bu ham siluet yalnızca piksel titremesini almak için
-küçük bir medyan penceresinden geçirilir; eğrinin karakteri korunur.
+Bu betik onu olduğu gibi siteye taşır ve yalnızca CSS maskeleri türetir:
+
+  public/brand/wave.png / .webp    → şeridin kendisi, orijinal pikseller
+  public/brand/wave-mask.png       → kurdeleler + altı dolu (mask-image)
+  public/brand/wave-mask-solid.png → üst kenardan aşağısı tamamen dolu
+  src/components/ui/wave-path.ts   → varlık yolları
+
+Maskeler yalnızca alfa kanalından türetilir; şekle dokunulmaz.
 """
 
 from __future__ import annotations
@@ -24,54 +24,12 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "public" / "brand" / "mark-ocean-trim.png"
+SRC = ROOT / "brand-source" / "wave-source.png"
 OUT = ROOT / "public" / "brand"
 TS_OUT = ROOT / "src" / "components" / "ui" / "wave-path.ts"
 
 ALPHA_MIN = 24
-WAVE_FROM = 460  # bu satırın altında başlayan koşular dalgaya aittir
-
-
-def column_runs(alpha: np.ndarray, x: int) -> list[tuple[int, int]]:
-    col = alpha[:, x] > ALPHA_MIN
-    runs: list[tuple[int, int]] = []
-    start = None
-    for y, on in enumerate(col):
-        if on and start is None:
-            start = y
-        elif not on and start is not None:
-            runs.append((start, y - 1))
-            start = None
-    if start is not None:
-        runs.append((start, len(col) - 1))
-    return runs
-
-
-def trace_top_edge(alpha: np.ndarray) -> np.ndarray:
-    """Her sütun için dalganın üst kenarı (yok ise NaN)."""
-    h, w = alpha.shape
-    top = np.full(w, np.nan)
-    for x in range(w):
-        for a, _b in column_runs(alpha, x):
-            if a >= WAVE_FROM:
-                top[x] = a
-                break
-    # Kenarlardaki boşlukları en yakın geçerli değerle doldur
-    idx = np.where(~np.isnan(top))[0]
-    if len(idx):
-        top[: idx[0]] = top[idx[0]]
-        top[idx[-1] + 1 :] = top[idx[-1]]
-    # Aradaki tekil boşluklar
-    for x in range(w):
-        if np.isnan(top[x]):
-            left = x - 1
-            right = x + 1
-            while right < w and np.isnan(top[right]):
-                right += 1
-            if right < w and left >= 0:
-                t = (x - left) / (right - left)
-                top[x] = top[left] * (1 - t) + top[right] * t
-    return top
+HOLE_MAX = 6  # bu kadar ince saydam boşluklar kapatılır (boya dokusu)
 
 
 def median_smooth(y: np.ndarray, k: int) -> np.ndarray:
@@ -83,63 +41,57 @@ def median_smooth(y: np.ndarray, k: int) -> np.ndarray:
 def mean_smooth(y: np.ndarray, k: int) -> np.ndarray:
     pad = k // 2
     padded = np.pad(y, pad, mode="edge")
-    kern = np.ones(k) / k
-    return np.convolve(padded, kern, mode="valid")
+    return np.convolve(padded, np.ones(k) / k, mode="valid")
+
+
+def edge(mask: np.ndarray, which: str) -> np.ndarray:
+    """Her sütun için üst ya da alt kenar; boş sütunlar komşudan doldurulur."""
+    h, w = mask.shape
+    out = np.full(w, np.nan)
+    for x in range(w):
+        ys = np.where(mask[:, x])[0]
+        if len(ys):
+            out[x] = ys.min() if which == "top" else ys.max()
+    idx = np.where(~np.isnan(out))[0]
+    if len(idx):
+        out[: idx[0]] = out[idx[0]]
+        out[idx[-1] + 1 :] = out[idx[-1]]
+    for x in np.where(np.isnan(out))[0]:
+        left, right = x - 1, x + 1
+        while right < w and np.isnan(out[right]):
+            right += 1
+        if 0 <= left and right < w:
+            t = (x - left) / (right - left)
+            out[x] = out[left] * (1 - t) + out[right] * t
+    return out
+
+
+def to_mask_png(alpha: np.ndarray, blur: float = 1.6) -> Image.Image:
+    img = Image.fromarray(alpha.astype(np.uint8), "L").filter(
+        ImageFilter.GaussianBlur(blur)
+    )
+    a = np.asarray(img)
+    return Image.fromarray(np.dstack([np.full_like(a, 255)] * 3 + [a]), "RGBA")
 
 
 def main() -> None:
-    im = Image.open(SRC).convert("RGBA")
-    arr = np.asarray(im)
-    alpha = arr[:, :, 3]
-    h, w = alpha.shape
+    src = Image.open(SRC).convert("RGBA")
+    src = src.crop(src.getbbox())
+    w, h = src.size
+    print(f"kaynak {w}x{h}")
 
-    raw = trace_top_edge(alpha)
-    # Kesim maskesi ham silueti kullanır (tek piksel bile kırpılmasın).
-    cut_edge = median_smooth(raw, 3)
-    y_top = float(cut_edge.min())
-    print(f"kaynak {w}x{h} · dalga üst kenarı {y_top:.0f}–{cut_edge.max():.0f}")
+    # ---------- 1) Şeridi olduğu gibi yayınla ----------
+    src.save(OUT / "wave.png", optimize=True)
+    src.save(OUT / "wave.webp", quality=95, method=6)
+    print(f"wave.png / wave.webp → {w}x{h}")
 
-    # ---------- 1) Dalga şeridini kes ----------
-    yy = np.arange(h)[:, None]
-    mask = yy >= cut_edge[None, :].round()
-    cut = arr.copy()
-    cut[:, :, 3] = np.where(mask, alpha, 0)
+    alpha = np.asarray(src)[:, :, 3]
+    solid = alpha > ALPHA_MIN
 
-    band = cut[int(y_top) :, :, :]
-    wave = Image.fromarray(band, "RGBA")
-    # Sağ/sol uçlarda tamamen boş sütunları kırp
-    bbox = wave.getbbox()
-    wave = wave.crop(bbox)
-    wave.save(OUT / "wave.png")
-    wave.save(OUT / "wave.webp", quality=94, method=6)
-    print(f"wave.png → {wave.size}")
-
-    # ---------- 2) Dolgulu maske ----------
-    # Dalganın kendi alfası + alt siluetinin altındaki her şey opak.
-    # CSS `mask-image` ile kullanıldığında üst kenarı birebir logodaki dalga
-    # olan dolu bir panel verir (bölüm geçişleri, koyu bantlar, sayfa geçişi).
-    wa = np.asarray(wave)[:, :, 3].astype(np.uint8)
-    bh, bw = wa.shape
-
-    # Boya dokusundan gelen tırtıklı kenarı temizle: eşikle → bulanıklaştır →
-    # tekrar eşikle. Silüet aynı kalır, kenar pürüzü gider.
-    clean = ((wa > 30) * 255).astype(np.uint8)
-    clean = np.asarray(
-        Image.fromarray(clean, "L").filter(ImageFilter.GaussianBlur(1.0))
-    )
-    wa = ((clean > 96) * 255).astype(np.uint8)
-    # Tek piksellik saçakları at (açma), sonra kenarı geri getir
-    wa = np.asarray(
-        Image.fromarray(wa, "L")
-        .filter(ImageFilter.MinFilter(3))
-        .filter(ImageFilter.MaxFilter(3))
-    )
-
-    # Şeridin içindeki KÜÇÜK saydam lekeleri kapat; iki kurdele arasındaki
-    # geniş boşluk (dalganın karakteri) olduğu gibi kalsın.
-    solid = wa.copy()
-    for x in range(bw):
-        col = solid[:, x] > 8
+    # Boya dokusundaki iğne deliklerini kapat; kurdele arasındaki geniş
+    # boşluklar (dalganın karakteri) olduğu gibi kalır.
+    for x in range(w):
+        col = solid[:, x]
         ys = np.where(col)[0]
         if len(ys) == 0:
             continue
@@ -149,93 +101,62 @@ def main() -> None:
                 e = y
                 while e <= ys.max() and not col[e]:
                     e += 1
-                if e - y <= 2:
-                    solid[y:e, x] = 255
+                if e - y <= HOLE_MAX:
+                    col[y:e] = True
                 y = e
             else:
                 y += 1
 
-    bottom = np.full(bw, bh, dtype=float)
-    for x in range(bw):
-        ys = np.where(solid[:, x] > 8)[0]
-        if len(ys):
-            bottom[x] = ys.max()
-    bottom = mean_smooth(median_smooth(bottom, 25), 21)
-    below = (np.arange(bh)[:, None] >= bottom[None, :]).astype(np.uint8) * 255
-    filled = np.maximum(solid, below)
-
-    # Dalga yatay akar; kenardaki titreme dikey yöndedir. Yalnızca YATAYDA
-    # yumuşatıp yeniden eşikleyerek tırtığı alıyoruz — eğrinin kendisi
-    # (yükselişi, alçalışı, iki kurdele arası boşluk) aynen kalıyor.
-    k = 17
-    kern = np.ones(k) / k
-    smoothed = np.stack(
-        [np.convolve(np.pad(row, k // 2, mode="edge"), kern, mode="valid") for row in filled.astype(np.float32)]
+    # ---------- 2) Kurdeleli maske (altı dolu) ----------
+    bottom = mean_smooth(median_smooth(edge(solid, "bottom"), 31), 25)
+    below = np.arange(h)[:, None] >= bottom[None, :]
+    to_mask_png(np.maximum(solid, below) * 255).save(
+        OUT / "wave-mask.png", optimize=True
     )
-    filled = ((smoothed > 118) * 255).astype(np.uint8)
+    print("wave-mask.png")
 
-    # Maske sitede 1440px+ genişliğe esnetiliyor. 3× büyütüp yumuşatarak
-    # kaydediyoruz; böylece kenar tırtıklı değil, temiz ve yumuşak görünür.
-    mask_img = Image.fromarray(filled, "L").resize(
-        (bw * 3, bh * 3), Image.LANCZOS
-    )
-    mask_img = mask_img.filter(ImageFilter.GaussianBlur(2.6))
-    ma = np.asarray(mask_img)
-    fill_img = Image.fromarray(
-        np.dstack([np.full_like(ma, 255)] * 3 + [ma]), "RGBA"
-    )
-    fill_img.save(OUT / "wave-mask.png", optimize=True)
-    print(f"wave-mask.png → {fill_img.size}")
-
-    # ---------- 2b) Boşluksuz siluet ----------
-    # Aynı dalganın üst kenarından aşağısı tamamen dolu hâli. Koyu fotoğraf
-    # üstünde kurdele araları fotoğrafı göstermesin diye altta bu durur;
-    # üst kenar birebir aynı eğridir.
-    top_edge = np.full(bw, bh, dtype=float)
-    for x in range(bw):
-        ys = np.where(filled[:, x] > 8)[0]
-        if len(ys):
-            top_edge[x] = ys.min()
-    top_edge = mean_smooth(median_smooth(top_edge, 9), 9)
-    solid_alpha = (np.arange(bh)[:, None] >= top_edge[None, :]).astype(np.uint8) * 255
-    solid_img = Image.fromarray(solid_alpha, "L").resize((bw * 3, bh * 3), Image.LANCZOS)
-    solid_img = solid_img.filter(ImageFilter.GaussianBlur(2.6))
-    sa3 = np.asarray(solid_img)
-    Image.fromarray(np.dstack([np.full_like(sa3, 255)] * 3 + [sa3]), "RGBA").save(
+    # ---------- 3) Boşluksuz siluet ----------
+    # Üst kenar birebir aynı; kurdele araları dolu. Koyu fotoğraf üstünde
+    # alt katman olarak kullanılır ki aralardan fotoğraf sızmasın.
+    # Kurdelelerin ayrıldığı yerdeki çentik ayırıcı olarak kusur gibi
+    # görünüyor; geniş pencereyle yuvarlanır, eğrinin gidişi değişmez.
+    top = mean_smooth(median_smooth(edge(solid, "top"), 81), 61)
+    to_mask_png((np.arange(h)[:, None] >= top[None, :]) * 255).save(
         OUT / "wave-mask-solid.png", optimize=True
     )
     print("wave-mask-solid.png")
 
-    # ---------- 3) TypeScript sabitleri ----------
-    ts = f"""/**
- * Logodaki dalga — `scripts/build-wave.py` tarafından
- * `public/brand/mark-ocean-trim.png` içinden birebir kesildi.
+    # ---------- 4) TypeScript sabitleri ----------
+    TS_OUT.write_text(
+        f'''/**
+ * MİA PARK OCEAN dalgası — `scripts/build-wave.py` tarafından
+ * `brand-source/wave-source.png` üzerinden üretilir.
  *
- * ELLE DÜZENLEMEYİN. Değişiklik gerekiyorsa betiği yeniden çalıştırın.
- * Sitedeki her dalga bu iki varlıktan birini kullanır; başka hiçbir yerde
- * elle çizilmiş dalga eğrisi yoktur.
+ * ELLE DÜZENLEMEYİN. Dalga yeniden çizilmez; kaynak grafik olduğu gibi
+ * kullanılır. Sitedeki her dalga bu varlıklardan birini gösterir.
  */
 
-/** Dalga şeridi — logodaki orijinal pikseller, şeffaf zemin. */
+/** Dalga şeridi — kaynak grafiğin orijinal pikselleri, şeffaf zemin. */
 export const WAVE_IMAGE = "/brand/wave.webp";
 
 /**
- * Aynı dalganın dolgulu maskesi: şeridin kendisi + altındaki her şey opak.
- * `mask-image` olarak kullanıldığında üst kenarı birebir logodaki dalga olan
- * dolu bir panel verir.
+ * Aynı dalganın dolgulu maskesi: kurdeleler + altındaki her şey opak.
+ * `mask-image` olarak kullanıldığında üst kenarı birebir dalga olan dolu
+ * bir panel verir.
  */
 export const WAVE_MASK = "/brand/wave-mask.png";
 
 /**
- * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, iç ayrımlar dolu.
- * Koyu fotoğraf üstünde alt katman olarak kullanılır.
+ * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları
+ * dolu. Koyu fotoğraf üstünde alt katman olarak kullanılır.
  */
 export const WAVE_MASK_SOLID = "/brand/wave-mask-solid.png";
 
 /** Şeridin en/boy oranı. */
-export const WAVE_RATIO = {wave.width / wave.height:.4f};
-"""
-    TS_OUT.write_text(ts, encoding="utf-8")
+export const WAVE_RATIO = {w / h:.4f};
+''',
+        encoding="utf-8",
+    )
     print("wave-path.ts")
 
 

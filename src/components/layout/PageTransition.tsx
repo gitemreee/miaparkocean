@@ -76,7 +76,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
 // Üç katman da aynı dalga; renkleri logodaki maviden lacivere derinleşir.
 const WAVE_LAYERS = [
-  { fill: "linear-gradient(135deg,#48b4cc,#18789c)", flat: "#48b4cc", opacity: 0.5 },
-  { fill: "linear-gradient(135deg,#0f52ba,#0c6c90)", flat: "#0f52ba", opacity: 0.78 },
-  { fill: "linear-gradient(135deg,#000926,#04304e 55%,#0a5578)", flat: "#04113a", opacity: 1 },
+  { fill: "linear-gradient(135deg,#6ebdd0,#2c94b4)", flat: "#6ebdd0", opacity: 0.5 },
+  { fill: "linear-gradient(135deg,#2c94b4,#1a7496)", flat: "#2c94b4", opacity: 0.78 },
+  { fill: "linear-gradient(135deg,#04283a,#063f5a 55%,#095678)", flat: "#04283a", opacity: 1 },
 ];

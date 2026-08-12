@@ -9,7 +9,7 @@ import { units } from "@/data/units";
  * Hangi tipin projede ne kadar yer kapladığı bir bakışta görülür ve mobilde
  * çok daha az yer tutar.
  */
-const SEGMENT_COLORS = ["#0f52ba", "#0c6c90", "#18789c", "#48b4cc"];
+const SEGMENT_COLORS = ["#095678", "#1a7496", "#2c94b4", "#48abc5"];
 
 export function Stats() {
   const total = units.reduce((n, u) => n + u.count, 0);

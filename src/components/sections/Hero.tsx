@@ -77,8 +77,8 @@ export function Hero() {
         {/* Okyanus perdesi — render'ı boğmayacak kadar hafif.
             Metin okunurluğu, alttaki yoğun bant ve sol taraftaki yumuşak
             koyulaşmayla sağlanır; görselin gökyüzü ve mimarisi açık kalır. */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,48,78,0.88)_0%,rgba(6,55,90,0.6)_26%,rgba(12,108,144,0.24)_52%,transparent_78%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,48,78,0.5)_0%,rgba(4,48,78,0.14)_44%,transparent_70%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,40,58,0.88)_0%,rgba(9,86,120,0.58)_26%,rgba(26,116,150,0.22)_52%,transparent_78%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,40,58,0.5)_0%,rgba(4,40,58,0.14)_44%,transparent_70%)]" />
 
         <div className="container-luxe relative flex min-h-[68vh] flex-col justify-end pb-24 pt-28 md:min-h-[92vh] md:pb-40 md:pt-36">
           <div className="relative min-h-[6.5rem] sm:min-h-[10rem] md:min-h-[13.5rem]">
@@ -132,7 +132,7 @@ export function Hero() {
 
         {/* İmza: logodaki dalganın kendisi sahneyi sayfaya bağlar */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          <WaveEdge className="h-[44px] md:h-[76px]" />
+          <WaveEdge className="h-[58px] md:h-[104px]" />
         </div>
       </div>
 

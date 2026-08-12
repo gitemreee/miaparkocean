@@ -22,7 +22,7 @@ export function Process() {
         <ol className="relative mt-10 md:hidden">
           {/* Gradyan ray */}
           <span
-            className="absolute bottom-6 left-[21px] top-3 w-[3px] rounded-full bg-[linear-gradient(180deg,#0f52ba,#0c6c90_45%,#18789c_75%,#48b4cc)]"
+            className="absolute bottom-6 left-[21px] top-3 w-[3px] rounded-full bg-[linear-gradient(180deg,#095678,#1a7496_38%,#2c94b4_68%,#48abc5)]"
             aria-hidden="true"
           />
           {processSteps.map((s, i) => {
@@ -52,7 +52,7 @@ export function Process() {
         {/* ---------- Masaüstü: yatay ilerleme rayı ---------- */}
         <ol className="relative mt-16 hidden md:grid md:grid-cols-4 md:gap-6">
           <span
-            className="absolute left-[12.5%] right-[12.5%] top-7 h-[3px] rounded-full bg-[linear-gradient(90deg,#0f52ba,#0c6c90_45%,#18789c_75%,#48b4cc)]"
+            className="absolute left-[12.5%] right-[12.5%] top-7 h-[3px] rounded-full bg-[linear-gradient(90deg,#095678,#1a7496_38%,#2c94b4_68%,#48abc5)]"
             aria-hidden="true"
           />
           {processSteps.map((s, i) => {
@@ -60,7 +60,7 @@ export function Process() {
             return (
               <Reveal key={s.title} delay={i * 0.1}>
                 <li className="relative flex flex-col items-center text-center">
-                  <span className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-surf text-white shadow-[0_12px_28px_-12px_rgba(15,82,186,0.7)] ring-8 ring-[#eef7fb]">
+                  <span className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-surf text-white shadow-[0_12px_28px_-12px_rgba(15,82,186,0.7)] ring-8 ring-[#e9f7fa]">
                     <Icon className="h-6 w-6" strokeWidth={2} />
                   </span>
                   <span className="mt-4 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">

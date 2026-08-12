@@ -41,7 +41,7 @@ export default function BasinAciklamasiPage() {
           </span>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
-          <WaveEdge className="h-[38px] md:h-[58px]" />
+          <WaveEdge className="h-[50px] md:h-[80px]" />
         </div>
       </div>
 

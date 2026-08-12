@@ -10,7 +10,7 @@ export function Footer() {
   return (
     <footer className="section-dark">
       {/* Üstteki bölümden footer'a geçiş — logodaki dalganın kendisi */}
-      <WaveEdge flip ribbon={false} className="-mt-px h-[42px] md:h-[58px]" />
+      <WaveEdge flip ribbonOpacity={0.85} className="-mt-px h-[52px] md:h-[84px]" />
 
       <div className="container-luxe relative z-10 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
