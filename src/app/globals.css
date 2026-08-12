@@ -122,7 +122,10 @@
     /* Koyu yüzeyler — derin petrol mavisi, metin kontrastı korunur */
     --gradient-ocean: linear-gradient(145deg, #04283a 0%, #06405a 26%, #095678 54%, #12688c 80%, #1a7496 100%);
     --gradient-ocean-soft: linear-gradient(145deg, #095678 0%, #12688c 38%, #1a7496 70%, #2c94b4 100%);
-    --gradient-deep: linear-gradient(168deg, #04283a 0%, #063f5a 32%, #095678 64%, #12688c 100%);
+    /* Koyu bölümler yukarıdan aşağı DERİNLEŞİR: üst kenar dalganın tonuna
+       yakın başlar, aşağı indikçe lacivere iner — suya inme hissi. Ters
+       yönde (üstte en koyu) dalgadan sonra sert bir kesik oluşuyordu. */
+    --gradient-deep: linear-gradient(178deg, #12688c 0%, #0d5b7d 18%, #095678 40%, #06455f 70%, #04283a 100%);
     /* Butonlar, raylar, rozetler: metalik yansımalı */
     --gradient-surf: linear-gradient(115deg, #095678 0%, #1a7496 22%, #2c94b4 46%, #48abc5 68%, #6ebdd0 100%);
     --gradient-metallic: var(--mia-metallic);
@@ -569,9 +572,19 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle at 14% 18%, rgba(156, 216, 228, 0.2), transparent 46%),
-                      radial-gradient(circle at 86% 78%, rgba(72, 180, 204, 0.28), transparent 48%);
+    background-image: radial-gradient(circle at 14% 18%, rgba(156, 216, 228, 0.16), transparent 46%),
+                      radial-gradient(circle at 86% 78%, rgba(72, 180, 204, 0.22), transparent 48%);
     pointer-events: none;
+  }
+
+  /* Dalgadan koyuya iniş — dalganın gövde tonu (#5babc3) aşağı doğru erir,
+     böylece dalga ile koyu zemin arasında kesik bir sınır kalmaz. */
+  .wave-fade {
+    background-image: linear-gradient(180deg,
+      rgba(91, 171, 195, 0.55) 0%,
+      rgba(45, 138, 173, 0.34) 28%,
+      rgba(26, 116, 150, 0.16) 58%,
+      transparent 100%);
   }
   /* Kıyı bandı — koyu bölümden beyaza yumuşak çıkış */
   .section-shore { background-image: var(--gradient-shore); }

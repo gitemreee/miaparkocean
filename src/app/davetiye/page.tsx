@@ -175,7 +175,7 @@ export default function DavetiyePage() {
 
       {/* ---------- Alt bant ---------- */}
       <footer className="section-dark mt-20 md:mt-28">
-        <WaveEdge flip className="h-[50px] md:h-[80px]" />
+        <WaveEdge flip fill="linear-gradient(180deg,#e9f6f9,#f1fafb 60%,#f1fafb)" className="h-[50px] md:h-[80px]" />
 
         <div className="container-luxe relative z-10 py-12 text-center">
           <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>
