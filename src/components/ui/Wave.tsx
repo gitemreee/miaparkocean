@@ -35,7 +35,7 @@ type WaveEdgeProps = {
  * böylece konum sınıfları burada çakışmaz.
  */
 export function WaveEdge({
-  fill = "linear-gradient(180deg,#e9f7fa,#f6fcfd 46%,#ffffff)",
+  fill = "linear-gradient(180deg,#f4fbfd,#eef8fa 55%,#e8f6f9)",
   ribbon = true,
   ribbonOpacity = 1,
   flip = false,
@@ -46,10 +46,10 @@ export function WaveEdge({
       className={`pointer-events-none relative w-full ${flip ? "rotate-180" : ""} ${className}`}
       aria-hidden="true"
     >
-      {/* Taban: dalganın boşluksuz silueti, bir sonraki bölümün zemininde.
-          Üst kenarı birebir dalga olduğu için fotoğrafla sayfa arasındaki
-          sınır dalgayı izler. */}
-      <span className="wave-solid absolute inset-0" style={{ backgroundImage: fill }} />
+      {/* Taban: sayfa zemini dalganın ALT siluetinden başlar. Kurdeleler
+          fotoğrafın üstüne biner, araları gerçekten saydam kalır — şeffaf
+          PNG gibi görünür, arkasında beyaz bir gövde olmaz. */}
+      <span className="wave-base absolute inset-0" style={{ backgroundImage: fill }} />
       {/* Üstte dalganın kendisi — kaynak grafiğin orijinal renkleri */}
       {ribbon && (
         <span className="wave-ribbon absolute inset-0" style={{ opacity: ribbonOpacity }} />

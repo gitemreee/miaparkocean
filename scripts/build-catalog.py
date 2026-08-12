@@ -545,11 +545,9 @@ def page_location():
     for li, line in enumerate(wrap(dr, PROJECT["address"], sans(23), W - 2 * M - 560)):
         dr.text((tx, y + 200 + li * 34), line, font=sans(23), fill=(*ICE, 255))
 
-    # beyaz plaket içinde logo
-    lg = logo_img(300)
-    plate = rounded((lg.width + 60, lg.height + 56), 26, WHITE)
-    plate.alpha_composite(lg, (30, 28))
-    page.alpha_composite(plate, (W - M - plate.width - 56, y + (band_h - plate.height) // 2))
+    # Koyu zeminde logo beyaz durur — plaket yok
+    lg = logo_img(320, on_dark=True)
+    page.alpha_composite(lg, (W - M - lg.width - 66, y + (band_h - lg.height) // 2))
 
     dr.text((tx, y + band_h - 60), f"Yapımcı: {PROJECT['developer']}", font=sans(21), fill=(*LOGO_LIGHT, 220))
     dr.text((tx, y + band_h - 30), f"Tek Yetkili Satıcı: {PROJECT['seller']}", font=sans(21), fill=(*LOGO_LIGHT, 220))

@@ -75,9 +75,9 @@ export function Hero() {
         ))}
 
         {/* Okyanus perdesi — render'ı boğmayacak kadar hafif.
-            Metin okunurluğu, alttaki yoğun bant ve sol taraftaki yumuşak
-            koyulaşmayla sağlanır; görselin gökyüzü ve mimarisi açık kalır. */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,40,58,0.88)_0%,rgba(9,86,120,0.58)_26%,rgba(26,116,150,0.22)_52%,transparent_78%)]" />
+            En altta perde geri açılır: dalga koyu bir bandın değil, görselin
+            kendisinin üstüne oturur; şeffaf PNG gibi durur. */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(4,40,58,0.22)_0%,rgba(4,40,58,0.5)_6%,rgba(4,40,58,0.86)_13%,rgba(9,86,120,0.56)_32%,rgba(26,116,150,0.2)_56%,transparent_80%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,40,58,0.5)_0%,rgba(4,40,58,0.14)_44%,transparent_70%)]" />
 
         <div className="container-luxe relative flex min-h-[68vh] flex-col justify-end pb-24 pt-28 md:min-h-[92vh] md:pb-40 md:pt-36">

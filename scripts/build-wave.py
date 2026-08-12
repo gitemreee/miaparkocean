@@ -10,6 +10,7 @@ Bu betik onu olduğu gibi siteye taşır ve yalnızca CSS maskeleri türetir:
 
   public/brand/wave.png / .webp    → şeridin kendisi, orijinal pikseller
   public/brand/wave-mask.png       → kurdeleler + altı dolu (mask-image)
+  public/brand/wave-mask-base.png  → yalnızca alt siluetin altı
   public/brand/wave-mask-solid.png → üst kenardan aşağısı tamamen dolu
   src/components/ui/wave-path.ts   → varlık yolları
 
@@ -74,16 +75,66 @@ def to_mask_png(alpha: np.ndarray, blur: float = 1.6) -> Image.Image:
     return Image.fromarray(np.dstack([np.full_like(a, 255)] * 3 + [a]), "RGBA")
 
 
+def unmatte_white(img: Image.Image) -> Image.Image:
+    """
+    Kenar yumuşatma piksellerindeki BEYAZ zemin kalıntısını temizler.
+
+    Kaynak grafik beyaz zemin üzerinde kesilmiş: yarı saydam pikseller
+    `gözlenen = gerçek·α + 255·(1−α)` biçiminde beyazla karışmış durumda
+    (ölçüm: α<60 piksellerin ortalaması RGB 246,247,248). Koyu fotoğrafın
+    üstüne konduğunda bu, dalganın çevresinde beyaz bir hale bırakıyor.
+    Denklemi tersine çevirip gerçek rengi geri alıyoruz — şekil ve alfa
+    hiç değişmez, yalnızca kenarın rengi düzelir.
+    """
+    a = np.asarray(img).astype(np.float32)
+    rgb, alpha = a[:, :, :3], a[:, :, 3:4]
+    k = np.clip(alpha / 255.0, 1e-3, 1.0)
+    fixed = np.clip((rgb - 255.0 * (1.0 - k)) / k, 0, 255)
+
+    # Düşük alfada bölme gürültüyü büyütüyor (koyu saçak). Rengi alfa
+    # ağırlıklı bulanıklaştırıp güvenilir komşulardan dolduruyoruz:
+    # premultiply → bulanıklaştır → böl. Alfa hiç değişmez.
+    def blur(ch: np.ndarray, r: float) -> np.ndarray:
+        return np.asarray(
+            Image.fromarray(np.clip(ch, 0, 255).astype(np.uint8), "L").filter(
+                ImageFilter.GaussianBlur(r)
+            )
+        ).astype(np.float32)
+
+    aw = blur(alpha[:, :, 0], 2.0)
+    pm = np.dstack([blur(fixed[:, :, c] * k[:, :, 0], 2.0) for c in range(3)])
+    bled = np.clip(pm * 255.0 / np.maximum(aw, 1.0)[:, :, None], 0, 255)
+
+    # Alfa yükseldikçe kendi rengine, düştükçe komşularınkine yaklaş
+    t = np.clip((k - 0.18) / 0.42, 0.0, 1.0)
+    out_rgb = fixed * t + bled * (1.0 - t)
+
+    # Kesim kenarı boyalı ve tırtıklı; alfayı hafifçe yumuşatıyoruz ki
+    # koyu fotoğrafın üstünde benekli bir saçak bırakmasın. Şekil değişmez
+    # (yarıçap, 2332px genişlikte ekranda yarım pikselden küçük).
+    smooth_a = np.asarray(
+        Image.fromarray(alpha[:, :, 0].astype(np.uint8), "L").filter(
+            ImageFilter.GaussianBlur(1.4)
+        )
+    ).astype(np.float32)[:, :, None]
+
+    out_rgb = np.where(smooth_a > 0, out_rgb, 0)
+    return Image.fromarray(
+        np.dstack([out_rgb, smooth_a]).astype(np.uint8), "RGBA"
+    )
+
+
 def main() -> None:
     src = Image.open(SRC).convert("RGBA")
     src = src.crop(src.getbbox())
     w, h = src.size
     print(f"kaynak {w}x{h}")
 
-    # ---------- 1) Şeridi olduğu gibi yayınla ----------
-    src.save(OUT / "wave.png", optimize=True)
-    src.save(OUT / "wave.webp", quality=95, method=6)
-    print(f"wave.png / wave.webp → {w}x{h}")
+    # ---------- 1) Şeridi yayınla (beyaz hale giderilmiş) ----------
+    clean = unmatte_white(src)
+    clean.save(OUT / "wave.png", optimize=True)
+    clean.save(OUT / "wave.webp", quality=95, method=6)
+    print(f"wave.png / wave.webp → {w}x{h} (beyaz hale giderildi)")
 
     alpha = np.asarray(src)[:, :, 3]
     solid = alpha > ALPHA_MIN
@@ -115,6 +166,13 @@ def main() -> None:
     )
     print("wave-mask.png")
 
+    # ---------- 2b) Taban maskesi ----------
+    # Yalnızca dalganın ALT siluetinin altı. Bölüm geçişlerinde sayfa zemini
+    # buradan başlar; dalga kurdeleleri fotoğrafın üstüne biner ve
+    # aralarından gerçekten fotoğraf görünür — şeffaf PNG gibi.
+    to_mask_png(below * 255).save(OUT / "wave-mask-base.png", optimize=True)
+    print("wave-mask-base.png")
+
     # ---------- 3) Boşluksuz siluet ----------
     # Üst kenar birebir aynı; kurdele araları dolu. Koyu fotoğraf üstünde
     # alt katman olarak kullanılır ki aralardan fotoğraf sızmasın.
@@ -145,6 +203,13 @@ export const WAVE_IMAGE = "/brand/wave.webp";
  * bir panel verir.
  */
 export const WAVE_MASK = "/brand/wave-mask.png";
+
+/**
+ * Yalnızca dalganın ALT siluetinin altı. Bölüm geçişlerinde sayfa zemini
+ * buradan başlar; kurdeleler fotoğrafın üstüne biner ve araları gerçekten
+ * saydam kalır.
+ */
+export const WAVE_MASK_BASE = "/brand/wave-mask-base.png";
 
 /**
  * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları

@@ -506,7 +506,8 @@
     background-position: center;
   }
   .wave-fill,
-  .wave-solid {
+  .wave-solid,
+  .wave-base {
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;
@@ -521,6 +522,10 @@
   .wave-solid {
     -webkit-mask-image: url("/brand/wave-mask-solid.png");
     mask-image: url("/brand/wave-mask-solid.png");
+  }
+  .wave-base {
+    -webkit-mask-image: url("/brand/wave-mask-base.png");
+    mask-image: url("/brand/wave-mask-base.png");
   }
 
   .wave-divider {

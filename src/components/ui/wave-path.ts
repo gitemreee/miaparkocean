@@ -17,6 +17,13 @@ export const WAVE_IMAGE = "/brand/wave.webp";
 export const WAVE_MASK = "/brand/wave-mask.png";
 
 /**
+ * Yalnızca dalganın ALT siluetinin altı. Bölüm geçişlerinde sayfa zemini
+ * buradan başlar; kurdeleler fotoğrafın üstüne biner ve araları gerçekten
+ * saydam kalır.
+ */
+export const WAVE_MASK_BASE = "/brand/wave-mask-base.png";
+
+/**
  * Aynı dalganın boşluksuz silueti — üst kenar birebir aynı, kurdele araları
  * dolu. Koyu fotoğraf üstünde alt katman olarak kullanılır.
  */

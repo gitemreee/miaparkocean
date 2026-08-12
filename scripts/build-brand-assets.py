@@ -154,22 +154,16 @@ def whiteout(img: Image.Image) -> Image.Image:
     """
     Koyu mavi zemin için ters (beyaz) sürüm.
 
-    Şekil hiç değişmez: yalnızca boya beyaza çevrilir. Orijinaldeki açık-koyu
-    oyunu alfaya taşınır — parlak yüzeyler tam beyaz, koyu konturlar hafif
-    saydam beyaz olur; böylece M'nin ve kulelerin iç ayrımı kaybolmaz.
+    Şekil hiç değişmez, boya DÜZ BEYAZ olur. Tonlamayı alfaya taşımak
+    (metalik his vermek) koyu zeminde logoyu grileştiriyordu; ters logo
+    tek renk olmalı. Silüetin kendi boşlukları zaten M'yi, kuleleri ve
+    kelime markasını okunur tutuyor.
     """
     a = np.asarray(img.convert("RGBA")).astype(np.float32)
-    rgb, alpha = a[:, :, :3], a[:, :, 3]
-
-    lum = (0.2126 * rgb[:, :, 0] + 0.7152 * rgb[:, :, 1] + 0.0722 * rgb[:, :, 2]) / 255.0
-    inside = alpha > 8
-    if inside.any():
-        lo, hi = np.percentile(lum[inside], [4, 96])
-        lum = np.clip((lum - lo) / max(hi - lo, 1e-3), 0.0, 1.0)
-
+    alpha = a[:, :, 3]
     out = np.zeros_like(a)
     out[:, :, 0:3] = 255.0
-    out[:, :, 3] = alpha * (0.52 + 0.48 * lum)
+    out[:, :, 3] = alpha
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
