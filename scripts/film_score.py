@@ -277,7 +277,7 @@ def build(duration: float) -> np.ndarray:
                            S_END, duration - 1.5, duration],
                       [0.72, 0.80, 1.0, 0.84, 1.0, 1.0, 0.9, 0.55, 0.0]).astype(np.float32)
     mix *= shape
-    mix = np.tanh(mix * 1.35) * 0.86
+    mix = np.tanh(mix * 1.35) * 0.80
 
     # stereo genişlik
     d = 300

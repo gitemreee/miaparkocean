@@ -15,14 +15,20 @@ Bu klasör, projenin sosyal medya iletişiminin tek kaynağıdır. Tasarımcı, 
 
 ## Tanıtım filmi
 
-`public/videos/mia-park-ocean-tanitim.mp4` — 1920x1080, 25 fps, 1:15.
-Paylaşım için küçültülmüş kopya: `mia-park-ocean-tanitim-web.mp4` (22 MB).
-Boş araziden binaların yükselişi, havadan geçişler, daire tipi künyeleri,
-konum ve finansman bölümleri, logo kapanışı.
+`public/videos/mia-park-ocean-tanitim.mp4` — 1920x1080, 25 fps, **2:00**.
+Paylaşım kopyası: `mia-park-ocean-tanitim-web.mp4` (25 MB).
 
-Film tamamen projenin **kendi render'larından** kurulur; dışarıdan stok
-görüntü ya da üretilmiş bina yoktur. Kamera sanaldır: yüksek çözünürlüklü
-render'ın içinden kayan bir kırpma dikdörtgeni kadraja ölçeklenir.
+Sahneler gerçek video: 14 çekim, her biri projenin **kendi render'ından**
+başlatılarak üretildi. Ekrandaki bina uydurma değil — mimarisi, giriş kapısı,
+avlusu projenin kendisi. Çekimlerin dökümü ve nasıl üretildikleri
+[`film-source/CEKIMLER.md`](../film-source/CEKIMLER.md) dosyasında.
+
+Akış: yüksekten kapıya inen drone · gündüzden geceye time-lapse · logo ·
+cephe ve sokak · avlu, havuzlar, yürüyüş yolları · teras ve balkon ·
+dört daire tipinin künyesi · konum kartları · faizsiz finansman · kapanış.
+
+Müzik `scripts/film_score.py` ile üretilir: 100 BPM, davul, yürüyen bas,
+bölüm geçişlerinde yükseliş. Kesmeler müzikle hizalı.
 
 Yeniden üretmek (kaynak: `scripts/build-film.py`):
 
