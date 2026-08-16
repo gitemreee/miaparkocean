@@ -740,6 +740,7 @@ def score(duration: float) -> np.ndarray:
     tt = np.arange(n, dtype=np.float32) / SR
     pad = np.zeros(n, np.float32)
     sub = np.zeros(n, np.float32)
+    shimmer = np.zeros(n, np.float32)
 
     i = 0
     pos = 0.0
@@ -757,14 +758,25 @@ def score(duration: float) -> np.ndarray:
         v = np.sin(2 * math.pi * _hz(root - 24) * np.arange(seg, dtype=np.float32) / SR)
         end = min(start + seg, n)
         sub[start:end] += (v * env)[:end - start] * 0.5
+
+        # parlaklık — akorun üst sesleri iki oktav yukarıda, çok kısık.
+        # Yatağın tamamı bas bölgede kalırsa film boğuk duyuluyor.
+        ts = np.arange(seg, dtype=np.float32) / SR
+        for j, mn in enumerate(notes[-2:]):
+            sh = np.sin(2 * math.pi * _hz(mn + 24) * ts)
+            sh *= 1.0 + 0.3 * np.sin(2 * math.pi * (0.6 + 0.13 * j) * ts + j)
+            shimmer[start:end] += (sh * env)[:end - start] * 0.055
+
         pos += CHORD_LEN
         i += 1
 
     # hava — çok kısık, sadece dokusu için
     rng = np.random.default_rng(11)
-    air = rng.normal(0, 1, n).astype(np.float32)
-    k = 220
-    air = np.convolve(air, np.ones(k, np.float32) / k, mode="same") * 6.0
+    raw = rng.normal(0, 1, n).astype(np.float32)
+    k = 24
+    low = np.convolve(raw, np.ones(k, np.float32) / k, mode="same")
+    air = (raw - low) * 0.055          # tiz "hava"
+    air += low * 0.9                   # altında ince bir uğultu
 
     # nabız: binalar yükselmeye başlayınca girer
     pulse = np.zeros(n, np.float32)
@@ -779,14 +791,14 @@ def score(duration: float) -> np.ndarray:
         pulse[s0:end] += (f0 * e)[:end - s0] * 0.34
         b += beat
 
-    mix = pad * 0.5 + sub * 0.42 + air * 0.5 + pulse
+    mix = pad * 0.5 + sub * 0.40 + shimmer * 0.9 + air * 0.5 + pulse
     mix = _reverb(mix, 0.32)
 
     # filmin yayı: açılış kısık, yükseliş büyür, kapanışta iner
     shape = np.interp(tt, [0, 5, 8, 20, duration - 12, duration - 2, duration],
                       [0.42, 0.55, 0.95, 0.85, 0.9, 0.62, 0.0]).astype(np.float32)
     mix *= shape
-    mix = np.tanh(mix * 1.25) * 0.72
+    mix = np.tanh(mix * 1.30) * 0.80
 
     # hafif genişlik: kanallar arasında birkaç örneklik kayma
     d = 380
@@ -835,7 +847,49 @@ def _render_frame(k: int) -> bytes:
     return frame_at(k / FPS, _STARTS).tobytes()
 
 
+def write_score(path: str, dur: float) -> None:
+    import wave
+    st = (score(dur) * 32767).astype(np.int16)
+    with wave.open(path, "wb") as f:
+        f.setnchannels(2)
+        f.setsampwidth(2)
+        f.setframerate(SR)
+        f.writeframes(st.tobytes())
+
+
+def user_track() -> str | None:
+    """public/videos/muzik.(wav|mp3|m4a) varsa sentezlenen yatak yerine o kullanılır."""
+    for ext in ("wav", "mp3", "m4a", "aac"):
+        p = os.path.join(os.path.dirname(OUT), f"muzik.{ext}")
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def remux_audio() -> None:
+    """Görüntüyü yeniden üretmeden yalnızca sesi değiştirir."""
+    dur = total_duration()
+    src = user_track()
+    tmp = os.path.join(os.path.dirname(OUT), "_ses.wav")
+    if src is None:
+        write_score(tmp, dur)
+        src = tmp
+    ff = imageio_ffmpeg.get_ffmpeg_exe()
+    tmp_out = OUT + ".tmp.mp4"
+    subprocess.run([ff, "-y", "-i", OUT, "-i", src, "-map", "0:v:0", "-map", "1:a:0",
+                    "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest",
+                    "-movflags", "+faststart", tmp_out],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    os.replace(tmp_out, OUT)
+    if os.path.exists(tmp):
+        os.remove(tmp)
+    print(f"ses yenilendi · {os.path.getsize(OUT) / 1048576:.1f} MB")
+
+
 def main() -> None:
+    if "--ses" in sys.argv:
+        remux_audio()
+        return
     dur = total_duration()
     starts = scene_starts()
 
@@ -851,16 +905,15 @@ def main() -> None:
         print(f"süre: {dur:.2f} s")
         return
 
-    wav = os.path.join(os.path.dirname(OUT), "_muzik.wav")
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    import wave
-    st = (score(dur) * 32767).astype(np.int16)
-    with wave.open(wav, "wb") as f:
-        f.setnchannels(2)
-        f.setsampwidth(2)
-        f.setframerate(SR)
-        f.writeframes(st.tobytes())
-    print(f"müzik: {dur:.1f} s")
+    wav = user_track()
+    own = wav is None
+    if own:
+        wav = os.path.join(os.path.dirname(OUT), "_muzik.wav")
+        write_score(wav, dur)
+        print(f"müzik (sentez): {dur:.1f} s")
+    else:
+        print(f"müzik (dosya): {os.path.basename(wav)}")
 
     ff = imageio_ffmpeg.get_ffmpeg_exe()
     cmd = [ff, "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
@@ -890,7 +943,8 @@ def main() -> None:
                 print(f"  {k:4d}/{total}  ({k / FPS:5.1f} s)", flush=True)
     proc.stdin.close()
     proc.wait()
-    os.remove(wav)
+    if own:
+        os.remove(wav)
     mb = os.path.getsize(OUT) / 1048576
     print(f"{os.path.basename(OUT)} · {dur:.1f} s · {mb:.1f} MB")
 
