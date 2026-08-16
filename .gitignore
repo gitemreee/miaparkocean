@@ -11,3 +11,6 @@ __pycache__/
 public/videos/_muzik.wav
 public/videos/_ses.wav
 public/videos/*.tmp.mp4
+
+# film kare önbelleği (mp4'lerden üretilir)
+film-source/.kare-onbellek/

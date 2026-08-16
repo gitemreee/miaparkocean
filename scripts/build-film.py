@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
 """
-MİA PARK OCEAN — sinematik tanıtım filmi.
+MİA PARK OCEAN — sinematik tanıtım filmi (sürüm 2).
 
-1920x1080 · 25 fps · ~80 saniye. Kareler PIL ile üretilip ffmpeg'e ham RGB
-olarak akıtılır; ara PNG yazılmaz.
+1920x1080 · 25 fps · ~2 dakika. Bu sürümde sahneler GERÇEK VİDEO:
+Higgsfield'de projenin kendi render'larından üretilen kamera hareketli
+çekimler. Önceki sürümde durağan görsel üstünde kırpma gezdiriliyordu ve
+sunumda slayt gibi duruyordu.
 
-KAMERA
-──────
-Elimizde video değil, yüksek çözünürlüklü render'lar var. Bu yüzden kamera
-sanal: kaynak görselin içinden zamanla kayan bir dikdörtgen kırpılıp kadraja
-ölçeklenir. Kırpma dikdörtgeni 1920'den geniş başladığı için yakınlaşma
-gerçek çözünürlükten yenir, yumuşama olmaz.
+ÇEKİMLER
+────────
+film-source/clips/ altındaki mp4'ler. Her biri projenin bir render'ından
+başlatıldı (start_image), böylece ekranda görünen bina uydurma değil:
+mimarisi, kapısı, avlusu projenin kendisi. Yeniden üretmek için
+film-source/CEKIMLER.md'deki komutlar.
 
-İNŞAAT YÜKSELİŞİ
-────────────────
-Boş arazi planı, render'ın kendi gökyüzünden üretilir: ufuk çizgisinin
-üstündeki her şey, görselin en üst şeridinden esnetilen gökyüzüyle boyanır.
-Sonra gerçek render alttan yukarı yumuşak kenarlı bir maskeyle açılır —
-binalar topraktan yükseliyormuş gibi görünür. Uydurma bina yok; ortaya çıkan
-şey projenin kendi render'ı.
+SES
+───
+scripts/film_score.py — tempolu, davullu, bölüm geçişlerinde yükselişli.
+Kurgu kesme noktaları müziğin bölümleriyle hizalı: logo 22. saniyedeki
+vuruşta açılır, daire tipleri müzik seyrelince gelir, finansman finalde.
+
+Kendi müziğinizi koymak için: public/videos/muzik.wav → npm run film
 
 Çıktı → public/videos/mia-park-ocean-tanitim.mp4
 """
@@ -40,12 +42,14 @@ IMG = os.path.join(ROOT, "public", "images")
 BRAND = os.path.join(ROOT, "public", "brand")
 PUBLIC = os.path.join(ROOT, "public")
 FONTS = os.path.join(ROOT, "brand-source", "fonts")
+CLIPS = os.path.join(ROOT, "film-source", "clips")
+CACHE = os.path.join(ROOT, "film-source", ".kare-onbellek")
 OUT = os.path.join(ROOT, "public", "videos", "mia-park-ocean-tanitim.mp4")
 
 W, H = 1920, 1080
 FPS = 25
+FF = imageio_ffmpeg.get_ffmpeg_exe()
 
-# ---------------------------------------------------------------- renkler
 NAVY = (4, 40, 58)
 MIA_DEEP = (9, 86, 120)
 MIA_DARK = (26, 116, 150)
@@ -76,7 +80,6 @@ def sans_b(s: int) -> ImageFont.FreeTypeFont:
 
 
 def ease(t: float) -> float:
-    """Yumuşak giriş-çıkış — kamera hiçbir yerde sertçe durmasın."""
     t = min(max(t, 0.0), 1.0)
     return t * t * (3 - 2 * t)
 
@@ -90,8 +93,7 @@ def lerp(a: float, b: float, t: float) -> float:
     return a + (b - a) * t
 
 
-def fade(t: float, dur: float, tin: float = 0.6, tout: float = 0.6) -> float:
-    """Sahne başında ve sonunda 0-1 arası opaklık zarfı."""
+def fade(t: float, dur: float, tin: float = 0.5, tout: float = 0.5) -> float:
     a = ease(t / tin) if tin > 0 else 1.0
     b = ease((dur - t) / tout) if tout > 0 else 1.0
     return min(a, b)
@@ -111,19 +113,56 @@ def track(dr, xy, text, f, fill, sp, anchor="la"):
     return total
 
 
-# ---------------------------------------------------------------- kaynaklar
+# ---------------------------------------------------------------- çekimler
+_index: dict[str, list[str]] = {}
+
+
+def clip_dir(name: str) -> list[str]:
+    """
+    mp4'ü bir kez JPEG karelere açar, sonra kare kare okunur.
+
+    8 saniyelik 1080p klibi belleğe almak 1 GB'ı buluyor; diske açmak hem
+    ucuz hem de yeniden çalıştırmalarda anında hazır.
+    """
+    if name in _index:
+        return _index[name]
+    d = os.path.join(CACHE, name)
+    if not os.path.isdir(d) or not os.listdir(d):
+        os.makedirs(d, exist_ok=True)
+        src = os.path.join(CLIPS, f"{name}.mp4")
+        if not os.path.exists(src):
+            raise SystemExit(f"çekim yok: {src}")
+        subprocess.run(
+            [FF, "-y", "-v", "error", "-i", src,
+             "-vf", f"fps={FPS},scale={W}:{H}:flags=lanczos",
+             "-q:v", "2", os.path.join(d, "%04d.jpg")], check=True)
+    _index[name] = sorted(os.path.join(d, f) for f in os.listdir(d) if f.endswith(".jpg"))
+    return _index[name]
+
+
+_frame_cache: tuple[str, Image.Image] | None = None
+
+
+def clip_frame(name: str, t: float, speed: float = 1.0, offset: float = 0.0) -> Image.Image:
+    """Klibin t anındaki karesi. speed<1 ağırlaştırır, sahneyi uzatır."""
+    global _frame_cache
+    fs = clip_dir(name)
+    i = int(round((offset + t * speed) * FPS))
+    i = min(max(i, 0), len(fs) - 1)
+    p = fs[i]
+    if _frame_cache and _frame_cache[0] == p:
+        return _frame_cache[1]
+    im = Image.open(p).convert("RGB")
+    _frame_cache = (p, im)
+    return im
+
+
+def clip_len(name: str) -> float:
+    return len(clip_dir(name)) / FPS
+
+
+# ---------------------------------------------------------------- kaynak
 _cache: dict[str, Image.Image] = {}
-
-
-def source(name: str, scale: float = 1.0) -> Image.Image:
-    """Render'ı kamera hareketine yetecek kadar büyütüp önbellekler."""
-    key = f"{name}@{scale:.3f}"
-    if key not in _cache:
-        im = Image.open(os.path.join(IMG, f"{name}.webp")).convert("RGB")
-        if scale != 1.0:
-            im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
-        _cache[key] = im
-    return _cache[key]
 
 
 def logo_white(width: int) -> Image.Image:
@@ -154,98 +193,71 @@ def partner_white(width: int) -> Image.Image:
     return _cache[key]
 
 
-# ---------------------------------------------------------------- kamera
-def camera(im: Image.Image, box0, box1, t: float, e=ease) -> Image.Image:
-    """
-    box = (cx, cy, genişlik_oranı) — kaynak görselin normalize koordinatları.
-    Kırpma dikdörtgeni 16:9'a sabitlenir, kadraj dışına taşmaz.
-    """
-    k = e(t)
-    cx = lerp(box0[0], box1[0], k)
-    cy = lerp(box0[1], box1[1], k)
-    fw = lerp(box0[2], box1[2], k)
-
-    cw = im.width * fw
-    ch = cw * H / W
-    if ch > im.height:
-        ch = im.height
-        cw = ch * W / H
-    x = min(max(cx * im.width - cw / 2, 0), im.width - cw)
-    y = min(max(cy * im.height - ch / 2, 0), im.height - ch)
-    crop = im.crop((round(x), round(y), round(x + cw), round(y + ch)))
-    return crop.resize((W, H), Image.LANCZOS)
-
-
-# ---------------------------------------------------------------- renk/ışık
+# ---------------------------------------------------------------- görüntü
 def blur_fast(im: Image.Image, radius: float, f: int = 4) -> Image.Image:
-    """
-    Geniş yarıçaplı bulanıklık.
-
-    1920x1080'de doğrudan GaussianBlur(26) kare başına yüzlerce ms yiyor.
-    Küçültüp bulanıklaştırıp geri büyütmek gözle aynı sonucu veriyor —
-    parlama ve gölge zaten düşük frekanslı katmanlar.
-    """
     small = im.resize((max(im.width // f, 8), max(im.height // f, 8)), Image.BILINEAR)
     small = small.filter(ImageFilter.GaussianBlur(max(radius / f, 0.6)))
     return small.resize(im.size, Image.BILINEAR)
 
 
-_VIGNETTE: Image.Image | None = None
+_VIG: Image.Image | None = None
 
 
 def vignette() -> Image.Image:
-    global _VIGNETTE
-    if _VIGNETTE is None:
+    global _VIG
+    if _VIG is None:
         yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
         dx = (xx - W / 2) / (W / 2)
         dy = (yy - H / 2) / (H / 2)
         r = np.sqrt(dx * dx + dy * dy) / 1.42
-        a = np.clip((r - 0.42) / 0.58, 0, 1) ** 1.7 * 118
+        a = np.clip((r - 0.45) / 0.55, 0, 1) ** 1.7 * 96
         arr = np.zeros((H, W, 4), np.uint8)
         arr[:, :, 3] = a.astype(np.uint8)
-        _VIGNETTE = Image.fromarray(arr, "RGBA")
-    return _VIGNETTE
+        _VIG = Image.fromarray(arr, "RGBA")
+    return _VIG
 
 
-def grade(im: Image.Image, teal: float = 0.10, lift: float = 0.0,
-          bloom: float = 0.16) -> Image.Image:
-    """
-    Sinematik derecelendirme: gölgelere petrol mavisi, ışıklara sıcaklık,
-    üstüne hafif bir parlama. Render'lar zaten temiz; abartmıyoruz.
-    """
+def grade(im: Image.Image, teal: float = 0.09, bloom: float = 0.12) -> Image.Image:
+    """Hafif sinematik derecelendirme — çekimler zaten güzel ışıklı."""
     a = np.asarray(im).astype(np.float32) / 255.0
     lum = a @ np.array([0.299, 0.587, 0.114], np.float32)
     sh = np.clip(1.0 - lum * 1.9, 0, 1)[:, :, None]
     hi = np.clip(lum * 1.5 - 0.45, 0, 1)[:, :, None]
-    a += sh * np.array([-0.035, 0.020, 0.055], np.float32) * (teal / 0.10)
-    a += hi * np.array([0.030, 0.012, -0.012], np.float32)
-    a = (a - 0.5) * 1.055 + 0.5 + lift
+    a += sh * np.array([-0.030, 0.018, 0.048], np.float32) * (teal / 0.09)
+    a += hi * np.array([0.026, 0.010, -0.010], np.float32)
+    a = (a - 0.5) * 1.045 + 0.5
     out = Image.fromarray((np.clip(a, 0, 1) * 255).astype(np.uint8), "RGB")
     if bloom > 0:
-        gl = blur_fast(out, 26)
-        out = Image.blend(out, Image.blend(out, gl, 1.0), bloom * 0.6)
+        gl = blur_fast(out, 24)
         out = Image.fromarray(
             np.clip(np.asarray(out).astype(np.float32)
-                    + np.asarray(gl).astype(np.float32) * bloom * 0.22, 0, 255).astype(np.uint8), "RGB")
+                    + np.asarray(gl).astype(np.float32) * bloom * 0.30, 0, 255).astype(np.uint8), "RGB")
     out = out.convert("RGBA")
     out.alpha_composite(vignette())
     return out.convert("RGB")
 
 
+def punch(im: Image.Image, k: float) -> Image.Image:
+    """Çekimin üstüne hafif ek yakınlaşma — kesmeler daha canlı olur."""
+    if k <= 1.0005:
+        return im
+    cw, ch = W / k, H / k
+    x, y = (W - cw) / 2, (H - ch) / 2
+    return im.crop((round(x), round(y), round(x + cw), round(y + ch))).resize((W, H), Image.LANCZOS)
+
+
 # ---------------------------------------------------------------- tipografi
-def text_layer(draw_fn) -> Image.Image:
+def text_layer(fn) -> Image.Image:
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    draw_fn(ImageDraw.Draw(layer))
+    fn(ImageDraw.Draw(layer))
     return layer
 
 
-def with_shadow(base: Image.Image, layer: Image.Image, blur: int = 22,
-                boost: float = 1.9, opacity: float = 1.0) -> Image.Image:
-    """Metni okunur kılan yumuşak gölge — perde koyulaştırmadan."""
-    if opacity <= 0.003:
+def with_shadow(base, layer, blur: int = 22, boost: float = 1.9, opacity: float = 1.0):
+    if opacity <= 0.004:
         return base
     sh = blur_fast(layer, blur)
-    dark = Image.new("RGBA", (W, H), (2, 22, 34, 0))
+    dark = Image.new("RGBA", (W, H), (2, 20, 32, 0))
     dark.putalpha(sh.split()[3].point(lambda v: min(255, int(v * boost * opacity))))
     out = base.convert("RGBA")
     out.alpha_composite(dark)
@@ -256,277 +268,139 @@ def with_shadow(base: Image.Image, layer: Image.Image, blur: int = 22,
     return out.convert("RGB")
 
 
-def lower_third(base, title, sub, o: float, y: int = 830, size: int = 96,
-                weight: str = "500") -> Image.Image:
-    """Sol alt köşe künyesi — çizgi soldan açılır, yazı belirir."""
+def lower_third(base, title, sub, o: float, y: int = 840, size: int = 84,
+                weight: str = "500"):
+    """Sol alt künye — çizgi soldan açılır, yazı belirir."""
     if o <= 0.004:
         return base
-    x = 150
+    x = 140
 
     def paint(dr):
-        w = int(96 * min(o * 1.6, 1.0))
+        w = int(88 * min(o * 1.7, 1.0))
         if w > 2:
-            dr.line([x, y - 34, x + w, y - 34], fill=(*MIA_AQUA, 255), width=5)
+            dr.line([x, y - 30, x + w, y - 30], fill=(*MIA_AQUA, 255), width=5)
         dr.text((x, y), title, font=serif(size, weight), fill=(*WHITE, 255))
         if sub:
-            track(dr, (x + 3, y + size + 26), sub, sans_b(30), (*MIA_ICE, 255), 12)
+            track(dr, (x + 3, y + size + 22), sub, sans_b(28), (*MIA_ICE, 255), 11)
 
     return with_shadow(base, text_layer(paint), opacity=o)
 
 
-def centered(base, lines, o: float, y0: int = 430) -> Image.Image:
-    """Ortada tipografi bloğu: (metin, punto, font_tipi, renk, satır_arası)."""
-    if o <= 0.004:
-        return base
-
-    def paint(dr):
-        y = y0
-        for text, size, kind, color, gap in lines:
-            if kind == "serif":
-                dr.text((W / 2, y), text, font=serif(size, "600"), fill=(*color, 255), anchor="ma")
-            elif kind == "serif-light":
-                dr.text((W / 2, y), text, font=serif(size, "500"), fill=(*color, 255), anchor="ma")
-            elif kind == "track":
-                track(dr, (W / 2, y), text, sans_b(size), (*color, 255), 16, "ma")
-            else:
-                dr.text((W / 2, y), text, font=sans(size), fill=(*color, 255), anchor="ma")
-            y += gap
-
-    return with_shadow(base, text_layer(paint), opacity=o)
-
-
-def brandbar(base: Image.Image, o: float = 1.0) -> Image.Image:
-    """Sağ üstte küçük marka imzası — film boyunca sabit."""
+def brandbar(base, o: float = 1.0):
     if o <= 0.01:
         return base
-    lg = logo_white(210)
+    lg = logo_white(190)
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    layer.alpha_composite(lg, (W - 150 - lg.width, 78))
-    return with_shadow(base, layer, blur=18, boost=1.4, opacity=o * 0.92)
-
-
-# ---------------------------------------------------------------- inşaat
-_GRAD: dict[tuple[int, int], Image.Image] = {}
-
-
-def _band(w: int, h: int) -> Image.Image:
-    if (w, h) not in _GRAD:
-        col = (np.linspace(0, 1, h, dtype=np.float32) ** 0.85 * 255).astype(np.uint8)
-        _GRAD[(w, h)] = Image.fromarray(np.repeat(col[:, None], w, axis=1), "L")
-    return _GRAD[(w, h)]
-
-
-def rise_mask(size, edge: int, soft: int = 130) -> Image.Image:
-    """Kenarın ALTI beyaz (gerçek render), ÜSTÜ siyah (boş arazi)."""
-    w, h = size
-    m = Image.new("L", (w, h), 255)
-    top = max(edge - soft, 0)
-    if top > 0:
-        ImageDraw.Draw(m).rectangle([0, 0, w, top], fill=0)
-    if edge > 0:
-        band = _band(w, min(soft, max(edge, 1)))
-        m.paste(band, (0, top))
-    return m
-
-
-_PLATE: dict[str, Image.Image] = {}
-
-
-def empty_plate(name: str, scale: float, horizon: float) -> Image.Image:
-    """
-    Boş arazi planı — render'ın KENDİ gökyüzünden üretilir.
-
-    Ufkun üstü, görselin en üst şeridinden esnetilerek boyanır; ufka ince bir
-    pus bandı konur. Böylece binalar yokken de ışık, renk ve hava aynı kalır.
-    """
-    key = f"{name}@{scale}"
-    if key in _PLATE:
-        return _PLATE[key]
-    im = source(name, scale)
-    w, h = im.size
-    hy = int(h * horizon)
-    sky = im.crop((0, 0, w, max(int(h * 0.05), 8))).resize((w, hy + 60), Image.BICUBIC)
-    sky = sky.filter(ImageFilter.GaussianBlur(14))
-    plate = im.copy()
-    plate.paste(sky, (0, 0))
-    # ufuk pusu — uzaktaki ağaç hattının yerini tutar
-    haze = im.crop((0, hy - 14, w, hy + 34)).resize((w, 120), Image.BICUBIC)
-    haze = haze.filter(ImageFilter.GaussianBlur(34))
-    plate.paste(haze, (0, hy - 96), _band(w, 120).point(lambda v: 30 + int(v * 0.55)))
-    plate = Image.composite(plate, im, rise_mask((w, h), hy + 30, 90).point(lambda v: 255 - v))
-    _PLATE[key] = plate
-    return plate
+    layer.alpha_composite(lg, (W - 140 - lg.width, 72))
+    return with_shadow(base, layer, blur=16, boost=1.3, opacity=o * 0.9)
 
 
 # ---------------------------------------------------------------- sahneler
-# (isim, süre) sırası TIMELINE'da. Her sahne yerel t saniyesini alır.
-
-GATE_SCALE = 1.55
-GATE_HORIZON = 0.70        # entrance-gate'te binaların oturduğu hat
-GATE_GROUND = 0.695
-
-
-def sc_land(t: float, d: float) -> Image.Image:
-    """01 · Boş arazi. Kamera yolun üstünden yavaşça yükselir."""
-    plate = empty_plate("entrance-gate", GATE_SCALE, GATE_HORIZON)
-    f = camera(plate, (0.52, 0.86, 0.52), (0.50, 0.62, 0.72), t / d)
-    f = grade(f, teal=0.13, bloom=0.2)
-    o = fade(t, d, 1.4, 0.7)
-    f = centered(f, [
-        ("İZMİT MİA BÖLGESİ", 40, "track", MIA_ICE, 96),
-        ("Burada bir şey başlıyor.", 104, "serif-light", WHITE, 0),
-    ], o * 0.96, y0=430)
-    return f
-
-
-def sc_rise(t: float, d: float) -> Image.Image:
-    """02 · Binalar yükseliyor. Gerçek render alttan yukarı açılır."""
-    real = source("entrance-gate", GATE_SCALE)
-    plate = empty_plate("entrance-gate", GATE_SCALE, GATE_HORIZON)
-    w, h = real.size
-    k = ease(min(t / (d * 0.82), 1.0))
-    edge = int(h * GATE_GROUND * (1 - k))
-    frame = Image.composite(real, plate, rise_mask((w, h), edge, 140))
-
-    # yükselen kenarda ışık — "büyüme" hissi
-    if 0.02 < k < 0.99:
-        glow = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        gd = ImageDraw.Draw(glow)
-        a = int(150 * math.sin(min(k, 1.0) * math.pi) ** 0.6)
-        gd.rectangle([0, edge - 8, w, edge + 8], fill=(*MIA_ICE, a))
-        glow = glow.filter(ImageFilter.GaussianBlur(26))
-        frame = Image.alpha_composite(frame.convert("RGBA"), glow).convert("RGB")
-
-    f = camera(frame, (0.50, 0.62, 0.72), (0.50, 0.55, 0.94), t / d)
-    f = grade(f, teal=0.11, bloom=0.18)
-    o = fade(t, d, 0.7, 0.8)
-    f = lower_third(f, "600 daire", "4 BLOK · 8 KAT · 4 YAŞAM TİPİ", o * ease(max(t - d * 0.45, 0) / 0.9))
-    return f
-
-
-def sc_reveal(t: float, d: float) -> Image.Image:
-    """03 · Proje adı."""
-    f = camera(source("entrance-gate", GATE_SCALE), (0.50, 0.55, 0.94), (0.48, 0.53, 0.80), t / d)
-    f = grade(f, teal=0.10, bloom=0.2)
-    o = fade(t, d, 0.8, 0.8)
-    lg = logo_white(560)
-    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    layer.alpha_composite(lg, ((W - lg.width) // 2, 300))
-    f = with_shadow(f, layer, blur=30, boost=1.6, opacity=o)
-    f = centered(f, [("İZMİT'İN YENİ MERKEZİNDE", 38, "track", MIA_ICE, 0)],
-                 o * ease(max(t - 1.2, 0) / 1.0), y0=760)
-    return f
-
-
-def sc_aerial(t: float, d: float) -> Image.Image:
-    """04 · Havadan geçiş."""
-    f = camera(source("aerial-pools", 1.45), (0.36, 0.46, 0.62), (0.64, 0.54, 0.72), t / d)
-    f = grade(f, teal=0.12)
-    o = fade(t, d, 0.7, 0.7)
-    f = lower_third(f, "Merkezi avlu", "SÜS HAVUZLARI · GENİŞ PEYZAJ", o)
-    return brandbar(f, o)
-
-
-def sc_dusk(t: float, d: float) -> Image.Image:
-    """05 · Akşam avlusu."""
-    f = camera(source("hero-courtyard-dusk", 1.5), (0.50, 0.58, 0.86), (0.50, 0.50, 0.66), t / d)
-    f = grade(f, teal=0.15, bloom=0.24)
-    o = fade(t, d, 0.7, 0.7)
-    f = lower_third(f, "Akşamları başka", "MİMARİ AYDINLATMA", o)
-    return brandbar(f, o)
-
-
-def sc_street(t: float, d: float) -> Image.Image:
-    """06 · Sokak cephesi."""
-    f = camera(source("street-corner", 1.5), (0.62, 0.44, 0.66), (0.40, 0.54, 0.80), t / d)
-    f = grade(f, teal=0.11)
-    o = fade(t, d, 0.7, 0.7)
-    f = lower_third(f, "Zemin katta ticaret", "GÜVENLİ, YAŞAYAN BİR SOKAK", o)
-    return brandbar(f, o)
-
-
-# ---------------------------------------------------------------- callout
-def callout(base: Image.Image, o: float, k: float, anchor, side: int,
-            big: str, rows) -> Image.Image:
-    """
-    Daire tipi etiketi: noktadan çıkan çizgi, ucunda künye.
-
-    k 0→1 çizgiyi uzatır, ardından yazı belirir. side +1 sağa, -1 sola.
-    """
-    if o <= 0.004:
-        return base
-    ax, ay = anchor[0] * W, anchor[1] * H
-    diag = 150.0
-    lx = ax + side * diag
-    ly = ay - diag
-    run = 300.0 * ease(min(k * 1.35, 1.0))
-    ex = lx + side * run
-
-    def paint(dr):
-        r = 9
-        dr.ellipse([ax - r, ay - r, ax + r, ay + r], fill=(*MIA_ICE, 255))
-        dr.ellipse([ax - 22, ay - 22, ax + 22, ay + 22], outline=(*MIA_AQUA, 180), width=3)
-        kk = ease(min(k * 1.6, 1.0))
-        dr.line([ax, ay, ax + side * diag * kk, ay - diag * kk], fill=(*MIA_ICE, 230), width=4)
-        if run > 4:
-            dr.line([lx, ly, ex, ly], fill=(*MIA_ICE, 230), width=4)
-        to = ease(max(k - 0.42, 0) / 0.5)
-        if to <= 0.01:
-            return
-        tx = lx + side * 34
-        anc = "la" if side > 0 else "ra"
-        col = (*WHITE, int(255 * to))
-        dr.text((tx, ly - 118), big, font=serif(96, "600"), fill=col, anchor=anc)
-        y = ly + 22
-        for row in rows:
-            track(dr, (tx, y), row, sans_b(32), (*MIA_ICE, int(250 * to)), 12,
-                  "la" if side > 0 else "ra")
-            y += 50
-
-    return with_shadow(base, text_layer(paint), blur=20, boost=1.7, opacity=o)
-
-
-def unit_scene(name, scale, box0, box1, anchor, side, big, rows, label):
+def shot(name, title=None, sub=None, zoom=1.0, offset=0.0, speed=1.0,
+         teal=0.09, bloom=0.12, bar=True, ty=840, tsize=84):
+    """Bir çekim + sol alt künye. Sahnelerin çoğu bu kalıptan."""
     def fn(t: float, d: float) -> Image.Image:
-        f = camera(source(name, scale), box0, box1, t / d)
-        f = grade(f, teal=0.10, bloom=0.14)
+        f = clip_frame(name, t, speed, offset)
+        f = punch(f, lerp(1.0, zoom, ease(t / d)) if zoom > 1 else 1.0)
+        f = grade(f, teal, bloom)
         o = fade(t, d, 0.5, 0.5)
-        k = ease_out(min(max(t - 0.25, 0) / 1.05, 1.0))
-        f = callout(f, o, k, anchor, side, big, rows)
-        f = brandbar(f, o)
-        if label:
-            f = lower_third(f, label, "", o * 0.9, y=940, size=54)
-        return f
+        if title:
+            f = lower_third(f, title, sub, o * ease(min(max(t - 0.5, 0) / 0.8, 1.0)),
+                            y=ty, size=tsize)
+        return brandbar(f, o) if bar else f
     return fn
 
 
-sc_u1 = unit_scene("unit-1plus0-a", 1.35, (0.46, 0.50, 0.70), (0.54, 0.52, 0.60),
-                   (0.30, 0.60), 1, "1+0", ["BRÜT 28 m²", "472 DAİRE"], "")
-sc_u2 = unit_scene("unit-1plus1-a", 1.35, (0.56, 0.50, 0.70), (0.46, 0.52, 0.60),
-                   (0.70, 0.62), -1, "1+1", ["BRÜT 50 m²", "96 DAİRE"], "")
-sc_u3 = unit_scene("loft-living", 1.4, (0.42, 0.52, 0.68), (0.56, 0.50, 0.60),
-                   (0.28, 0.64), 1, "1+1 Bahçe Loft", ["BRÜT 50 m²", "16 DAİRE"], "")
-sc_u4 = unit_scene("duplex-cutaway", 1.5, (0.50, 0.50, 0.86), (0.50, 0.52, 0.66),
-                   (0.66, 0.66), -1, "2+1 Bahçe Dubleks", ["BRÜT 100 m²", "16 DAİRE"], "")
+# ── 01 · açılış: drone iniyor ──────────────────────────────────────────
+def sc_open(t: float, d: float) -> Image.Image:
+    f = clip_frame("13-giris-drone", t, 0.92)
+    f = grade(f, 0.11, 0.16)
+    o = fade(t, d, 1.2, 0.6)
+
+    def paint(dr):
+        track(dr, (W / 2, 402), "İZMİT MİA BÖLGESİ", sans_b(36), (*MIA_ICE, 255), 18, "ma")
+        dr.text((W / 2, 468), "Burada yeni bir hayat başlıyor.",
+                font=serif(96, "500"), fill=(*WHITE, 255), anchor="ma")
+
+    return with_shadow(f, text_layer(paint), opacity=o * 0.97)
 
 
-def sc_social(t: float, d: float) -> Image.Image:
-    """11 · Sosyal donatılar."""
-    f = camera(source("courtyard-pools", 1.45), (0.40, 0.52, 0.64), (0.60, 0.48, 0.74), t / d)
-    f = grade(f, teal=0.12, bloom=0.18)
+# ── 03 · logo açılışı ──────────────────────────────────────────────────
+def sc_logo(t: float, d: float) -> Image.Image:
+    f = clip_frame("02-sokak-drone", t, 0.95)
+    f = grade(f, 0.10, 0.18)
+    dim = ease(min(t / 1.1, 1.0))
+    veil = Image.new("RGBA", (W, H), (3, 24, 38, int(110 * dim)))
+    f = Image.alpha_composite(f.convert("RGBA"), veil).convert("RGB")
     o = fade(t, d, 0.6, 0.7)
-    f = lower_third(f, "Her gün tatil konforu", "HAVUZLAR · YÜRÜYÜŞ YOLLARI · SPOR ALANLARI", o)
-    return brandbar(f, o)
+    k = ease_out(min(t / 1.6, 1.0))
+    lg = logo_white(int(lerp(430, 560, k)))
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    layer.alpha_composite(lg, ((W - lg.width) // 2, 318))
+    f = with_shadow(f, layer, blur=30, boost=1.5, opacity=o * k)
+    return with_shadow(f, text_layer(lambda dr: track(
+        dr, (W / 2, 742), "OCEAN GAYRİMENKUL GÜVENCESİYLE", sans_b(32),
+        (*MIA_ICE, 255), 16, "ma")), opacity=o * ease(min(max(t - 1.6, 0) / 1.0, 1.0)))
 
 
-# ---------------------------------------------------------------- konum
-def bg_gradient(t: float, d: float) -> Image.Image:
-    """Marka mavisi zemin — yavaşça kayan bir ışıkla."""
+# ── daire tipi künyesi ─────────────────────────────────────────────────
+_SIDE_SCRIM: dict[int, Image.Image] = {}
+
+
+def side_scrim(side: int) -> Image.Image:
+    """Künyenin olduğu yarıyı koyulaştıran yatay perde."""
+    if side not in _SIDE_SCRIM:
+        x = np.linspace(0, 1, W, dtype=np.float32)
+        if side > 0:
+            a = np.clip((0.62 - x) / 0.62, 0, 1) ** 1.5
+        else:
+            a = np.clip((x - 0.38) / 0.62, 0, 1) ** 1.5
+        arr = np.zeros((H, W, 4), np.uint8)
+        arr[:, :, 0], arr[:, :, 1], arr[:, :, 2] = 2, 20, 32
+        arr[:, :, 3] = (a * 168).astype(np.uint8)[None, :]
+        _SIDE_SCRIM[side] = Image.fromarray(arr, "RGBA")
+    return _SIDE_SCRIM[side]
+
+
+def unit_shot(name, big, area, count, note, side=1, offset=0.0, speed=0.95):
+    def fn(t: float, d: float) -> Image.Image:
+        f = clip_frame(name, t, speed, offset)
+        f = grade(f, 0.08, 0.10)
+        sc = side_scrim(side).copy()
+        sc.putalpha(sc.split()[3].point(
+            lambda v: int(v * ease(min(max(t - 0.2, 0) / 0.8, 1.0)))))
+        f = Image.alpha_composite(f.convert("RGBA"), sc).convert("RGB")
+        o = fade(t, d, 0.5, 0.5)
+        k = ease_out(min(max(t - 0.3, 0) / 1.1, 1.0))
+        if k <= 0.01:
+            return brandbar(f, o)
+        x = 150 if side > 0 else W - 150
+        anc = "la" if side > 0 else "ra"
+
+        def paint(dr):
+            wline = int(340 * k)
+            dr.line([x, 470, x + side * wline, 470], fill=(*MIA_AQUA, 255), width=5)
+            to = ease(max(k - 0.35, 0) / 0.65)
+            if to <= 0.01:
+                return
+            c = int(255 * to)
+            dr.text((x, 506), big, font=serif(112, "600"), fill=(*WHITE, c), anchor=anc)
+            track(dr, (x + side * 4, 654), f"BRÜT {area}", sans_b(34), (*MIA_ICE, c), 13, anc)
+            dr.text((x, 706), count, font=sans_b(52), fill=(*MIA_PALE, c), anchor=anc)
+            dr.text((x, 786), note, font=sans(38), fill=(*MIA_ICE, int(232 * to)), anchor=anc)
+
+        f = with_shadow(f, text_layer(paint), opacity=o)
+        return brandbar(f, o)
+    return fn
+
+
+# ---------------------------------------------------------------- zeminler
+def brand_bg(t: float, d: float, drift: float = 1.0) -> Image.Image:
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     k = xx / W * 0.6 + yy / H * 0.4
-    stops = [(0.0, np.array((5, 46, 66), np.float32)),
+    stops = [(0.0, np.array((5, 44, 64), np.float32)),
              (0.55, np.array(MIA_DEEP, np.float32)),
-             (1.0, np.array((20, 108, 140), np.float32))]
+             (1.0, np.array((22, 112, 144), np.float32))]
     arr = np.zeros((H, W, 3), np.float32)
     for i in range(len(stops) - 1):
         t0, c0 = stops[i]
@@ -534,284 +408,158 @@ def bg_gradient(t: float, d: float) -> Image.Image:
         m = (k >= t0) & (k <= t1)
         q = np.clip((k - t0) / (t1 - t0), 0, 1)[:, :, None]
         arr = np.where(m[:, :, None], c0 + (c1 - c0) * q, arr)
-    cx = W * (0.5 + 0.06 * math.sin(t / d * math.pi))
-    dd = np.sqrt((xx - cx) ** 2 + (yy - H * 0.42) ** 2) / (W * 0.72)
-    arr += np.clip(1 - dd, 0, 1)[:, :, None] ** 2.1 * np.array(MIA_CYAN, np.float32) * 0.30
+    cx = W * (0.5 + 0.07 * math.sin(t / max(d, 1e-6) * math.pi * drift))
+    dd = np.sqrt((xx - cx) ** 2 + (yy - H * 0.42) ** 2) / (W * 0.7)
+    arr += np.clip(1 - dd, 0, 1)[:, :, None] ** 2.1 * np.array(MIA_CYAN, np.float32) * 0.32
     return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB")
 
 
-def sc_map(t: float, d: float) -> Image.Image:
-    """12 · Konum — halkalar açılır, mesafeler belirir."""
-    f = bg_gradient(t, d)
+# ── konum · mavi kartlar ───────────────────────────────────────────────
+LOC_CARDS = [
+    ("D-100 KARAYOLU", "1 dk", "Ana yollara birkaç dakikada"),
+    ("ŞEHİR MERKEZİ", "5 dk", "İzmit çarşısı ve sahil bandı"),
+    ("ÜNİVERSİTE", "yakın", "Kocaeli Üniversitesi"),
+    ("ŞEHİR HASTANESİ", "yakın", "Sağlık kampüsü"),
+]
+
+
+def sc_location(t: float, d: float) -> Image.Image:
+    f = brand_bg(t, d)
     cx, cy = W / 2, H * 0.46
-    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    dr = ImageDraw.Draw(layer)
-    g = ease(min(t / 2.2, 1.0))
-    for i, r0 in enumerate([120, 235, 365, 510, 670, 850, 1050]):
-        r = r0 * lerp(0.55, 1.0, ease(min(max(t - i * 0.13, 0) / 1.5, 1.0)))
-        a = int(84 * (0.9 ** i) * g)
-        dr.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(*MIA_LIGHT, a), width=3)
-    for kk in range(12):
-        ang = math.radians(kk * 30)
-        dr.line([cx + 120 * math.cos(ang), cy + 120 * math.sin(ang),
-                 cx + 1050 * math.cos(ang), cy + 1050 * math.sin(ang)],
-                fill=(*MIA_LIGHT, int(24 * g)), width=2)
-    r = 86
-    dr.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(*MIA_ICE, int(34 * g)),
-               outline=(*MIA_ICE, int(190 * g)), width=4)
-    f = Image.alpha_composite(f.convert("RGBA"), layer).convert("RGB")
 
-    m = mark_white(96)
-    ml = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    ml.alpha_composite(m, (int(cx - m.width / 2), int(cy - m.height / 2 - 2)))
-    f = with_shadow(f, ml, blur=16, boost=1.2, opacity=g)
+    rings = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    rd = ImageDraw.Draw(rings)
+    g = ease(min(t / 1.6, 1.0))
+    for i, r0 in enumerate([150, 300, 470, 660, 870, 1100]):
+        r = r0 * lerp(0.6, 1.0, ease(min(max(t - i * 0.1, 0) / 1.4, 1.0)))
+        rd.ellipse([cx - r, cy - r, cx + r, cy + r],
+                   outline=(*MIA_LIGHT, int(70 * (0.88 ** i) * g)), width=3)
+    f = Image.alpha_composite(f.convert("RGBA"), rings).convert("RGB")
 
-    pins = [(-1, -1, "D-100 KARAYOLU", "1 dk", 0.9),
-            (1, -1, "ŞEHİR MERKEZİ", "5 dk", 1.5),
-            (-1, 1, "ÜNİVERSİTE", "yakın", 2.1),
-            (1, 1, "HASTANE", "yakın", 2.7)]
+    o = fade(t, d, 0.5, 0.6)
 
-    def paint(dr2):
-        for sx, sy, label, dist, t0 in pins:
-            o2 = ease(min(max(t - t0, 0) / 0.9, 1.0))
-            if o2 <= 0.01:
+    def paint(dr):
+        track(dr, (W / 2, 118), "KONUM AVANTAJI", sans_b(34), (*MIA_LIGHT, int(240 * g)), 18, "ma")
+        # dört kart, ikişer sıra
+        bw, bh, gap = 620, 176, 34
+        x0 = cx - bw - gap / 2
+        y0 = cy - bh - gap / 2 + 40
+        for i, (label, val, note) in enumerate(LOC_CARDS):
+            k = ease(min(max(t - 0.7 - i * 0.28, 0) / 0.85, 1.0))
+            if k <= 0.01:
                 continue
-            px = cx + sx * W * 0.29
-            py = cy + sy * H * 0.27
-            a = int(255 * o2)
-            dr2.ellipse([px - 9, py - 9, px + 9, py + 9], fill=(*MIA_ICE, a))
-            dr2.ellipse([px - 24, py - 24, px + 24, py + 24], outline=(*MIA_AQUA, int(170 * o2)), width=3)
-            track(dr2, (px, py + 42), label, sans_b(31), (*MIA_ICE, a), 12, "ma")
-            dr2.text((px, py + 88), dist, font=serif(64, "600"), fill=(*WHITE, a), anchor="ma")
+            bx = x0 + (i % 2) * (bw + gap)
+            by = y0 + (i // 2) * (bh + gap) + (1 - k) * 26
+            a = int(255 * k)
+            dr.rounded_rectangle([bx, by, bx + bw, by + bh], 20,
+                                 fill=(*MIA_ICE, int(24 * k)), outline=(*MIA_AQUA, int(120 * k)), width=3)
+            track(dr, (bx + 40, by + 28), label, sans_b(29), (*MIA_ICE, a), 12)
+            dr.text((bx + 40, by + 68), val, font=serif(70, "600"),
+                    fill=(*WHITE, a), anchor="la")
+            dr.text((bx + bw - 40, by + 116), note, font=sans(30),
+                    fill=(*MIA_PALE, int(228 * k)), anchor="ra")
 
-    f = with_shadow(f, text_layer(paint), blur=18, boost=1.3, opacity=fade(t, d, 0.5, 0.7))
-    o = fade(t, d, 0.6, 0.7)
-    f = centered(f, [("İzmit MİA Bölgesi", 74, "serif", WHITE, 0)],
-                 o * ease(max(t - 3.2, 0) / 1.0), y0=int(H * 0.86))
-    return f
+    # Ortadaki amblem kartların arasından sızıyordu; kartlar zaten alanı
+    # dolduruyor, marka imzası sağ üstteki brandbar'da duruyor.
+    f = with_shadow(f, text_layer(paint), blur=18, boost=1.2, opacity=o)
+    return with_shadow(f, text_layer(lambda dr: dr.text(
+        (W / 2, H - 132), "İzmit MİA Bölgesi — şehrin yeni merkezi",
+        font=sans(40), fill=(*MIA_ICE, 240), anchor="ma")),
+        opacity=o * ease(min(max(t - 2.6, 0) / 1.0, 1.0)))
 
 
-# ---------------------------------------------------------------- finansman
+# ── finansman ──────────────────────────────────────────────────────────
 def sc_finance(t: float, d: float) -> Image.Image:
-    """13 · Faizsiz finansman — rakamlar sayarak gelir."""
-    f = bg_gradient(t, d)
-    o = fade(t, d, 0.6, 0.7)
-
-    k1 = ease(min(max(t - 0.4, 0) / 1.1, 1.0))
-    k2 = ease(min(max(t - 1.0, 0) / 1.3, 1.0))
+    f = brand_bg(t, d, drift=1.4)
+    o = fade(t, d, 0.5, 0.6)
+    k1 = ease(min(max(t - 0.3, 0) / 0.9, 1.0))
+    k2 = ease(min(max(t - 0.8, 0) / 1.2, 1.0))
     ay = int(round(60 * k2))
 
     def paint(dr):
-        track(dr, (W / 2, 200), "TASARRUFA DAYALI FİNANSMAN", sans_b(38), (*MIA_LIGHT, 240), 16, "ma")
-        dr.text((W * 0.30, 560), "%0", font=serif(230, "700"), fill=(*WHITE, int(255 * k1)), anchor="ms")
-        track(dr, (W * 0.30, 610), "FAİZ", sans_b(40), (*MIA_ICE, int(250 * k1)), 20, "ma")
-        dr.line([W / 2, 380, W / 2, 640], fill=(*MIA_LIGHT, int(90 * k1)), width=3)
-        dr.text((W * 0.70, 560), f"{ay}", font=serif(230, "700"), fill=(*WHITE, int(255 * k2)), anchor="ms")
-        track(dr, (W * 0.70, 610), "AY VADE", sans_b(40), (*MIA_ICE, int(250 * k2)), 20, "ma")
-        k3 = ease(min(max(t - 2.6, 0) / 1.0, 1.0))
+        track(dr, (W / 2, 132), "TASARRUFA DAYALI FİNANSMAN", sans_b(36),
+              (*MIA_LIGHT, 240), 17, "ma")
+        dr.text((W * 0.30, 448), "%0", font=serif(210, "700"),
+                fill=(*WHITE, int(255 * k1)), anchor="ms")
+        track(dr, (W * 0.30, 484), "FAİZ", sans_b(36), (*MIA_ICE, int(250 * k1)), 18, "ma")
+        dr.line([W / 2, 300, W / 2, 500], fill=(*MIA_LIGHT, int(90 * k1)), width=3)
+        dr.text((W * 0.70, 448), f"{ay}", font=serif(210, "700"),
+                fill=(*WHITE, int(255 * k2)), anchor="ms")
+        track(dr, (W * 0.70, 484), "AY VADE", sans_b(36), (*MIA_ICE, int(250 * k2)), 18, "ma")
+
+        k3 = ease(min(max(t - 2.2, 0) / 0.9, 1.0))
         if k3 > 0.01:
-            dr.text((W / 2, 760), "Bankasız. Faizsiz. Kefilsiz.",
-                    font=serif(78, "500"), fill=(*MIA_PALE, int(255 * k3)), anchor="ma")
-            dr.text((W / 2, 880), "Vade farkı yok, ara ödeme yok, taksit sabit.",
-                    font=sans(42), fill=(*MIA_ICE, int(235 * k3)), anchor="ma")
+            for i, w in enumerate(["Bankasız.", "Faizsiz.", "Kefilsiz."]):
+                kk = ease(min(max(t - 2.2 - i * 0.22, 0) / 0.7, 1.0))
+                dr.text((W * (0.22 + i * 0.28), 656), w, font=serif(70, "500"),
+                        fill=(*MIA_PALE, int(255 * kk)), anchor="ma")
+        k4 = ease(min(max(t - 3.4, 0) / 0.9, 1.0))
+        if k4 > 0.01:
+            dr.text((W / 2, 790), "Vade farkı yok · Ara ödeme yok · Taksit 60 ay sabit",
+                    font=sans(40), fill=(*MIA_ICE, int(238 * k4)), anchor="ma")
 
-    return with_shadow(f, text_layer(paint), blur=20, boost=1.2, opacity=o)
+    return with_shadow(f, text_layer(paint), blur=18, boost=1.2, opacity=o)
 
 
-# ---------------------------------------------------------------- kapanış
+# ── kapanış ────────────────────────────────────────────────────────────
 def sc_close(t: float, d: float) -> Image.Image:
-    """14 · Gece + logo kapanışı."""
-    f = camera(source("night-gate", 1.5), (0.50, 0.52, 0.90), (0.50, 0.50, 0.70), t / d)
-    f = grade(f, teal=0.16, bloom=0.28)
-
-    dim = ease(min(max(t - 1.6, 0) / 1.8, 1.0))
-    if dim > 0.01:
-        veil = Image.new("RGBA", (W, H), (3, 26, 40, int(190 * dim)))
-        f = Image.alpha_composite(f.convert("RGBA"), veil).convert("RGB")
-
-    o = fade(t, d, 0.8, 1.2)
-    ko = ease(min(max(t - 2.0, 0) / 1.4, 1.0))
-    if ko > 0.01:
-        lg = logo_white(620)
+    f = clip_frame("14-gece-yaklasim", t, 0.9, 1.0)
+    f = grade(f, 0.14, 0.22)
+    dim = ease(min(max(t - 0.8, 0) / 1.6, 1.0))
+    veil = Image.new("RGBA", (W, H), (3, 24, 38, int(196 * dim)))
+    f = Image.alpha_composite(f.convert("RGBA"), veil).convert("RGB")
+    o = fade(t, d, 0.6, 1.4)
+    k = ease_out(min(max(t - 1.0, 0) / 1.3, 1.0))
+    if k > 0.01:
+        lg = logo_white(600)
         layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        layer.alpha_composite(lg, ((W - lg.width) // 2, 250))
-        pm = partner_white(210)
-        layer.alpha_composite(pm, ((W - pm.width) // 2, 900))
-        layer.putalpha(layer.split()[3].point(lambda v: int(v * ko)))
+        layer.alpha_composite(lg, ((W - lg.width) // 2, 232))
+        pm = partner_white(200)
+        layer.alpha_composite(pm, ((W - pm.width) // 2, 902))
+        layer.putalpha(layer.split()[3].point(lambda v: int(v * k)))
         f = with_shadow(f, layer, blur=28, boost=1.4, opacity=o)
+    k2 = ease(min(max(t - 2.2, 0) / 1.0, 1.0))
 
-    k4 = ease(min(max(t - 3.2, 0) / 1.2, 1.0))
-    f = centered(f, [
-        ("miaparkocean.com", 52, "sans", MIA_ICE, 78),
-        ("0540 028 00 41", 52, "sans", MIA_ICE, 0),
-    ], o * k4, y0=700)
-    return f
+    def paint(dr):
+        dr.text((W / 2, 660), "miaparkocean.com", font=sans(48),
+                fill=(*MIA_ICE, int(250 * k2)), anchor="ma")
+        dr.text((W / 2, 736), "0540 028 00 41", font=sans_b(52),
+                fill=(*WHITE, int(255 * k2)), anchor="ma")
+
+    return with_shadow(f, text_layer(paint), opacity=o * k2)
 
 
 # ---------------------------------------------------------------- zaman çizgisi
+# Kesmeler müzikle hizalı: 22. saniyedeki vuruşta logo, 58'de müzik seyrelir
+# ve daire tipleri başlar, 100'de final bölümü ile finansman gelir.
 TIMELINE = [
-    ("bos-arazi", sc_land, 6.4),
-    ("yukselis", sc_rise, 8.2),
-    ("proje", sc_reveal, 6.0),
-    ("havadan", sc_aerial, 5.8),
-    ("aksam", sc_dusk, 5.4),
-    ("sokak", sc_street, 5.0),
-    ("1plus0", sc_u1, 4.6),
-    ("1plus1", sc_u2, 4.6),
-    ("loft", sc_u3, 4.6),
-    ("dubleks", sc_u4, 5.0),
-    ("donati", sc_social, 5.4),
-    ("konum", sc_map, 7.0),
-    ("finansman", sc_finance, 6.6),
-    ("kapanis", sc_close, 7.4),
+    ("acilis", sc_open, 8.2),
+    ("gunduz-gece", shot("01-gunduz-gece", "Sabahtan geceye", "MİMARİ AYDINLATMA · 7/24 GÜVENLİK", bar=False), 8.0),
+    ("gece-yaklasim", shot("14-gece-yaklasim", None, None, bar=False, teal=0.13), 6.4),
+    ("logo", sc_logo, 7.6),
+    ("cephe", shot("08-cephe-yukselis", "600 daire", "4 BLOK · 8 KAT · 4 YAŞAM TİPİ"), 7.0),
+    ("sokak", shot("02-sokak-drone", "Modern mimari", "GENİŞ BALKONLAR · AÇIK PLAN", offset=1.0), 6.8),
+    ("havadan", shot("03-havadan-yorunge", "Merkezi avlu", "SÜS HAVUZLARI · GENİŞ PEYZAJ"), 7.0),
+    ("avlu", shot("04-avlu-suzulme", "Yürüyüş yolları", "ÇOCUK OYUN PARKI · YEŞİL ALAN"), 6.8),
+    ("teras", shot("06-teras-sosyal", "Sosyal ve spor alanları", "KAPALI OTOPARK · 7/24 GÜVENLİK"), 6.8),
+    ("balkon", shot("05-balkon-cift", "Geniş balkonlar", "1+0 VE 1+1 DAİRELERDE · ZEMİNDE BAHÇE"), 6.8),
+    ("aksam", shot("07-aksam-avlu", "Akşamları başka", "ÖZEL GECE AYDINLATMASI"), 6.6),
+    ("u-1plus0", unit_shot("09-daire-1plus0", "1+0", "28 m²", "472 daire", "Akıllı tasarım, maksimum konfor"), 6.8),
+    ("u-1plus1", unit_shot("10-daire-1plus1", "1+1", "50 m²", "96 daire", "Ferah, konforlu ve fonksiyonel", side=-1), 6.8),
+    ("u-loft", unit_shot("11-bahce-loft", "1+1 Bahçe Loft", "50 m²", "16 daire", "Zemin katta kendi bahçeniz"), 6.8),
+    ("u-dubleks", unit_shot("12-bahce-dubleks", "2+1 Bahçe Dubleks", "100 m²", "16 daire", "Bahçeniz, evinizin devamı", side=-1, speed=0.5), 7.2),
+    ("konum", sc_location, 8.4),
+    ("finansman", sc_finance, 8.4),
+    ("kapanis", sc_close, 8.6),
 ]
 
-XFADE = 0.55   # sahneler arası çapraz geçiş
+XFADE = 0.6
 
 
 def total_duration() -> float:
     return sum(d for _, _, d in TIMELINE) - XFADE * (len(TIMELINE) - 1)
 
 
-# ---------------------------------------------------------------- müzik
-SR = 44100
-
-# Dm – Bb – F – C · her akor 8 sn. Alt oktavda kök, üstte açık aralıklar:
-# sinematik yatak burada; melodi yok, çünkü altına konuşma/alt yazı gelebilir.
-CHORDS = [
-    (62, [50, 57, 62, 65, 69]),   # Dm
-    (58, [46, 53, 58, 62, 65]),   # Bb
-    (53, [41, 48, 53, 57, 60]),   # F
-    (60, [48, 55, 60, 64, 67]),   # C
-]
-CHORD_LEN = 8.0
-
-
-def _hz(midi: float) -> float:
-    return 440.0 * 2 ** ((midi - 69) / 12.0)
-
-
-def _voice(f: float, n: int, detune: float = 0.0) -> np.ndarray:
-    """Yumuşak, harmonikleri sönen bir ses — tek sinüs kadar cansız değil."""
-    tt = np.arange(n, dtype=np.float32) / SR
-    out = np.zeros(n, np.float32)
-    for h, amp in ((1, 1.0), (2, 0.42), (3, 0.20), (4, 0.11), (5, 0.06), (6, 0.035)):
-        ph = 2 * math.pi * f * h * (1 + detune) * tt
-        out += amp * np.sin(ph + h * 0.7)
-    # yavaş nefes
-    out *= 1.0 + 0.06 * np.sin(2 * math.pi * 0.13 * tt + f % 3)
-    return out / 1.85
-
-
-def _env(n: int, attack: float, release: float) -> np.ndarray:
-    e = np.ones(n, np.float32)
-    a = int(SR * attack)
-    r = int(SR * release)
-    if a > 0:
-        x = np.linspace(0, 1, min(a, n), dtype=np.float32)
-        e[:min(a, n)] *= x * x * (3 - 2 * x)
-    if r > 0 and r < n:
-        x = np.linspace(1, 0, r, dtype=np.float32)
-        e[-r:] *= x * x * (3 - 2 * x)
-    return e
-
-
-def _reverb(x: np.ndarray, mix: float = 0.34) -> np.ndarray:
-    """Schroeder tarzı basit yankı — mekân hissi için yeterli."""
-    out = np.zeros_like(x)
-    for delay_ms, g in ((37.1, 0.78), (41.9, 0.75), (49.3, 0.72), (58.7, 0.70)):
-        d = int(SR * delay_ms / 1000)
-        buf = np.zeros_like(x)
-        buf[d:] = x[:-d]
-        # geri beslemeli sönüm
-        acc = buf.copy()
-        for _ in range(4):
-            nxt = np.zeros_like(acc)
-            nxt[d:] = acc[:-d] * g
-            acc = nxt
-            out += acc
-    out /= 9.0
-    return x * (1 - mix) + out * mix
-
-
-def score(duration: float) -> np.ndarray:
-    """Filmle aynı uzunlukta, iki kanallı sinematik yatak."""
-    n = int(SR * duration)
-    tt = np.arange(n, dtype=np.float32) / SR
-    pad = np.zeros(n, np.float32)
-    sub = np.zeros(n, np.float32)
-    shimmer = np.zeros(n, np.float32)
-
-    i = 0
-    pos = 0.0
-    while pos < duration:
-        root, notes = CHORDS[i % len(CHORDS)]
-        seg = int(SR * min(CHORD_LEN + 2.2, duration - pos + 2.2))
-        if seg <= 0:
-            break
-        start = int(SR * pos)
-        env = _env(seg, 1.5, 2.4)
-        for j, m in enumerate(notes):
-            v = _voice(_hz(m), seg, detune=0.0018 * (j - 2))
-            end = min(start + seg, n)
-            pad[start:end] += (v * env)[:end - start] * (0.34 if j else 0.42)
-        v = np.sin(2 * math.pi * _hz(root - 24) * np.arange(seg, dtype=np.float32) / SR)
-        end = min(start + seg, n)
-        sub[start:end] += (v * env)[:end - start] * 0.5
-
-        # parlaklık — akorun üst sesleri iki oktav yukarıda, çok kısık.
-        # Yatağın tamamı bas bölgede kalırsa film boğuk duyuluyor.
-        ts = np.arange(seg, dtype=np.float32) / SR
-        for j, mn in enumerate(notes[-2:]):
-            sh = np.sin(2 * math.pi * _hz(mn + 24) * ts)
-            sh *= 1.0 + 0.3 * np.sin(2 * math.pi * (0.6 + 0.13 * j) * ts + j)
-            shimmer[start:end] += (sh * env)[:end - start] * 0.055
-
-        pos += CHORD_LEN
-        i += 1
-
-    # hava — çok kısık, sadece dokusu için
-    rng = np.random.default_rng(11)
-    raw = rng.normal(0, 1, n).astype(np.float32)
-    k = 24
-    low = np.convolve(raw, np.ones(k, np.float32) / k, mode="same")
-    air = (raw - low) * 0.055          # tiz "hava"
-    air += low * 0.9                   # altında ince bir uğultu
-
-    # nabız: binalar yükselmeye başlayınca girer
-    pulse = np.zeros(n, np.float32)
-    beat = 2.0
-    b = 6.0
-    while b < duration - 1.0:
-        s0 = int(SR * b)
-        ln = int(SR * 1.1)
-        e = np.exp(-np.linspace(0, 7, ln, dtype=np.float32))
-        f0 = np.sin(2 * math.pi * 52 * np.arange(ln, dtype=np.float32) / SR)
-        end = min(s0 + ln, n)
-        pulse[s0:end] += (f0 * e)[:end - s0] * 0.34
-        b += beat
-
-    mix = pad * 0.5 + sub * 0.40 + shimmer * 0.9 + air * 0.5 + pulse
-    mix = _reverb(mix, 0.32)
-
-    # filmin yayı: açılış kısık, yükseliş büyür, kapanışta iner
-    shape = np.interp(tt, [0, 5, 8, 20, duration - 12, duration - 2, duration],
-                      [0.42, 0.55, 0.95, 0.85, 0.9, 0.62, 0.0]).astype(np.float32)
-    mix *= shape
-    mix = np.tanh(mix * 1.30) * 0.80
-
-    # hafif genişlik: kanallar arasında birkaç örneklik kayma
-    d = 380
-    left = mix.copy()
-    right = np.zeros_like(mix)
-    right[d:] = mix[:-d]
-    right = right * 0.94 + mix * 0.06
-    st = np.stack([left, right], axis=1)
-    st *= _env(n, 1.2, 1.6)[:, None]
-    return np.clip(st, -1, 1)
-
-
-# ---------------------------------------------------------------- kurgu
 def scene_starts():
     s, out = 0.0, []
     for _, _, d in TIMELINE:
@@ -821,44 +569,21 @@ def scene_starts():
 
 
 def frame_at(T: float, starts) -> Image.Image:
-    """T anındaki kare; sahneler XFADE kadar üst üste binerek geçer."""
-    active = [(i, T - starts[i]) for i in range(len(TIMELINE))
-              if 0 <= T - starts[i] < TIMELINE[i][2]]
-    if not active:
-        active = [(len(TIMELINE) - 1, TIMELINE[-1][2] - 0.001)]
-    if len(active) == 1:
-        i, lt = active[0]
+    act = [(i, T - starts[i]) for i in range(len(TIMELINE))
+           if 0 <= T - starts[i] < TIMELINE[i][2]]
+    if not act:
+        act = [(len(TIMELINE) - 1, TIMELINE[-1][2] - 0.001)]
+    if len(act) == 1:
+        i, lt = act[0]
         return TIMELINE[i][1](lt, TIMELINE[i][2])
-    (i0, t0), (i1, t1) = active[0], active[1]
+    (i0, t0), (i1, t1) = act[0], act[1]
     a = TIMELINE[i0][1](t0, TIMELINE[i0][2])
     b = TIMELINE[i1][1](t1, TIMELINE[i1][2])
     return Image.blend(a, b, ease(min(t1 / XFADE, 1.0)))
 
 
-_STARTS = None
-
-
-def _init_worker(starts) -> None:
-    global _STARTS
-    _STARTS = starts
-
-
-def _render_frame(k: int) -> bytes:
-    return frame_at(k / FPS, _STARTS).tobytes()
-
-
-def write_score(path: str, dur: float) -> None:
-    import wave
-    st = (score(dur) * 32767).astype(np.int16)
-    with wave.open(path, "wb") as f:
-        f.setnchannels(2)
-        f.setsampwidth(2)
-        f.setframerate(SR)
-        f.writeframes(st.tobytes())
-
-
-def user_track() -> str | None:
-    """public/videos/muzik.(wav|mp3|m4a) varsa sentezlenen yatak yerine o kullanılır."""
+# ---------------------------------------------------------------- ses
+def user_track():
     for ext in ("wav", "mp3", "m4a", "aac"):
         p = os.path.join(os.path.dirname(OUT), f"muzik.{ext}")
         if os.path.exists(p):
@@ -866,43 +591,43 @@ def user_track() -> str | None:
     return None
 
 
-def remux_audio() -> None:
-    """Görüntüyü yeniden üretmeden yalnızca sesi değiştirir."""
-    dur = total_duration()
-    src = user_track()
-    tmp = os.path.join(os.path.dirname(OUT), "_ses.wav")
-    if src is None:
-        write_score(tmp, dur)
-        src = tmp
-    ff = imageio_ffmpeg.get_ffmpeg_exe()
-    tmp_out = OUT + ".tmp.mp4"
-    subprocess.run([ff, "-y", "-i", OUT, "-i", src, "-map", "0:v:0", "-map", "1:a:0",
-                    "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest",
-                    "-movflags", "+faststart", tmp_out],
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    os.replace(tmp_out, OUT)
-    if os.path.exists(tmp):
-        os.remove(tmp)
-    print(f"ses yenilendi · {os.path.getsize(OUT) / 1048576:.1f} MB")
+def write_score(path: str, dur: float) -> None:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import film_score
+    film_score.write(path, dur)
+
+
+# ---------------------------------------------------------------- ana akış
+_STARTS = None
+
+
+def _init(starts):
+    global _STARTS
+    _STARTS = starts
+
+
+def _render(k: int) -> bytes:
+    return frame_at(k / FPS, _STARTS).tobytes()
 
 
 def main() -> None:
-    if "--ses" in sys.argv:
-        remux_audio()
-        return
     dur = total_duration()
     starts = scene_starts()
 
-    if "--preview" in sys.argv:
-        outdir = sys.argv[sys.argv.index("--preview") + 1]
+    if "--sure" in sys.argv:
+        for (n, _, d), s in zip(TIMELINE, starts):
+            print(f"  {s:6.1f}  {d:4.1f}  {n}")
+        print(f"toplam {dur:.1f} s")
+        return
+
+    if "--onizle" in sys.argv:
+        outdir = sys.argv[sys.argv.index("--onizle") + 1]
         os.makedirs(outdir, exist_ok=True)
-        for T in [1.0, 4.0, 8.0, 11.0, 14.0, 18.0, 23.0, 28.0, 34.0, 38.5,
-                  43.0, 47.5, 52.5, 58.0, 63.0, 70.0, 76.0, 80.0]:
-            if T >= dur:
-                continue
-            frame_at(T, starts).save(os.path.join(outdir, f"t{T:05.1f}.jpg"), quality=88)
-            print(f"  kare {T:5.1f}s")
-        print(f"süre: {dur:.2f} s")
+        for (n, _, d), s in zip(TIMELINE, starts):
+            T = s + d * 0.55
+            frame_at(min(T, dur - 0.05), starts).save(
+                os.path.join(outdir, f"{s:06.1f}-{n}.jpg"), quality=88)
+            print(f"  {s:6.1f}s {n}")
         return
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -911,42 +636,30 @@ def main() -> None:
     if own:
         wav = os.path.join(os.path.dirname(OUT), "_muzik.wav")
         write_score(wav, dur)
-        print(f"müzik (sentez): {dur:.1f} s")
+        print(f"müzik (sentez) · {dur:.1f} s")
     else:
-        print(f"müzik (dosya): {os.path.basename(wav)}")
+        print(f"müzik (dosya) · {os.path.basename(wav)}")
 
-    ff = imageio_ffmpeg.get_ffmpeg_exe()
-    cmd = [ff, "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
+    cmd = [FF, "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-", "-i", wav,
-           "-c:v", "libx264", "-preset", "slow", "-crf", "20",
+           "-c:v", "libx264", "-preset", "medium", "-crf", "20",
            "-pix_fmt", "yuv420p", "-profile:v", "high", "-movflags", "+faststart",
            "-c:a", "aac", "-b:a", "160k", "-shortest", OUT]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     total = int(dur * FPS)
-
-    # Kareler birbirinden bağımsız; çekirdek sayısı kadar paralel üretilip
-    # sıraya girerek ffmpeg'e yazılır. Tek çekirdekte ~15 dk süren iş
-    # dört çekirdekte ~5 dk'ya iniyor.
     workers = max(1, min(4, (os.cpu_count() or 2)))
-    if workers > 1:
-        import multiprocessing as mp
-        with mp.Pool(workers, initializer=_init_worker, initargs=(starts,)) as pool:
-            for k, buf in enumerate(pool.imap(_render_frame, range(total), chunksize=8)):
-                proc.stdin.write(buf)
-                if k % 100 == 0:
-                    print(f"  {k:4d}/{total}  ({k / FPS:5.1f} s)", flush=True)
-    else:
-        for k in range(total):
-            proc.stdin.write(frame_at(k / FPS, starts).tobytes())
-            if k % 100 == 0:
+    import multiprocessing as mp
+    with mp.Pool(workers, initializer=_init, initargs=(starts,)) as pool:
+        for k, buf in enumerate(pool.imap(_render, range(total), chunksize=6)):
+            proc.stdin.write(buf)
+            if k % 150 == 0:
                 print(f"  {k:4d}/{total}  ({k / FPS:5.1f} s)", flush=True)
     proc.stdin.close()
     proc.wait()
     if own:
         os.remove(wav)
-    mb = os.path.getsize(OUT) / 1048576
-    print(f"{os.path.basename(OUT)} · {dur:.1f} s · {mb:.1f} MB")
+    print(f"{os.path.basename(OUT)} · {dur:.1f} s · {os.path.getsize(OUT) / 1048576:.1f} MB")
 
 
 if __name__ == "__main__":
