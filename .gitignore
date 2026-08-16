@@ -5,3 +5,9 @@ out/
 *.log
 .env*.local
 tsconfig.tsbuildinfo
+
+# Python önbelleği ve film üretiminin geçici ses dosyaları
+__pycache__/
+public/videos/_muzik.wav
+public/videos/_ses.wav
+public/videos/*.tmp.mp4

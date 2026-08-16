@@ -13,6 +13,23 @@ Bu klasör, projenin sosyal medya iletişiminin tek kaynağıdır. Tasarımcı, 
 | [`06-gorsel-brief.md`](./06-gorsel-brief.md) | Şablon ölçüleri ve tasarım brief'leri |
 | [`07-lansman-plani.md`](./07-lansman-plani.md) | 21 Ağustos lansmanı — gün gün paylaşım planı |
 
+## Tanıtım filmi
+
+`public/videos/mia-park-ocean-tanitim.mp4` — 1920x1080, 25 fps, ~75 saniye.
+Boş araziden binaların yükselişi, havadan geçişler, daire tipi künyeleri,
+konum ve finansman bölümleri, logo kapanışı.
+
+Film tamamen projenin **kendi render'larından** kurulur; dışarıdan stok
+görüntü ya da üretilmiş bina yoktur. Kamera sanaldır: yüksek çözünürlüklü
+render'ın içinden kayan bir kırpma dikdörtgeni kadraja ölçeklenir.
+
+Yeniden üretmek (kaynak: `scripts/build-film.py`):
+
+    npm run film
+
+Müziği değiştirmek için `public/videos/muzik.wav` (ya da `.mp3`) koymanız
+yeterli — dosya varsa betik sentezlediği yatağı kullanmaz, sizinkini alır.
+
 ## Instagram ızgara seti
 
 [`instagram/`](./instagram/) — 23 geniş panel, her biri 3 gönderiye bölünmüş:
