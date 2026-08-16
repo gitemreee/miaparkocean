@@ -20,12 +20,20 @@ export const catalogPages = [
 // Katalog PDF'i public/ altına konur. Yoksa buton gizlenir.
 export const catalogPdf = "/mia-park-ocean-katalog.pdf";
 
-// Tanıtım filmi: YouTube/Vimeo embed URL'si gelince `url` doldurulur.
-// Örn: "https://www.youtube.com/embed/VIDEO_ID"
-// [DOĞRULANACAK: tanıtım filmi bağlantısı]
+// Tanıtım filmi.
+//
+// `file` sitede barındırılan mp4'tür ve varsayılan budur; ziyaretçi oynat
+// tuşuna basmadan tek bayt inmez (preload="none"). Sürüm 25 MB'lık paylaşım
+// kopyası — 1080p ama 1.7 Mbit/sn, mobilde de akıyor. 70 MB'lık master
+// public/videos/mia-park-ocean-tanitim.mp4 olarak duruyor, siteye konmuyor.
+//
+// İleride YouTube'a yüklenirse `url`'i doldurmak yeterli; embed öne geçer
+// ve izlenme sayısı YouTube tarafında toplanır.
 export const promoVideo = {
+  file: "/videos/mia-park-ocean-tanitim-web.mp4",
   url: "",
-  poster: "/images/balcony-dusk.webp",
+  poster: "/images/film-poster.webp",
   title: "MİA PARK OCEAN Tanıtım Filmi",
-  caption: "Projeyi hareketli görüntülerle keşfedin",
+  caption: "İki dakikada proje: mimari, daire tipleri, konum ve ödeme modeli",
+  duration: "2:00",
 };

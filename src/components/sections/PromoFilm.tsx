@@ -1,13 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, X, Clapperboard } from "lucide-react";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { promoVideo } from "@/data/media";
 
 export function PromoFilm() {
   const [open, setOpen] = useState(false);
-  const hasVideo = Boolean(promoVideo.url);
+  // Sitede barındırılan dosya varsayılan; YouTube bağlantısı girilirse o öne geçer.
+  const embed = Boolean(promoVideo.url);
+  const hasVideo = embed || Boolean(promoVideo.file);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Film sesli izleniyor, bu yüzden autoPlay tek başına yetmiyor: tarayıcılar
+  // sessiz olmayan otomatik oynatmayı engelliyor. Modal açılır açılmaz bir kez
+  // play() deniyoruz; engellenirse kontroller zaten ekranda.
+  useEffect(() => {
+    if (open && !embed) videoRef.current?.play().catch(() => {});
+  }, [open, embed]);
 
   useEffect(() => {
     if (!open) return;
@@ -36,6 +46,11 @@ export function PromoFilm() {
           MİA PARK OCEAN'ı <span className="gradient-text-light">hareketle</span> keşfedin
         </h2>
         <p className="mt-4 max-w-lg text-lg text-cream/75">{promoVideo.caption}</p>
+        {promoVideo.duration && (
+          <span className="mt-3 rounded-full border border-cream/25 px-4 py-1 text-sm text-cream/70">
+            {promoVideo.duration} · sesli
+          </span>
+        )}
 
         <button
           type="button"
@@ -59,14 +74,27 @@ export function PromoFilm() {
           <button type="button" onClick={() => setOpen(false)} aria-label="Kapat" className="absolute right-5 top-5 text-cream/80 hover:text-bronze">
             <X className="h-8 w-8" />
           </button>
-          <div className="aspect-video w-full max-w-4xl overflow-hidden rounded-xl bg-black" onClick={(e) => e.stopPropagation()}>
-            <iframe
-              src={promoVideo.url}
-              title={promoVideo.title}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+          <div className="aspect-video w-full max-w-5xl overflow-hidden rounded-xl bg-black" onClick={(e) => e.stopPropagation()}>
+            {embed ? (
+              <iframe
+                src={promoVideo.url}
+                title={promoVideo.title}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                src={promoVideo.file}
+                poster={promoVideo.poster}
+                title={promoVideo.title}
+                controls
+                playsInline
+                preload="auto"
+                className="h-full w-full"
+              />
+            )}
           </div>
         </div>
       )}
