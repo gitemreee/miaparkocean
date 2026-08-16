@@ -15,7 +15,8 @@ Bu klasör, projenin sosyal medya iletişiminin tek kaynağıdır. Tasarımcı, 
 
 ## Tanıtım filmi
 
-`public/videos/mia-park-ocean-tanitim.mp4` — 1920x1080, 25 fps, ~75 saniye.
+`public/videos/mia-park-ocean-tanitim.mp4` — 1920x1080, 25 fps, 1:15.
+Paylaşım için küçültülmüş kopya: `mia-park-ocean-tanitim-web.mp4` (22 MB).
 Boş araziden binaların yükselişi, havadan geçişler, daire tipi künyeleri,
 konum ve finansman bölümleri, logo kapanışı.
 
