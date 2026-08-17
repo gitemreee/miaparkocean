@@ -22,9 +22,13 @@ Yardımcı komutlar:
 | `npm run images` | Kaynak render'ları `public/images`'e WebP olarak üretir (sharp) |
 | `npm run brand` | Logo varlıklarını, favicon'ları ve OG görselini yeniden üretir |
 | `npm run etkinlik` | Davetiye kartlarını ve masa QR etiketlerini yeniden üretir |
+| `npm run instagram` | Instagram ızgara setini (23 panel → 69 gönderi) üretir |
+| `npm run film` | Tanıtım filmini yeniden kurgular ve dışa aktarır |
+| `npm run tabela` | Totem ve şantiye çevre afişlerini baskı ölçüsünde üretir |
 | `npm run indexnow` | Yeni/güncel sayfaları Bing ve Yandex'e bildirir |
 
-`brand` ve `etkinlik` komutları Python gerektirir: `pip install pillow numpy segno`
+Python gerektiren komutlar (`brand`, `etkinlik`, `instagram`, `film`,
+`tabela`): `pip install pillow numpy segno`
 
 ---
 
@@ -104,6 +108,8 @@ brand-source/             # kaynak logo + fontlar (üretim girdisi)
 scripts/                  # varlık üreticileri + indexnow
 docs/                     # SEO denetimi ve kurulum rehberleri
 social-media/             # marka kiti, içerik takvimi, gönderi metinleri
+tabela/                   # totem + şantiye çevre afişleri (baskıya hazır)
+signage-source/           # tabela için büyütülmüş render'lar (üretim girdisi)
 ```
 
 ---
