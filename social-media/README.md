@@ -12,6 +12,7 @@ Bu klasör, projenin sosyal medya iletişiminin tek kaynağıdır. Tasarımcı, 
 | [`05-hashtag-setleri.md`](./05-hashtag-setleri.md) | Konuya göre hashtag setleri |
 | [`06-gorsel-brief.md`](./06-gorsel-brief.md) | Şablon ölçüleri ve tasarım brief'leri |
 | [`07-lansman-plani.md`](./07-lansman-plani.md) | 21 Ağustos lansmanı — gün gün paylaşım planı |
+| [`08-lansman-gonderi-metinleri.md`](./08-lansman-gonderi-metinleri.md) | Basın lansmanı seti: 12 gönderi + 3 reels metni, gönderi başına 5 hashtag |
 
 ## Tanıtım filmi
 
