@@ -4,6 +4,7 @@ import {
   PiggyBank, Vote, Landmark, ScrollText,
   BookMarked, MonitorSmartphone, UserCheck, Layers, FileSearch, KeyRound,
   Percent, Lock, TrendingDown, Handshake, Train,
+  Baby, Droplets, Flame, Waypoints,
   type LucideIcon,
 } from "lucide-react";
 
@@ -13,6 +14,7 @@ const icons: Record<string, LucideIcon> = {
   PiggyBank, Vote, Landmark, ScrollText,
   BookMarked, MonitorSmartphone, UserCheck, Layers, FileSearch, KeyRound,
   Percent, Lock, TrendingDown, Handshake, Train,
+  Baby, Droplets, Flame, Waypoints,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

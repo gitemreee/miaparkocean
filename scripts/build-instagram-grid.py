@@ -863,6 +863,168 @@ def panel_openplan() -> Image.Image:
     return p
 
 
+# ---------------------------------------------------- basın panelleri
+# Haber gönderilerinde her PARÇA bir gazete: sol üstünde MİA amblemi ile
+# o yayının logosu yan yana, altında gazetenin haberde kullandığı KENDİ
+# fotoğrafı, en altta gazetenin manşeti.
+#
+# Fotoğraf parçayı tam kaplamıyor, kart olarak duruyor: basın toplantısı
+# kareleri 16:9 ve içinde insanlar var; 4:5'e kırpınca masadakilerin
+# yarısı dışarıda kalıyordu.
+#
+# Logolar beyaz plaketin içinde. Altı yayının logosu altı farklı zemine
+# göre çizilmiş (Gündem beyaz, İlke ve Fikir siyah); beyaz plaket hepsini
+# kendi renkleriyle okunur kılan tek ortak zemin — zaten bizim altın
+# kuralımız da logonun beyaz zeminde durması.
+PRESS_LOGO_DIR = os.path.join(IMG, "basin")
+
+
+def tile_left(i: int) -> int:
+    """Parçanın ızgarada görünen sol kenarı + güvenli boşluk."""
+    return BLEED + GRID_W * i + 60
+
+
+def outlet_logo(slug: str, max_w: int, max_h: int) -> Image.Image:
+    im = Image.open(os.path.join(PRESS_LOGO_DIR, f"logo-{slug}.png")).convert("RGBA")
+    s = min(max_w / im.width, max_h / im.height)
+    return im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
+
+
+def press_badge(p: Image.Image, i: int, slug: str, y: int = 56, h: int = 132) -> int:
+    """Parçanın sol üstüne beyaz plaket: MİA amblemi | gazetenin logosu."""
+    pad, gap = 24, 22
+    mk = mark(70, white=False)
+    lg = outlet_logo(slug, 228, 68)
+    w = pad + mk.width + gap + 2 + gap + lg.width + pad
+    x = tile_left(i)
+
+    plate = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(plate)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=24, fill=(255, 255, 255, 255))
+    plate.alpha_composite(mk, (pad, (h - mk.height) // 2))
+    d.line([pad + mk.width + gap, 30, pad + mk.width + gap, h - 30], fill=(*MIA_PALE, 255), width=2)
+    plate.alpha_composite(lg, (pad + mk.width + gap + 2 + gap, (h - lg.height) // 2))
+    paste_soft(p, plate, (x, y), blur=20, boost=1.3)
+    return y + h
+
+
+def photo_card(p: Image.Image, i: int, name: str, y: int, h: int, focus: float = 0.5) -> None:
+    """Parçanın içine yuvarlatılmış köşeli fotoğraf kartı."""
+    w = TILE_TEXT_W
+    im = cover(name, (w, h), focus).convert("RGB")
+    mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, w - 1, h - 1], radius=28, fill=255)
+    card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    card.paste(im, (0, 0), mask)
+    paste_soft(p, card, (tile_left(i), y), blur=26, boost=1.1)
+
+
+def fit_wrap(dr, texts, max_w: int, start: int, max_lines: int, w: str = "500"):
+    """Hepsi en çok `max_lines` satıra sığacak ortak punto."""
+    size = start
+    while size > 38:
+        f = serif(size, w)
+        if all(len(wrap(dr, t, f, max_w)) <= max_lines for t in texts):
+            return f
+        size -= 2
+    return serif(size, w)
+
+
+def press_panel(kind: str, items) -> Image.Image:
+    """items: [(slug, manşet, odak), x3] — odak fotoğrafın dikey kırpma noktası."""
+    p = blue(kind)
+    dr = ImageDraw.Draw(p)
+    heads = [h for _, h, _ in items]
+    fh = fit_wrap(dr, heads, TILE_TEXT_W, 74, 3, "600")
+    lh = round(fh.size * 1.26)
+
+    for i, (slug, head, focus) in enumerate(items):
+        x = tile_left(i)
+        press_badge(p, i, slug)
+        photo_card(p, i, f"basin/haber-{slug}.webp", 232, 566, focus)
+        track(dr, (x, 852), "18 AĞUSTOS 2026", sans_b(32), (*MIA_AQUA, 240), 11)
+        for k, line in enumerate(wrap(dr, head, fh, TILE_TEXT_W)):
+            dr.text((x, 928 + k * lh), line, font=fh, fill=WHITE, anchor="la")
+        dr.line([x, 1216, x + 90, 1216], fill=(*MIA_AQUA, 190), width=4)
+        track(dr, (x, 1252), "HABERİN TAMAMI PROFİLDE", sans_sb(27), (*MIA_PALE, 228), 8)
+        if i:
+            xs = BLEED + GRID_W * i
+            dr.line([xs, 240, xs, PANEL_H - 240], fill=(*MIA_LIGHT, 55), width=2)
+
+    partner_mark(p, shadow=False)
+    return p
+
+
+# ── 24 · basında biz I ─────────────────────────────────────────────────
+def panel_press_a() -> Image.Image:
+    return press_panel("deep", [
+        ("kocaeligazetesi", "600 konutluk projede faizsiz ödeme modeli", 0.45),
+        ("ozgunkocaeli", "Kocaeli'ye 600 dairelik yeni proje", 0.42),
+        ("ilkekocaeli", "MİA Park Ocean Kocaeli'de tanıtıldı", 0.40),
+    ])
+
+
+# ── 25 · basında biz II ────────────────────────────────────────────────
+def panel_press_b() -> Image.Image:
+    return press_panel("soft", [
+        ("kocaeligundem", "MİA Bölgesine 600 dairelik dev proje", 0.42),
+        ("kocaelifikir", "MİA Park Ocean basına tanıtıldı", 0.45),
+        ("kocaelikoz", "Kocaeli'nin yeni yaşam projesi tanıtıldı", 0.42),
+    ])
+
+
+# ------------------------------------------------- üç ayrı fotoğraflı panel
+def trio(shots, words, caps, size: int = 190, weight: str = "500") -> Image.Image:
+    """
+    Her parçada BAŞKA bir kare — ızgarada üç pencereli tek bir satır.
+
+    Kesim noktalarında fotoğraflar bindirme payını da kapsar, yoksa
+    parçaların arasında bir piksellik boşluk çizgisi kalıyor.
+    """
+    p = Image.new("RGBA", (PANEL_W, PANEL_H), WHITE)
+    for i, (img, focus) in enumerate(shots):
+        x0 = 0 if i == 0 else BLEED + GRID_W * i
+        x1 = PANEL_W if i == 2 else BLEED + GRID_W * (i + 1)
+        w = x1 - x0
+        p.alpha_composite(cover(img, (w, PANEL_H), focus), (x0, 0))
+        p.alpha_composite(
+            scrim((w, PANEL_H), [(0.0, (4, 40, 58, 120)), (0.22, (4, 40, 58, 0)),
+                                 (0.50, (4, 40, 58, 0)), (0.78, (4, 40, 58, 95)),
+                                 (1.0, (4, 40, 58, 220))]), (x0, 0)
+        )
+    frame(p)
+
+    def paint(dr):
+        word_row(dr, words, caps, size, weight)
+
+    draw_with_shadow(p, paint)
+    return p
+
+
+# ── 26 · projeden · giriş, avlu, yürüyüş ───────────────────────────────
+def panel_project_a() -> Image.Image:
+    """Karşıdan bakış, balkondan avluya bakış ve yürüyüş yolları."""
+    return trio(
+        [("entrance-gate.webp", 0.46),
+         ("ic-mekan/15-balkondan-avlu.webp", 0.5),
+         ("ic-mekan/18-yuruyus-yolu.webp", 0.5)],
+        ["Giriş", "Avlu", "Yürüyüş"],
+        ["PROJEYE İLK BAKIŞ", "BALKONDAN AVLUYA", "PEYZAJ İÇİNDE YOLLAR"],
+    )
+
+
+# ── 27 · projeden · havuz, oyun parkı, bahçe ───────────────────────────
+def panel_project_b() -> Image.Image:
+    """Süs havuzları, çocuk oyun parkı ve zemin katın bahçesi."""
+    return trio(
+        [("ic-mekan/17-sus-havuzu.webp", 0.5),
+         ("ic-mekan/19-cocuk-oyun-parki.webp", 0.5),
+         ("ic-mekan/13-bahceli-daire-terasi.webp", 0.5)],
+        ["Havuz", "Oyun", "Bahçe"],
+        ["AVLUDA SÜS HAVUZLARI", "ÇOCUK OYUN PARKI", "ZEMİNDE ÖZEL BAHÇE"],
+    )
+
+
 PANELS = [
     ("01-karsidan-sabit", "Karşıdan görünüm · sabitlenecek", panel_entrance),
     ("02-sifir-faiz", "%0 faiz · 60 ay vade", panel_zero),
@@ -887,6 +1049,10 @@ PANELS = [
     ("21-daire-2plus1", "2+1 Bahçe Dubleks · 100 m² · 16 daire", panel_unit_2plus1),
     ("22-daire-ici", "Daire içi · açık plan, balkon, mutfak", panel_interior),
     ("23-acik-plan", "Balkon · mutfak · yaşam alanı", panel_openplan),
+    ("24-basinda-biz-1", "Basında biz I · Gazetesi, Özgün, İlke", panel_press_a),
+    ("25-basinda-biz-2", "Basında biz II · Gündem, Fikir, Koz", panel_press_b),
+    ("26-projeden-giris-avlu", "Giriş · avlu · yürüyüş yolları", panel_project_a),
+    ("27-projeden-havuz-bahce", "Süs havuzu · oyun parkı · bahçe", panel_project_b),
 ]
 
 

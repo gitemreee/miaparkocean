@@ -39,8 +39,9 @@ yeterli — dosya varsa betik sentezlediği yatağı kullanmaz, sizinkini alır.
 
 ## Instagram ızgara seti
 
-[`instagram/`](./instagram/) — 23 geniş panel, her biri 3 gönderiye bölünmüş:
-**69 gönderi.** Profil ızgarasında her satır tek bir geniş görsel gibi görünür.
+[`instagram/`](./instagram/) — 27 geniş panel, her biri 3 gönderiye bölünmüş:
+**81 gönderi.** Son dört panel basın lansmanına ait: 24–25 gazetelerin
+kendi fotoğrafı ve logosuyla, 26–27 projenin kendi render'larıyla. Profil ızgarasında her satır tek bir geniş görsel gibi görünür.
 Paylaşım sırası ve sabitleme yönergesi için
 [`instagram/README.md`](./instagram/README.md); profilin tamamının maketi
 `instagram/IZGARA-ONIZLEME.jpg`. Yeniden üretmek için:
