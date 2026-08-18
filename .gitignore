@@ -14,3 +14,6 @@ public/videos/*.tmp.mp4
 
 # film kare önbelleği (mp4'lerden üretilir)
 film-source/.kare-onbellek/
+
+# reels üretiminin geçici ses dosyaları
+social-media/reels/_*.wav

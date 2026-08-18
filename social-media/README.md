@@ -37,6 +37,16 @@ Yeniden üretmek (kaynak: `scripts/build-film.py`):
 Müziği değiştirmek için `public/videos/muzik.wav` (ya da `.mp3`) koymanız
 yeterli — dosya varsa betik sentezlediği yatağı kullanmaz, sizinkini alır.
 
+## Reels
+
+[`reels/`](./reels/) — filmin kendi çekimlerinden üretilmiş **3 dikey
+video** (1080x1920) ve kapakları. Üç kapak tek bir geniş görselin üç
+parçası: profil ızgarasında yan yana gelince satırı tamamlıyorlar.
+Paylaşım sırası ve kapak yükleme yönergesi
+[`reels/README.md`](./reels/README.md) dosyasında. Yeniden üretmek için:
+
+    npm run reels
+
 ## Instagram ızgara seti
 
 [`instagram/`](./instagram/) — 27 geniş panel, her biri 3 gönderiye bölünmüş:

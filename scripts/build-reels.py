@@ -95,11 +95,36 @@ def track(dr, xy, text, f, fill, sp, anchor="la"):
     return total
 
 
-def fit(dr, text: str, start: int, max_w: int, w: str = "500"):
-    s = start
-    while s > 44 and dr.textlength(text, font=serif(s, w)) > max_w:
-        s -= 3
-    return serif(s, w)
+def wrap(dr, text: str, f, max_w: int):
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        t = f"{cur} {w}".strip()
+        if dr.textlength(t, font=f) <= max_w:
+            cur = t
+        else:
+            if cur:
+                lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def fit_lines(dr, text: str, start: int, max_w: int, max_lines: int = 2, w: str = "600"):
+    """En çok `max_lines` satıra sığan en büyük punto.
+
+    Uzun bir cümleyi tek satıra sıkıştırmak reels'te puntoyu telefonda
+    okunmayacak kadar küçültüyor; iki satıra bölmek hem büyük hem okunur
+    tutuyor.
+    """
+    size = start
+    while size > 48:
+        f = serif(size, w)
+        if len(wrap(dr, text, f, max_w)) <= max_lines:
+            return f, wrap(dr, text, f, max_w)
+        size -= 3
+    f = serif(size, w)
+    return f, wrap(dr, text, f, max_w)
 
 
 # ---------------------------------------------------------------- görüntü
@@ -228,8 +253,11 @@ def vshot(name: str, word: str, cap: str, pan=(0.5, 0.5), zoom=(1.0, 1.06),
             rise = round((1 - bf.ease_out(min(t / 0.7, 1.0))) * 26)
 
             def paint(dr):
-                f = fit(dr, word, 128, W - SAFE_X * 2 - 120, "600")
-                dr.text((SAFE_X, WORD_Y + rise), word, font=f, fill=WHITE, anchor="ls")
+                f, lines = fit_lines(dr, word, 122, W - SAFE_X * 2 - 90)
+                lh = round(f.size * 1.18)
+                top = WORD_Y - lh * (len(lines) - 1)
+                for k, ln in enumerate(lines):
+                    dr.text((SAFE_X, top + k * lh + rise), ln, font=f, fill=WHITE, anchor="ls")
                 if cap:
                     track(dr, (SAFE_X, CAP_Y + rise), cap, sans(34, "600"), (*MIA_ICE, 246), 9)
 
@@ -262,35 +290,35 @@ def vc_end(t: float, d: float) -> Image.Image:
 # ---------------------------------------------------------------- reels
 REELS = [
     ("reel-1-proje", "Proje", [
-        (vshot("13-giris-drone", "İzmit MİA Bölgesi'nde", "600 DAİRE · 4 BLOK · 8 KAT",
+        (vshot("13-giris-drone", "Sahile iki dakika", "İZMİT MİA BÖLGESİ",
                pan=(0.62, 0.42), zoom=(1.08, 1.0)), 5.4),
-        (vshot("08-cephe-yukselis", "Modern mimari", "GENİŞ BALKONLAR · AÇIK PLAN",
+        (vshot("08-cephe-yukselis", "Dört blok, sekiz kat", "600 DAİRE · DÖRT YAŞAM TİPİ",
                pan=(0.40, 0.60)), 5.2),
-        (vshot("02-sokak-drone", "Sokağından başlıyor", "D100'E 1 DAKİKA · SAHİLE 2 DAKİKA",
+        (vshot("02-sokak-drone", "D100'e bir dakika", "ŞEHİR MERKEZİ VE HASTANE 5 DAKİKA",
                pan=(0.58, 0.40), offset=1.0), 5.2),
-        (vshot("01-gunduz-gece", "Sabahtan geceye", "ÖZEL GECE AYDINLATMASI",
+        (vshot("01-gunduz-gece", "Işıklar yanınca başka", "ÖZEL GECE AYDINLATMASI",
                pan=(0.45, 0.55)), 5.4),
         (vc_end, 4.6),
     ]),
     ("reel-2-sosyal-yasam", "Sosyal yaşam", [
-        (vshot("03-havadan-yorunge", "Merkezi avlu", "GENİŞ PEYZAJ · SÜS HAVUZLARI",
-               pan=(0.38, 0.62), zoom=(1.0, 1.08)), 5.4),
-        (vshot("04-avlu-suzulme", "Yürüyüş yolları", "ÇOCUK OYUN PARKI · YEŞİL ALAN",
-               pan=(0.55, 0.42)), 5.2),
-        (vshot("06-teras-sosyal", "Sosyal ve spor alanları", "KAPALI HAVUZ · FİTNESS · SAUNA",
-               pan=(0.42, 0.58)), 5.2),
+        (vshot("03-havadan-yorunge", "İster havuzu izleyin, ister denizi",
+               "MERKEZİ AVLU · SÜS HAVUZLARI", pan=(0.38, 0.62), zoom=(1.0, 1.08)), 5.6),
+        (vshot("04-avlu-suzulme", "Bahçesi olan ev değil, parkı olan ev",
+               "YÜRÜYÜŞ YOLLARI · ÇOCUK OYUN PARKI", pan=(0.55, 0.42)), 5.6),
+        (vshot("06-teras-sosyal", "Havuz, fitness, hamam",
+               "KAPALI YÜZME HAVUZU · SAUNA", pan=(0.42, 0.58)), 5.2),
         (vshot("07-aksam-avlu", "Akşamları başka", "AVLUDA GECE AYDINLATMASI",
-               pan=(0.60, 0.44)), 5.4),
+               pan=(0.60, 0.44)), 5.2),
         (vc_end, 4.6),
     ]),
     ("reel-3-daireler", "Daireler", [
-        (vshot("09-daire-1plus0", "1+0 · Brüt 28 m²", "AÇIK PLAN · GENİŞ BALKON",
+        (vshot("09-daire-1plus0", "İlk evin tam ölçüsü", "1+0 · BRÜT 28 m² · AÇIK PLAN",
                pan=(0.44, 0.56)), 5.2),
-        (vshot("10-daire-1plus1", "1+1 · Brüt 50 m²", "AYRI YATAK ODASI · GENİŞ BALKON",
+        (vshot("10-daire-1plus1", "Yatak odası ayrı", "1+1 · BRÜT 50 m² · GENİŞ BALKON",
                pan=(0.56, 0.44)), 5.2),
-        (vshot("11-bahce-loft", "1+1 Bahçe Loft · 50 m²", "ZEMİN KATTA KENDİ BAHÇENİZ",
+        (vshot("11-bahce-loft", "Zemin katta kendi bahçeniz", "1+1 BAHÇE LOFT · BRÜT 50 m²",
                pan=(0.42, 0.58)), 5.4),
-        (vshot("12-bahce-dubleks", "2+1 Bahçe Dubleks · 100 m²", "İKİ KATLI · ÖZEL BAHÇE",
+        (vshot("12-bahce-dubleks", "Bahçeniz, evinizin devamı", "2+1 BAHÇE DUBLEKS · BRÜT 100 m²",
                pan=(0.58, 0.42), speed=0.5), 5.6),
         (vc_end, 4.6),
     ]),

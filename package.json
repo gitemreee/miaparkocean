@@ -18,7 +18,8 @@
     "katalog": "python scripts/build-catalog.py",
     "instagram": "python scripts/build-instagram-grid.py",
     "film": "python scripts/build-film.py",
-    "tabela": "python scripts/build-signage.py"
+    "tabela": "python scripts/build-signage.py",
+    "reels": "python scripts/build-reels.py"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
