@@ -15,9 +15,9 @@ yazılıdır; ölçü değişirse dosyalar yeniden üretilir (`npm run tabela`).
 | `afis-3-daireler.jpg` | 3000 × 2400 mm | 1:1 @ 50 dpi | 5906 × 4724 |
 | `afis-4-konum.jpg` | 3000 × 2400 mm | 1:1 @ 50 dpi | 5906 × 4724 |
 | `afis-5-sosyal-yasam.jpg` | 3000 × 2400 mm | 1:1 @ 50 dpi | 5906 × 4724 |
-| `rollup-1…4-*.jpg` | 800 × 2000 mm | 1:1 @ 100 dpi | 3150 × 7874 |
-| `bilbord-1…4-*.jpg` | 5000 × 3000 mm | 1:1 @ 40 dpi | 7874 × 4724 |
-| `yaka-1…4-*.jpg` | 90 × 130 mm | 1:1 @ 300 dpi | 1063 × 1535 |
+| `rollup-1…6-*.jpg` | 800 × 2000 mm | 1:1 @ 100 dpi | 3150 × 7874 |
+| `bilbord-*-SOL/SAG.jpg` | 5000 × 3000 mm | 1:1 @ 40 dpi | 7874 × 4724 |
+| `yaka-1…8-*.jpg` | 90 × 130 mm | 1:1 @ 300 dpi | 1063 × 1535 |
 
 `MIA-PARK-OCEAN-TABELA-SUNUMU.pdf` — A4 yatay, 8 sayfa. Baskı için değil,
 müşteriye/ekibe göstermek için. `onizleme/` klasöründe küçültülmüş kontrol
@@ -87,9 +87,19 @@ Bu yüzden afişler aynı hizada ve aynı yükseklikte asılmalıdır.
 - Alt künye şeridinin çamur/çamurluk hattının üstünde kalması için çitin
   alt kenarından en az 300 mm yukarıda asın.
 
-## Roll-up — 800 × 2000 mm, 4 model
+## Roll-up — 800 × 2000 mm, 6 model
 
-1 kimlik · 2 daire tipleri · 3 konum · 4 sosyal yaşam.
+1 kimlik · 2 finansman · 3 daire tipleri · 4 ortak yaşam · 5 balkondan
+körfez · 6 iç mekân.
+
+**Görselden markaya gradyanlı geçiş.** Fotoğrafı sert bir çizgiyle kesip
+altına renk koymak ucuz duruyordu; perde yumuşak inince görsel markaya
+karışıyor ve yazı boşlukta değil kendi zemininde oturuyor. Daire tipleri
+roll-up'ında dört kare de birbirine eriyerek geçiyor — sert çizgilerle
+bölününce katalog sayfası gibi duruyordu.
+
+Alt künye şeridi düz beyaz değil; beyazdan buz mavisine çok hafif bir
+geçiş, yazı kontrastını bozmadan ölü alanı kaldırıyor.
 
 **Alt kaset payı.** Roll-up'ın alt ~130 mm'si kasetin içinde kalır ve
 görünmez. Kritik hiçbir şey oraya konmadı; künye şeridi beyaz olduğu için
@@ -98,31 +108,52 @@ kasete giren kısım da beyaz devam ediyor, kesildiği belli olmuyor.
 Üst kenardan 40 mm, yanlardan 62 mm boş bırakıldı. Kaset genişliği 800 mm
 olan standart mekanizmaya birebir oturur.
 
-## Bilbord — 5000 × 3000 mm, 4 model
+## Bilbord — 5000 × 3000 mm, 10 İKİLİ SET (20 adet)
 
-1 kimlik · 2 proje · 3 iç mekân · 4 balkondan körfez.
+Panolar **yan yana** kiralandığı için tasarımlar ikişerli. Her set bir
+cümleyi ikiye bölüyor; `-SOL` ve `-SAG` dosyaları yan yana asılır.
 
-**Tam boy baskı.** Beyaz künye şeridi yok: bilbord şehrin görünür
-noktalarına asılıyor, alttan yarım metreyi beyaza vermek görselin en iyi
-kısmını kesiyordu. Web adresi, telefonlar, Instagram ve satıcı imzası
-BEYAZ olarak doğrudan görselin üstünde; okunurluğu perde ve yazı gölgesi
-sağlıyor.
+| Set | Sol | Sağ |
+|---|---|---|
+| 01 gündüz-gece | Gündüz başka, | gece başka. |
+| 02 dışarısı-içerisi | Dışarısı ne kadar iyiyse, | içerisi de o kadar. |
+| 03 havuz-deniz | İster havuzu izleyin, | ister denizi. |
+| 04 banka-faiz | Banka yok, kefil yok. | Kredi yok, faiz yok. |
+| 05 balkon-bahçe | Kimine balkon, | kimine bahçe. |
+| 06 rakamlar | 600 daire, | dört yaşam tipi. |
+| 07 yürümek-oynamak | Yürüyüş yolu kapınızın önünde, | oyun parkı gözünüzün önünde. |
+| 08 şehir-deniz | Şehrin içinde, | denizin yanında. |
+| 09 ilk ev-aile | İlk eviniz de burada, | büyüyen aileniz de. |
+| 10 kimlik | Lüks artık | ulaşılabilir. |
 
-Karekod küçük bir beyaz plaketin içinde. Görselin üstüne doğrudan basılan
-karekod okunmuyor — telefon kamerası modülleri zeminden ayıramıyor.
+**Her panoda MİA logosu ve iletişim var** — biri diğerine bakmadan da tam.
+Logo sol panoda sola, sağ panoda sağa yaslı; ikisi simetrik bir çift olur.
 
-Mesafe/konum bilgisi bilinçli olarak konmadı: bu boyda okunan tek şey
-başlık, ikinci bir bilgi katmanı kimseye ulaşmıyor.
+Bazı setlerde iki farklı kare (gündüz/gece gibi karşıtlıklar), bazılarında
+**tek geniş karenin sol ve sağ yarısı** kullanıldı (04, 06, 10): o setlerde
+iki pano tek bir görüntünün devamı gibi okunur.
 
-40 dpi'lık çözünürlük 5 m genişlikte 7874 piksel eder. Bilbord 15-30 m
-mesafeden bakılır; o mesafede göz 20 m'de yaklaşık 6 mm'yi ayırt eder,
-piksel 0,63 mm'dir. Yani çözünürlük gözün ayırt edebileceğinin çok
-üstünde.
+**Tam boy baskı.** Beyaz künye şeridi yok: web adresi, telefonlar,
+Instagram ve satıcı imzası BEYAZ olarak doğrudan görselin üstünde.
+Karekod küçük bir beyaz plakette — görselin üstüne doğrudan basılan
+karekodu telefon kamerası zeminden ayıramıyor.
 
-## Yaka kartı — 90 × 130 mm, 4 model
+Mesafe/konum bilgisi konmadı: bu boyda okunan tek şey başlık.
 
-1 beyaz · 2 mavi · 3 buz mavisi · 4 fotoğraflı. Lansman: 21 Ağustos 2026,
+**Asarken:** iki pano arasında çerçeve boşluğu olduğu için cümlenin her
+yarısı kendi panosuna ortalandı, dikişe yaslanmadı. Panoların sırası
+karışırsa cümle bozulur — dosya adındaki SOL/SAG'a dikkat.
+
+## Yaka kartı — 90 × 130 mm, 8 model
+
+1 beyaz · 2 mavi · 3 buz mavisi · 4 fotoğraflı başlık · 5 yürüyüş yolu ·
+6 dış cephe · 7 balkondan körfez · 8 avlu. Lansman: 21 Ağustos 2026,
 Emex Otel, Kocaeli.
+
+**5-8'de kart boyu proje karesi var, gradyanla eriyerek.** Düz perde kartı
+dümdüz beyaz bırakıyordu. Kare üstte neredeyse tam güçte kalıyor, aşağı
+indikçe zemine karışıyor; **geçiş ismin üstünde bitiyor** — bandın içinde
+kalan isim arkasındaki ağaç ya da denizle yarışıp okunmuyordu.
 
 - **Soyadı büyük harf** — isimle soyadı bir bakışta ayrılıyor, uzaktan da
   soyadı okunuyor. İsim `BADGE_FIRST` / `BADGE_LAST` ile değişir.
