@@ -89,6 +89,9 @@ SELLER = "OCEAN GAYRİMENKUL"
 SELLER_ROLE = "TEK YETKİLİ SATICI"
 QR_TOTEM = "https://miaparkocean.com/?utm_source=totem"
 QR_AFIS = "https://miaparkocean.com/?utm_source=saha-afis"
+QR_ROLLUP = "https://miaparkocean.com/?utm_source=rollup"
+QR_BILBORD = "https://miaparkocean.com/?utm_source=bilbord"
+QR_YAKA = "https://miaparkocean.com/?utm_source=lansman"
 
 UNITS = [
     ("1+0", "1+0 Daire", "28 m²", 472),
@@ -832,7 +835,7 @@ def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(PREVIEW, exist_ok=True)
     previews = {}
-    for name, fn, w_mm, h_mm, dpi, label in BOARDS:
+    for name, fn, w_mm, h_mm, dpi, label in BOARDS + EXTRA:
         im = fn()
         path = os.path.join(OUT, f"{name}.jpg")
         im.save(path, "JPEG", quality=94, subsampling=0, optimize=True, dpi=(dpi, dpi))
@@ -919,7 +922,7 @@ def presentation(previews) -> None:
         x += f.width + gapx
     pages.append(page)
 
-    for name, _, w_mm, h_mm, dpi, label in BOARDS:
+    for name, _, w_mm, h_mm, dpi, label in BOARDS + EXTRA:
         if name.startswith("totem-"):
             continue
         page, _ = _page(label, f"{w_mm} x {h_mm} mm  ·  1:1 @ {dpi} dpi")
@@ -938,6 +941,576 @@ def presentation(previews) -> None:
     pages[0].save(os.path.join(OUT, "MIA-PARK-OCEAN-TABELA-SUNUMU.pdf"),
                   save_all=True, append_images=pages[1:], resolution=150)
 
+
+
+
+# ================================================================== ROLLUP
+# 800 x 2000 mm, 1:1 @ 100 dpi. Yakından okunur (1-3 m), bu yüzden afişten
+# yüksek çözünürlük.
+#
+# ALT KASET PAYI
+# ──────────────
+# Roll-up'ın alt ~130 mm'si kasetin içinde kalır ve görünmez. Kritik hiçbir
+# şey oraya konmuyor; künye şeridi beyaz olduğu için kasete giren kısım da
+# beyaz devam ediyor, kesildiği belli olmuyor.
+RU_W, RU_H, RU_DPI = 800, 2000, 100
+RU_PAD = 62
+RU_RAIL = 1560            # beyaz künye şeridinin üst kenarı
+RU_SAFE_BOT = 1860        # bunun altı kasete girer
+
+
+def rollup() -> Board:
+    return Board(RU_W, RU_H, RU_DPI)
+
+
+def info_rail(b: Board, y0: float, pad: float, qr_mm: float, qr_url: str,
+              u: float = 1.0, wide: bool = False) -> None:
+    """
+    Ortak künye şeridi: web, Instagram, telefonlar, karekod, satıcı imzası.
+
+    Bütün ölçüler `u` ile çarpılır — aynı düzen roll-up'ta 1x, bilbordda
+    2.2x olarak kuruluyor. Böylece iki üründe künye aynı kompozisyonda
+    duruyor, sadece büyüklüğü değişiyor.
+    """
+    dr = b.draw
+    dr.rectangle([0, b.p(y0), b.W, b.H], fill=WHITE)
+    dr.rectangle([0, b.p(y0), b.W, b.p(y0 + 2.4 * u)], fill=MIA_DEEP)
+
+    x = b.p(pad)
+    q = qr_image(qr_url, b.p(qr_mm))
+    qx = b.W - b.p(pad + qr_mm)
+    qy = b.p(y0 + 26 * u)
+    b.im.alpha_composite(q, (qx, qy))
+    track(b, dr, (qx + b.p(qr_mm) / 2, qy + b.p(qr_mm) + b.p(11 * u)),
+          "PROJEYİ GEZ", b.sans(9 * u, "700"), MIA_DARK, b.p(1.6 * u), "ma")
+
+    if wide:
+        # Bilbord 5 metre geniş: her şeyi sola yığmak şeridin ortasını
+        # bomboş bırakıyordu. Bloklar yatayda dağıtılıyor, punto büyüyor.
+        dr.text((x, b.p(y0 + 128 * u)), SITE, font=b.serif(40 * u, "600"),
+                fill=MIA_DEEP, anchor="ls")
+        track(b, dr, (x, b.p(y0 + 148 * u)), "INSTAGRAM   @MIAPARKOCEAN",
+              b.sans(12 * u, "700"), MIA_DARK, b.p(2.6 * u))
+        xp = round(b.W * 0.40)
+        fp = b.sans(26 * u, "700")
+        dr.text((xp, b.p(y0 + 100 * u)), PHONES[0], font=fp, fill=INK, anchor="ls")
+        dr.text((xp, b.p(y0 + 148 * u)), PHONES[1], font=fp, fill=INK, anchor="ls")
+        dr.line([xp - b.p(26 * u), b.p(y0 + 46 * u), xp - b.p(26 * u), b.p(y0 + 168 * u)],
+                fill=MIA_PALE, width=b.p(1.4 * u))
+        seller_block(b, dr, round(b.W * 0.655), b.p(y0 + 108 * u), 13 * u)
+        return
+
+    dr.text((x, b.p(y0 + 72 * u)), SITE, font=b.serif(30 * u, "600"),
+            fill=MIA_DEEP, anchor="ls")
+    track(b, dr, (x, b.p(y0 + 84 * u)), "INSTAGRAM   @MIAPARKOCEAN",
+          b.sans(9.5 * u, "700"), MIA_DARK, b.p(2 * u))
+
+    fp = b.sans(19 * u, "700")
+    dr.text((x, b.p(y0 + 130 * u)), PHONES[0], font=fp, fill=INK, anchor="ls")
+    dr.text((x, b.p(y0 + 158 * u)), PHONES[1], font=fp, fill=INK, anchor="ls")
+    seller_block(b, dr, x, b.p(y0 + 172 * u), 8 * u)
+
+
+def ru_rail(b: Board) -> None:
+    info_rail(b, RU_RAIL, RU_PAD, 132, QR_ROLLUP, 1.0)
+
+
+def ru_brand(b: Board, white: bool = True, shadow: bool = True) -> None:
+    lg = lockup(b.p(430), white)
+    pos = (b.p(RU_PAD), b.p(58))
+    if shadow:
+        sh = Image.new("RGBA", b.im.size, (0, 0, 0, 0))
+        sh.alpha_composite(lg, pos)
+        sh = sh.filter(ImageFilter.GaussianBlur(b.p(8)))
+        dark = Image.new("RGBA", b.im.size, (2, 22, 34, 0))
+        dark.putalpha(sh.split()[3].point(lambda v: min(255, round(v * 1.7))))
+        b.im.alpha_composite(dark)
+    b.im.alpha_composite(lg, pos)
+
+
+def ru_head(b: Board, eyebrow: str, title: str, white: bool = True,
+            y_eyebrow: float = 440, y_title: float = 530) -> None:
+    """Roll-up başlığı — sağa değil sola yaslı, üstte logo."""
+    dr = b.draw
+    inner = b.p(RU_W - RU_PAD * 2)
+    fill = WHITE if white else MIA_DEEP
+    sub = (*MIA_LIGHT, 245) if white else (*MIA_DARK, 255)
+    f, sp = fit_track(b, dr, [eyebrow], inner, 13, 0.22, lambda s: b.sans(s, "600"))
+    track(b, dr, (b.p(RU_PAD), b.p(y_eyebrow)), eyebrow, f, sub, sp)
+    ft = fit(b, dr, [title], inner, 52, lambda s: b.serif(s, "600"))
+    dr.text((b.p(RU_PAD), b.p(y_title)), title, font=ft, fill=fill, anchor="ls")
+
+
+# ── rollup 1 · kimlik ──────────────────────────────────────────────────
+def rollup_kimlik() -> Image.Image:
+    b = rollup()
+    b.im = cover("night-gate", (b.W, b.p(RU_RAIL)), 0.52)
+    b.im = Image.alpha_composite(
+        Image.new("RGBA", b.im.size, (0, 0, 0, 0)), b.im)
+    full = Image.new("RGBA", (b.W, b.H), (255, 255, 255, 255))
+    full.alpha_composite(b.im, (0, 0))
+    b.im = full
+    b.im.alpha_composite(scrim((b.W, b.p(RU_RAIL)), [
+        (0.00, (2, 20, 38, 210)), (0.24, (2, 20, 38, 110)),
+        (0.46, (2, 20, 38, 40)), (0.72, (2, 20, 38, 120)),
+        (1.00, (2, 20, 38, 225)),
+    ]), (0, 0))
+    ru_brand(b, white=True, shadow=False)
+
+    stats = f"{TOTAL_UNITS} DAİRE · {len(UNITS)} YAŞAM TİPİ · 60 AY VADE · %0 FAİZ"
+
+    def paint(dr):
+        inner = b.p(RU_W - RU_PAD * 2)
+        f, sp = fit_track(b, dr, ["İZMİT MİA BÖLGESİ'NDE YÜKSELİYOR"], inner, 14, 0.2,
+                          lambda s: b.sans(s, "600"))
+        track(b, dr, (b.p(RU_PAD), b.p(940)), "İZMİT MİA BÖLGESİ'NDE YÜKSELİYOR",
+              f, (*MIA_ICE, 250), sp)
+        lines = ["Lüks artık", "ulaşılabilir."]
+        fs = fit(b, dr, lines, inner, 96, lambda s: b.serif(s, "600"))
+        for i, ln in enumerate(lines):
+            dr.text((b.p(RU_PAD), b.p(1100 + i * 128)), ln, font=fs, fill=WHITE, anchor="ls")
+        fc, spc = fit_track(b, dr, [stats], inner, 17, 0.13, lambda s: b.sans(s, "700"))
+        track(b, dr, (b.p(RU_PAD), b.p(1420)), stats, fc, WHITE, spc)
+
+    soft_text(b, paint, blur_mm=9, alpha=0.72)
+    ru_rail(b)
+    return b.im.convert("RGB")
+
+
+# ── rollup 2 · daire tipleri ───────────────────────────────────────────
+def rollup_daireler() -> Image.Image:
+    b = rollup()
+    b.im = gradient((b.W, b.H), LIGHT_STOPS, angle=0.35)
+    ru_brand(b, white=False, shadow=False)
+    dr = b.draw
+    ru_head(b, "DÖRT YAŞAM TİPİ", "Size göre olanı seçin", white=False)
+
+    x0, x1 = b.p(RU_PAD), b.p(RU_W - RU_PAD)
+    names = [u[1] for u in UNITS]
+    fn = fit(b, dr, names, b.p(RU_W - RU_PAD * 2 - 150), 34, lambda s: b.serif(s, "600"))
+    for i, (_, name, area, count) in enumerate(UNITS):
+        y = 620 + i * 205
+        dr.text((x0, b.p(y)), name, font=fn, fill=MIA_DEEP, anchor="ls")
+        dr.text((x1, b.p(y)), area, font=b.sans(30, "700"), fill=INK, anchor="rs")
+        track(b, dr, (x0, b.p(y + 26)), f"{count} DAİRE", b.sans(12, "600"), MIA_DARK, b.p(2.2))
+        dr.line([x0, b.p(y + 78), x1, b.p(y + 78)], fill=(*MIA_OCEAN, 90), width=b.p(1.2))
+
+    note = "1+0 ve 1+1 dairelerde geniş balkon · Bahçe Loft ve Bahçe Dubleks'te özel bahçe"
+    fnote = fit(b, dr, [note], b.p(RU_W - RU_PAD * 2), 20, lambda s: b.sans(s, "400"))
+    for k, ln in enumerate(wrap(dr, note, fnote, b.p(RU_W - RU_PAD * 2))):
+        dr.text((x0, b.p(1480 + k * 30)), ln, font=fnote, fill=MIA_DEEP, anchor="ls")
+
+    ru_rail(b)
+    return b.im.convert("RGB")
+
+
+# ── rollup 3 · konum ───────────────────────────────────────────────────
+def rollup_konum() -> Image.Image:
+    b = rollup()
+    b.im = gradient((b.W, b.H), SURF_STOPS, angle=0.55)
+    bg = cover("aerial-pools", (b.W, b.p(RU_RAIL)), 0.5, sharpen=False)
+    bg = bg.filter(ImageFilter.GaussianBlur(b.p(14)))
+    bg.putalpha(26)
+    b.im.alpha_composite(bg, (0, 0))
+    b.im.alpha_composite(glow((b.W, b.H), b.p(400), b.p(900), b.p(700), MIA_DEEP, 0.40))
+    ru_brand(b, white=True, shadow=False)
+    dr = b.draw
+    ru_head(b, "PROJENİN KONUMU", "Her yere dakikalar içinde")
+
+    x0, x1 = b.p(RU_PAD), b.p(RU_W - RU_PAD)
+    fp = b.sans(26, "600")
+    ft = b.sans(30, "700")
+    for i, (place, time) in enumerate(DISTANCES[:7]):
+        y = b.p(620 + i * 125)
+        dr.text((x0, y), place, font=fp, fill=(*MIA_ICE, 250), anchor="ls")
+        dr.text((x1, y), time, font=ft, fill=WHITE, anchor="rs")
+        lx0 = x0 + round(dr.textlength(place, font=fp)) + b.p(12)
+        lx1 = x1 - round(dr.textlength(time, font=ft)) - b.p(12)
+        xx, dot, step = lx0, b.p(2.4), b.p(12)
+        while xx < lx1:
+            dr.ellipse([xx, y - b.p(8), xx + dot, y - b.p(8) + dot], fill=(*MIA_LIGHT, 150))
+            xx += step
+    dr.text((x0, b.p(1500)), "Süreler araçla yaklaşık ulaşım süreleridir.",
+            font=b.sans(17, "400"), fill=(*MIA_ICE, 225), anchor="ls")
+    ru_rail(b)
+    return b.im.convert("RGB")
+
+
+# ── rollup 4 · sosyal yaşam ────────────────────────────────────────────
+def rollup_sosyal() -> Image.Image:
+    b = rollup()
+    b.im = cover("balkondan-deniz", (b.W, b.p(RU_RAIL)), 0.5)
+    full = Image.new("RGBA", (b.W, b.H), (255, 255, 255, 255))
+    full.alpha_composite(b.im, (0, 0))
+    b.im = full
+    b.im.alpha_composite(scrim((b.W, b.p(RU_RAIL)), [
+        (0.00, (3, 26, 44, 190)), (0.26, (3, 26, 44, 70)),
+        (0.50, (3, 26, 44, 40)), (0.74, (3, 26, 44, 150)),
+        (1.00, (3, 26, 44, 232)),
+    ]), (0, 0))
+    ru_brand(b, white=True, shadow=False)
+
+    def paint(dr):
+        inner = b.p(RU_W - RU_PAD * 2)
+        f, sp = fit_track(b, dr, ["ORTAK YAŞAM ALANLARI"], inner, 14, 0.22,
+                          lambda s: b.sans(s, "600"))
+        track(b, dr, (b.p(RU_PAD), b.p(900)), "ORTAK YAŞAM ALANLARI", f, (*MIA_ICE, 250), sp)
+        lines = ["İster havuzu izleyin,", "ister denizi."]
+        fs = fit(b, dr, lines, inner, 74, lambda s: b.serif(s, "600"))
+        for i, ln in enumerate(lines):
+            dr.text((b.p(RU_PAD), b.p(1030 + i * 100)), ln, font=fs, fill=WHITE, anchor="ls")
+
+    soft_text(b, paint, blur_mm=9, alpha=0.72)
+
+    dr = b.draw
+    chips = ["KAPALI YÜZME HAVUZU", "FİTNESS SALONU", "SAUNA VE TÜRK HAMAMI",
+             "MERKEZİ AVLU", "SÜS HAVUZLARI", "ÇOCUK OYUN PARKI",
+             "KAPALI OTOPARK", "7/24 GÜVENLİK"]
+    fch, spch = fit_track(b, dr, chips, b.p(RU_W - RU_PAD * 2), 13, 0.16,
+                          lambda s: b.sans(s, "700"))
+
+    def draw_chips(d):
+        x, y = b.p(RU_PAD), b.p(1210)
+        row = b.p(48)
+        for c in chips:
+            w = sum(dr.textlength(ch, font=fch) for ch in c) + spch * (len(c) - 1) + b.p(34)
+            if x + w > b.p(RU_W - RU_PAD):
+                x, y = b.p(RU_PAD), y + row
+            d.rounded_rectangle([x, y, x + w, y + b.p(38)], radius=b.p(19),
+                                fill=(4, 34, 52, 170), outline=(*MIA_PALE, 150), width=b.p(1.2))
+            track(b, d, (x + w / 2, y + b.p(11)), c, fch, WHITE, spch, "ma")
+            x += w + b.p(10)
+
+    overlay(b, draw_chips)
+    ru_rail(b)
+    return b.im.convert("RGB")
+
+
+# ================================================================ BİLBORD
+# 5000 x 3000 mm yatay, 1:1 @ 40 dpi. Uzaktan ve çoğu zaman HAREKET
+# HALİNDE okunur: her tasarımda tek bir cümle, tek bir rakam. Künye şeridi
+# roll-up'takinin 2.2 katı ölçekte, aynı kompozisyonda.
+BB_W, BB_H, BB_DPI = 5000, 3000, 40
+BB_PAD = 180
+BB_RAIL = 2480
+BB_U = 2.2
+
+
+def bilbord() -> Board:
+    return Board(BB_W, BB_H, BB_DPI)
+
+
+def bb_qr_plate(b: Board, x: int, y: int, size_mm: float) -> None:
+    """Karekod beyaz plaket içinde.
+
+    Görselin üstüne doğrudan basılan karekod okunmuyor: telefon kamerası
+    modülleri zeminden ayıramıyor. Küçük bir beyaz plaket hem güvenli hem
+    de tam boy baskıyı bozmuyor.
+    """
+    pad = b.p(size_mm * 0.10)
+    d = b.draw
+    d.rounded_rectangle([x - pad, y - pad, x + b.p(size_mm) + pad, y + b.p(size_mm) + pad],
+                        radius=b.p(size_mm * 0.09), fill=WHITE)
+    b.im.alpha_composite(qr_image(QR_BILBORD, b.p(size_mm)), (x, y))
+
+
+def bb_info(b: Board) -> None:
+    """
+    Tam boy baskıda künye: BEYAZ YAZI, doğrudan görselin üstünde.
+
+    Beyaz şerit kaldırıldı — bilbord şehrin görünür noktalarına asılıyor,
+    alttan 500 mm'yi beyaza vermek görselin en iyi kısmını kesiyordu.
+    Okunurluğu perde ve yazı gölgesi sağlıyor.
+    """
+    dr = b.draw
+    x = b.p(BB_PAD)
+
+    def paint(d):
+        d.text((x, b.p(2700)), SITE, font=b.serif(112, "600"), fill=WHITE, anchor="ls")
+        track(b, d, (x, b.p(2745)), "INSTAGRAM   @MIAPARKOCEAN",
+              b.sans(34, "700"), (*MIA_ICE, 250), b.p(7))
+        xp = round(b.W * 0.40)
+        fp = b.sans(68, "700")
+        d.text((xp, b.p(2660)), PHONES[0], font=fp, fill=WHITE, anchor="ls")
+        d.text((xp, b.p(2775)), PHONES[1], font=fp, fill=WHITE, anchor="ls")
+        d.line([xp - b.p(70), b.p(2560), xp - b.p(70), b.p(2800)],
+               fill=(*MIA_PALE, 170), width=b.p(4))
+        track(b, d, (round(b.W * 0.655), b.p(2680)), SELLER,
+              b.sans(46, "700"), WHITE, b.p(8))
+        track(b, d, (round(b.W * 0.655), b.p(2748)), SELLER_ROLE,
+              b.sans(28, "600"), (*MIA_ICE, 240), b.p(6))
+
+    soft_text(b, paint, blur_mm=20, alpha=0.75)
+    qs = 300
+    bb_qr_plate(b, b.W - b.p(BB_PAD + qs), b.p(2480), qs)
+    track(b, b.draw, (b.W - b.p(BB_PAD + qs / 2), b.p(2830)), "PROJEYİ GEZ",
+          b.sans(30, "700"), WHITE, b.p(6), "ma")
+
+
+def bb_full(b: Board, name: str, focus: float = 0.5,
+            top: int = 165, bot: int = 205) -> None:
+    """Görsel TAM BOY — beyaz şerit yok, kenardan kenara baskı."""
+    b.im = cover(name, (b.W, b.H), focus)
+    b.im.alpha_composite(scrim((b.W, b.H), [
+        (0.00, (2, 22, 40, top)), (0.26, (2, 22, 40, 45)),
+        (0.58, (2, 22, 40, 50)), (0.80, (2, 22, 40, 150)),
+        (1.00, (2, 22, 40, bot)),
+    ]))
+
+
+def bb_brand(b: Board, white: bool = True, shadow: bool = True) -> None:
+    lg = lockup(b.p(1000), white)
+    pos = (b.p(BB_PAD), b.p(150))
+    if shadow:
+        sh = Image.new("RGBA", b.im.size, (0, 0, 0, 0))
+        sh.alpha_composite(lg, pos)
+        sh = sh.filter(ImageFilter.GaussianBlur(b.p(16)))
+        dark = Image.new("RGBA", b.im.size, (2, 22, 34, 0))
+        dark.putalpha(sh.split()[3].point(lambda v: min(255, round(v * 1.7))))
+        b.im.alpha_composite(dark)
+    b.im.alpha_composite(lg, pos)
+
+
+def bb_words(b: Board, lines, eyebrow: str, right: bool = True,
+             y0: float = 0, lh: float = 300, size: float = 230) -> None:
+    """Tek cümle, en çok iki satır — bilbordda okunan tek şey bu."""
+    if not y0:
+        y0 = 1180 if right else 1460
+    x = b.p(BB_W - BB_PAD) if right else b.p(BB_PAD)
+    anchor = "rs" if right else "ls"
+    inner = b.p(BB_W * 0.62)
+
+    def paint(dr):
+        f, sp = fit_track(b, dr, [eyebrow], inner, 46, 0.2, lambda s: b.sans(s, "600"))
+        track(b, dr, (x, b.p(y0 - lh * 0.75)), eyebrow, f, (*MIA_ICE, 250), sp,
+              "ra" if right else "la")
+        fs = fit(b, dr, lines, inner, size, lambda s: b.serif(s, "600"))
+        for i, ln in enumerate(lines):
+            dr.text((x, b.p(y0 + i * lh)), ln, font=fs, fill=WHITE, anchor=anchor)
+
+    soft_text(b, paint, blur_mm=26, alpha=0.86)
+
+
+# ── bilbord 1 · kimlik ─────────────────────────────────────────────────
+def bilbord_kimlik() -> Image.Image:
+    b = bilbord()
+    bb_full(b, "night-gate", 0.5)
+    bb_brand(b, shadow=False)
+    bb_words(b, ["Lüks artık", "ulaşılabilir."], "İZMİT MİA BÖLGESİ'NDE YÜKSELİYOR")
+    bb_info(b)
+    return b.im.convert("RGB")
+
+
+# ── bilbord 2 · proje ──────────────────────────────────────────────────
+def bilbord_proje() -> Image.Image:
+    b = bilbord()
+    bb_full(b, "courtyard-pools", 0.5, top=180)
+    bb_brand(b, shadow=False)
+    bb_words(b, ["600 daire,", "dört yaşam tipi."], "DÖRT BLOK · SEKİZ KAT", right=False)
+    bb_info(b)
+    return b.im.convert("RGB")
+
+
+# ── bilbord 3 · iç mekân ───────────────────────────────────────────────
+def bilbord_ic_mekan() -> Image.Image:
+    """Bilbord şehrin içinde: dışarıyı zaten görüyorlar, içeriyi göstermeli."""
+    b = bilbord()
+    bb_full(b, "ic-mekan/11-dubleks-salon", 0.5, top=170, bot=210)
+    # İç mekân karesi baştan sona aydınlık; yazının oturduğu sağ yarıya
+    # yatay perde çekilmezse beyaz yazı duvara karışıyor.
+    side = gradient((b.W, b.H), [(0.0, (255, 255, 255)), (1.0, (255, 255, 255))])
+    arr = np.zeros((1, b.W, 4), np.float32)
+    xs = np.linspace(0, 1, b.W)
+    arr[0, :, 3] = np.clip((xs - 0.34) / 0.42, 0, 1) ** 1.4 * 168
+    arr[0, :, 0], arr[0, :, 1], arr[0, :, 2] = 2, 22, 40
+    side = Image.fromarray(arr.astype(np.uint8), "RGBA").resize((b.W, b.H), Image.BILINEAR)
+    b.im.alpha_composite(side)
+    bb_brand(b, shadow=False)
+    bb_words(b, ["Ev burada", "başlıyor."], "YÜKSEK KALİTELİ İÇ MEKÂN")
+    bb_info(b)
+    return b.im.convert("RGB")
+
+
+# ── bilbord 4 · balkondan körfez ───────────────────────────────────────
+def bilbord_deniz() -> Image.Image:
+    b = bilbord()
+    bb_full(b, "balkondan-deniz", 0.5, top=180, bot=215)
+    bb_brand(b, shadow=False)
+    bb_words(b, ["İster havuzu izleyin,", "ister denizi."],
+             "GENİŞ BALKON · MERKEZİ AVLU", right=False, size=185)
+    bb_info(b)
+    return b.im.convert("RGB")
+
+
+
+# ============================================================== YAKA KARTI
+# 90 x 130 mm dikey, 300 dpi. Lansman günü (21 Ağustos 2026, Emex Otel)
+# takılacak kartlar.
+#
+# ASKI DELİĞİ
+# ───────────
+# Kordon deliği üstten ~10 mm'ye açılır. O bant boş bırakılıyor; logo ya da
+# yazı oraya girerse zımba deliği tam ortasından geçiyor.
+YK_W, YK_H, YK_DPI = 90, 130, 300
+YK_PAD = 8
+YK_SLOT = 14              # üstten bu kadarı asma deliğine ayrıldı
+
+# Soyadı BÜYÜK harf: yaka kartında isimle soyadı bir bakışta ayrılıyor,
+# uzaktan da soyadı okunuyor.
+BADGE_FIRST = "Engin"
+BADGE_LAST = "KOÇAK"
+BADGE_NAME = f"{BADGE_FIRST} {BADGE_LAST}"
+BADGE_ROLE = "İşletme Brokerı"
+EVENT_LINE = "21 AĞUSTOS 2026 · EMEX OTEL"
+
+
+def badge() -> Board:
+    return Board(YK_W, YK_H, YK_DPI)
+
+
+def yk_slot(b: Board, dark: bool = False) -> None:
+    """Kordon deliğinin yerini gösteren ince kılavuz — kesimci nereye
+    zımbalayacağını görsün."""
+    dr = b.draw
+    w, h = b.p(16), b.p(3.5)
+    x = (b.W - w) // 2
+    y = b.p(6)
+    dr.rounded_rectangle([x, y, x + w, y + h], radius=h // 2,
+                         outline=(255, 255, 255, 90) if dark else (*MIA_PALE, 200),
+                         width=max(1, b.p(0.4)))
+
+
+def yk_qr(b: Board, x: int, y: int, size_mm: float = 18, dark=INK) -> None:
+    b.im.alpha_composite(qr_image(QR_YAKA, b.p(size_mm), dark), (x, y))
+
+
+def yk_body(b: Board, on_dark: bool, name_y: float = 78) -> None:
+    """
+    Ortak gövde: isim, unvan, satıcı, karekod, etkinlik satırı.
+
+    Karekod SAĞ ALTTA, yazı sütunu solda ve dar tutuluyor. İlk kurguda
+    22 mm'lik karekod "OCEAN GAYRİMENKUL" ve etkinlik satırının üstüne
+    biniyordu; 90 mm genişlikte ikisi ancak yan yana sığıyor.
+    """
+    dr = b.draw
+    ink = WHITE if on_dark else MIA_DEEP
+    soft = (*MIA_PALE, 245) if on_dark else (*MIA_DARK, 255)
+    x = b.p(YK_PAD + 5)
+    qr_mm = 18
+    qx = b.W - b.p(YK_PAD + 5 + qr_mm)
+    text_w = qx - x - b.p(4)              # karekoda çarpmadan kalan genişlik
+
+    fn = fit(b, dr, [BADGE_NAME], b.p(YK_W - YK_PAD * 2 - 10), 11,
+             lambda s: b.serif(s, "600"))
+    dr.text((x, b.p(name_y)), BADGE_NAME, font=fn, fill=ink, anchor="ls")
+    frole, sprole = fit_track(b, dr, [BADGE_ROLE.upper()], text_w, 3.1, 0.16,
+                              lambda s: b.sans(s, "600"), floor_mm=1.2)
+    track(b, dr, (x, b.p(name_y + 4)), BADGE_ROLE.upper(), frole, soft, sprole)
+    dr.line([x, b.p(name_y + 12), x + b.p(17), b.p(name_y + 12)],
+            fill=(*MIA_AQUA, 220) if on_dark else (*MIA_OCEAN, 220), width=b.p(0.9))
+
+    fs, sps = fit_track(b, dr, [SELLER], text_w, 3.6, 0.18,
+                        lambda s: b.sans(s, "700"), floor_mm=1.2)
+    track(b, dr, (x, b.p(name_y + 20)), SELLER, fs, ink, sps)
+
+    yk_qr(b, qx, b.p(YK_H - YK_PAD - 4 - qr_mm), qr_mm)
+
+    fe, spe = fit_track(b, dr, ["21 AĞUSTOS 2026", "EMEX OTEL · KOCAELİ", SITE.upper()],
+                        text_w, 3.0, 0.16, lambda s: b.sans(s, "700"), floor_mm=1.2)
+    track(b, dr, (x, b.p(YK_H - YK_PAD - 18)), "21 AĞUSTOS 2026", fe, soft, spe)
+    track(b, dr, (x, b.p(YK_H - YK_PAD - 12)), "EMEX OTEL · KOCAELİ", fe, soft, spe)
+    track(b, dr, (x, b.p(YK_H - YK_PAD - 5)), SITE.upper(), fe,
+          (*MIA_LIGHT, 255) if on_dark else (*MIA_OCEAN, 255), spe)
+
+
+# ── yaka 1 · beyaz zemin, mavi baş bandı ───────────────────────────────
+def yaka_1() -> Image.Image:
+    b = badge()
+    dr = b.draw
+    dr.rectangle([0, 0, b.W, b.H], fill=WHITE)
+    b.im.alpha_composite(gradient((b.W, b.p(58)), DEEP_STOPS, angle=0.7), (0, 0))
+    lg = lockup(b.p(52), white=True)
+    b.im.alpha_composite(lg, ((b.W - lg.width) // 2, b.p(YK_SLOT + 5)))
+    yk_slot(b, dark=True)
+    yk_body(b, on_dark=False)
+    return b.im.convert("RGB")
+
+
+# ── yaka 2 · tam mavi ──────────────────────────────────────────────────
+def yaka_2() -> Image.Image:
+    b = badge()
+    b.im = gradient((b.W, b.H), DEEP_STOPS, angle=0.72)
+    b.im.alpha_composite(glow((b.W, b.H), b.p(45), b.p(40), b.p(70), MIA_CYAN, 0.30))
+    lg = lockup(b.p(50), white=True)
+    b.im.alpha_composite(lg, ((b.W - lg.width) // 2, b.p(YK_SLOT + 6)))
+    yk_slot(b, dark=True)
+    # Karekod koyu zeminde okunmaz; beyaz plakete alınıyor.
+    dr = b.draw
+    qs = b.p(18)
+    qx = b.W - b.p(YK_PAD + 5 + 18)
+    qy = b.p(YK_H - YK_PAD - 4 - 18)
+    dr.rounded_rectangle([qx - b.p(2), qy - b.p(2), qx + qs + b.p(2), qy + qs + b.p(2)],
+                         radius=b.p(2), fill=WHITE)
+    yk_body(b, on_dark=True)
+    return b.im.convert("RGB")
+
+
+# ── yaka 3 · buz mavisi, çerçeveli ─────────────────────────────────────
+def yaka_3() -> Image.Image:
+    b = badge()
+    b.im = gradient((b.W, b.H), LIGHT_STOPS, angle=0.3)
+    dr = b.draw
+    dr.rounded_rectangle([b.p(4), b.p(4), b.W - b.p(4), b.H - b.p(4)],
+                         radius=b.p(4), outline=(*MIA_OCEAN, 150), width=b.p(0.7))
+    lg = lockup(b.p(50), white=False)
+    b.im.alpha_composite(lg, ((b.W - lg.width) // 2, b.p(YK_SLOT + 6)))
+    yk_slot(b)
+    yk_body(b, on_dark=False)
+    return b.im.convert("RGB")
+
+
+# ── yaka 4 · üstte proje karesi ────────────────────────────────────────
+def yaka_4() -> Image.Image:
+    b = badge()
+    dr = b.draw
+    dr.rectangle([0, 0, b.W, b.H], fill=WHITE)
+    head = b.p(58)
+    b.im.alpha_composite(cover("night-gate", (b.W, head), 0.5), (0, 0))
+    b.im.alpha_composite(scrim((b.W, head), [
+        (0.0, (2, 20, 38, 205)), (0.5, (2, 20, 38, 150)), (1.0, (2, 20, 38, 210)),
+    ]), (0, 0))
+    lg = lockup(b.p(50), white=True)
+    b.im.alpha_composite(lg, ((b.W - lg.width) // 2, b.p(YK_SLOT + 5)))
+    yk_slot(b, dark=True)
+    yk_body(b, on_dark=False)
+    return b.im.convert("RGB")
+
+
+ROLLUPS = [
+    ("rollup-1-kimlik", rollup_kimlik, "Roll-up 1 · kimlik"),
+    ("rollup-2-daireler", rollup_daireler, "Roll-up 2 · daire tipleri"),
+    ("rollup-3-konum", rollup_konum, "Roll-up 3 · konum"),
+    ("rollup-4-sosyal-yasam", rollup_sosyal, "Roll-up 4 · sosyal yaşam"),
+]
+BILBORDS = [
+    ("bilbord-1-kimlik", bilbord_kimlik, "Bilbord 1 · kimlik"),
+    ("bilbord-2-proje", bilbord_proje, "Bilbord 2 · proje"),
+    ("bilbord-3-ic-mekan", bilbord_ic_mekan, "Bilbord 3 · iç mekân"),
+    ("bilbord-4-deniz", bilbord_deniz, "Bilbord 4 · balkondan körfez"),
+]
+BADGES = [
+    ("yaka-1-beyaz", yaka_1, "Yaka kartı 1 · beyaz"),
+    ("yaka-2-mavi", yaka_2, "Yaka kartı 2 · mavi"),
+    ("yaka-3-buz", yaka_3, "Yaka kartı 3 · buz mavisi"),
+    ("yaka-4-fotografli", yaka_4, "Yaka kartı 4 · fotoğraflı"),
+]
+
+# Totem/afiş dışındaki ürünler. Aynı Board motoru, aynı künye şeridi.
+EXTRA = (
+    [(n, f, RU_W, RU_H, RU_DPI, t) for n, f, t in ROLLUPS] +
+    [(n, f, BB_W, BB_H, BB_DPI, t) for n, f, t in BILBORDS] +
+    [(n, f, YK_W, YK_H, YK_DPI, t) for n, f, t in BADGES]
+)
 
 if __name__ == "__main__":
     main()

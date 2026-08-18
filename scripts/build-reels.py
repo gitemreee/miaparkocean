@@ -128,22 +128,24 @@ def fit_lines(dr, text: str, start: int, max_w: int, max_lines: int = 2, w: str 
 
 
 # ---------------------------------------------------------------- görüntü
-_VIG: Image.Image | None = None
+_VIG: dict = {}
 
 
-def vignette() -> Image.Image:
-    """Dikey kadraja göre köşe karartma — filmin yataydakinin dikey eşi."""
-    global _VIG
-    if _VIG is None:
-        yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-        dx = (xx - W / 2) / (W / 2)
-        dy = (yy - H / 2) / (H / 2)
+def vignette(size=None) -> Image.Image:
+    """Köşe karartma. Kapanış kartındaki tam kare bandı dikey tuvalden
+    başka ölçüde olduğu için ölçüye göre üretilip saklanıyor."""
+    w, h = size or (W, H)
+    key = (w, h)
+    if key not in _VIG:
+        yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+        dx = (xx - w / 2) / (w / 2)
+        dy = (yy - h / 2) / (h / 2)
         r = np.sqrt(dx * dx + dy * dy) / 1.42
         a = np.clip((r - 0.50) / 0.55, 0, 1) ** 1.7 * 86
-        arr = np.zeros((H, W, 4), np.uint8)
+        arr = np.zeros((h, w, 4), np.uint8)
         arr[:, :, 3] = a.astype(np.uint8)
-        _VIG = Image.fromarray(arr, "RGBA")
-    return _VIG
+        _VIG[key] = Image.fromarray(arr, "RGBA")
+    return _VIG[key]
 
 
 def grade(im: Image.Image, teal: float = 0.09, bloom: float = 0.12) -> Image.Image:
@@ -161,7 +163,7 @@ def grade(im: Image.Image, teal: float = 0.09, bloom: float = 0.12) -> Image.Ima
             np.clip(np.asarray(out).astype(np.float32)
                     + np.asarray(gl).astype(np.float32) * bloom * 0.30, 0, 255).astype(np.uint8), "RGB")
     out = out.convert("RGBA")
-    out.alpha_composite(vignette())
+    out.alpha_composite(vignette(out.size))
     return out.convert("RGB")
 
 
@@ -214,6 +216,20 @@ def clip_frame_smooth(name: str, t: float, speed: float = 1.0, offset: float = 0
     if frac < 0.02 or i1 == i0:
         return a
     return Image.blend(a, read(i1), frac)
+
+
+def glow_v(cx: float, cy: float, r: float, color, strength: float = 0.25) -> Image.Image:
+    """Dikey tuvalde yumuşak ışık odağı — küçük üretilip büyütülür."""
+    sw, sh = 180, 320
+    fx, fy = sw / W, sh / H
+    yy, xx = np.mgrid[0:sh, 0:sw].astype(np.float32)
+    dd = np.sqrt(((xx - cx * fx) / (r * fx)) ** 2 + ((yy - cy * fy) / (r * fy)) ** 2)
+    a = np.clip(1.0 - dd, 0, 1) ** 2.1 * strength
+    arr = np.zeros((sh, sw, 4), np.float32)
+    for c in range(3):
+        arr[:, :, c] = color[c]
+    arr[:, :, 3] = a * 255
+    return Image.fromarray(arr.astype(np.uint8), "RGBA").resize((W, H), Image.LANCZOS)
 
 
 def text_layer(fn) -> Image.Image:
@@ -305,45 +321,47 @@ def vshot(name: str, word: str, cap: str, pan=(0.5, 0.5), zoom=(1.0, 1.06),
     return scene
 
 
-def vc_end(clip: str, offset: float = 0.0, speed: float = 0.8):
+def vc_end(clip: str, offset: float = 0.0, speed: float = 0.85):
     """
-    Kapanış kartı — koyulaştırılmış GERÇEK çekim üstünde logo.
+    Kapanış kartı — PROJENİN TAMAMI görünür.
 
-    Önce marka gradyanı kullanılıyordu ve kartın 4,6 saniyesi boyunca
-    ekranda hiçbir şey kıpırdamıyordu; ölçtüğümüzde her üç reels'in de
-    son 3,7 saniyesi kare kare aynı çıktı. Arkaya ağır perdeli bir çekim
-    koyup yavaşça içeri girmek, hem donmayı bitiriyor hem de kart marka
-    zemininde durmaya devam ediyor.
+    Önceki kurguda kapanış da 9:16'ya kırpılıyordu; yatay karenin ancak
+    %40'ı giriyor, ekranda havuzun bir köşesi ve binanın yarısı kalıyordu.
+    Kapanış kartı bir "kart" olduğu için kırpmaya mecbur değiliz: yatay
+    kare TAM GENİŞLİĞİYLE bir bant olarak konuyor, üstünde logo, altında
+    çağrı duruyor. Bant hareketli çekim olduğu için kart da donmuyor.
     """
+    BAND_H = round(W * 9 / 16)                 # 1080 x 608 — tam kare
+
     def scene(t: float, d: float) -> Image.Image:
-        k = min(max(t / d, 0.0), 1.0)
-        im = clip_frame_smooth(clip, t, speed, offset)
-        im = vcrop(im, 0.5, 1.04 + 0.10 * k)          # yavaş içeri giriş
-        im = grade(im, teal=0.14, bloom=0.06)
-        # Perde 205 alfayla neredeyse opaktı, üstüne 9 piksel bulanıklık
-        # binince arkadaki hareket hiç görünmüyordu. Yazının okunurluğunu
-        # zaten with_shadow sağlıyor; perde hafifleyince kart yaşıyor.
-        im = bf.blur_fast(im, 4)
-        im = Image.alpha_composite(
-            im.convert("RGBA"),
-            Image.new("RGBA", (W, H), (3, 30, 46, 152))).convert("RGB")
+        base = bf.brand_bg(t, d, drift=0.9).resize((W, H), Image.LANCZOS).convert("RGBA")
+        base.alpha_composite(glow_v(W * 0.5, 640, 900, MIA_CYAN, 0.22))
+
+        band = clip_frame_smooth(clip, t, speed, offset).resize((W, BAND_H), Image.LANCZOS)
+        band = grade(band, teal=0.10, bloom=0.10)
+        by = 720
+        # bandın üstüne ve altına ince ışık çizgisi — zemine yapışmasın
+        base.alpha_composite(band.convert("RGBA"), (0, by))
+        d2 = ImageDraw.Draw(base)
+        d2.rectangle([0, by - 3, W, by], fill=(*MIA_AQUA, 190))
+        d2.rectangle([0, by + BAND_H, W, by + BAND_H + 3], fill=(*MIA_AQUA, 190))
 
         o = bf.fade(t, d, 0.6, 0.4)
-        lg = bf.logo_white(660)
         layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        layer.alpha_composite(lg, ((W - lg.width) // 2, 700))
+        # Kilit "İZMİT MİA BÖLGESİ" alt satırını zaten taşıyor; ayrıca
+        # yazılınca ikisi üst üste biniyordu.
+        lg = bf.logo_white(640)
+        layer.alpha_composite(lg, ((W - lg.width) // 2, 200))
         dr = ImageDraw.Draw(layer)
-        track(dr, (W / 2, 1170), "İZMİT MİA BÖLGESİ", sans(36, "600"), (*MIA_PALE, 240), 14, "ma")
-        dr.line([W / 2 - 90, 1268, W / 2 + 90, 1268], fill=(*MIA_AQUA, 210), width=4)
-        dr.text((W / 2, 1410), "600 daire, dört yaşam tipi", font=serif(72, "500"),
+        dr.text((W / 2, 1428), "600 daire, dört yaşam tipi", font=serif(70, "500"),
                 fill=WHITE, anchor="ms")
-        track(dr, (W / 2, 1480), "DETAYLAR PROFİLDEKİ BAĞLANTIDA", sans(32, "700"),
+        track(dr, (W / 2, 1488), "DETAYLAR PROFİLDEKİ BAĞLANTIDA", sans(31, "700"),
               (*MIA_ICE, 240), 10, "ma")
-        pm = bf.partner_white(210)
-        layer.alpha_composite(pm, ((W - pm.width) // 2, 1630))
+        pm = bf.partner_white(200)
+        layer.alpha_composite(pm, ((W - pm.width) // 2, 1546))
         if o < 1:
             layer.putalpha(layer.split()[3].point(lambda v: int(v * o)))
-        return with_shadow(im, layer, blur=18, boost=1.2)
+        return with_shadow(base.convert("RGB"), layer, blur=16, boost=1.2)
     return scene
 
 
@@ -358,7 +376,7 @@ REELS = [
                pan=(0.58, 0.40), offset=1.0), 5.2),
         (vshot("01-gunduz-gece", "Işıklar yanınca başka", "ÖZEL GECE AYDINLATMASI",
                pan=(0.45, 0.55)), 5.4),
-        (vc_end("14-gece-yaklasim"), 3.8),
+        (vc_end("03-havadan-yorunge", offset=1.0), 4.2),
     ]),
     ("reel-2-sosyal-yasam", "Sosyal yaşam", [
         (vshot("03-havadan-yorunge", "İster havuzu izleyin, ister denizi",
@@ -369,7 +387,7 @@ REELS = [
                "KAPALI YÜZME HAVUZU · SAUNA", pan=(0.42, 0.58)), 5.2),
         (vshot("07-aksam-avlu", "Akşamları başka", "AVLUDA GECE AYDINLATMASI",
                pan=(0.60, 0.44)), 5.2),
-        (vc_end("13-giris-drone", offset=1.2), 3.8),
+        (vc_end("13-giris-drone", offset=0.8), 4.2),
     ]),
     ("reel-3-daireler", "Daireler", [
         (vshot("09-daire-1plus0", "İlk evin tam ölçüsü", "1+0 · BRÜT 28 m² · AÇIK PLAN",
@@ -380,7 +398,7 @@ REELS = [
                pan=(0.42, 0.58)), 5.4),
         (vshot("12-bahce-dubleks", "Bahçeniz, evinizin devamı", "2+1 BAHÇE DUBLEKS · BRÜT 100 m²",
                pan=(0.58, 0.42), speed=0.5), 5.6),
-        (vc_end("14-gece-yaklasim", offset=2.0), 3.8),
+        (vc_end("14-gece-yaklasim", offset=1.0), 4.2),
     ]),
 ]
 
