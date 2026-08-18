@@ -19,6 +19,7 @@
     "instagram": "python scripts/build-instagram-grid.py",
     "film": "python scripts/build-film.py",
     "tabela": "python scripts/build-signage.py",
+    "tabela:katman": "python scripts/build-signage.py --katman",
     "reels": "python scripts/build-reels.py"
   },
   "dependencies": {

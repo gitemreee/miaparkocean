@@ -17,3 +17,6 @@ film-source/.kare-onbellek/
 
 # reels üretiminin geçici ses dosyaları
 social-media/reels/_*.wav
+
+# Katmanlı baskı kaynakları (~200 MB). npm run tabela:katman ile üretilir.
+tabela/kaynak/

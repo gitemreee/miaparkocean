@@ -17,7 +17,7 @@ yazılıdır; ölçü değişirse dosyalar yeniden üretilir (`npm run tabela`).
 | `afis-5-sosyal-yasam.jpg` | 3000 × 2400 mm | 1:1 @ 50 dpi | 5906 × 4724 |
 | `rollup-1…6-*.jpg` | 800 × 2000 mm | 1:1 @ 100 dpi | 3150 × 7874 |
 | `bilbord-*-SOL/SAG.jpg` | 5000 × 3000 mm | 1:1 @ 40 dpi | 7874 × 4724 |
-| `yaka-1…8-*.jpg` | 90 × 130 mm | 1:1 @ 300 dpi | 1063 × 1535 |
+| `yaka-1…10-*.jpg` | 90 × 130 mm | 1:1 @ 300 dpi | 1063 × 1535 |
 
 `MIA-PARK-OCEAN-TABELA-SUNUMU.pdf` — A4 yatay, 8 sayfa. Baskı için değil,
 müşteriye/ekibe göstermek için. `onizleme/` klasöründe küçültülmüş kontrol
@@ -144,16 +144,23 @@ Mesafe/konum bilgisi konmadı: bu boyda okunan tek şey başlık.
 yarısı kendi panosuna ortalandı, dikişe yaslanmadı. Panoların sırası
 karışırsa cümle bozulur — dosya adındaki SOL/SAG'a dikkat.
 
-## Yaka kartı — 90 × 130 mm, 8 model
+## Yaka kartı — 90 × 130 mm, 10 model
 
 1 beyaz · 2 mavi · 3 buz mavisi · 4 fotoğraflı başlık · 5 yürüyüş yolu ·
-6 dış cephe · 7 balkondan körfez · 8 avlu. Lansman: 21 Ağustos 2026,
-Emex Otel, Kocaeli.
+6 dış cephe · 7 balkondan körfez · 8 avlu · 9 önden gündüz · 10 önden gece.
+Lansman: 21 Ağustos 2026, Emex Otel, Kocaeli.
 
 **5-8'de kart boyu proje karesi var, gradyanla eriyerek.** Düz perde kartı
 dümdüz beyaz bırakıyordu. Kare üstte neredeyse tam güçte kalıyor, aşağı
 indikçe zemine karışıyor; **geçiş ismin üstünde bitiyor** — bandın içinde
 kalan isim arkasındaki ağaç ya da denizle yarışıp okunmuyordu.
+
+**9-10 projeyi ÖNDEN, kırpmadan gösterir.** Bant yüksekliği ölçüden değil
+render'ın en-boyundan çıkıyor: 16:9 kare 90 mm genişlikte tam 50,6 mm
+ediyor, daha uzun bant kareyi yanlardan kırpıp projeyi yarım bırakırdı.
+Bandın alt kenarı sert kesilmiyor, fotoğrafın kendisi saydama eriyip
+zemindeki gradyanı açığa çıkarıyor — altına düz renk sürülünce o rengin
+bittiği yerde görünür bir dikiş kalıyordu. 9 gündüz, 10 gece.
 
 - **Soyadı büyük harf** — isimle soyadı bir bakışta ayrılıyor, uzaktan da
   soyadı okunuyor. İsim `BADGE_FIRST` / `BADGE_LAST` ile değişir.

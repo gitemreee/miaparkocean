@@ -46,6 +46,8 @@ Kullanım:
 from __future__ import annotations
 
 import os
+import shutil
+import sys
 
 import numpy as np
 import segno
@@ -684,7 +686,7 @@ UNIT_SHOTS = [
     "ic-mekan/01-1plus0-salon",
     "ic-mekan/05-1plus1-salon",
     "ic-mekan/09-loft-salon",
-    "ic-mekan/11-dubleks-salon",
+    "ic-mekan/14-dubleks-bahcesi",
 ]
 
 
@@ -1082,10 +1084,15 @@ def ru_title(b: Board, eyebrow: str, lines, y: float, size: float = 66,
     if eyebrow:
         fe, sp = fit_track(b, dr, [eyebrow], inner, 17, 0.22, lambda s: b.sans(s, "700"))
 
+    # Başlığın ilk satırının tepesi; alt başlık bunun ÜSTÜNE yerleşir.
+    asc = fs.getmetrics()[0]
+    top = b.p(y + 74) - asc
+
     def paint(d):
         if fe:
             # Gradyanın orta tonunda buz mavisi siliniyordu; alt başlık beyaz.
-            track(b, d, (b.p(RU_PAD), b.p(y)), eyebrow, fe, WHITE, sp)
+            track(b, d, (b.p(RU_PAD), top - b.p(16) - fe.getmetrics()[1]), eyebrow,
+                  fe, WHITE, sp)
         for i, ln in enumerate(lines):
             d.text((b.p(RU_PAD), b.p(y + 74 + i * lh)), ln, font=fs, fill=WHITE, anchor="ls")
         if fsub:
@@ -1142,7 +1149,7 @@ def rollup_finansman() -> Image.Image:
 
 # ── roll-up 3 · daire tipleri ──────────────────────────────────────────
 UNIT_SHOTS_RU = ["ic-mekan/01-1plus0-salon", "ic-mekan/05-1plus1-salon",
-                 "ic-mekan/09-loft-salon", "ic-mekan/11-dubleks-salon"]
+                 "ic-mekan/09-loft-salon", "ic-mekan/14-dubleks-bahcesi"]
 
 
 def rollup_daireler() -> Image.Image:
@@ -1214,7 +1221,7 @@ def rollup_deniz() -> Image.Image:
 # ── roll-up 6 · gece ───────────────────────────────────────────────────
 def rollup_gece() -> Image.Image:
     b = rollup()
-    ru_photo(b, "ic-mekan/11-dubleks-salon", 0.52, 600, 1050)
+    ru_photo(b, "ic-mekan/05-1plus1-salon", 0.5, 600, 1050)
     ru_brand(b, white=True, shadow=False)
     ru_title(b, "YÜKSEK KALİTELİ İÇ MEKÂN",
              ["Ev burada", "başlıyor."], 1090, size=92, lh=118,
@@ -1320,10 +1327,15 @@ def bb_line(b: Board, eyebrow: str, lines, y0: float = 1250, lh: float = 320,
     inner = b.p(BB_W - BB_PAD * 2)
 
     def paint(dr):
+        fs = fit(b, dr, lines, inner, size, lambda s: b.serif(s, "600"))
         if eyebrow:
             f, sp = fit_track(b, dr, [eyebrow], inner, 48, 0.2, lambda s: b.sans(s, "600"))
-            track(b, dr, (cx, b.p(y0 - lh * 0.68)), eyebrow, f, (*MIA_ICE, 250), sp, "ma")
-        fs = fit(b, dr, lines, inner, size, lambda s: b.serif(s, "600"))
+            # Alt başlığı orana göre değil, BAŞLIĞIN GERÇEK TEPESİNE göre
+            # koy: punto küçülünce sabit oran yetmiyor ve ikisi giriyordu.
+            asc = fs.getmetrics()[0]
+            _, fdesc = f.getmetrics()
+            track(b, dr, (cx, b.p(y0) - asc - b.p(30) - fdesc), eyebrow,
+                  f, (*MIA_ICE, 250), sp, "ma")
         for i, ln in enumerate(lines):
             dr.text((cx, b.p(y0 + i * lh)), ln, font=fs, fill=WHITE, anchor="ms")
 
@@ -1354,11 +1366,13 @@ def bb_panel(img: str, focus: float, side: float, eyebrow: str, lines,
 PAIRS = [
     ("01-gunduz-gece",
      ("aerial-pools", 0.5, 0.5), ("night-gate", 0.5, 0.5),
-     ("GÜNDÜZ", "GECE"), ["Gündüz", "başka,"], ["gece", "başka."], 260),
+     ("İZMİT MİA BÖLGESİ", "ÖZEL GECE AYDINLATMASI"),
+     ["Gündüz", "başka,"], ["gece", "başka."], 260),
 
     ("02-disarisi-icerisi",
-     ("entrance-gate", 0.48, 0.5), ("ic-mekan/11-dubleks-salon", 0.5, 0.5),
-     ("DIŞARISI", "İÇERİSİ"), ["Dışarısı", "ne kadar iyiyse,"], ["içerisi", "de o kadar."], 190),
+     ("entrance-gate", 0.48, 0.5), ("ic-mekan/05-1plus1-salon", 0.5, 0.5),
+     ("MİMARİ VE PEYZAJ", "YÜKSEK KALİTELİ İÇ MEKÂN"),
+     ["Dışarısı", "ne kadar iyiyse,"], ["içerisi", "de o kadar."], 190),
 
     ("03-havuz-deniz",
      ("courtyard-pools", 0.55, 0.35), ("balkondan-deniz", 0.5, 0.62),
@@ -1382,7 +1396,7 @@ PAIRS = [
 
     ("07-yurumek-oynamak",
      ("ic-mekan/18-yuruyus-yolu", 0.5, 0.5), ("ic-mekan/19-cocuk-oyun-parki", 0.5, 0.5),
-     ("YÜRÜYÜŞ VE DİNLENME YOLLARI", "ÇOCUK OYUN PARKI"),
+     ("GENİŞ PEYZAJ", "GÜVENLİ OYUN ALANI"),
      ["Yürüyüş yolu", "kapınızın önünde,"], ["oyun parkı", "gözünüzün önünde."], 165),
 
     ("08-sehir-deniz",
@@ -1636,6 +1650,64 @@ def yaka_8() -> Image.Image:
     return b.im.convert("RGB")
 
 
+
+def yk_band(b: Board, name: str, light: bool = True, band: float = 50.6,
+            soft: float = 15, veil: int = 55) -> None:
+    """
+    Projenin ÖNDEN TAM görünümü — kırpılmadan, kart boyu bant olarak.
+
+    Bant yüksekliği 16:9 render'ın 90 mm genişlikteki birebir karşılığı
+    (50,6 mm). Daha uzun bir bant kareyi yanlardan kırpar, proje "tam"
+    görünmez; bu yüzden yükseklik ölçüden değil, kaynağın en-boyundan
+    çıkıyor.
+
+    Bandın altı SERT KESİLMİYOR: fotoğrafın kendi alt kenarı saydama
+    eriyip zemindeki gradyanı açığa çıkarıyor. Önceki kurguda bandın
+    altına düz bir renk sürülüyordu; o rengin bittiği yerde gradyanla
+    arasında görünür bir dikiş kalıyordu.
+    """
+    stops = ([(0.0, WHITE), (0.5, (247, 252, 254)), (1.0, MIA_PALE)] if light
+             else DEEP_STOPS)
+    b.im = gradient((b.W, b.H), stops, angle=0.3)
+
+    bh = b.p(band)
+    im = cover(name, (b.W, bh), 0.5)
+    im.alpha_composite(scrim((b.W, bh), [
+        (0.0, (2, 22, 40, veil + 45)), (0.5, (2, 22, 40, veil)),
+        (1.0, (2, 22, 40, veil - 15)),
+    ]))
+
+    # Erime yalnız fotoğrafın alt şeridinde: bina siluetleri bandın üst
+    # üçte ikisinde, erimenin girdiği yer yol ve peyzaj.
+    sh = min(b.p(soft), bh - 2)
+    ramp = np.ones(bh, np.float32)
+    ramp[bh - sh:] = np.linspace(1.0, 0.0, sh) ** 1.5
+    a = np.asarray(im.split()[3], np.float32) * ramp[:, None]
+    im.putalpha(Image.fromarray(a.astype(np.uint8), "L"))
+    b.im.alpha_composite(im, (0, 0))
+
+
+# ── yaka 9 · önden gündüz ──────────────────────────────────────────────
+def yaka_9() -> Image.Image:
+    b = badge()
+    yk_band(b, "entrance-gate", light=True, veil=50)
+    yk_logo(b, white=True, w=44)
+    yk_slot(b, dark=True)
+    yk_body(b, on_dark=False, name_y=72)
+    return b.im.convert("RGB")
+
+
+# ── yaka 10 · önden gece ───────────────────────────────────────────────
+def yaka_10() -> Image.Image:
+    b = badge()
+    yk_band(b, "night-gate", light=False, veil=42)
+    yk_logo(b, white=True, w=44)
+    yk_slot(b, dark=True)
+    yk_qr_plate(b)
+    yk_body(b, on_dark=True, name_y=72)
+    return b.im.convert("RGB")
+
+
 ROLLUPS = [
     ("rollup-1-kimlik", rollup_kimlik, "Roll-up 1 · kimlik"),
     ("rollup-2-finansman", rollup_finansman, "Roll-up 2 · finansman"),
@@ -1658,6 +1730,8 @@ BADGES = [
     ("yaka-6-cephe", yaka_6, "Yaka kartı 6 · dış cephe"),
     ("yaka-7-deniz", yaka_7, "Yaka kartı 7 · balkondan körfez"),
     ("yaka-8-avlu", yaka_8, "Yaka kartı 8 · avlu"),
+    ("yaka-9-on-gunduz", yaka_9, "Yaka kartı 9 · önden gündüz"),
+    ("yaka-10-on-gece", yaka_10, "Yaka kartı 10 · önden gece"),
 ]
 
 # Totem/afiş dışındaki ürünler. Aynı Board motoru, aynı künye şeridi.
@@ -1667,5 +1741,94 @@ EXTRA = (
     [(n, f, YK_W, YK_H, YK_DPI, t) for n, f, t in BADGES]
 )
 
+
+
+# =========================================================== KATMANLI KAYNAK
+# `--katman` ile her tasarım İKİ dosyaya ayrılır:
+#
+#     <ad>-zemin.jpg   fotoğraf, gradyan, logo, karekod — yazı YOK
+#     <ad>-yazi.png    yalnızca tipografi, saydam zeminde
+#
+# İkisi üst üste konunca birebir onaylanan tasarım çıkar. Matbaa ya da
+# tasarımcı yazı katmanını silip yenisini yazabilir; zemine dokunmaz.
+#
+# NASIL AYRIŞTIRILIYOR
+# ────────────────────
+# Tasarım iki kez üretiliyor: bir kez normal, bir kez bütün yazılar
+# bastırılarak. İkisinin farkından yazı katmanı ÇÖZÜLÜYOR — tahmin değil,
+# birebir tersine çözüm:
+#
+#     tam = zemin * (1 - a) + c * a          (alfa harmanlama)
+#     c   = zemin + (tam - zemin) / a
+#
+# a, c'nin 0-255 dışına taşmayacağı en küçük değer seçilerek bulunuyor.
+#
+# Böylece yumuşak gölgeler ve yarı saydam kenarlar da doğru çıkıyor;
+# katman zeminin üstüne konduğunda piksel piksel aynı sonucu veriyor.
+SRC_OUT = os.path.join(OUT, "kaynak")
+
+_NO_TEXT = False
+_orig_text = ImageDraw.ImageDraw.text
+
+
+def _patched_text(self, xy, text, *a, **k):
+    if _NO_TEXT:
+        return None
+    return _orig_text(self, xy, text, *a, **k)
+
+
+ImageDraw.ImageDraw.text = _patched_text
+
+
+def _split(full: Image.Image, bg: Image.Image, rows: int = 900):
+    """Yazı katmanını çözer. Şeritler halinde: bilbordda tam boy float32
+    dizi bir gigabaytı geçiyor."""
+    w, h = full.size
+    out = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    for y0 in range(0, h, rows):
+        y1 = min(y0 + rows, h)
+        f = np.asarray(full.crop((0, y0, w, y1)), np.float32)
+        b = np.asarray(bg.crop((0, y0, w, y1)), np.float32)
+        # Alfa, rengin 0-255 dışına taşmayacağı EN KÜÇÜK değer seçilir.
+        # Sadece kanal farkını alfa saymak, farkın küçük olduğu yerde
+        # rengi uçuruyor ve kırpılınca katman zemine tam oturmuyordu.
+        up = np.where(f > b, (f - b) / np.maximum(255.0 - b, 1.0), 0.0)
+        dn = np.where(f < b, (b - f) / np.maximum(b, 1.0), 0.0)
+        a = np.clip(np.maximum(up, dn).max(axis=2), 0.0, 1.0)
+        safe = np.maximum(a, 1.0 / 255.0)[:, :, None]
+        c = np.clip(b + (f - b) / safe, 0, 255)
+        strip = np.dstack([c, a * 255.0]).astype(np.uint8)
+        out.paste(Image.fromarray(strip, "RGBA"), (0, y0))
+    return out
+
+
+def build_layers() -> None:
+    global _NO_TEXT
+    os.makedirs(SRC_OUT, exist_ok=True)
+    for name, fn, w_mm, h_mm, dpi, label in BOARDS + EXTRA:
+        _NO_TEXT = False
+        full = fn().convert("RGB")
+        _NO_TEXT = True
+        bg = fn().convert("RGB")
+        _NO_TEXT = False
+
+        bp = os.path.join(SRC_OUT, f"{name}-zemin.jpg")
+        bg.save(bp, "JPEG", quality=94, subsampling=0, optimize=True, dpi=(dpi, dpi))
+        tp = os.path.join(SRC_OUT, f"{name}-yazi.png")
+        _split(full, bg).save(tp, optimize=True)
+        print(f"  {name:<34} zemin {os.path.getsize(bp)/1e6:5.1f} MB · "
+              f"yazı {os.path.getsize(tp)/1e6:5.1f} MB")
+
+    # matbaanın ihtiyacı olan yazı tipleri
+    fd = os.path.join(SRC_OUT, "yazi-tipleri")
+    os.makedirs(fd, exist_ok=True)
+    for f in os.listdir(FONTS):
+        if f.endswith((".ttf", ".otf")):
+            shutil.copy2(os.path.join(FONTS, f), os.path.join(fd, f))
+    print(f"\n  → {SRC_OUT}")
+
 if __name__ == "__main__":
-    main()
+    if "--katman" in sys.argv:
+        build_layers()
+    else:
+        main()
