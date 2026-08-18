@@ -242,7 +242,11 @@ def vshot(name: str, word: str, cap: str, pan=(0.5, 0.5), zoom=(1.0, 1.06),
           offset: float = 0.0, speed: float = 1.0):
     """Dikey kadrajlı çekim + alt üçlükte kelime ve başlık."""
     def scene(t: float, d: float) -> Image.Image:
-        k = bf.ease(min(t / d, 1.0))
+        # Kaydırma DOĞRUSAL. smoothstep ile yumuşatılınca sahnenin başında
+        # ve sonunda kamera hızı sıfıra iniyordu; iki kesmenin arasında
+        # görüntü donuyormuş gibi duruyordu. Sabit hızda kayan pencere
+        # kesmeden kesmeye akışı kesmiyor.
+        k = min(max(t / d, 0.0), 1.0)
         im = bf.clip_frame(name, t, speed, offset)
         im = vcrop(im, pan[0] + (pan[1] - pan[0]) * k, zoom[0] + (zoom[1] - zoom[0]) * k)
         im = grade(im)
@@ -266,25 +270,43 @@ def vshot(name: str, word: str, cap: str, pan=(0.5, 0.5), zoom=(1.0, 1.06),
     return scene
 
 
-def vc_end(t: float, d: float) -> Image.Image:
-    """Kapanış kartı — marka zemininde logo ve tek satır çağrı."""
-    base = bf.brand_bg(t, d, drift=0.5).resize((W, H), Image.LANCZOS).convert("RGB")
-    o = bf.fade(t, d, 0.6, 0.4)
-    lg = bf.logo_white(660)
-    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    layer.alpha_composite(lg, ((W - lg.width) // 2, 690))
-    dr = ImageDraw.Draw(layer)
-    track(dr, (W / 2, 1160), "İZMİT MİA BÖLGESİ", sans(36, "600"), (*MIA_PALE, 240), 14, "ma")
-    dr.line([W / 2 - 90, 1258, W / 2 + 90, 1258], fill=(*MIA_AQUA, 210), width=4)
-    dr.text((W / 2, 1400), "600 daire, dört yaşam tipi", font=serif(72, "500"),
-            fill=WHITE, anchor="ms")
-    track(dr, (W / 2, 1470), "DETAYLAR PROFİLDEKİ BAĞLANTIDA", sans(32, "700"),
-          (*MIA_ICE, 240), 10, "ma")
-    pm = bf.partner_white(210)
-    layer.alpha_composite(pm, ((W - pm.width) // 2, 1620))
-    if o < 1:
-        layer.putalpha(layer.split()[3].point(lambda v: int(v * o)))
-    return with_shadow(base, layer, blur=18, boost=1.2)
+def vc_end(clip: str, offset: float = 0.0, speed: float = 0.55):
+    """
+    Kapanış kartı — koyulaştırılmış GERÇEK çekim üstünde logo.
+
+    Önce marka gradyanı kullanılıyordu ve kartın 4,6 saniyesi boyunca
+    ekranda hiçbir şey kıpırdamıyordu; ölçtüğümüzde her üç reels'in de
+    son 3,7 saniyesi kare kare aynı çıktı. Arkaya ağır perdeli bir çekim
+    koyup yavaşça içeri girmek, hem donmayı bitiriyor hem de kart marka
+    zemininde durmaya devam ediyor.
+    """
+    def scene(t: float, d: float) -> Image.Image:
+        k = min(max(t / d, 0.0), 1.0)
+        im = bf.clip_frame(clip, t, speed, offset)
+        im = vcrop(im, 0.5, 1.04 + 0.10 * k)          # yavaş içeri giriş
+        im = grade(im, teal=0.14, bloom=0.06)
+        im = bf.blur_fast(im, 9)
+        im = Image.alpha_composite(
+            im.convert("RGBA"),
+            Image.new("RGBA", (W, H), (3, 30, 46, 205))).convert("RGB")
+
+        o = bf.fade(t, d, 0.6, 0.4)
+        lg = bf.logo_white(660)
+        layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        layer.alpha_composite(lg, ((W - lg.width) // 2, 700))
+        dr = ImageDraw.Draw(layer)
+        track(dr, (W / 2, 1170), "İZMİT MİA BÖLGESİ", sans(36, "600"), (*MIA_PALE, 240), 14, "ma")
+        dr.line([W / 2 - 90, 1268, W / 2 + 90, 1268], fill=(*MIA_AQUA, 210), width=4)
+        dr.text((W / 2, 1410), "600 daire, dört yaşam tipi", font=serif(72, "500"),
+                fill=WHITE, anchor="ms")
+        track(dr, (W / 2, 1480), "DETAYLAR PROFİLDEKİ BAĞLANTIDA", sans(32, "700"),
+              (*MIA_ICE, 240), 10, "ma")
+        pm = bf.partner_white(210)
+        layer.alpha_composite(pm, ((W - pm.width) // 2, 1630))
+        if o < 1:
+            layer.putalpha(layer.split()[3].point(lambda v: int(v * o)))
+        return with_shadow(im, layer, blur=18, boost=1.2)
+    return scene
 
 
 # ---------------------------------------------------------------- reels
@@ -298,7 +320,7 @@ REELS = [
                pan=(0.58, 0.40), offset=1.0), 5.2),
         (vshot("01-gunduz-gece", "Işıklar yanınca başka", "ÖZEL GECE AYDINLATMASI",
                pan=(0.45, 0.55)), 5.4),
-        (vc_end, 4.6),
+        (vc_end("14-gece-yaklasim"), 3.8),
     ]),
     ("reel-2-sosyal-yasam", "Sosyal yaşam", [
         (vshot("03-havadan-yorunge", "İster havuzu izleyin, ister denizi",
@@ -309,7 +331,7 @@ REELS = [
                "KAPALI YÜZME HAVUZU · SAUNA", pan=(0.42, 0.58)), 5.2),
         (vshot("07-aksam-avlu", "Akşamları başka", "AVLUDA GECE AYDINLATMASI",
                pan=(0.60, 0.44)), 5.2),
-        (vc_end, 4.6),
+        (vc_end("13-giris-drone", offset=1.2), 3.8),
     ]),
     ("reel-3-daireler", "Daireler", [
         (vshot("09-daire-1plus0", "İlk evin tam ölçüsü", "1+0 · BRÜT 28 m² · AÇIK PLAN",
@@ -320,7 +342,7 @@ REELS = [
                pan=(0.42, 0.58)), 5.4),
         (vshot("12-bahce-dubleks", "Bahçeniz, evinizin devamı", "2+1 BAHÇE DUBLEKS · BRÜT 100 m²",
                pan=(0.58, 0.42), speed=0.5), 5.6),
-        (vc_end, 4.6),
+        (vc_end("14-gece-yaklasim", offset=2.0), 3.8),
     ]),
 ]
 
@@ -338,18 +360,25 @@ def duration_of(scenes) -> float:
 
 
 def frame_at(T: float, scenes, starts) -> Image.Image:
+    """
+    Sahneler XFADE kadar bindirilir; bindirme aralığında iki kare karışır.
+
+    Önceki kurguda geçiş hiç çalışmıyordu: `cur` zaten T'yi içeren SON
+    sahne olduğu için "T >= bir sonrakinin başlangıcı" koşulu hiçbir
+    zaman sağlanmıyor, her yer sert kesme oluyordu. Doğrusu, yeni sahnenin
+    ilk XFADE saniyesinde bir ÖNCEKİ sahneyle karıştırmak.
+    """
     cur = 0
     for i, s in enumerate(starts):
         if T >= s:
             cur = i
     fn, d = scenes[cur]
     im = fn(min(T - starts[cur], d), d)
-    if cur + 1 < len(scenes):
-        s2 = starts[cur + 1]
-        if T >= s2:
-            fn2, d2 = scenes[cur + 1]
-            k = bf.ease(min((T - s2) / XFADE, 1.0))
-            im = Image.blend(im, fn2(T - s2, d2), k)
+    local = T - starts[cur]
+    if cur > 0 and local < XFADE:
+        fp, dp = scenes[cur - 1]
+        prev = fp(min(T - starts[cur - 1], dp), dp)
+        im = Image.blend(prev, im, bf.ease(local / XFADE))
     return im
 
 
