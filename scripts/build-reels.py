@@ -181,6 +181,41 @@ def vcrop(im: Image.Image, px: float, zoom: float) -> Image.Image:
     return im.crop(box).resize((W, H), Image.LANCZOS)
 
 
+_FC: dict = {}
+
+
+def clip_frame_smooth(name: str, t: float, speed: float = 1.0, offset: float = 0.0) -> Image.Image:
+    """
+    Klibin t anındaki karesi — komşu iki kare harmanlanarak.
+
+    build_film.clip_frame kare indisini YUVARLIYOR. Hız 1'in altındayken
+    indis her çıktı karesinde bir artmıyor, aynı kaynak karesi üst üste
+    basılıyor: hız 0,5'te çıktının yarısı tekrar, ekranda tak tak eden
+    bir titreme. Kesirli indiste iki komşu kareyi karıştırmak indisi
+    sürekli kılıyor, tekrar eden kare kalmıyor.
+    """
+    fs = bf.clip_dir(name)
+    x = (offset + t * speed) * FPS
+    i0 = min(max(int(math.floor(x)), 0), len(fs) - 1)
+    frac = x - math.floor(x)
+    i1 = min(i0 + 1, len(fs) - 1)
+
+    def read(i):
+        p = fs[i]
+        im = _FC.get(p)
+        if im is None:
+            im = Image.open(p).convert("RGB")
+            if len(_FC) > 6:
+                _FC.clear()
+            _FC[p] = im
+        return im
+
+    a = read(i0)
+    if frac < 0.02 or i1 == i0:
+        return a
+    return Image.blend(a, read(i1), frac)
+
+
 def text_layer(fn) -> Image.Image:
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     fn(ImageDraw.Draw(layer))
@@ -247,7 +282,7 @@ def vshot(name: str, word: str, cap: str, pan=(0.5, 0.5), zoom=(1.0, 1.06),
         # görüntü donuyormuş gibi duruyordu. Sabit hızda kayan pencere
         # kesmeden kesmeye akışı kesmiyor.
         k = min(max(t / d, 0.0), 1.0)
-        im = bf.clip_frame(name, t, speed, offset)
+        im = clip_frame_smooth(name, t, speed, offset)
         im = vcrop(im, pan[0] + (pan[1] - pan[0]) * k, zoom[0] + (zoom[1] - zoom[0]) * k)
         im = grade(im)
         im = Image.alpha_composite(im.convert("RGBA"), scrim()).convert("RGB")
@@ -270,7 +305,7 @@ def vshot(name: str, word: str, cap: str, pan=(0.5, 0.5), zoom=(1.0, 1.06),
     return scene
 
 
-def vc_end(clip: str, offset: float = 0.0, speed: float = 0.55):
+def vc_end(clip: str, offset: float = 0.0, speed: float = 0.8):
     """
     Kapanış kartı — koyulaştırılmış GERÇEK çekim üstünde logo.
 
@@ -282,13 +317,16 @@ def vc_end(clip: str, offset: float = 0.0, speed: float = 0.55):
     """
     def scene(t: float, d: float) -> Image.Image:
         k = min(max(t / d, 0.0), 1.0)
-        im = bf.clip_frame(clip, t, speed, offset)
+        im = clip_frame_smooth(clip, t, speed, offset)
         im = vcrop(im, 0.5, 1.04 + 0.10 * k)          # yavaş içeri giriş
         im = grade(im, teal=0.14, bloom=0.06)
-        im = bf.blur_fast(im, 9)
+        # Perde 205 alfayla neredeyse opaktı, üstüne 9 piksel bulanıklık
+        # binince arkadaki hareket hiç görünmüyordu. Yazının okunurluğunu
+        # zaten with_shadow sağlıyor; perde hafifleyince kart yaşıyor.
+        im = bf.blur_fast(im, 4)
         im = Image.alpha_composite(
             im.convert("RGBA"),
-            Image.new("RGBA", (W, H), (3, 30, 46, 205))).convert("RGB")
+            Image.new("RGBA", (W, H), (3, 30, 46, 152))).convert("RGB")
 
         o = bf.fade(t, d, 0.6, 0.4)
         lg = bf.logo_white(660)
