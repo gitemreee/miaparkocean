@@ -976,18 +976,19 @@ def panel_press_b() -> Image.Image:
 # ── 26 · balkondan avluya ──────────────────────────────────────────────
 def panel_balcony_view() -> Image.Image:
     """
-    Balkondan avluya bakış — tek geniş kare, cümle üç parçaya bölünmüş.
+    Balkondan avlu ve körfez — projenin iki manzarası tek karede.
 
-    Üç ayrı fotoğrafı yan yana koymak ızgarada satırı bozuyor: profildeki
-    diğer satırlar tek bir görselin devamı gibi okunuyor, üç ayrı kare
-    araya duvar örüyor.
+    Basın bülteninde dairelerin "deniz ve şehir manzarasına" sahip olacağı,
+    projenin sahile yaklaşık 500 metre mesafede olduğu yazıyor; kare buna
+    göre üretildi. Sattığı şey manzaranın kendisi değil, seçme hakkı.
     """
-    p = photo("ic-mekan/15-balkondan-avlu.webp", 0.52, top=112, bot=200, bot_start=0.48)
+    p = photo("ic-mekan/21-balkondan-deniz.webp", 0.5, top=112, bot=200, bot_start=0.46)
     frame(p)
 
     def paint(dr):
-        word_row(dr, ["Balkonunuz", "avluya", "bakıyor."],
-                 ["GENİŞ BALKON", "SÜS HAVUZLARI VE PEYZAJ", "MERKEZİ AVLU"], 175)
+        word_row(dr, ["İster havuzu", "izleyin,", "ister denizi."],
+                 ["GENİŞ BALKON", "MERKEZİ AVLU · SÜS HAVUZLARI",
+                  "SAHİLE YÜRÜME MESAFESİ"], 180)
 
     draw_with_shadow(p, paint)
     return p
@@ -995,13 +996,14 @@ def panel_balcony_view() -> Image.Image:
 
 # ── 27 · yürüyüş yolları ───────────────────────────────────────────────
 def panel_walkways() -> Image.Image:
-    """Peyzajın içinden geçen yürüyüş yolları — akşam yürüyüşü kapının önünde."""
+    """Peyzajın içinden geçen yürüyüş yolları — site değil, park içinde yaşamak."""
     p = photo("ic-mekan/18-yuruyus-yolu.webp", 0.5, top=112, bot=205, bot_start=0.46)
     frame(p)
 
     def paint(dr):
-        word_row(dr, ["Akşam", "yürüyüşü", "evin önünde."],
-                 ["YÜRÜYÜŞ VE DİNLENME YOLLARI", "ÇOCUK OYUN PARKI", "GENİŞ YEŞİL ALAN"], 185)
+        word_row(dr, ["Bahçesi olan", "ev değil,", "parkı olan ev."],
+                 ["YÜRÜYÜŞ VE DİNLENME YOLLARI", "GENİŞ PEYZAJ",
+                  "ÇOCUK OYUN PARKI"], 185)
 
     draw_with_shadow(p, paint)
     return p
@@ -1033,8 +1035,8 @@ PANELS = [
     ("23-acik-plan", "Balkon · mutfak · yaşam alanı", panel_openplan),
     ("24-basinda-biz-1", "Basında biz I · Gazetesi, Özgün, İlke", panel_press_a),
     ("25-basinda-biz-2", "Basında biz II · Gündem, Fikir, Koz", panel_press_b),
-    ("26-balkondan-avlu", "Balkonunuz avluya bakıyor", panel_balcony_view),
-    ("27-yuruyus-yollari", "Akşam yürüyüşü evin önünde", panel_walkways),
+    ("26-havuz-deniz", "İster havuzu izleyin, ister denizi", panel_balcony_view),
+    ("27-yuruyus-yollari", "Bahçesi olan ev değil, parkı olan ev", panel_walkways),
 ]
 
 

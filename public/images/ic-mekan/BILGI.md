@@ -44,3 +44,17 @@ eklendi, pazarlama iddiası taşımıyorlar.
 Bunlar üretilmiş görsellerdir, fotoğraf değildir. Satış malzemesinde
 kullanırken projenin resmî render'larıyla birlikte, temsilî olduğu
 anlaşılacak şekilde kullanın.
+
+## 21 · Balkondan körfez
+
+`21-balkondan-deniz.webp` — giriş kapısının ARKASINDAKİ bloğun üst kat
+balkonundan çapraz bakış.
+
+Sahadaki dizilim kadraja birebir işlendi:
+proje → çimenlik boş arsa → palmiyeli refüjlü sahil yolu → İzmit körfezi.
+Arada ev, villa ya da başka yapı yok; ilk denemede modelin oraya koyduğu
+kırmızı çatılı evler kaldırıldı.
+
+Dayanak: 18 Ağustos 2026 tanıtım toplantısında dairelerin "deniz ve şehir
+manzarasına" sahip olacağı ve projenin sahile yaklaşık 500 metre mesafede
+olduğu açıklandı (bkz. `src/data/press.ts`).
