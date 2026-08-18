@@ -973,56 +973,38 @@ def panel_press_b() -> Image.Image:
     ])
 
 
-# ------------------------------------------------- üç ayrı fotoğraflı panel
-def trio(shots, words, caps, size: int = 190, weight: str = "500") -> Image.Image:
+# ── 26 · balkondan avluya ──────────────────────────────────────────────
+def panel_balcony_view() -> Image.Image:
     """
-    Her parçada BAŞKA bir kare — ızgarada üç pencereli tek bir satır.
+    Balkondan avluya bakış — tek geniş kare, cümle üç parçaya bölünmüş.
 
-    Kesim noktalarında fotoğraflar bindirme payını da kapsar, yoksa
-    parçaların arasında bir piksellik boşluk çizgisi kalıyor.
+    Üç ayrı fotoğrafı yan yana koymak ızgarada satırı bozuyor: profildeki
+    diğer satırlar tek bir görselin devamı gibi okunuyor, üç ayrı kare
+    araya duvar örüyor.
     """
-    p = Image.new("RGBA", (PANEL_W, PANEL_H), WHITE)
-    for i, (img, focus) in enumerate(shots):
-        x0 = 0 if i == 0 else BLEED + GRID_W * i
-        x1 = PANEL_W if i == 2 else BLEED + GRID_W * (i + 1)
-        w = x1 - x0
-        p.alpha_composite(cover(img, (w, PANEL_H), focus), (x0, 0))
-        p.alpha_composite(
-            scrim((w, PANEL_H), [(0.0, (4, 40, 58, 120)), (0.22, (4, 40, 58, 0)),
-                                 (0.50, (4, 40, 58, 0)), (0.78, (4, 40, 58, 95)),
-                                 (1.0, (4, 40, 58, 220))]), (x0, 0)
-        )
+    p = photo("ic-mekan/15-balkondan-avlu.webp", 0.52, top=112, bot=200, bot_start=0.48)
     frame(p)
 
     def paint(dr):
-        word_row(dr, words, caps, size, weight)
+        word_row(dr, ["Balkonunuz", "avluya", "bakıyor."],
+                 ["GENİŞ BALKON", "SÜS HAVUZLARI VE PEYZAJ", "MERKEZİ AVLU"], 175)
 
     draw_with_shadow(p, paint)
     return p
 
 
-# ── 26 · projeden · giriş, avlu, yürüyüş ───────────────────────────────
-def panel_project_a() -> Image.Image:
-    """Karşıdan bakış, balkondan avluya bakış ve yürüyüş yolları."""
-    return trio(
-        [("entrance-gate.webp", 0.46),
-         ("ic-mekan/15-balkondan-avlu.webp", 0.5),
-         ("ic-mekan/18-yuruyus-yolu.webp", 0.5)],
-        ["Giriş", "Avlu", "Yürüyüş"],
-        ["PROJEYE İLK BAKIŞ", "BALKONDAN AVLUYA", "PEYZAJ İÇİNDE YOLLAR"],
-    )
+# ── 27 · yürüyüş yolları ───────────────────────────────────────────────
+def panel_walkways() -> Image.Image:
+    """Peyzajın içinden geçen yürüyüş yolları — akşam yürüyüşü kapının önünde."""
+    p = photo("ic-mekan/18-yuruyus-yolu.webp", 0.5, top=112, bot=205, bot_start=0.46)
+    frame(p)
 
+    def paint(dr):
+        word_row(dr, ["Akşam", "yürüyüşü", "evin önünde."],
+                 ["YÜRÜYÜŞ VE DİNLENME YOLLARI", "ÇOCUK OYUN PARKI", "GENİŞ YEŞİL ALAN"], 185)
 
-# ── 27 · projeden · havuz, oyun parkı, bahçe ───────────────────────────
-def panel_project_b() -> Image.Image:
-    """Süs havuzları, çocuk oyun parkı ve zemin katın bahçesi."""
-    return trio(
-        [("ic-mekan/17-sus-havuzu.webp", 0.5),
-         ("ic-mekan/19-cocuk-oyun-parki.webp", 0.5),
-         ("ic-mekan/13-bahceli-daire-terasi.webp", 0.5)],
-        ["Havuz", "Oyun", "Bahçe"],
-        ["AVLUDA SÜS HAVUZLARI", "ÇOCUK OYUN PARKI", "ZEMİNDE ÖZEL BAHÇE"],
-    )
+    draw_with_shadow(p, paint)
+    return p
 
 
 PANELS = [
@@ -1051,8 +1033,8 @@ PANELS = [
     ("23-acik-plan", "Balkon · mutfak · yaşam alanı", panel_openplan),
     ("24-basinda-biz-1", "Basında biz I · Gazetesi, Özgün, İlke", panel_press_a),
     ("25-basinda-biz-2", "Basında biz II · Gündem, Fikir, Koz", panel_press_b),
-    ("26-projeden-giris-avlu", "Giriş · avlu · yürüyüş yolları", panel_project_a),
-    ("27-projeden-havuz-bahce", "Süs havuzu · oyun parkı · bahçe", panel_project_b),
+    ("26-balkondan-avlu", "Balkonunuz avluya bakıyor", panel_balcony_view),
+    ("27-yuruyus-yollari", "Akşam yürüyüşü evin önünde", panel_walkways),
 ]
 
 

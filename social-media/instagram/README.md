@@ -7,7 +7,7 @@ betiği çalıştırın:
 
 ## Ne var burada
 
-* `01-…` … `27-projeden-havuz-bahce` — her klasör TEK bir geniş görselin üç parçası.
+* `01-…` … `27-yuruyus-yollari` — her klasör TEK bir geniş görselin üç parçası.
   Profil ızgarasında bu üç parça yan yana gelip tek kare gibi görünür.
 * `_izgara-gorunumu.jpg` — o panelin ızgarada nasıl görüneceği.
 * `IZGARA-ONIZLEME.jpg` — profilin tamamının maketi (en yeni üstte).
