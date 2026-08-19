@@ -2,29 +2,47 @@
 # -*- coding: utf-8 -*-
 """MİA PARK OCEAN — arsa çevre tabelaları (10 pano).
 
-Arsanın DIŞINDAN okunan çit panoları: yoldan geçen görüyor, o yüzden her
-pano tek bir mesaj taşıyor ve her panonun üstünde aynı kimlik bandı var.
+Arsanın DIŞINDAN okunan çit panoları. Yoldan geçen tek bir panoya bakar;
+bu yüzden her pano tek mesaj taşır, kimlik ve iletişim ise hepsinde
+tekrarlanır.
 
 ÖLÇÜ: 3000 x 2000 mm, 1:1 ölçekte 50 dpi (5906 x 3937 px).
 
+DALGA
+─────
+Kimlik bandı ve künye şeridi DÜZ ÇİZGİYLE bitmiyor: logonun kendi
+dalgasıyla bitiyor. public/brand/wave-mask-end.png ile alt kenarı dalga
+şeklinde kesilen okyanus gradyanı, üstüne de dalganın kendi renkli
+kurdelesi (wave.png) biniyor — sitedeki kartların üst köşesindeki imzanın
+tabela ölçeğindeki karşılığı. Elle çizilmiş "dalgamsı" eğri yok, kaynak
+grafiğin pikselleri kullanılıyor.
+
+YERLEŞİM AİLELERİ
+─────────────────
+On pano tek kalıptan çıkmıyor; fotoğrafın biçimi panodan panoya değişiyor:
+
+    1  kimlik      tam sayfa gece render'ı
+    2  yaşam       ÜÇ YUVARLAK fotoğraf, okyanus gradyanı üstünde
+    3  ödeme       saf tipografi, dev rakam
+    4  finansman   üç kart (Higgsfield)
+    5  daireler    TEK BÜYÜK KARE fotoğraf + yanında liste
+    6  sosyal      fotoğraf + perde (Higgsfield)
+    7  manzara     tam sayfa (Higgsfield)
+    8  ulaşım      açık zemin, sekiz veri kartı
+    9  konum       gradyan + konum pini (Higgsfield)
+   10  karekod     dev karekod + iki yuvarlak fotoğraf
+
 BANT DÜZENİ (mm, üstten)
 ────────────────────────
-    0 –  280   kimlik bandı   MİA PARK OCEAN kilidi + "PROJE ALANI"
-  280 – 1740   mesaj alanı    panodan panoya değişen tek konu
- 1740 – 2000   künye şeridi   karekod, web, Instagram, telefonlar, satıcı
+    0 –  250   kimlik bandı gövdesi   MİA PARK OCEAN kilidi + "PROJE ALANI"
+  250 –  380   dalga inişi            banttan panoya geçiş
+  380 – 1620   mesaj alanı            güvenli alan
+ 1620 – 1750   dalga çıkışı
+ 1750 – 2000   künye şeridi           karekod · web · Instagram · telefon
 
-Kimlik bandı ve künye şeridi ONUNDA DA AYNI: paneller yan yana asılınca
-çit boyunca kesintisiz iki mavi çizgi oluşuyor, set tek tasarım gibi
-okunuyor. "PROJE ALANI" ibaresi bu yüzden tek bir panoda değil, HER
-PANODA duruyor — hangi panonun önünden geçerseniz geçin arsanın kime ait
-olduğu yazıyor.
-
-ÜRETİM
-──────
-Altı pano bu betikte çiziliyor. Dördü (finansman, sosyal yaşam, manzara,
-konum) Higgsfield ile üretildi ve signage-source/hf-arsa/ altında duruyor;
-istemleri tabela/arsa/PROMPT.md'de. Kaynağı ne olursa olsun kimlik bandını
-ve künye şeridini hep bu betik basıyor — logo yapay zekâya çizdirilmiyor.
+Bantlar onunda da birebir aynı; panolar aynı hizada asılınca çit boyunca
+kesintisiz iki dalga oluşur. "PROJE ALANI" ibaresi her panonun sağ
+üstündedir.
 
     python scripts/build-arsa-tabela.py
 """
@@ -68,71 +86,21 @@ OUT = os.path.join(ROOT, "tabela", "arsa")
 PREVIEW = os.path.join(OUT, "onizleme")
 
 W_MM, H_MM, DPI = 3000, 2000, 50
-HEAD, FOOT = 280, 1740          # kimlik bandının altı / künye şeridinin üstü
-PAD = 110
+HEAD, FOOT = 250, 1750          # bant gövdelerinin sınırı
+WAVE = 130                      # dalganın banttan taşma payı
+SAFE_TOP, SAFE_BOT = 400, 1620  # yazının girebileceği alan
+PAD = 120
+
+BRAND = bs.BRAND
+# Bant gradyanı: soldan sağa açılan okyanus. Marka paketindeki metalik
+# gradyanın koyu ucu — beyaz yazı sağ uçta da okunsun diye en açık durak
+# #1A7496'da kesiliyor.
+BAND_STOPS = [(0.0, (4, 40, 58)), (0.34, (7, 88, 120)), (0.62, (18, 104, 140)),
+              (0.84, (26, 116, 150)), (1.0, (12, 92, 126))]
 
 
 def board() -> Board:
     return Board(W_MM, H_MM, DPI)
-
-
-# --------------------------------------------------------- ortak bantlar
-def tr_upper(t: str) -> str:
-    """Türkçe büyük harf. Python'un upper()'ı i -> I yapıyor, İ değil."""
-    return t.replace("i", "İ").replace("ı", "I").upper()
-
-
-def logo_h(b: Board, h_mm: float, white: bool = True) -> Image.Image:
-    """Kilidi YÜKSEKLİĞE göre ölçekle.
-
-    lockup() genişlik alıyor; 280 mm'lik kimlik bandında genişlikten
-    gitmek kilidi bandın altına taşırıyordu. Kaynak oranını ölçüp
-    genişliği yükseklikten türetiyoruz.
-    """
-    src = Image.open(os.path.join(bs.BRAND,
-                                  "logo-ocean-white.png" if white else "logo-ocean-trim.png"))
-    box = src.getbbox()
-    ar = (box[2] - box[0]) / (box[3] - box[1]) if box else src.width / src.height
-    return lockup(round(b.p(h_mm) * ar), white=white)
-
-
-def bands(b: Board) -> None:
-    """Kimlik bandı + künye şeridi. On panonun onunda da birebir aynı."""
-    dr = b.draw
-    dr.rectangle([0, 0, b.W, b.p(HEAD)], fill=DEEP)
-    dr.rectangle([0, b.p(FOOT), b.W, b.H], fill=DEEP)
-
-    # --- üst: logo kilidi solda, PROJE ALANI sağda
-    lg = logo_h(b, 216)
-    b.im.alpha_composite(lg, (b.p(PAD), (b.p(HEAD) - lg.height) // 2))
-    f, sp = fit_track(b, dr, ["PROJE ALANI"], b.p(1100), 78, 0.20,
-                      lambda s: b.sans(s, "700"))
-    track(b, dr, (b.W - b.p(PAD), cap_top(b, f, b.p(HEAD) / 2)), "PROJE ALANI",
-          f, WHITE, sp, "ra")
-
-    # --- alt: karekod, iletişim, satıcı
-    y0, band = b.p(FOOT), b.p(H_MM - FOOT)
-    q = b.p(180)
-    plate = q + b.p(24)
-    px, py = b.p(PAD), y0 + (band - plate) // 2
-    dr.rounded_rectangle([px, py, px + plate, py + plate], radius=b.p(10), fill=WHITE)
-    b.im.alpha_composite(qr_image(QR_URL, q, DEEP), (px + b.p(12), py + b.p(12)))
-
-    tx = px + plate + b.p(70)
-    cy = y0 + band / 2
-    f1 = b.sans(52, "700")
-    f2 = b.sans(42, "600")
-    dr.text((tx, cap_top(b, f1, cy - b.p(42))), f"{SITE}   ·   {IG}", font=f1, fill=WHITE)
-    dr.text((tx, cap_top(b, f2, cy + b.p(46))), "   ·   ".join(PHONES), font=f2,
-            fill=(*PALE, 255))
-
-    fx = b.W - b.p(PAD)
-    f3, sp3 = fit_track(b, dr, [SELLER], b.p(760), 44, 0.14, lambda s: b.sans(s, "700"))
-    track(b, dr, (fx, cap_top(b, f3, cy - b.p(38))), SELLER, f3, WHITE, sp3, "ra")
-    f4, sp4 = fit_track(b, dr, [SELLER_ROLE], b.p(760), 28, 0.22,
-                        lambda s: b.sans(s, "600"))
-    track(b, dr, (fx, cap_top(b, f4, cy + b.p(42))), SELLER_ROLE, f4, (*PALE, 255),
-          sp4, "ra")
 
 
 def cap_top(b: Board, f, cy: float) -> float:
@@ -141,149 +109,248 @@ def cap_top(b: Board, f, cy: float) -> float:
     return cy - (t + bo) / 2
 
 
+def tr_upper(t: str) -> str:
+    """Türkçe büyük harf. Python'un upper()'ı i -> I yapıyor, İ değil."""
+    return t.replace("i", "İ").replace("ı", "I").upper()
+
+
 def mid(b: Board):
-    """Mesaj alanının kutusu (px)."""
-    return b.p(HEAD), b.p(FOOT), b.p(FOOT) - b.p(HEAD)
+    """Mesaj alanının kutusu (px) — dalga inişinin altı, çıkışının üstü."""
+    return b.p(SAFE_TOP), b.p(SAFE_BOT), b.p(SAFE_BOT) - b.p(SAFE_TOP)
+
+
+# ------------------------------------------------------------------ dalga
+def _wave(name: str, size, flip: bool = False) -> Image.Image:
+    im = Image.open(os.path.join(BRAND, name))
+    if flip:
+        im = im.transpose(Image.FLIP_TOP_BOTTOM)
+    return im.resize(size, Image.LANCZOS)
+
+
+def wave_band(b: Board, top: bool) -> None:
+    """Okyanus gradyanlı bant — alt (ya da üst) kenarı logonun dalgası.
+
+    Düz dikdörtgen bant panoyu ikiye bölüyordu. Burada gradyanın alfası
+    wave-mask-end.png ile kesiliyor: bant dalga şeklinde bitiyor, altındaki
+    tasarım olduğu gibi görünüyor. Üstüne dalganın KENDİ renkli kurdelesi
+    biniyor; başka bir eğri çizilmiyor, kaynak grafiğin pikselleri
+    kullanılıyor.
+    """
+    body = b.p(HEAD) if top else b.H - b.p(FOOT)
+    wv = b.p(WAVE)
+    h = body + wv
+    y = 0 if top else b.p(FOOT) - wv
+
+    g = gradient((b.W, h), BAND_STOPS, angle=0.92)
+    g.alpha_composite(glow((b.W, h), b.W * (0.72 if top else 0.28), h * 0.5,
+                           b.W * 0.42, AQUA, 0.20))
+
+    a = np.zeros((h, b.W), np.uint8)
+    m = np.asarray(_wave("wave-mask-end.png", (b.W, wv), flip=not top), np.uint8)
+    if m.ndim == 3:
+        m = m[:, :, -1]
+    if top:
+        a[:body] = 255
+        a[body:] = m
+    else:
+        a[:wv] = m
+        a[wv:] = 255
+    g.putalpha(Image.fromarray(a, "L"))
+    b.im.alpha_composite(g, (0, y))
+
+    ribbon = _wave("wave.png", (b.W, wv), flip=not top).convert("RGBA")
+    ribbon.putalpha(ribbon.split()[3].point(lambda v: round(v * 0.85)))
+    b.im.alpha_composite(ribbon, (0, y + (body if top else 0)))
+
+
+def bands(b: Board) -> None:
+    """Kimlik bandı + künye şeridi. On panonun onunda da birebir aynı."""
+    wave_band(b, True)
+    wave_band(b, False)
+    dr = b.draw
+
+    lg = logo_h(b, 190)
+    b.im.alpha_composite(lg, (b.p(PAD), (b.p(HEAD) - lg.height) // 2))
+    f, sp = fit_track(b, dr, ["PROJE ALANI"], b.p(1000), 74, 0.22,
+                      lambda s: b.sans(s, "700"))
+    track(b, dr, (b.W - b.p(PAD), cap_top(b, f, b.p(HEAD) / 2)), "PROJE ALANI",
+          f, WHITE, sp, "ra")
+
+    y0, band = b.p(FOOT), b.H - b.p(FOOT)
+    q = b.p(168)
+    plate = q + b.p(22)
+    px, py = b.p(PAD), y0 + (band - plate) // 2
+    dr.rounded_rectangle([px, py, px + plate, py + plate], radius=b.p(10), fill=WHITE)
+    b.im.alpha_composite(qr_image(QR_URL, q, DEEP), (px + b.p(11), py + b.p(11)))
+
+    tx = px + plate + b.p(64)
+    cy = y0 + band / 2
+    f1, f2 = b.sans(50, "700"), b.sans(40, "600")
+    dr.text((tx, cap_top(b, f1, cy - b.p(40))), f"{SITE}   ·   {IG}", font=f1, fill=WHITE)
+    dr.text((tx, cap_top(b, f2, cy + b.p(44))), "   ·   ".join(PHONES), font=f2,
+            fill=(*PALE, 255))
+
+    fx = b.W - b.p(PAD)
+    f3, sp3 = fit_track(b, dr, [SELLER], b.p(760), 42, 0.14, lambda s: b.sans(s, "700"))
+    track(b, dr, (fx, cap_top(b, f3, cy - b.p(36))), SELLER, f3, WHITE, sp3, "ra")
+    f4, sp4 = fit_track(b, dr, [SELLER_ROLE], b.p(760), 27, 0.22,
+                        lambda s: b.sans(s, "600"))
+    track(b, dr, (fx, cap_top(b, f4, cy + b.p(40))), SELLER_ROLE, f4, (*PALE, 255),
+          sp4, "ra")
+
+
+def logo_h(b: Board, h_mm: float, white: bool = True) -> Image.Image:
+    """Kilidi YÜKSEKLİĞE göre ölçekle — lockup() genişlik alıyor, banttan
+    taşırıyordu."""
+    src = Image.open(os.path.join(BRAND, "logo-ocean-white.png" if white
+                                  else "logo-ocean-trim.png"))
+    box = src.getbbox()
+    ar = (box[2] - box[0]) / (box[3] - box[1]) if box else src.width / src.height
+    return lockup(round(b.p(h_mm) * ar), white=white)
 
 
 # ------------------------------------------------------------ yapı taşları
-def photo(b: Board, name: str, focus: float = 0.5) -> None:
-    y0, y1, h = mid(b)
-    b.im.paste(cover(name, (b.W, h), focus), (0, y0))
+def full_photo(b: Board, name: str, focus: float = 0.5) -> None:
+    """Tam sayfa render — bantların altına da giriyor ki dalga fotoğrafın
+    üstünde kessin, fotoğraf bandın altında bitmesin."""
+    b.im.paste(cover(name, (b.W, b.H), focus), (0, 0))
 
 
-def veil(b: Board, color=NAVY, a0: int = 0, a1: int = 210, frm: float = 0.25) -> None:
-    """Mesaj alanına dikey perde — yazı her render'da okunsun."""
-    y0, y1, h = mid(b)
-    ys = np.linspace(0, 1, h, dtype=np.float32)
+def circle_photo(b: Board, name: str, cx: float, cy: float, d: float,
+                 focus: float = 0.5, ring=None) -> None:
+    """Yuvarlak fotoğraf — kenarında ince halka."""
+    px = b.p(d)
+    im = cover(name, (px, px), focus)
+    mask = Image.new("L", (px, px), 0)
+    ImageDraw.Draw(mask).ellipse([0, 0, px - 1, px - 1], fill=255)
+    x, y = b.p(cx) - px // 2, b.p(cy) - px // 2
+    b.im.paste(im, (x, y), mask)
+    r = b.p(d / 2)
+    overlay(b, lambda d_: d_.ellipse([b.p(cx) - r, b.p(cy) - r, b.p(cx) + r,
+                                      b.p(cy) + r],
+                                     outline=ring or (*ICE, 150),
+                                     width=max(3, b.p(3.5))))
+
+
+def square_photo(b: Board, name: str, x: float, y: float, w: float, h: float,
+                 focus: float = 0.5, r: float = 26) -> None:
+    box = (b.p(x), b.p(y), b.p(x + w), b.p(y + h))
+    im = cover(name, (box[2] - box[0], box[3] - box[1]), focus)
+    mask = Image.new("L", im.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, im.width - 1, im.height - 1],
+                                           radius=b.p(r), fill=255)
+    b.im.paste(im, box[:2], mask)
+
+
+def field(b: Board, stops, angle: float = 0.35) -> None:
+    """Panonun tamamını kaplayan gradyan zemin."""
+    b.im.paste(gradient((b.W, b.H), stops, angle=angle), (0, 0))
+
+
+def veil(b: Board, color=NAVY, a0: int = 0, a1: int = 215, frm: float = 0.28) -> None:
+    ys = np.linspace(0, 1, b.H, dtype=np.float32)
     a = np.clip((ys - frm) / max(1 - frm, 1e-6), 0, 1) * (a1 - a0) + a0
-    arr = np.zeros((h, 1, 4), np.float32)
+    arr = np.zeros((b.H, 1, 4), np.float32)
     for c in range(3):
         arr[:, 0, c] = color[c]
     arr[:, 0, 3] = a
-    im = Image.fromarray(arr.astype(np.uint8), "RGBA").resize((b.W, h), Image.BILINEAR)
-    b.im.alpha_composite(im, (0, y0))
+    b.im.alpha_composite(Image.fromarray(arr.astype(np.uint8), "RGBA")
+                         .resize((b.W, b.H), Image.BILINEAR), (0, 0))
 
 
 def flat_veil(b: Board, color, alpha: int) -> None:
-    y0, y1, h = mid(b)
-    overlay(b, lambda d: d.rectangle([0, y0, b.W, y1], fill=(*color, alpha)))
+    overlay(b, lambda d: d.rectangle([0, 0, b.W, b.H], fill=(*color, alpha)))
 
 
 def headline(b: Board, lines, y: float, size: float, fill=WHITE, x: float = PAD,
              lh: float = 1.06, anchor: str = "la"):
-    """Büyük manşet. y = ilk satırın ORTASI (mm)."""
     dr = b.draw
     f = fit(b, dr, lines, b.W - b.p(PAD * 2), size, lambda s: b.sans(s, "700"))
     step = f.size * lh
     px = b.p(x) if anchor == "la" else (b.W - b.p(x) if anchor == "ra" else b.W // 2)
     for i, t in enumerate(lines):
         dr.text((px, cap_top(b, f, b.p(y) + i * step)), t, font=f, fill=fill,
-                anchor={"la": "la", "ra": "ra", "ma": "ma"}[anchor])
-    return b.p(y) + (len(lines) - 1) * step + f.size * 0.6
+                anchor=anchor)
+    return b.p(y) + (len(lines) - 1) * step
 
 
-def eyebrow(b: Board, text: str, y: float, size: float = 44, fill=None,
+def eyebrow(b: Board, text: str, y: float, size: float = 46, fill=None,
             x: float = PAD, anchor: str = "la") -> None:
     dr = b.draw
     f, sp = fit_track(b, dr, [text], b.W - b.p(PAD * 2), size, 0.26,
                       lambda s: b.sans(s, "600"))
     px = b.p(x) if anchor == "la" else (b.W - b.p(x) if anchor == "ra" else b.W // 2)
-    track(b, dr, (px, cap_top(b, f, b.p(y))), text, f, fill or (*AQUA, 255), sp,
-          {"la": "la", "ra": "ra", "ma": "ma"}[anchor])
+    track(b, dr, (px, cap_top(b, f, b.p(y))), text, f, fill or (*AQUA, 255), sp, anchor)
 
 
 def rule(b: Board, x: float, y: float, w: float, color=CORAL, t: float = 10) -> None:
     b.draw.rectangle([b.p(x), b.p(y), b.p(x + w), b.p(y + t)], fill=color)
 
 
-def glass(b: Board, x, y, w, h, r=26, a=150, border=None) -> None:
-    """Buzlu cam kart: altı bulanıklaşıyor, üstüne yarı saydam mavi biniyor."""
-    box = (b.p(x), b.p(y), b.p(x + w), b.p(y + h))
-    reg = b.im.crop(box).filter(ImageFilter.GaussianBlur(b.p(6)))
-    tint = gradient((box[2] - box[0], box[3] - box[1]),
-                    [(0.0, DARK), (1.0, OCEAN)], angle=0.35)
-    tint.putalpha(a)
-    body = reg.convert("RGBA")
-    body.alpha_composite(tint)
-    mask = Image.new("L", body.size, 0)
-    ImageDraw.Draw(mask).rounded_rectangle([0, 0, body.width - 1, body.height - 1],
-                                           radius=b.p(r), fill=255)
-    b.im.paste(body, box[:2], mask)
-    overlay(b, lambda d: d.rounded_rectangle(box, radius=b.p(r), outline=border or
-                                             (*PALE, 120), width=max(2, b.p(1.6))))
-
-
-# ================================================================ panolar
-def p1_proje_alani() -> Image.Image:
-    """Ana kimlik panosu — gece render'ı, slogan, proje büyüklüğü."""
+# ================================================================= panolar
+def p01_kimlik() -> Image.Image:
+    """Tam sayfa gece render'ı. Fotoğraf bantların altına da giriyor;
+    dalga onun üstünde kesiyor."""
     b = board()
-    photo(b, "night-gate", 0.52)
-    veil(b, NAVY, 0, 225, 0.18)
-    headline(b, ["LÜKS ARTIK", "ULAŞILABİLİR."], 1120, 190)
-    rule(b, PAD, 1470, 420)
-    eyebrow(b, f"{TOTAL} KONUTLUK YAŞAM PROJESİ  ·  İZMİT MİA BÖLGESİ", 1590, 50,
+    full_photo(b, "night-gate", 0.52)
+    veil(b, NAVY, 0, 220, 0.22)
+    headline(b, ["LÜKS ARTIK", "ULAŞILABİLİR."], 1030, 190)
+    rule(b, PAD, 1385, 420)
+    eyebrow(b, f"{TOTAL} KONUTLUK YAŞAM PROJESİ  ·  İZMİT MİA BÖLGESİ", 1500, 50,
             (*ICE, 255))
     bands(b)
     return b.im.convert("RGB")
 
 
-def p2_ulasim() -> Image.Image:
-    """Sekiz mesafe. Arsa yoldan geçene 'neredeyim' değil 'neye yakınım' der."""
+def p02_yasam() -> Image.Image:
+    """Üç yuvarlak fotoğraf. Kalıbı kıran pano bu: dikdörtgen yok."""
     b = board()
-    y0, y1, h = mid(b)
-    b.im.paste(gradient((b.W, h), [(0.0, WHITE), (0.5, (240, 251, 253)), (1.0, PALE)],
-                        angle=0.7), (0, y0))
-    eyebrow(b, "HER YERE YAKIN", 400, 50, (*DEEP, 255))
-    headline(b, ["ULAŞIM"], 520, 150, DEEP)
-    rule(b, PAD, 640, 380)
+    field(b, [(0.0, (4, 40, 58)), (0.42, (7, 88, 120)), (1.0, (26, 116, 150))], 0.28)
+    b.im.alpha_composite(glow((b.W, b.H), b.W * 0.5, b.H * 0.62, b.W * 0.62,
+                              AQUA, 0.22))
+    eyebrow(b, "KAPINIZIN ÖNÜNDE", 470, 52, (*AQUA, 255), anchor="ma")
+    headline(b, ["SOSYAL YAŞAM"], 600, 130, WHITE, anchor="ma")
 
-    cw, ch, gx, gy = 660, 372, 30, 66
-    x0 = (W_MM - (cw * 4 + gx * 3)) / 2
+    shots = [("courtyard-pools", "YÜZME HAVUZU", 0.5),
+             ("entrance-gate", "GENİŞ PEYZAJ", 0.55),
+             ("balkondan-deniz", "YÜRÜYÜŞ YOLLARI", 0.45)]
+    d, gap = 520, 190
+    x0 = (W_MM - (d * 3 + gap * 2)) / 2 + d / 2
     dr = b.draw
-    fn, _ = fit_track(b, dr, [d[0] for d in DISTANCES], b.p(cw - 80), 52, 0.04,
+    f, sp = fit_track(b, dr, [s[1] for s in shots], b.p(d + 120), 46, 0.16,
                       lambda s: b.sans(s, "600"))
-    fv = b.sans(120, "700")
-    for i, (name, mins) in enumerate(DISTANCES):
-        cx = x0 + (i % 4) * (cw + gx)
-        cy = 800 + (i // 4) * (ch + gy)
-        box = [b.p(cx), b.p(cy), b.p(cx + cw), b.p(cy + ch)]
-        dr.rounded_rectangle(box, radius=b.p(18), fill=WHITE, outline=(*PALE, 255),
-                             width=max(2, b.p(2)))
-        dr.text((b.p(cx + 44), cap_top(b, fn, b.p(cy + 110))), name, font=fn, fill=INK)
-        dr.text((b.p(cx + cw - 44), cap_top(b, fv, b.p(cy + 262))), mins, font=fv,
-                fill=DEEP, anchor="ra")
+    for i, (img, cap, foc) in enumerate(shots):
+        cx = x0 + i * (d + gap)
+        circle_photo(b, img, cx, 1080, d, foc)
+        track(b, dr, (b.p(cx), cap_top(b, f, b.p(1440))), cap, f, (*ICE, 255), sp, "ma")
     bands(b)
     return b.im.convert("RGB")
 
 
-def p3_odeme() -> Image.Image:
-    """Tek mesaj: 60 ay. Otuz metreden okunacak tek şey bu."""
+def p03_odeme() -> Image.Image:
+    """Saf tipografi. Otuz metreden okunacak tek şey: 60."""
     b = board()
-    y0, y1, h = mid(b)
-    b.im.paste(gradient((b.W, h), bs.SURF_STOPS, angle=0.62), (0, y0))
-    b.im.alpha_composite(glow((b.W, h), b.W * 0.78, h * 0.72, b.W * 0.55,
-                              AQUA, 0.30), (0, y0))
-    # Hayalet render: düz alfa verilince üst kenarı çizgi gibi görünüyordu,
-    # dikey rampayla gradyandan doğuyor.
-    gh = b.p(h * 0.56)
+    field(b, [(0.0, (7, 88, 120)), (0.5, (26, 116, 150)), (1.0, (44, 148, 180))], 0.75)
+    b.im.alpha_composite(glow((b.W, b.H), b.W * 0.24, b.H * 0.72, b.W * 0.55,
+                              ICE, 0.26))
+    gh = b.p(H_MM * 0.5)
     ghost = cover("entrance-gate", (b.W, gh), 0.45)
-    ramp = np.clip(np.linspace(-0.35, 1.0, gh), 0, 1) ** 1.6 * 46
+    ramp = np.clip(np.linspace(-0.4, 1.0, gh), 0, 1) ** 1.7 * 42
     ghost.putalpha(Image.fromarray(
         np.repeat(ramp[:, None], b.W, axis=1).astype(np.uint8), "L"))
-    b.im.alpha_composite(ghost, (0, y1 - gh))
+    b.im.alpha_composite(ghost, (0, b.H - gh))
 
-    eyebrow(b, "TASARRUFA DAYALI FAİZSİZ FİNANSMAN", 430, 52, (*ICE, 255),
+    eyebrow(b, "TASARRUFA DAYALI FAİZSİZ FİNANSMAN", 490, 52, (*ICE, 255),
             anchor="ma")
-    headline(b, ["VADE FARKSIZ"], 610, 130, WHITE, anchor="ma")
-    headline(b, ["60 AY TAKSİT"], 900, 300, WHITE, anchor="ma")
+    headline(b, ["VADE FARKSIZ"], 640, 124, WHITE, anchor="ma")
+    headline(b, ["60 AY TAKSİT"], 900, 290, WHITE, anchor="ma")
 
-    pw, ph = 1560, 150
-    px, py = (W_MM - pw) / 2, 1290
-    b.draw.rounded_rectangle([b.p(px), b.p(py), b.p(px + pw), b.p(py + ph)],
-                             radius=b.p(ph / 2), fill=CORAL)
+    pw, ph = 1520, 140
+    px, py = (W_MM - pw) / 2, 1270
     dr = b.draw
-    f, sp = fit_track(b, dr, ["PEŞİN FİYATINA VADE"], b.p(pw - 140), 62, 0.20,
+    dr.rounded_rectangle([b.p(px), b.p(py), b.p(px + pw), b.p(py + ph)],
+                         radius=b.p(ph / 2), fill=CORAL)
+    f, sp = fit_track(b, dr, ["PEŞİN FİYATINA VADE"], b.p(pw - 140), 60, 0.20,
                       lambda s: b.sans(s, "700"))
     track(b, dr, (b.W // 2, cap_top(b, f, b.p(py + ph / 2))), "PEŞİN FİYATINA VADE",
           f, WHITE, sp, "ma")
@@ -291,126 +358,116 @@ def p3_odeme() -> Image.Image:
     return b.im.convert("RGB")
 
 
-def p5_daireler() -> Image.Image:
-    """Dört tip, m² ve adet. Fiyat yok — arayan telefonu açsın."""
+def p05_daireler() -> Image.Image:
+    """Tek büyük kare fotoğraf solda, tipler sağda satır satır."""
     b = board()
-    photo(b, "entrance-gate", 0.5)
-    flat_veil(b, DEEP, 172)
-    eyebrow(b, "DAİRE TİPLERİ", 400, 52, (*PALE, 255), anchor="ma")
+    field(b, [(0.0, WHITE), (0.55, (240, 251, 253)), (1.0, PALE)], 0.6)
+    sq = SAFE_BOT - SAFE_TOP
+    square_photo(b, "entrance-gate", PAD, SAFE_TOP, sq, sq, 0.5, r=30)
 
-    cw, chh = 660, 700
-    gx = 40
+    x = PAD + sq + 120
+    dr = b.draw
+    eyebrow(b, "DAİRE TİPLERİ", SAFE_TOP + 40, 48, (*DEEP, 255), x=x)
+    rule(b, x, SAFE_TOP + 110, 260, CORAL)
+
+    rows = [(u[0], tr_upper(u[1].replace(u[0], "", 1).strip()), u[2], u[3])
+            for u in UNITS]
+    fc = b.sans(96, "700")
+    fl, spl = fit_track(b, dr, [r[1] for r in rows], b.p(560), 38, 0.14,
+                        lambda s: b.sans(s, "600"))
+    fm = b.sans(78, "700")
+    fa = b.sans(36, "600")
+    y = SAFE_TOP + 250
+    step = 250
+    for i, (code, tag, area, adet) in enumerate(rows):
+        yy = y + i * step
+        dr.text((b.p(x), cap_top(b, fc, b.p(yy))), code, font=fc, fill=DEEP)
+        track(b, dr, (b.p(x + 300), cap_top(b, fl, b.p(yy - 34))), tag, fl,
+              (*DARK, 255), spl)
+        dr.text((b.p(x + 300), cap_top(b, fa, b.p(yy + 42))), f"{adet} ADET",
+                font=fa, fill=(*OCEAN, 255))
+        dr.text((b.W - b.p(PAD), cap_top(b, fm, b.p(yy))), area, font=fm,
+                fill=INK, anchor="ra")
+        if i < len(rows) - 1:
+            dr.rectangle([b.p(x), b.p(yy + step / 2 - 2), b.W - b.p(PAD),
+                          b.p(yy + step / 2 + 2)], fill=(*PALE, 255))
+    bands(b)
+    return b.im.convert("RGB")
+
+
+def p08_ulasim() -> Image.Image:
+    """Sekiz mesafe. 'Neredeyim' değil 'neye yakınım'."""
+    b = board()
+    field(b, [(0.0, WHITE), (0.5, (240, 251, 253)), (1.0, PALE)], 0.7)
+    eyebrow(b, "HER YERE YAKIN", SAFE_TOP + 30, 50, (*DEEP, 255))
+    headline(b, ["ULAŞIM"], SAFE_TOP + 150, 140, DEEP)
+    rule(b, PAD, SAFE_TOP + 250, 380)
+
+    cw, ch, gx, gy = 660, 300, 30, 40
     x0 = (W_MM - (cw * 4 + gx * 3)) / 2
     dr = b.draw
-    ft = b.sans(120, "700")
-    fm = b.sans(64, "700")
-    tags = [tr_upper(u[1].replace(u[0], "", 1).strip()) for u in UNITS]
-    fa, spa = fit_track(b, dr, tags, b.p(cw - 80), 42, 0.14,
-                        lambda s: b.sans(s, "600"))
-    fc = b.sans(40, "600")
-    for i, (code, label, area, adet) in enumerate(UNITS):
-        cx = x0 + i * (cw + gx)
-        glass(b, cx, 560, cw, chh, r=28, a=185, border=(*PALE, 190))
-        dr.text((b.p(cx + cw / 2), cap_top(b, ft, b.p(700))), code, font=ft,
-                fill=WHITE, anchor="ma")
-        # Alt satır kodun tekrarı değil, kodtan arta kalan tip adı:
-        # "1+0 Daire" -> DAİRE, "1+1 Bahçe Loft" -> BAHÇE LOFT.
-        track(b, dr, (b.p(cx + cw / 2), cap_top(b, fa, b.p(838))), tags[i], fa,
-              (*ICE, 255), spa, "ma")
-        dr.rectangle([b.p(cx + cw / 2 - 90), b.p(900), b.p(cx + cw / 2 + 90),
-                      b.p(904)], fill=(*PALE, 200))
-        dr.text((b.p(cx + cw / 2), cap_top(b, fm, b.p(990))), area, font=fm,
-                fill=WHITE, anchor="ma")
-        dr.text((b.p(cx + cw / 2), cap_top(b, fc, b.p(1120))), f"{adet} ADET",
-                font=fc, fill=(*AQUA, 255), anchor="ma")
-
-    pw, ph = 1560, 130
-    px, py = (W_MM - pw) / 2, 1400
-    b.draw.rounded_rectangle([b.p(px), b.p(py), b.p(px + pw), b.p(py + ph)],
-                             radius=b.p(ph / 2), fill=(*ICE, 255))
-    f, sp = fit_track(b, dr, ["TÜM TİPLERDE 60 AY VADE"], b.p(pw - 140), 56, 0.18,
-                      lambda s: b.sans(s, "700"))
-    track(b, dr, (b.W // 2, cap_top(b, f, b.p(py + ph / 2))), "TÜM TİPLERDE 60 AY VADE",
-          f, DEEP, sp, "ma")
+    fn, _ = fit_track(b, dr, [d[0] for d in DISTANCES], b.p(cw - 80), 48, 0.04,
+                      lambda s: b.sans(s, "600"))
+    fv = b.sans(104, "700")
+    for i, (name, mins) in enumerate(DISTANCES):
+        cx = x0 + (i % 4) * (cw + gx)
+        cy = SAFE_TOP + 420 + (i // 4) * (ch + gy)
+        dr.rounded_rectangle([b.p(cx), b.p(cy), b.p(cx + cw), b.p(cy + ch)],
+                             radius=b.p(18), fill=WHITE, outline=(*PALE, 255),
+                             width=max(2, b.p(2)))
+        dr.text((b.p(cx + 40), cap_top(b, fn, b.p(cy + 92))), name, font=fn, fill=INK)
+        dr.text((b.p(cx + cw - 40), cap_top(b, fv, b.p(cy + 214))), mins, font=fv,
+                fill=DEEP, anchor="ra")
     bands(b)
     return b.im.convert("RGB")
 
 
-def p8_yatirim() -> Image.Image:
-    """Sol yarı fotoğraf, sağ yarı söz. Ortada sert dikey kesik."""
+def p10_karekod() -> Image.Image:
+    """Dev karekod solda, iki yuvarlak fotoğraf sağda."""
     b = board()
-    y0, y1, h = mid(b)
-    half = b.p(W_MM * 0.54)
-    b.im.paste(cover("courtyard-pools", (half, h), 0.45), (0, y0))
-    b.draw.rectangle([half, y0, b.W, y1], fill=BONE)
-
-    x = W_MM * 0.54 + 90
-    dr = b.draw
-    f = fit(b, dr, ["YÜKSEK YATIRIM", "POTANSİYELİ"], b.W - b.p(x + PAD), 118,
-            lambda s: b.sans(s, "700"))
-    for i, t in enumerate(["YÜKSEK YATIRIM", "POTANSİYELİ"]):
-        dr.text((b.p(x), cap_top(b, f, b.p(560) + i * f.size * 1.08)), t, font=f,
-                fill=DEEP)
-    rule(b, x, 800, 300, CORAL)
-
-    fb, spb = fit_track(b, dr, ["GELİŞEN BÖLGE", "ARTAN DEĞER", "600 KONUTLUK ÖLÇEK"],
-                        b.W - b.p(x + PAD + 70), 52, 0.10, lambda s: b.sans(s, "600"))
-    for i, t in enumerate(["GELİŞEN BÖLGE", "ARTAN DEĞER", "600 KONUTLUK ÖLÇEK"]):
-        yy = 940 + i * 130
-        dr.rectangle([b.p(x), b.p(yy - 14), b.p(x + 28), b.p(yy + 14)], fill=CORAL)
-        track(b, dr, (b.p(x + 70), cap_top(b, fb, b.p(yy))), t, fb, INK, spb)
-    bands(b)
-    return b.im.convert("RGB")
-
-
-def p10_satis() -> Image.Image:
-    """Karekod panosu — yoldan geçen telefonu kaldırıp okutsun."""
-    b = board()
-    photo(b, "night-gate", 0.35)
-    flat_veil(b, NAVY, 215)
-    eyebrow(b, "BİLGİ VE RANDEVU İÇİN", 430, 54, (*AQUA, 255), anchor="ma")
-    headline(b, ["KAREKODU OKUTUN"], 590, 150, WHITE, anchor="ma")
+    full_photo(b, "night-gate", 0.35)
+    flat_veil(b, NAVY, 218)
 
     q = b.p(560)
-    plate = q + b.p(60)
-    px, py = (b.W - plate) // 2, b.p(830)
-    b.draw.rounded_rectangle([px, py, px + plate, py + plate], radius=b.p(22),
+    plate = q + b.p(64)
+    px, py = b.p(PAD + 60), b.p(SAFE_TOP + 190)
+    b.draw.rounded_rectangle([px, py, px + plate, py + plate], radius=b.p(24),
                              fill=WHITE)
-    b.im.alpha_composite(qr_image(QR_URL, q, DEEP), (px + b.p(30), py + b.p(30)))
+    b.im.alpha_composite(qr_image(QR_URL, q, DEEP), (px + b.p(32), py + b.p(32)))
 
+    x = PAD + 60 + 620 + 130
+    eyebrow(b, "BİLGİ VE RANDEVU İÇİN", SAFE_TOP + 150, 50, (*AQUA, 255), x=x)
+    headline(b, ["KAREKODU", "OKUTUN"], SAFE_TOP + 300, 128, WHITE, x=x)
     dr = b.draw
-    f, sp = fit_track(b, dr, ["DAİRE PLANLARI · ÖDEME SEÇENEKLERİ · SANAL TUR"],
-                      b.p(2200), 48, 0.16, lambda s: b.sans(s, "600"))
-    track(b, dr, (b.W // 2, cap_top(b, f, b.p(1620))),
-          "DAİRE PLANLARI · ÖDEME SEÇENEKLERİ · SANAL TUR", f, (*ICE, 255), sp, "ma")
+    items = ["DAİRE PLANLARI", "ÖDEME SEÇENEKLERİ", "SANAL TUR"]
+    f, sp = fit_track(b, dr, items, b.p(900), 46, 0.12, lambda s: b.sans(s, "600"))
+    for i, t in enumerate(items):
+        yy = SAFE_TOP + 700 + i * 110
+        dr.rectangle([b.p(x), b.p(yy - 12), b.p(x + 26), b.p(yy + 14)], fill=CORAL)
+        track(b, dr, (b.p(x + 64), cap_top(b, f, b.p(yy))), t, f, (*ICE, 255), sp)
+
+    circle_photo(b, "courtyard-pools", W_MM - PAD - 230, SAFE_TOP + 300, 460, 0.5)
+    circle_photo(b, "balkondan-deniz", W_MM - PAD - 430, SAFE_TOP + 860, 400, 0.45)
     bands(b)
     return b.im.convert("RGB")
 
 
-# --------------------------------------------------- Higgsfield panoları
-def clean_seam(b: Board, limit: float = 90) -> None:
-    """Bandın hemen altındaki/üstündeki üretim artığını sil.
+# ---------------------------------------------------- Higgsfield panoları
+def clean_seam(b: Board, limit: float = 120) -> None:
+    """Üretimin bant sınırına koyduğu ince şeridi ölç ve sil.
 
-    Üretim, ayrılan bantların sınırına kendi ince çizgisini koyabiliyor
-    (konum panosunda beyaz bir şerit kalmıştı). Bandı kalınlaştırmak çiti
-    bozardı — panolar aynı hizada olmalı. Onun yerine artığı ÖLÇÜP
-    siliyoruz: sınırdan içeri doğru yürüyüp satır yatayda düz kaldığı
-    sürece (çizgi düzdür, fotoğraf değildir) o satırları ilk dokulu
-    satırla dolduruyoruz. Fotoğrafla başlayan panolarda hiçbir şey
-    değişmiyor.
+    Satır yatayda düz kaldığı sürece siliniyor; fotoğrafla başlayan
+    panolara dokunulmuyor. Dalga bandı artık daha aşağı indiği için
+    ölçüm de o sınırdan başlıyor.
     """
     a = np.asarray(b.im.convert("RGB"), np.float32)
     top, bot, lim = b.p(HEAD), b.p(FOOT), b.p(limit)
-
-    def flat(y):
-        return a[y].std(axis=0).max() < 6
-
+    flat = lambda y: a[y].std(axis=0).max() < 6
     n = 0
     while n < lim and flat(top + n):
         n += 1
     if n:
         b.im.paste(b.im.crop((0, top + n, b.W, top + n + 1)).resize((b.W, n)), (0, top))
-
     m = 0
     while m < lim and flat(bot - 1 - m):
         m += 1
@@ -420,12 +477,7 @@ def clean_seam(b: Board, limit: float = 90) -> None:
 
 
 def from_ai(name: str) -> Image.Image:
-    """Üretilen panoyu 3:2'ye oturt, sonra ortak bantları bas.
-
-    İstemde üstteki %14 ve alttaki %13 boş bırakılmıştı; bantlar oraya
-    denk geliyor ve üretimin bant rengi ne olursa olsun üzerine marka
-    mavisi basılıyor. Böylece on pano tek çizgide buluşuyor.
-    """
+    """Üretilen panoyu 3:2'ye oturt, dikişi temizle, dalga bantlarını bas."""
     im = Image.open(os.path.join(SRC, name + ".png")).convert("RGB")
     b = board()
     s = max(b.W / im.width, b.H / im.height)
@@ -439,25 +491,21 @@ def from_ai(name: str) -> Image.Image:
 
 
 BOARDS = [
-    ("arsa-01-proje-alani", p1_proje_alani),
-    ("arsa-02-ulasim",      p2_ulasim),
-    ("arsa-03-odeme",       p3_odeme),
+    ("arsa-01-proje-alani", p01_kimlik),
+    ("arsa-02-yasam",       p02_yasam),
+    ("arsa-03-odeme",       p03_odeme),
     ("arsa-04-finansman",   lambda: from_ai("arsa-4-finansman")),
-    ("arsa-05-daireler",    p5_daireler),
+    ("arsa-05-daireler",    p05_daireler),
     ("arsa-06-sosyal",      lambda: from_ai("arsa-6-sosyal")),
     ("arsa-07-manzara",     lambda: from_ai("arsa-7-manzara")),
-    ("arsa-08-yatirim",     p8_yatirim),
+    ("arsa-08-ulasim",      p08_ulasim),
     ("arsa-09-konum",       lambda: from_ai("arsa-9-konum")),
-    ("arsa-10-karekod",     p10_satis),
+    ("arsa-10-karekod",     p10_karekod),
 ]
 
 
 def fence_run(paths) -> None:
-    """On panoyu yan yana dizip çitin dışarıdan görünüşünü çıkarır.
-
-    Panoların asıl sınavı tek tek değil, sıradaki hâlleri: kimlik bandı ve
-    künye şeridi çit boyunca kesintisiz iki mavi çizgi oluşturmalı.
-    """
+    """On panoyu yan yana dizip çitin dışarıdan görünüşünü çıkarır."""
     ims = [Image.open(p) for p in paths]
     h = 460
     ws = [round(im.width * h / im.height) for im in ims]
