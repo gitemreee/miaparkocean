@@ -35,3 +35,6 @@ signage-source/hf-arsa/
 # Bilbord/arsa panolarinin Higgsfield ham ciktilari (~180 MB).
 # tabela/bilbord-mia/PROMPT.md ile uretilip npm run panolar ile islenir.
 signage-source/hf-mia/
+
+# Yeni pano serisinin Higgsfield ham ciktilari.
+signage-source/hf-mia2/

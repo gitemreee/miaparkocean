@@ -16,16 +16,27 @@ durur, orada gereken şey arsanın kime ait olduğudur.
 
 ## Dosyalar
 
-| # | Dosya | Konu |
+| # | Dosya | Kurgu |
 |---|---|---|
-| 1 | `bilbord-1-sosyal-yuvarlak.jpg` | Üç yuvarlak fotoğraf — sosyal yaşam |
-| 2 | `bilbord-2-sifir-faiz.jpg` | %0 faiz · 60 ay vade · kredi/faiz/kefil yok |
-| 3 | `bilbord-3-dusuk-pesinat.jpg` | Düşük peşinatla ev sahibi olun |
-| 4 | `bilbord-4-burada-eviniz.jpg` | Burada eviniz olsun istemez miydiniz? |
-| 5 | `bilbord-5-satis-ofisi.jpg` | Kahvenizi içmeye bekleriz + karekod |
-| 6 | `bilbord-6-ic-mekan.jpg` | Evinizi şimdiden görün — iç mekân |
-| 7 | `bilbord-7-dis-mekan.jpg` | Dışarısı da evinizin bir parçası |
-| 8 | `bilbord-8-daire-tipleri.jpg` | 1+0 · 1+1 · 2+1, m² ile |
+| 1 | `bilbord-1-mozaik.jpg` | Mozaik ızgara — altı farklı boy fotoğraf karosu, yazı yalnızca tek renkli blokta |
+| 2 | `bilbord-2-kemer.jpg` | Üç kemer pencere — fotoğraf sadece kemerlerin içinde |
+| 3 | `bilbord-3-tipografik.jpg` | Saf tipografi — %0 faiz · 60 ay vade, fotoğraf dipnot boyunda |
+| 4 | `bilbord-4-diyagonal.jpg` | Eğik üst üste düşmüş katmanlar — düşük peşinatla ev sahibi olun |
+| 5 | `bilbord-5-duotone.jpg` | İki renkli duotone zemin, içinde renkli kesit pencere |
+| 6 | `bilbord-6-sutunlu.jpg` | Beş dikey sütun — evinizi şimdiden görün |
+| 7 | `bilbord-7-veri.jpg` | Veri panosu — 600 konut · 60 ay · 4 daire tipi · %0 faiz |
+| 8 | `bilbord-8-siluet.jpg` | Kesim siluet, dev daire içinde — kahvemizi içmeye bekleriz |
+
+**Sekiz panonun sekizi ayrı kurgu.** Hiçbiri "fotoğrafın üstüne yazı"
+değil: mozaik ızgara, kemer pencereler, saf tipografi, eğik katmanlar,
+duotone üstünde renkli kesit, beş sütun, veri blokları, kesim siluet.
+Üçünde fotoğraf ya dipnot boyunda ya da hiç yok.
+
+**Havuz.** Panolarda "yüzme havuzu" ibaresi YOK. Render'lardaki su
+**süs havuzu**; depodaki tabela sözlüğü de (`AMENITIES`) böyle diyor.
+`src/data/amenities.ts` hâlâ "Kapalı Yüzme Havuzu" maddesi taşıyor —
+proje gerçekten böyle bir havuz içermiyorsa sitedeki o madde de
+düzeltilmeli, yoksa site panoyla çelişir.
 
 `onizleme/` altında 1/6 ölçekli kontrol kopyaları var.
 

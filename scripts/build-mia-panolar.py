@@ -15,7 +15,12 @@ yerlerinde durdukları için üst ve alt bantları farklı:
 
 DALGA YOK. Bantlar iki ince çizgiyle ayrılıyor: kalın bir kural, ince bir
 kural. Bant rengi her tasarımın KENDİ üretiminden ölçülüyor — set tek tip
-mavi değil; lacivert, antrasit, bronz ve orman yeşili panolar var.
+mavi değil; lacivert, antrasit, bronz, kum ve orman yeşili panolar var.
+
+HİÇBİRİ "FOTOĞRAFIN ÜSTÜNE YAZI" DEĞİL. Sekiz panonun sekizi ayrı kurgu:
+mozaik ızgara, kemer pencereler, saf tipografi, eğik katmanlar, duotone
+üstünde renkli kesit, beş sütun, veri blokları, kesim siluet. İkisinde
+fotoğraf yalnızca dipnot boyunda, birinde hiç yok.
 
 Kaynak: Higgsfield (nano_banana_pro, 3:2, 4K). İstemler PROMPT.md'de, ham
 PNG'ler signage-source/hf-mia/ altında (git'e girmiyor). Üretime logo
@@ -51,17 +56,17 @@ BOLGE = "İZMİT MİA BÖLGESİ"
 ALAN = "PROJE ALANI"
 DISCLAIM = "GÖRSELLER TEMSİLİDİR"
 
-SRC = os.path.join(ROOT, "signage-source", "hf-mia")
+SRC = os.path.join(ROOT, "signage-source", "hf-mia2")
 
 DESIGNS = [
-    ("mia-1-sosyal-yuvarlak", "Üç yuvarlak fotoğraf — sosyal yaşam"),
-    ("mia-2-sifir-faiz",      "%0 faiz · 60 ay vade · kredi/faiz/kefil yok"),
-    ("mia-3-dusuk-pesinat",   "Düşük peşinatla ev sahibi olun"),
-    ("mia-4-burada-eviniz",   "Burada eviniz olsun istemez miydiniz?"),
-    ("mia-5-satis-ofisi",     "Satış ofisi — kahvenizi içmeye bekleriz"),
-    ("mia-6-ic-mekan",        "İç mekân — evinizi şimdiden görün"),
-    ("mia-7-dis-mekan",       "Dış mekân — dışarısı da evinizin bir parçası"),
-    ("mia-8-daire-tipleri",   "Daire tipleri — 1+0 / 1+1 / 2+1"),
+    ("mia-1-mozaik",     "Mozaik ızgara — merkezi avlu çevresinde hayat"),
+    ("mia-2-kemer",      "Kemer pencereler — dışarısı da evinizin bir parçası"),
+    ("mia-3-tipografik", "Tipografik pano — %0 faiz · 60 ay vade"),
+    ("mia-4-diyagonal",  "Eğik katmanlar — düşük peşinatla ev sahibi olun"),
+    ("mia-5-duotone",    "Duotone + renkli kesit — burada eviniz olsun istemez miydiniz?"),
+    ("mia-6-sutunlu",    "Beş sütun — evinizi şimdiden görün"),
+    ("mia-7-veri",       "Veri panosu — 600 konut · 60 ay · 4 daire tipi"),
+    ("mia-8-siluet",     "Kesim siluet — kahvemizi içmeye bekleriz"),
 ]
 
 # (klasör, mm genişlik, mm yükseklik, dpi, bant mm, üst sağ yazı, karekod)

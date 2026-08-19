@@ -48,18 +48,38 @@ preserving İ ı Ş ş Ğ ğ Ç ç Ö ö Ü ü. No prices, no ₺. Do not transl
 abbreviate, re-spell or invent any word.
 ```
 
-## Sekiz tasarım
+## Sekiz tasarım — sekiz ayrı KURGU
 
-| # | Bant rengi | MIDDLE | Türkçe metin |
+Önceki set reddedildi: hepsi "fotoğrafın üstüne yazı"ydı. Bu sette her
+panonun kurgusu farklı; üçünde fotoğraf ya dipnot boyunda ya hiç yok.
+
+| # | Bant rengi | Kurgu | Türkçe metin |
 |---|---|---|---|
-| 1 | petrol #075878 | koyu gradyan, ÜÇ YUVARLAK fotoğraf yan yana, halkalı | KAPINIZIN ÖNÜNDE · SOSYAL YAŞAM · YÜZME HAVUZU / GENİŞ PEYZAJ / YÜRÜYÜŞ YOLLARI |
-| 2 | antrasit #1B2228 | dev `%0 FAİZ` solda, dikey çizgi, `60 AY VADE` sağda mercan | KREDİ YOK · FAİZ YOK · KEFİL YOK |
-| 3 | bronz #8A6534 | solda kırık beyaz alan, sağda loft iç mekân | TASARRUFA DAYALI FAİZSİZ FİNANSMAN · DÜŞÜK PEŞİNATLA EV SAHİBİ OLUN · 60 AY VADE FARKSIZ TAKSİT |
-| 4 | gece #04222F | tam sayfa altın saat manzarası, solda perde, serif | BURADA EVİNİZ OLSUN İSTEMEZ MİYDİNİZ? · DENİZE VE ŞEHRE BİR ARADA BAKAN EVLER |
-| 5 | gece #04222F | gece render'ı perdeli, üç şampanya hap, sağ altta BOŞ BEYAZ KARE | SATIŞ OFİSİMİZ AÇIK · KAHVENİZİ İÇMEYE BEKLERİZ · DAİRE PLANLARI / ÖDEME SEÇENEKLERİ / UZMAN DANIŞMANLIK |
-| 6 | petrol #075878 | tam sayfa salon, altta perde, sağda üç hap | EVİNİZİ ŞİMDİDEN GÖRÜN · 1+0 / 1+1 / 2+1 |
-| 7 | orman #12463F | tam sayfa avlu, altta perde | DIŞARISI DA EVİNİZİN BİR PARÇASI · YÜZME HAVUZU · YÜRÜYÜŞ YOLLARI · PEYZAJ ALANLARI · ÇOCUK OYUN ALANI |
-| 8 | petrol #075878 | perdeli render üstünde üç buzlu cam kart | DAİRE TİPLERİ · 1+0 28 m² · 1+1 50 m² · 2+1 100 m² · TÜM TİPLERDE 60 AY VADE |
+| 1 mozaik | petrol #075878 | altı farklı boy fotoğraf karosu, beyaz derzli ızgara; yazı yalnızca tek renkli blokta, hiçbir fotoğrafın üstünde değil | MERKEZİ AVLU ÇEVRESİNDE HAYAT · SÜS HAVUZLARI · GENİŞ PEYZAJ · YÜRÜYÜŞ YOLLARI · ÇOCUK OYUN PARKI |
+| 2 kemer | kum #C8B18A | düz krem zemine açılmış üç kemer pencere; fotoğraf sadece kemerlerin içinde | MİA PARK OCEAN'DA · DIŞARISI DA EVİNİZİN BİR PARÇASI |
+| 3 tipografik | antrasit #1B2228 | saf tipografi, arkada fotoğraf yok; altta mercan çubuk, sağ altta dipnot boyunda tek kare | %0 FAİZ · 60 AY VADE · KREDİ YOK · FAİZ YOK · KEFİL YOK |
+| 4 diyagonal | petrol #075878 | 8 derece eğik, üst üste düşmüş üç düzlem; manşet yalnızca düz renkli düzlemde | DÜŞÜK PEŞİNATLA EV SAHİBİ OLUN · 60 AY VADE FARKSIZ TAKSİT |
+| 5 duotone | gece #04222F | tüm zemin iki renkli duotone; sağ alta kesilmiş pencereden gerçek renk görünüyor | BURADA EVİNİZ OLSUN İSTEMEZ MİYDİNİZ? |
+| 6 sutunlu | petrol #075878 | boydan boya beş dikey sütun; yazı yalnızca iki düz renkli sütunda, biri dikey dizilmiş | EVİNİZİ ŞİMDİDEN GÖRÜN · 1+0 / 1+1 / 2+1 · 28 – 100 m² |
+| 7 veri | orman #12463F | altı düz renk bloğundan infografik duvar; tek blok fotoğraf | 600 KONUT · 60 AY VADE · 4 DAİRE TİPİ · 28–100 m² · %0 FAİZ |
+| 8 siluet | gece #04222F | dev daire; bina arka planından kesilip daireden taşıyor, dikdörtgen fotoğraf çerçevesi yok | SATIŞ OFİSİMİZ AÇIK · KAHVEMİZİ İÇMEYE BEKLERİZ |
+
+## Üç metin tuzağı
+
+**Yüzme havuzu yok.** İsteme "There is NO swimming pool in this project —
+never write or imply YÜZME HAVUZU" satırı eklendi. Render'lardaki su süs
+havuzu; panolarda da öyle geçiyor.
+
+**KAHVEMİZİ, KAHVENİZİ değil.** Modelin daha olası bulduğu çekim
+KAHVENİZİ; isteme "Note it is KAHVEMİZİ (our coffee), not KAHVENİZİ"
+diye ayrıca yazıldı.
+
+**Artı işareti ve blok etiketi.** Veri panosunda "1+0" üç denemede de
+bulanık/çift çıktı — model artı işaretinde takılıyor. Blok artı
+içermeyen bir veriye çevrildi: 4 DAİRE TİPİ. Ayrıca istemde blokları
+"block A, block B" diye adlandırmak panoya A/B/C harflerini bastırıyordu;
+bloklar artık konumla tarif ediliyor ve "bu tarifler asla basılmayacak"
+diye ayrıca yazılıyor.
 
 ## Karekod yuvası
 
