@@ -20,7 +20,8 @@
     "film": "python scripts/build-film.py",
     "tabela": "python scripts/build-signage.py",
     "tabela:katman": "python scripts/build-signage.py --katman",
-    "reels": "python scripts/build-reels.py"
+    "reels": "python scripts/build-reels.py",
+    "lux": "python scripts/build-lux.py"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
