@@ -454,7 +454,7 @@ def ru_oswald() -> Image.Image:
         (0.78, (16, 38, 58)), (1.0, NIGHT),
     ], angle=0.16)
     halo(b, W_MM / 2, 1390, 640, 420, (120, 178, 214), 0.30, 2.2)
-    band(b, "entrance-gate", 1200, 470, 0.46, feather=140, bottom_fade=150)
+    band(b, "entrance-gate", 1250, 470, 0.46, feather=140, bottom_fade=150)
 
     head_logos(b, 88)
     dr = b.draw
@@ -487,14 +487,14 @@ def ru_oswald() -> Image.Image:
                         0.18, lambda s_: b.cond(s_))
 
     def note(d):
-        track(b, d, (b.p(W_MM / 2), b.p(886)), "BANKA YOK · KREDİ YOK · KEFİL YOK",
+        track(b, d, (b.p(W_MM / 2), b.p(868)), "BANKA YOK · KREDİ YOK · KEFİL YOK",
               fq, (*SAND_HI, 250), spq, "ma")
     overlay(b, note)
 
     circles(b, 1000, ["ic-mekan/17-sus-havuzu", "ic-mekan/18-yuruyus-yolu",
              "ic-mekan/05-1plus1-salon"],
             ["SÜS HAVUZLARI", "YÜRÜYÜŞ YOLLARI", "İÇ MEKÂN"])
-    near_line(b, 1174)
+    near_line(b, 1214)
 
     shock(b, 632, 1520, 126)
     vignette(b, 0.38, 2.3)
