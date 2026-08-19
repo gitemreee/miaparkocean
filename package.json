@@ -20,6 +20,7 @@
     "film": "python scripts/build-film.py",
     "tabela": "python scripts/build-signage.py",
     "tabela:katman": "python scripts/build-signage.py --katman",
+    "arsa": "python3 scripts/build-arsa-tabela.py",
     "reels": "python scripts/build-reels.py",
     "rollup": "python scripts/build-rollup.py",
     "fiyat:rollup": "python3 scripts/finish-fiyat-rollup.py",

@@ -27,3 +27,7 @@ tabela/kaynak-zip/
 # Higgsfield ham çıktıları (~160 MB). tabela/fiyat-rollup/PROMPT.md'deki
 # istemlerle yeniden üretilip npm run fiyat:rollup ile işleniyor.
 signage-source/hf/
+
+# Arsa tabelalarinin Higgsfield ham ciktilari (~80 MB).
+# tabela/arsa/PROMPT.md ile yeniden uretilip npm run arsa ile islenir.
+signage-source/hf-arsa/
