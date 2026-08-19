@@ -1,74 +1,76 @@
-# Roll-up — beş tasarım, ölçü ve baskı föyü
+# Roll-up — beş tasarım
 
 Hepsi **800 × 2000 mm**, 1:1 ölçekte **100 dpi** (3150 × 7874 px).
 
-| Dosya | Ton | Kurgu |
+| Dosya | Yazı tipi | Zemin |
 |---|---|---|
-| `rollup-1-cam-panel` | mavi | Gece render üstünde buzlu cam panel |
-| `rollup-2-kunye` | mavi | Gökyüzü üstte, bina altta, bölmeli künye şeridi |
-| `rollup-3-rozet` | mavi | Cam hap rozetler + mesafe şeridi |
-| `rollup-4-beyaz-plan` | beyaz | Segment hap: peşinat / vade / faiz |
-| `rollup-5-beyaz-baslik` | beyaz | İki tonlu manşet + yuvarlak ikon hapları |
+| `rollup-1-gece` | Playfair Display | gece · night-gate |
+| `rollup-2-oswald` | Oswald (sıkışık grotesk) | gündüz · entrance-gate |
+| `rollup-3-beyaz` | Cormorant Garamond | sıcak beyaz · facade-warm |
+| `rollup-4-klasik` | Marcellus (roman kapital) | gece · aerial-pools |
+| `rollup-5-modern` | Montserrat (geometrik) | akşam · courtyard-pools |
 
-## Tasarım dili
+Beşinin de ortak parçaları: iki logo üstte, daire kutuları, dikey
+çizgiyle ayrılmış üç olgu, mesafe yayı, şok mührü, künye şeridi.
 
-Verilen beş emlak referansının ortak dili alındı:
+## Tipografi kütüphanesi
 
-- **Bina tek başına kahraman.** Fotoğraf ızgarası, ikon listesi, kolaj yok.
-- **Cam hap rozetler** taşıyor sayıları — peşinat, vade, faiz.
-- **Bölmeli bilgi şeridi:** dikey çizgiyle ayrılmış üç olgu.
-- İnce tipografi, geniş harf aralığı, az renk, çok boşluk.
+Önceki sürümlerde elde yalnızca **iki** yazı tipi vardı (Fraunces,
+Manrope) ve yapılan her tasarım birbirinin aynısı çıkıyordu. Kütüphane
+genişletildi — hepsi açık lisanslı, Türkçe karakterleri tam:
 
-**Şok rozeti** beşinde de var: 699.000 ₺ peşinatla ev sahibi olun ·
-banka yok · kredi yok · faiz yok.
+| Yazı tipi | Rol |
+|---|---|
+| Oswald 200-700 | sıkışık grotesk — vurucu manşet |
+| Playfair Display 400-900 | display serif — proje adı |
+| Cormorant Garamond 300-700 | ince zarif serif |
+| Montserrat 100-900 | geometrik sans — veri |
+| Barlow Condensed 500/700 | sıkışık sans — etiket |
+| Marcellus | rafine roman kapital |
+| Dancing Script 400-700 | el yazısı vurgu |
 
-**İki logo da kendi renginde.** MİA kilidi ve Ocean Gayrimenkul hiçbir
-panoda renklendirilmiyor; koyu panolarda ikisinin de kendi beyaz sürümü
-kullanılıyor, açık panolarda asıl renkleriyle duruyorlar.
+Değişken eksenli fontlar ağırlık parametresiyle örnekleniyor. PIL font
+nesnesini yerinde değiştirdiği için her (dosya, punto, ağırlık) üçlüsü
+ayrı önbellekleniyor — aksi halde son ayarlanan ağırlık hepsine sızıyor.
+
+**₺ simgesi Playfair, Jost ve Marcellus'ta YOK.** Rakam bu yazı
+tipleriyle, simge Montserrat'la basılıyor; yoksa kutu çıkıyor.
+
+## Derinlik
+
+Referanslardaki "tasarlanmış" his düz dikdörtgenden gelmiyor:
+
+- **Işık halesi** binanın arkasında — düz zeminle render arasındaki
+  geçişi yumuşatıyor.
+- **Yumuşak bant kenarı** — sert dikdörtgen kenar "yapıştırılmış"
+  duruyordu; alfası yumuşatılınca bina zeminden çıkıyormuş gibi oturuyor.
+- **Vinyet** kenarlarda, göz merkeze toplanıyor.
+- **Gölge** şok mührünün altında.
 
 ## Daireler
 
-**1+0** (28 m², 472 daire) · **1+1** (50 m², 96 daire) ·
-**1+1 Bahçe Loft** (50 m², 16 daire).
-
-2+1 Bahçe Dubleks panolarda **gösterilmiyor**. Projenin toplam 600 daire
-olduğu ayrı bir olgu; tip listesinin toplamı değil.
-
-## Bina neden bant halinde
-
-Render'lar 4096 × 2304 (16:9). Dikey panoya tam sayfa kırpınca simetrik
-ikiz blok kompozisyonu ortadan kesiliyor. Kare doğal en-boyunda bant
-olarak konup **gökyüzü yukarı, zemin aşağı uzatılıyor**.
-
-İnce şeridi doğrudan esnetmek olmuyor: 200 pikseli 4000 piksele çekince
-bulutun yatay dokusu dikey çizgiye dönüşüyordu. Uzatma artık örneklenen
-renkten gradyan kurup kaynağı ağır bulanıklıkla üstüne bindiriyor.
+**1+0** · **1+1** · **1+1 Bahçe Loft**. 2+1 Bahçe Dubleks gösterilmiyor.
 
 ## Baskı
 
 - **Malzeme:** 510 gr blockout branda.
-- **Kaset:** 80 cm standart. Alt **40 mm** kasete girer; kritik yazı
-  1950 mm'yi geçmez.
-- **Güvenli alan:** yanlardan 56 mm.
+- **Kaset:** 80 cm standart; alt 40 mm kasete girer, kritik yazı 1950 mm'yi
+  geçmez.
+- **Güvenli alan:** yanlardan 58 mm.
 
 ## Fiyat doğrulanmalı
 
-Depoda fiyat kaydı yok. **699.000 ₺** peşinat rakamı gönderdiğiniz
-referans afişten alındı. Bastırmadan önce satış ekibine doğrulatın;
-değiştirmek için tek yer `scripts/build-rollup.py` içindeki `PESIN`.
+Depoda fiyat kaydı yok. **699.000 ₺** gönderdiğiniz referans afişten
+alındı. Bastırmadan önce doğrulatın; tek değiştirme noktası betikteki
+`PESIN`.
 
 ## Değiştirmek
 
-    npm run rollup                 # beşi birden
-    npm run rollup -- cam-panel    # tek tasarım
-    npm run rollup -- --katman     # zemin + yazı katmanları
+    npm run rollup
 
-| Ne değişecek | Nereden |
+| Ne | Nereden |
 |---|---|
 | Peşinat | betikte `PESIN` |
-| Şok rozeti metni | betikte `SHOCK`, `SHOCK_SUB` |
 | Daire tipleri | betikte `UNITS` |
 | Telefon, web, satıcı | `src/data/site.ts` |
 | Ölçü, çözünürlük | betikte `W_MM`, `H_MM`, `DPI` |
-
-Karekod hepsinde: `https://miaparkocean.com/?utm_source=rollup`

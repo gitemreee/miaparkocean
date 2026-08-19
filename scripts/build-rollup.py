@@ -201,10 +201,10 @@ def sky(b: B) -> None:
     ], angle=0.12)
 
 
-def head_logos(b: B, y: float = 84) -> None:
-    lg = lockup(b.p(150), white=True)
+def head_logos(b: B, y: float = 84, white: bool = True) -> None:
+    lg = lockup(b.p(166), white=white)
     b.im.alpha_composite(lg, (b.p(M), b.p(y)))
-    oc = ocean_logo(b, 88, white=True)
+    oc = ocean_logo(b, 100, white=white)
     b.im.alpha_composite(oc, (b.p(W_MM - M) - oc.width,
                               b.p(y) + (lg.height - oc.height) // 2))
 
@@ -223,7 +223,7 @@ def rule(b: B, y: float, x0: float = None, x1: float = None, col=WHITE,
 def chips(b: B, y: float, labels, ink=WHITE, size: float = 15) -> None:
     """[1+0] [1+1] [1+1 LOFT] — referans 2'nin kutulu tipleri."""
     dr = b.draw
-    f = b.mont(size, 500)
+    f = b.mont(size, 600)
     ws = [dr.textlength(t, font=f) for t in labels]
     pad, gap = b.p(15), b.p(10)
     h = cap_h(f) + pad * 1.8
@@ -248,19 +248,19 @@ def facts(b: B, y: float, items, ink=WHITE, sub=ICE) -> None:
     n = len(items)
     step = (W_MM - M * 2) / n
     dr = b.draw
-    fl, spl = fit_track(b, dr, [a for a, _ in items], b.p(step - 24), 9.5, 0.22,
+    fl, spl = fit_track(b, dr, [a for a, _ in items], b.p(step - 20), 11.5, 0.20,
                         lambda s: b.cond(s))
-    fv = fit(b, dr, [v for _, v in items], b.p(step - 26), 24,
-             lambda s: b.mont(s, 600))
+    fv = fit(b, dr, [v for _, v in items], b.p(step - 22), 31,
+             lambda s: b.mont(s, 700))
 
     def paint(d):
         for i, (lab, val) in enumerate(items):
             cx = b.p(M + step * (i + 0.5))
             track(b, d, (cx, b.p(y)), lab, fl, (*sub, 215), spl, "ma")
-            d.text((cx, b.p(y + 42)), val, font=fv, fill=(*ink, 255), anchor="ms")
+            d.text((cx, b.p(y + 50)), val, font=fv, fill=(*ink, 255), anchor="ms")
             if i:
                 xv = b.p(M + step * i)
-                d.line([xv, b.p(y - 4), xv, b.p(y + 50)], fill=(*sub, 90),
+                d.line([xv, b.p(y - 5), xv, b.p(y + 58)], fill=(*sub, 90),
                        width=max(1, b.p(0.5)))
     overlay(b, paint)
 
@@ -273,8 +273,8 @@ def arc_distances(b: B, cy: float, r: float, items) -> None:
     overlay(b, paint)
 
     dr = b.draw
-    fv = b.mont(15, 600)
-    fl = b.cond(9.4)
+    fv = b.mont(19, 700)
+    fl = b.cond(11.5)
     for i, (ang, val, lab) in enumerate(items):
         a = math.radians(ang)
         px = b.p(W_MM / 2) + b.p(r) * math.cos(a)
@@ -283,7 +283,7 @@ def arc_distances(b: B, cy: float, r: float, items) -> None:
         def one(d, px=px, py=py, val=val, lab=lab):
             d.ellipse([px - b.p(4), py - b.p(4), px + b.p(4), py + b.p(4)],
                       fill=(*SAND_HI, 255))
-            d.text((px, py - b.p(30)), val, font=fv, fill=WHITE, anchor="ms")
+            d.text((px, py - b.p(34)), val, font=fv, fill=WHITE, anchor="ms")
             track(b, d, (px, py - b.p(26)), lab, fl, (*ICE, 210), b.p(1.4), "ma")
         overlay(b, one)
 
@@ -298,9 +298,9 @@ def shock(b: B, cx: float, cy: float, r: float) -> None:
         pts.append((b.p(cx) + rad * math.cos(a), b.p(cy) + rad * math.sin(a)))
 
     dr = b.draw
-    fbig = b.playfair(27, 700)
-    fmid = b.cond(11.5)
-    fsub = b.cond(8.6)
+    fbig = b.playfair(31, 800)
+    fmid = b.cond(14)
+    fsub = b.cond(10)
 
     def paint(d):
         d.polygon(pts, fill=(*SAND_HI, 255))
@@ -310,7 +310,7 @@ def shock(b: B, cx: float, cy: float, r: float) -> None:
         y = b.p(cy - r * 0.46)
         track(b, d, (b.p(cx), y), "PEŞİNATLA", fsub, (*NIGHT, 215), b.p(1.6), "ma")
         # Playfair'de ₺ yok, kutu basıyordu: rakam Playfair, simge Montserrat.
-        ftl = b.mont(15, 600)
+        ftl = b.mont(17, 700)
         wn = d.textlength(PESIN, font=fbig)
         wt = d.textlength(" ₺", font=ftl)
         x0 = b.p(cx) - (wn + wt) / 2
@@ -325,7 +325,8 @@ def shock(b: B, cx: float, cy: float, r: float) -> None:
     soft_shadow(b, paint, blur=7, alpha=150, dy=5)
 
 
-def foot(b: B, y: float = 1836) -> None:
+def foot(b: B, y: float = 1836, ink=WHITE, sub=ICE, qr_dark=None) -> None:
+    qr_dark = qr_dark or NIGHT
     rule(b, y - 30, col=SAND, a=110, w=0.6)
     qs = b.p(54)
     qx, qy = b.p(W_MM - M) - qs, b.p(y - 10)
@@ -334,19 +335,19 @@ def foot(b: B, y: float = 1836) -> None:
         d.rounded_rectangle([qx - b.p(5), qy - b.p(5), qx + qs + b.p(5),
                              qy + qs + b.p(5)], radius=b.p(4), fill=(255, 255, 255, 252))
     overlay(b, plate)
-    b.im.alpha_composite(qr_image(QR_URL, qs, NIGHT), (qx, qy))
+    b.im.alpha_composite(qr_image(QR_URL, qs, qr_dark), (qx, qy))
 
     dr = b.draw
-    fs, sps = fit_track(b, dr, [f"{SELLER} · {SELLER_ROLE}"], b.p(380), 7.6, 0.16,
+    fs, sps = fit_track(b, dr, [f"{SELLER} · {SELLER_ROLE}"], b.p(420), 9, 0.16,
                         lambda s: b.cond(s))
 
     def paint(d):
-        d.text((b.p(M), b.p(y + 20)), SITE, font=b.marcellus(21), fill=WHITE,
+        d.text((b.p(M), b.p(y + 20)), SITE, font=b.marcellus(25), fill=(*ink, 255),
                anchor="ls")
-        d.text((b.p(M), b.p(y + 50)), "  ·  ".join(PHONES), font=b.mont(13, 600),
-               fill=WHITE, anchor="ls")
+        d.text((b.p(M), b.p(y + 50)), "  ·  ".join(PHONES), font=b.mont(15, 700),
+               fill=(*ink, 255), anchor="ls")
         track(b, d, (b.p(M), b.p(y + 60)), f"{SELLER} · {SELLER_ROLE}", fs,
-              (*ICE, 200), sps)
+              (*sub, 215), sps)
     overlay(b, paint)
 
 
@@ -363,31 +364,31 @@ def ru_gece() -> Image.Image:
     dr = b.draw
 
     def script_word(d):
-        d.text((b.p(W_MM / 2), b.p(322)), "Yeni bir başlangıç", font=b.script(30, 600),
+        d.text((b.p(W_MM / 2), b.p(330)), "Yeni bir başlangıç", font=b.script(36, 700),
                fill=(*SAND_HI, 250), anchor="ms")
     overlay(b, script_word)
 
-    fn, spn = fit_track(b, dr, ["MİA PARK OCEAN"], b.p(660), 52, 0.03,
-                        lambda s: b.playfair(s, 600))
+    fn, spn = fit_track(b, dr, ["MİA PARK OCEAN"], b.p(676), 64, 0.02,
+                        lambda s: b.playfair(s, 800))
 
     def name(d):
-        track(b, d, (b.p(W_MM / 2), cap_top(fn, b.p(400))), "MİA PARK OCEAN", fn,
+        track(b, d, (b.p(W_MM / 2), cap_top(fn, b.p(412))), "MİA PARK OCEAN", fn,
               WHITE, spn, "ma")
     overlay(b, name)
 
-    chips(b, 452, UNITS, WHITE, 15)
+    chips(b, 470, UNITS, WHITE, 19)
 
-    fsub, spsub = fit_track(b, dr, ["İZMİT MİA BÖLGESİ · KOCAELİ"], b.p(500), 10,
-                            0.32, lambda s: b.cond(s))
+    fsub, spsub = fit_track(b, dr, ["İZMİT MİA BÖLGESİ · KOCAELİ"], b.p(560), 13,
+                            0.30, lambda s: b.cond(s))
 
     def subline(d):
-        track(b, d, (b.p(W_MM / 2), b.p(536)), "İZMİT MİA BÖLGESİ · KOCAELİ", fsub,
+        track(b, d, (b.p(W_MM / 2), b.p(562)), "İZMİT MİA BÖLGESİ · KOCAELİ", fsub,
               (*ICE, 225), spsub, "ma")
     overlay(b, subline)
 
-    rule(b, 586, 190, W_MM - 190, SAND, 120, 0.6)
+    rule(b, 612, 180, W_MM - 180, SAND, 120, 0.6)
 
-    facts(b, 636, [("BAŞLANGIÇ PEŞİNAT", f"{PESIN} ₺"),
+    facts(b, 664, [("BAŞLANGIÇ PEŞİNAT", f"{PESIN} ₺"),
                    ("ÖDEME PLANI", "60 AY"),
                    ("VADE FARKI", "%0")])
 
@@ -395,13 +396,235 @@ def ru_gece() -> Image.Image:
                                  (270, "1 dk", "D100"),
                                  (326, "5 dk", "ŞEHİR MERKEZİ")])
 
-    shock(b, 636, 1480, 118)
+    shock(b, 632, 1476, 126)
     vignette(b, 0.40, 2.3)
     foot(b, 1836)
     return b.im.convert("RGB")
 
 
-DESIGNS = [("rollup-gece", ru_gece, "gece · playfair + oswald")]
+# ============================================================ 2 · OSWALD
+def ru_oswald() -> Image.Image:
+    """Sıkışık grotesk manşet. Gündüz render, açık gökyüzü."""
+    b = board()
+    b.im = gradient((b.W, b.H), [
+        (0.0, (12, 30, 48)), (0.30, (22, 56, 84)), (0.55, (34, 78, 108)),
+        (0.78, (16, 38, 58)), (1.0, NIGHT),
+    ], angle=0.16)
+    halo(b, W_MM / 2, 1180, 640, 430, (120, 178, 214), 0.30, 2.2)
+    band(b, "entrance-gate", 1050, 470, 0.46, feather=140, bottom_fade=150)
+
+    head_logos(b, 88)
+    dr = b.draw
+
+    fe, spe = fit_track(b, dr, ["İZMİT MİA BÖLGESİ'NDE"], b.p(560), 13, 0.30,
+                        lambda s_: b.cond(s_))
+
+    def eb(d):
+        track(b, d, (b.p(W_MM / 2), b.p(306)), "İZMİT MİA BÖLGESİ'NDE", fe,
+              (*SAND_HI, 250), spe, "ma")
+    overlay(b, eb)
+
+    lines = ["SATIŞ", "BAŞLADI"]
+    fh, sph = fit_track(b, dr, lines, b.p(660), 96, 0.01,
+                        lambda s_: b.f("Oswald-var.ttf", s_, 700))
+    step = cap_h(fh) * 1.10
+
+    def head(d):
+        for i2, t in enumerate(lines):
+            track(b, d, (b.p(W_MM / 2), b.p(360) + i2 * step), t, fh, WHITE, sph, "ma")
+    overlay(b, head)
+
+    chips(b, 610, UNITS, WHITE, 19)
+    rule(b, 700, 180, W_MM - 180, SAND, 120, 0.6)
+    facts(b, 752, [("BAŞLANGIÇ PEŞİNAT", f"{PESIN} ₺"),
+                   ("ÖDEME PLANI", "60 AY"),
+                   ("VADE FARKI", "%0")])
+
+    fq, spq = fit_track(b, dr, ["BANKA YOK · KREDİ YOK · KEFİL YOK"], b.p(600), 14,
+                        0.20, lambda s_: b.cond(s_))
+
+    def note(d):
+        track(b, d, (b.p(W_MM / 2), b.p(886)), "BANKA YOK · KREDİ YOK · KEFİL YOK",
+              fq, (*SAND_HI, 250), spq, "ma")
+    overlay(b, note)
+
+    shock(b, 632, 1470, 126)
+    vignette(b, 0.38, 2.3)
+    foot(b, 1836)
+    return b.im.convert("RGB")
+
+
+# ============================================================ 3 · CORMORANT
+def ru_beyaz() -> Image.Image:
+    """İnce zarif serif, sıcak beyaz zemin. Kütüphanenin öbür ucu."""
+    b = board()
+    b.im = gradient((b.W, b.H), [(0.0, (253, 252, 249)), (0.5, (247, 244, 238)),
+                                 (1.0, (234, 229, 220))], angle=0.3)
+    ink, sub, line = (30, 34, 40), (128, 130, 134), (216, 210, 200)
+
+    ph = 470
+    im = cover("facade-warm", (b.W, b.p(ph)), 0.42)
+    a = np.asarray(im.split()[3], np.float32)
+    fp = b.p(120)
+    ramp = np.ones(b.p(ph), np.float32)
+    ramp[:fp] = np.linspace(0, 1, fp) ** 1.3
+    ramp[b.p(ph) - fp:] *= np.linspace(1, 0, fp) ** 1.2
+    im.putalpha(Image.fromarray((a * ramp[:, None]).astype(np.uint8), "L"))
+    b.im.alpha_composite(im, (0, b.p(1000)))
+
+    head_logos(b, 88, white=False)
+    dr = b.draw
+
+    def script_word(d):
+        d.text((b.p(W_MM / 2), b.p(330)), "Yeni bir başlangıç",
+               font=b.script(36, 700), fill=(*SAND, 255), anchor="ms")
+    overlay(b, script_word)
+
+    fn, spn = fit_track(b, dr, ["MİA PARK OCEAN"], b.p(680), 68, 0.04,
+                        lambda s_: b.cormorant(s_, 600))
+
+    def name(d):
+        track(b, d, (b.p(W_MM / 2), cap_top(fn, b.p(416))), "MİA PARK OCEAN", fn,
+              ink, spn, "ma")
+    overlay(b, name)
+
+    chips(b, 470, UNITS, ink, 19)
+
+    fsub, spsub = fit_track(b, dr, ["İZMİT MİA BÖLGESİ · KOCAELİ"], b.p(560), 13,
+                            0.30, lambda s_: b.cond(s_))
+
+    def subline(d):
+        track(b, d, (b.p(W_MM / 2), b.p(562)), "İZMİT MİA BÖLGESİ · KOCAELİ", fsub,
+              (*sub, 245), spsub, "ma")
+    overlay(b, subline)
+
+    rule(b, 612, 180, W_MM - 180, SAND, 190, 0.7)
+    facts(b, 664, [("BAŞLANGIÇ PEŞİNAT", f"{PESIN} ₺"),
+                   ("ÖDEME PLANI", "60 AY"),
+                   ("VADE FARKI", "%0")], ink=ink, sub=sub)
+
+    fq, spq = fit_track(b, dr, ["BANKA YOK · KREDİ YOK · KEFİL YOK"], b.p(600), 14,
+                        0.20, lambda s_: b.cond(s_))
+
+    def note(d):
+        # Açık zeminde açık şampanya okunmuyor; koyu tonu.
+        track(b, d, (b.p(W_MM / 2), b.p(800)), "BANKA YOK · KREDİ YOK · KEFİL YOK",
+              fq, (150, 116, 56, 255), spq, "ma")
+    overlay(b, note)
+
+    shock(b, 632, 1476, 126)
+    foot(b, 1836, ink=ink, sub=sub, qr_dark=ink)
+    return b.im.convert("RGB")
+
+
+# ============================================================ 4 · MARCELLUS
+def ru_klasik() -> Image.Image:
+    """Rafine roman kapital, geniş harf aralığı. En sakin pano."""
+    b = board()
+    b.im = gradient((b.W, b.H), [
+        (0.0, (4, 16, 24)), (0.28, (8, 32, 46)), (0.54, (12, 48, 66)),
+        (0.80, (7, 26, 38)), (1.0, (3, 12, 20)),
+    ], angle=0.14)
+    halo(b, W_MM / 2, 1220, 600, 430, (96, 168, 196), 0.30, 2.2)
+    band(b, "aerial-pools", 1080, 470, 0.5, feather=140, bottom_fade=160)
+
+    head_logos(b, 88)
+    dr = b.draw
+
+    fn, spn = fit_track(b, dr, ["MİA PARK OCEAN"], b.p(672), 50, 0.16,
+                        lambda s_: b.marcellus(s_))
+
+    def name(d):
+        track(b, d, (b.p(W_MM / 2), cap_top(fn, b.p(330))), "MİA PARK OCEAN", fn,
+              WHITE, spn, "ma")
+    overlay(b, name)
+
+    rule(b, 392, 230, W_MM - 230, SAND, 150, 0.6)
+
+    fi = b.cormorant(30, 400)
+
+    def line2(d):
+        d.text((b.p(W_MM / 2), b.p(452)), "İzmit MİA Bölgesi'nde yeni yaşam",
+               font=fi, fill=(*ICE, 250), anchor="ms")
+    overlay(b, line2)
+
+    chips(b, 500, UNITS, WHITE, 19)
+    facts(b, 626, [("BAŞLANGIÇ PEŞİNAT", f"{PESIN} ₺"),
+                   ("ÖDEME PLANI", "60 AY"),
+                   ("VADE FARKI", "%0")])
+
+    arc_distances(b, 1210, 320, [(214, "2 dk", "İZMİT SAHİLİ"),
+                                 (270, "1 dk", "D100"),
+                                 (326, "5 dk", "ŞEHİR MERKEZİ")])
+
+    shock(b, 632, 1500, 126)
+    vignette(b, 0.42, 2.3)
+    foot(b, 1836)
+    return b.im.convert("RGB")
+
+
+# ============================================================ 5 · MONTSERRAT
+def ru_modern() -> Image.Image:
+    """Geometrik sans, en çağdaş dil. Avlu render'ı."""
+    b = board()
+    b.im = gradient((b.W, b.H), [
+        (0.0, (8, 20, 32)), (0.32, (14, 42, 62)), (0.60, (10, 34, 52)),
+        (1.0, (4, 14, 24)),
+    ], angle=0.2)
+    halo(b, W_MM / 2, 1200, 620, 440, (104, 172, 200), 0.32, 2.2)
+    band(b, "courtyard-pools", 1060, 470, 0.5, feather=140, bottom_fade=160)
+
+    head_logos(b, 88)
+    dr = b.draw
+
+    lines = ["1+0 · 1+1 · LOFT", "DAİRELER SATIŞTA"]
+    fh, sph = fit_track(b, dr, lines, b.p(670), 42, 0.02,
+                        lambda s_: b.mont(s_, 800))
+    step = cap_h(fh) * 1.44
+
+    def head(d):
+        for i2, t in enumerate(lines):
+            track(b, d, (b.p(W_MM / 2), b.p(322) + i2 * step), t, fh, WHITE, sph, "ma")
+    overlay(b, head)
+
+    fsub, spsub = fit_track(b, dr, ["İZMİT MİA BÖLGESİ · KOCAELİ"], b.p(560), 13,
+                            0.30, lambda s_: b.cond(s_))
+
+    def subline(d):
+        track(b, d, (b.p(W_MM / 2), b.p(470)), "İZMİT MİA BÖLGESİ · KOCAELİ", fsub,
+              (*SAND_HI, 245), spsub, "ma")
+    overlay(b, subline)
+
+    rule(b, 528, 180, W_MM - 180, SAND, 120, 0.6)
+    facts(b, 584, [("BAŞLANGIÇ PEŞİNAT", f"{PESIN} ₺"),
+                   ("ÖDEME PLANI", "60 AY"),
+                   ("VADE FARKI", "%0")])
+
+    fq, spq = fit_track(b, dr, ["BANKA YOK · KREDİ YOK · KEFİL YOK"], b.p(600), 14,
+                        0.20, lambda s_: b.cond(s_))
+
+    def note(d):
+        track(b, d, (b.p(W_MM / 2), b.p(724)), "BANKA YOK · KREDİ YOK · KEFİL YOK",
+              fq, (*SAND_HI, 250), spq, "ma")
+    overlay(b, note)
+
+    arc_distances(b, 1190, 320, [(214, "2 dk", "İZMİT SAHİLİ"),
+                                 (270, "1 dk", "D100"),
+                                 (326, "5 dk", "ŞEHİR MERKEZİ")])
+
+    shock(b, 632, 1490, 126)
+    vignette(b, 0.38, 2.3)
+    foot(b, 1836)
+    return b.im.convert("RGB")
+
+
+DESIGNS = [
+    ("rollup-1-gece", ru_gece, "gece · Playfair"),
+    ("rollup-2-oswald", ru_oswald, "gündüz · Oswald sıkışık"),
+    ("rollup-3-beyaz", ru_beyaz, "beyaz · Cormorant"),
+    ("rollup-4-klasik", ru_klasik, "klasik · Marcellus"),
+    ("rollup-5-modern", ru_modern, "modern · Montserrat"),
+]
 
 
 def main() -> None:
