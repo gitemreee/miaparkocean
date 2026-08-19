@@ -51,15 +51,22 @@ SITE, PHONES = ru.SITE, ru.PHONES
 OUT = os.path.join(ROOT, "tabela", "fiyat")
 PREVIEW = os.path.join(OUT, "onizleme")
 
-W_MM, H_MM, DPI = 700, 990, 120
-M = 34
+W_MM, H_MM, DPI = 800, 2000, 100
+M = 58
 
+# Onaylanan beş panonun paleti. Önceki sürümdeki kraliyet mavisi +
+# hardal altını şablon gibi duruyordu; zemin gece laciverti, vurgu açık
+# şampanya. Kartlar SAYDAM DEĞİL — render kartın içinden sızınca yazı
+# çamurlanıyordu.
 WHITE = (255, 255, 255)
-NAVY = (16, 38, 92)                 # kart ve şerit lacivertİ
-NAVY_D = (9, 24, 64)
-GOLD = (198, 158, 72)
-GOLD_HI = (240, 208, 132)
-INK = (20, 30, 60)
+NIGHT = (5, 18, 30)
+NAVY = (10, 30, 48)                 # kart ve şerit gövdesi
+NAVY_D = (7, 22, 36)
+GOLD = (223, 199, 154)              # şampanya
+GOLD_HI = (240, 224, 190)
+GOLD_DIM = (176, 150, 106)
+ICE = (206, 228, 240)
+INK = (16, 26, 38)
 QR_URL = "https://miaparkocean.com/?utm_source=fiyat"
 
 
@@ -90,120 +97,136 @@ def sky_and_render(b, name: str = "night-gate", top: float = 596) -> None:
     b.im.alpha_composite(im, (0, tp))
     bot = b.H - tp - b.p(bh)
     if bot > 0:
-        strip = im.crop((0, b.p(bh) - 20, b.W, b.p(bh))).resize((b.W, bot), Image.LANCZOS)
-        b.im.alpha_composite(strip.filter(ImageFilter.GaussianBlur(b.p(2))),
-                             (0, tp + b.p(bh)))
+        # İnce şeridi doğrudan esnetmek dikey çizgi üretiyordu; örneklenen
+        # renkten gradyan kurulup kaynak ağır bulanıklıkla bindiriliyor.
+        c_b = tuple(a[-round(b.p(bh) * 0.06):].mean(axis=(0, 1)))
+        lay2 = gradient((b.W, bot), [(0.0, c_b), (0.45, tuple(c * 0.55 for c in c_b)),
+                                     (1.0, NIGHT)], angle=0.0)
+        tex2 = im.crop((0, b.p(bh) - round(b.p(bh) * 0.10), b.W, b.p(bh)))
+        tex2 = tex2.resize((b.W, bot), Image.LANCZOS).filter(
+            ImageFilter.GaussianBlur(max(6, bot // 8)))
+        tex2.putalpha(110)
+        lay2.alpha_composite(tex2)
+        b.im.alpha_composite(lay2, (0, tp + b.p(bh)))
     # Üst yarı yazı için hafif açılır.
-    b.im.alpha_composite(scrim((b.W, b.p(top * 0.62)), [
-        (0.0, (255, 250, 242, 132)), (1.0, (255, 250, 242, 0)),
+    b.im.alpha_composite(scrim((b.W, b.p(top)), [
+        (0.0, (*NIGHT, 232)), (0.42, (*NIGHT, 188)), (1.0, (*NIGHT, 70)),
     ]), (0, 0))
 
 
 def eyebrow(b, y: float, text: str) -> None:
     """Üst satır, iki yanında kısa çizgi — orijinalin açılışı."""
     dr = b.draw
-    f, sp = fit_track(b, dr, [text], b.p(500), 20, 0.10, lambda s: b.mont(s, 800))
+    f, sp = fit_track(b, dr, [text], b.p(600), 16, 0.26, lambda s: b.cond(s))
     w = sum(dr.textlength(c, font=f) for c in text) + sp * (len(text) - 1)
 
     def paint(d):
         cx = b.p(W_MM / 2)
-        track(b, d, (cx, cap_top(f, b.p(y))), text, f, NAVY, sp, "ma")
+        track(b, d, (cx, cap_top(f, b.p(y))), text, f, (*GOLD, 250), sp, "ma")
         for s_ in (-1, 1):
             x0 = cx + s_ * (w / 2 + b.p(18))
             x1 = cx + s_ * (w / 2 + b.p(64))
-            d.line([x0, b.p(y), x1, b.p(y)], fill=(*NAVY, 235), width=max(2, b.p(1.4)))
+            d.line([x0, b.p(y), x1, b.p(y)], fill=(*GOLD_DIM, 235),
+                   width=max(2, b.p(0.9)))
     overlay(b, paint)
 
 
 def headline(b, y: float, a: str, c: str) -> None:
     """İki renkli dev manşet, altında gölge."""
     dr = b.draw
-    f = fit(b, dr, [f"{a} {c}"], b.p(W_MM - M * 2), 92, lambda s: b.mont(s, 800))
+    f = fit(b, dr, [f"{a} {c}"], b.p(W_MM - M * 2), 84,
+            lambda s: b.playfair(s, 800))
     wa = dr.textlength(a + " ", font=f)
     tot = dr.textlength(f"{a} {c}", font=f)
     x0 = b.p(W_MM / 2) - tot / 2
 
     def paint(d):
-        d.text((x0, b.p(y)), a, font=f, fill=NAVY, anchor="ls")
+        d.text((x0, b.p(y)), a, font=f, fill=WHITE, anchor="ls")
         d.text((x0 + wa, b.p(y)), c, font=f, fill=GOLD, anchor="ls")
-    soft_shadow(b, paint, blur=4, alpha=90, dy=3)
+    soft_shadow(b, paint, blur=6, alpha=120, dy=4)
 
 
 def script_line(b, y: float, text: str) -> None:
     dr = b.draw
-    f = fit(b, dr, [text], b.p(520), 46, lambda s: b.script(s, 700))
+    f = fit(b, dr, [text], b.p(600), 44, lambda s: b.script(s, 700))
     w = dr.textlength(text, font=f)
 
     def paint(d):
-        d.text((b.p(W_MM / 2), b.p(y)), text, font=f, fill=NAVY, anchor="ms")
+        d.text((b.p(W_MM / 2), b.p(y)), text, font=f, fill=(*GOLD_HI, 252),
+               anchor="ms")
         d.arc([b.p(W_MM / 2) - w / 2, b.p(y) + b.p(2), b.p(W_MM / 2) + w / 2,
-               b.p(y) + b.p(26)], 0, 180, fill=(*GOLD, 235), width=max(2, b.p(1.6)))
+               b.p(y) + b.p(26)], 0, 180, fill=(*GOLD_DIM, 235), width=max(2, b.p(1.2)))
     overlay(b, paint)
 
 
-def cards(b, y: float, h: float, rows, priced: bool) -> None:
+def cards(b, y: float, h: float, rows, priced: bool, x0: float = None,
+          span: float = None) -> None:
     """Lacivert fiyat kartı: üst kenarında altın rozet, ortada dev rakam,
     beyaz hapta aylık, altta altın vade bandı."""
-    gap = 14
-    cw = (W_MM - M * 2 - gap * (len(rows) - 1)) / len(rows)
+    x0 = M if x0 is None else x0
+    span = (W_MM - M * 2) if span is None else span
+    gap = 10
+    cw = (span - gap * (len(rows) - 1)) / len(rows)
     l1 = "PEŞİNAT" if priced else "DAİRE BÜYÜKLÜĞÜ"
     l2 = "AYLIK SADECE" if priced else "ÖDEME PLANI"
     l3 = "VADE FARKSIZ 60 AY" if priced else "VADE FARKSIZ · %0 FAİZ"
 
     dr = b.draw
-    ftyp = fit(b, dr, [r[0] for r in rows], b.p(74), 24, lambda s: b.mont(s, 800))
-    fl, spl = fit_track(b, dr, [l1, l2], b.p(cw - 24), 9.5, 0.18,
-                        lambda s: b.mont(s, 700))
-    fnum = fit(b, dr, [r[1] for r in rows], b.p(cw - 46), 40,
-               lambda s: b.mont(s, 800))
-    fay = fit(b, dr, [r[2] for r in rows], b.p(cw - 66), 32,
-              lambda s: b.mont(s, 800))
-    ftl = b.mont(13, 800)
-    fv, spv = fit_track(b, dr, [l3], b.p(cw - 34), 11, 0.10, lambda s: b.mont(s, 700))
+    ftyp = fit(b, dr, [r[0] for r in rows], b.p(88), 26, lambda s: b.mont(s, 700))
+    fl, spl = fit_track(b, dr, [l1, l2], b.p(cw - 22), 11, 0.20,
+                        lambda s: b.cond(s))
+    fnum = fit(b, dr, [r[1] for r in rows], b.p(cw - 40), 44,
+               lambda s: b.mont(s, 700))
+    fay = fit(b, dr, [r[2] for r in rows], b.p(cw - 58), 36,
+              lambda s: b.mont(s, 700))
+    ftl = b.mont(15, 700)
+    fv, spv = fit_track(b, dr, [l3], b.p(cw - 26), 11, 0.10, lambda s: b.cond(s))
 
     for i, (typ, big, small) in enumerate(rows):
-        x = M + i * (cw + gap)
+        x = x0 + i * (cw + gap)
 
         def card(d, x=x, typ=typ, big=big, small=small):
+            # Dolu zemin: saydam kartın altından render sızıp yazıyı
+            # çamurlandırıyordu.
             d.rounded_rectangle([b.p(x), b.p(y), b.p(x + cw), b.p(y + h)],
-                                radius=b.p(9), fill=(*NAVY, 245),
-                                outline=(*GOLD, 190), width=max(2, b.p(1.1)))
-            bw, bh = b.p(cw * 0.52), b.p(30)
+                                radius=b.p(8), fill=(*NAVY, 255),
+                                outline=(*GOLD_DIM, 200), width=max(2, b.p(0.9)))
+            bw, bh = b.p(cw * 0.56), b.p(32)
             bx = b.p(x + cw / 2) - bw // 2
             d.rounded_rectangle([bx, b.p(y) - bh // 2, bx + bw, b.p(y) + bh // 2],
-                                radius=b.p(6), fill=(*GOLD, 255))
+                                radius=bh // 2, fill=(*GOLD, 255))
             d.text((bx + bw / 2, cap_top(ftyp, b.p(y))), typ, font=ftyp,
-                   fill=WHITE, anchor="ma")
+                   fill=NIGHT, anchor="ma")
 
             cx = b.p(x + cw / 2)
-            track(b, d, (cx, b.p(y + 40)), l1, fl, (255, 255, 255, 235), spl, "ma")
+            track(b, d, (cx, b.p(y + 52)), l1, fl, (*ICE, 235), spl, "ma")
             wn = d.textlength(big, font=fnum)
             wt = d.textlength("TL", font=ftl) if priced else 0
             x0 = cx - (wn + wt) / 2
-            d.text((x0, b.p(y + 96)), big, font=fnum, fill=GOLD_HI, anchor="ls")
+            d.text((x0, b.p(y + 128)), big, font=fnum, fill=GOLD_HI, anchor="ls")
             if priced:
-                d.text((x0 + wn, b.p(y + 96)), "TL", font=ftl, fill=GOLD_HI,
+                d.text((x0 + wn, b.p(y + 128)), "TL", font=ftl, fill=GOLD_HI,
                        anchor="ls")
-            d.line([b.p(x + 18), b.p(y + 112), b.p(x + cw - 18), b.p(y + 112)],
-                   fill=(*GOLD, 150), width=max(1, b.p(0.8)))
-            track(b, d, (cx, b.p(y + 132)), l2, fl, (255, 255, 255, 235), spl, "ma")
+            d.line([b.p(x + 20), b.p(y + 154), b.p(x + cw - 20), b.p(y + 154)],
+                   fill=(*GOLD_DIM, 170), width=max(1, b.p(0.6)))
+            track(b, d, (cx, b.p(y + 186)), l2, fl, (*ICE, 235), spl, "ma")
 
-            pw, ph = b.p(cw - 26), b.p(48)
-            px, py = b.p(x + 13), b.p(y + 156)
-            d.rounded_rectangle([px, py, px + pw, py + ph], radius=b.p(7),
-                                fill=(255, 255, 255, 252))
+            pw, ph = b.p(cw - 28), b.p(66)
+            px, py = b.p(x + 14), b.p(y + 218)
+            d.rounded_rectangle([px, py, px + pw, py + ph], radius=b.p(6),
+                                fill=(255, 255, 255, 255))
             wa = d.textlength(small, font=fay)
             wt2 = d.textlength("TL", font=ftl) if priced else 0
             ax = cx - (wa + wt2) / 2
-            d.text((ax, py + ph - b.p(13)), small, font=fay, fill=NAVY, anchor="ls")
+            d.text((ax, py + ph - b.p(15)), small, font=fay, fill=NIGHT, anchor="ls")
             if priced:
-                d.text((ax + wa, py + ph - b.p(13)), "TL", font=ftl, fill=NAVY,
+                d.text((ax + wa, py + ph - b.p(15)), "TL", font=ftl, fill=NIGHT,
                        anchor="ls")
 
-            vy = b.p(y + h) - b.p(46)
-            d.rounded_rectangle([px, vy, px + pw, vy + b.p(34)], radius=b.p(6),
+            vy = b.p(y + h) - b.p(50)
+            d.rounded_rectangle([px, vy, px + pw, vy + b.p(36)], radius=b.p(5),
                                 fill=(*GOLD, 255))
-            track(b, d, (cx, cap_top(fv, vy + b.p(17))), l3, fv, WHITE, spv, "ma")
+            track(b, d, (cx, cap_top(fv, vy + b.p(18))), l3, fv, NIGHT, spv, "ma")
         overlay(b, card)
 
 
@@ -230,32 +253,28 @@ def _picto(d, kind, cx, cy, r, col, t):
                   outline=col, width=t)
 
 
-def feat_pills(b, y0: float, h: float, items, cols: int = 2,
-               gapy: float = 10, total: float = None) -> None:
-    """Beyaz özellik hapları. Dördü yan yana sığmıyor, en uzun etiket
-    kırpılıyordu — 2x2 ızgaraya alındı."""
-    gap = 12
-    span = total if total else (W_MM - M * 2)
-    pw = (span - gap * (cols - 1)) / cols
+def feat_pills(b, x: float, y0: float, pw: float, h: float, items,
+               gapy: float = 10) -> None:
+    """Beyaz özellik hapları — orijinaldeki gibi SAĞDA DİKEY SÜTUN,
+    kartların yanında. Alta indirilince afişin yapısı bozuluyordu."""
     dr = b.draw
-    f, sp = fit_track(b, dr, [t for a in items for t in a[:2]], b.p(pw - 72), 11,
-                      0.05, lambda s: b.mont(s, 800))
+    f, sp = fit_track(b, dr, [t for a in items for t in a[:2]], b.p(pw - h - 18), 11,
+                      0.04, lambda s: b.mont(s, 600))
 
     for i, (l1, l2, kind) in enumerate(items):
-        x = M + (i % cols) * (pw + gap)
-        y = y0 + (i // cols) * (h + gapy)
+        y = y0 + i * (h + gapy)
 
-        def pill(d, x=x, y=y, l1=l1, l2=l2, kind=kind):
+        def pill(d, y=y, l1=l1, l2=l2, kind=kind):
             d.rounded_rectangle([b.p(x), b.p(y), b.p(x + pw), b.p(y + h)],
-                                radius=b.p(h / 2), fill=(255, 255, 255, 252))
+                                radius=b.p(6), fill=(255, 255, 255, 255))
             r = b.p(h * 0.32)
             cx, cy = b.p(x + h * 0.5), b.p(y + h / 2)
-            d.rounded_rectangle([cx - r, cy - r, cx + r, cy + r], radius=b.p(6),
+            d.rounded_rectangle([cx - r, cy - r, cx + r, cy + r], radius=b.p(5),
                                 fill=(*NAVY, 255))
-            _picto(d, kind, cx, cy, r * 0.92, GOLD_HI, max(2, b.p(1.5)))
+            _picto(d, kind, cx, cy, r * 0.92, GOLD, max(2, b.p(1.2)))
             tx = b.p(x + h * 0.96)
-            track(b, d, (tx, b.p(y + h * 0.26)), l1, f, (*NAVY, 255), sp)
-            track(b, d, (tx, b.p(y + h * 0.58)), l2, f, (*NAVY, 255), sp)
+            track(b, d, (tx, b.p(y + h * 0.26)), l1, f, (*INK, 255), sp)
+            track(b, d, (tx, b.p(y + h * 0.58)), l2, f, (*INK, 255), sp)
         overlay(b, pill)
 
 
@@ -269,7 +288,7 @@ def seal(b, cx: float, cy: float, r: float) -> None:
 
     def paint(d):
         d.ellipse([b.p(cx - r), b.p(cy - r), b.p(cx + r), b.p(cy + r)],
-                  fill=(*GOLD, 255), outline=(*GOLD_HI, 255), width=max(2, b.p(2)))
+                  fill=(*GOLD, 255), outline=(*GOLD_HI, 255), width=max(2, b.p(1.4)))
         d.ellipse([b.p(cx - r * .88), b.p(cy - r * .88), b.p(cx + r * .88),
                    b.p(cy + r * .88)], outline=(255, 255, 255, 160),
                   width=max(1, b.p(0.9)))
@@ -281,8 +300,8 @@ def seal(b, cx: float, cy: float, r: float) -> None:
                        (sx - ss * .6, sy + ss), (sx - ss * .42, sy + ss * .24),
                        (sx - ss, sy - ss * .2), (sx - ss * .32, sy - ss * .28)],
                       fill=WHITE)
-        track(b, d, (b.p(cx), b.p(cy - r * 0.24)), "SINIRLI", f1, WHITE, sp1, "ma")
-        track(b, d, (b.p(cx), b.p(cy + r * 0.04)), "SAYIDA", f1, WHITE, sp1, "ma")
+        track(b, d, (b.p(cx), b.p(cy - r * 0.24)), "SINIRLI", f1, NIGHT, sp1, "ma")
+        track(b, d, (b.p(cx), b.p(cy + r * 0.04)), "SAYIDA", f1, NIGHT, sp1, "ma")
 
         rw, rh = b.p(r * 2.05), b.p(r * 0.58)
         rx, ry = b.p(cx) - rw // 2, b.p(cy + r * 0.34)
@@ -300,11 +319,12 @@ def pin_pill(b, x: float, y: float, w: float, h: float, lines) -> None:
 
     def paint(d):
         d.rounded_rectangle([b.p(x), b.p(y), b.p(x + w), b.p(y + h)],
-                            radius=b.p(h / 2), fill=(*NAVY, 246))
+                            radius=b.p(6), fill=(*NAVY, 255),
+                            outline=(*GOLD_DIM, 170), width=max(2, b.p(0.9)))
         cx, cy, r = b.p(x + h * 0.52), b.p(y + h / 2), b.p(h * 0.26)
-        d.ellipse([cx - r, cy - r * 1.15, cx + r, cy + r * 0.55], fill=(*GOLD_HI, 255))
+        d.ellipse([cx - r, cy - r * 1.15, cx + r, cy + r * 0.55], fill=(*GOLD, 255))
         d.polygon([(cx - r * .5, cy + r * .3), (cx + r * .5, cy + r * .3),
-                   (cx, cy + r * 1.25)], fill=(*GOLD_HI, 255))
+                   (cx, cy + r * 1.25)], fill=(*GOLD, 255))
         d.ellipse([cx - r * .3, cy - r * .55, cx + r * .3, cy + r * .05],
                   fill=(*NAVY, 255))
         tx = b.p(x + h * 0.96)
@@ -317,21 +337,22 @@ def bottom_bar(b, y: float, h: float) -> None:
     """Tasarrufa dayalı faizsiz finansman şeridi + üç ret."""
     dr = b.draw
     fh = fit(b, dr, ["Tasarrufa Dayalı Faizsiz Finansman Sistemi ile"],
-             b.p(W_MM - M * 2 - 40), 18, lambda s: b.mont(s, 700))
+             b.p(W_MM - M * 2 - 50), 20, lambda s: b.cormorant(s, 500))
     items = ["BANKA YOK", "FAİZ YOK", "KEFİL YOK"]
-    fi, spi = fit_track(b, dr, items, b.p((W_MM - M * 2) / 3 - 70), 16, 0.06,
-                        lambda s: b.mont(s, 800))
+    fi, spi = fit_track(b, dr, items, b.p((W_MM - M * 2) / 3 - 76), 17, 0.06,
+                        lambda s: b.mont(s, 700))
 
     def paint(d):
         d.rounded_rectangle([b.p(M), b.p(y), b.p(W_MM - M), b.p(y + h)],
-                            radius=b.p(10), fill=(*NAVY, 248))
+                            radius=b.p(8), fill=(*NAVY, 255),
+                            outline=(*GOLD_DIM, 180), width=max(2, b.p(0.9)))
         a, bpart, c = "Tasarrufa Dayalı ", "Faizsiz", " Finansman Sistemi ile"
         wa = d.textlength(a, font=fh)
         wb = d.textlength(bpart, font=fh)
         wc = d.textlength(c, font=fh)
         x0 = b.p(W_MM / 2) - (wa + wb + wc) / 2
         d.text((x0, b.p(y + 27)), a, font=fh, fill=WHITE, anchor="ls")
-        d.text((x0 + wa, b.p(y + 27)), bpart, font=fh, fill=GOLD_HI, anchor="ls")
+        d.text((x0 + wa, b.p(y + 27)), bpart, font=fh, fill=GOLD, anchor="ls")
         d.text((x0 + wa + wb, b.p(y + 27)), c, font=fh, fill=WHITE, anchor="ls")
 
         step = (W_MM - M * 2) / 3
@@ -341,12 +362,12 @@ def bottom_bar(b, y: float, h: float) -> None:
             ix = cx - w / 2 - b.p(26)
             iy = b.p(y + 56)
             d.rectangle([ix - b.p(9), iy - b.p(2), ix + b.p(9), iy + b.p(1)],
-                        fill=GOLD_HI)
+                        fill=GOLD)
             d.polygon([(ix, iy - b.p(12)), (ix + b.p(10), iy - b.p(3)),
-                       (ix - b.p(10), iy - b.p(3))], fill=GOLD_HI)
+                       (ix - b.p(10), iy - b.p(3))], fill=GOLD)
             for k in (-5, 0, 5):
                 d.line([ix + b.p(k), iy + b.p(1), ix + b.p(k), iy + b.p(9)],
-                       fill=GOLD_HI, width=max(2, b.p(1.2)))
+                       fill=GOLD, width=max(2, b.p(1.2)))
             track(b, d, (cx + b.p(14), cap_top(fi, iy + b.p(3))), t, fi, WHITE,
                   spi, "ma")
             if i:
@@ -362,35 +383,68 @@ FEATS = [("EN UYGUN", "FİYATLAR", "onay"),
          ("VADE FARKSIZ", "60 AY TAKSİT", "el")]
 
 
+def foot(b, y: float = 1836) -> None:
+    """Alt künye — onaylanan roll-up'larla aynı."""
+    dr = b.draw
+
+    def rule(d):
+        d.line([b.p(M), b.p(y - 30), b.p(W_MM - M), b.p(y - 30)],
+               fill=(*GOLD_DIM, 150), width=max(1, b.p(0.6)))
+    overlay(b, rule)
+
+    qs = b.p(54)
+    qx, qy = b.p(W_MM - M) - qs, b.p(y - 10)
+
+    def plate(d):
+        d.rounded_rectangle([qx - b.p(5), qy - b.p(5), qx + qs + b.p(5),
+                             qy + qs + b.p(5)], radius=b.p(4), fill=(255, 255, 255, 252))
+    overlay(b, plate)
+    b.im.alpha_composite(qr_image(QR_URL, qs, NIGHT), (qx, qy))
+
+    fs, sps = fit_track(b, dr, [f"{ru.SELLER} · {ru.SELLER_ROLE}"], b.p(440), 10,
+                        0.16, lambda s_: b.cond(s_))
+
+    def paint(d):
+        d.text((b.p(M), b.p(y + 20)), SITE, font=b.marcellus(28), fill=WHITE,
+               anchor="ls")
+        d.text((b.p(M), b.p(y + 50)), "  ·  ".join(PHONES), font=b.mont(17, 700),
+               fill=WHITE, anchor="ls")
+        track(b, d, (b.p(M), b.p(y + 60)), f"{ru.SELLER} · {ru.SELLER_ROLE}", fs,
+              (*ICE, 215), sps)
+    overlay(b, paint)
+
+
 def afis(priced: bool) -> Image.Image:
     b = board()
-    sky_and_render(b, "night-gate", 596)
+    sky_and_render(b, "night-gate", 980)
 
-    lg = lockup(b.p(266), white=False)
-    b.im.alpha_composite(lg, ((b.W - lg.width) // 2, b.p(30)))
+    lg = lockup(b.p(190), white=True)
+    b.im.alpha_composite(lg, ((b.W - lg.width) // 2, b.p(70)))
 
-    eyebrow(b, 244, "İZMİT'İN EN DEĞERLİ LOKASYONUNDA")
-    headline(b, 348, "FİYAT", "AVANTAJI")
-    script_line(b, 412, "Kaçırılmayacak fırsat!")
+    eyebrow(b, 264, "İZMİT'İN EN DEĞERLİ LOKASYONUNDA")
+    headline(b, 372, "FİYAT", "AVANTAJI")
+    script_line(b, 448, "Kaçırılmayacak fırsat!")
 
-    cards(b, 452, 262, PRICES if priced else SIZES, priced)
-    # Haplar sola, mühür sağa: üçü de alt köşeye yığılınca üst üste
-    # biniyorlardı. Konum hapı çıkarıldı — üst satır zaten lokasyonu
-    # söylüyor, ikinci kez tekrar ediyordu.
-    feat_pills(b, 730, 58, FEATS, total=474)
+    # Kartlar SOLDA, haplar SAĞDA dikey sütun — referansın yapısı.
+    cards(b, 546, 374, PRICES if priced else SIZES, priced, x0=M, span=488)
+    feat_pills(b, 564, 546, 178, 85, FEATS, gapy=11)
 
-    seal(b, 596, 790, 70)
-    bottom_bar(b, 880, 92)
+    pin_pill(b, M, 1276, 216, 64, ["İZMİT MİA", "BÖLGESİ"])
+    seal(b, 616, 1306, 94)
+    bottom_bar(b, 1524, 122)
 
     if not priced:
         dr = b.draw
         fq, spq = fit_track(b, dr, ["FİYAT VE KAT PLANLARI İÇİN KAREKODU OKUTUN"],
-                            b.p(420), 11, 0.14, lambda s: b.mont(s, 700))
+                            b.p(560), 13, 0.16, lambda s: b.cond(s))
 
         def note(d):
-            track(b, d, (b.p(M), b.p(862)),
-                  "FİYAT VE KAT PLANLARI İÇİN KAREKODU OKUTUN", fq, WHITE, spq)
+            track(b, d, (b.p(M), b.p(1690)),
+                  "FİYAT VE KAT PLANLARI İÇİN KAREKODU OKUTUN", fq, (*GOLD, 250), spq)
         overlay(b, note)
+
+    ru.vignette(b, 0.36, 2.3)
+    foot(b, 1836)
     return b.im.convert("RGB")
 
 
