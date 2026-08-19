@@ -78,6 +78,14 @@ PRICES = [("1+0", "699.000", "29.900"),
           ("1+1", "999.000", "39.900"),
           ("2+1", "2.000.000", "50.000")]
 
+# Fiyatsız sürüm: rakamların yerinde m² ve vade. Fiyat her yerde
+# yayımlanmasın istendiğinde bu pano kullanılır, yönlendirme karekoda.
+SIZES = [("1+0", "28 m²", "60 AY"),
+         ("1+1", "50 m²", "60 AY"),
+         ("2+1", "100 m²", "60 AY")]
+LBL_PRICE = ("PEŞİNAT", "AYLIK SADECE", "VADE FARKSIZ 60 AY")
+LBL_FREE = ("DAİRE BÜYÜKLÜĞÜ", "ÖDEME PLANI", "VADE FARKSIZ · %0 FAİZ")
+
 _FC = {}
 
 
@@ -374,13 +382,14 @@ def shock(b: B, cx: float, cy: float, r: float) -> None:
 
 
 def price_rows(b: B, y: float, rows, ink=WHITE, sub=ICE, card=(14, 34, 52),
-               step: float = 214) -> None:
+               step: float = 214, labels=None, unit: bool = True) -> None:
     """Fiyat satırları. Roll-up dar olduğu için kartlar yan yana değil ALT
     ALTA: 800 mm'de üç kart 217 mm'ye düşüyor ve 2.000.000 rakamı
     okunmaz puntoya iniyordu."""
+    l1, l2, l3 = labels or LBL_PRICE
     dr = b.draw
     ftyp = fit(b, dr, [r[0] for r in rows], b.p(120), 30, lambda s_: b.mont(s_, 700))
-    fl, spl = fit_track(b, dr, ["PEŞİNAT", "AYLIK SADECE"], b.p(210), 10, 0.20,
+    fl, spl = fit_track(b, dr, [l1, l2], b.p(210), 10, 0.20,
                         lambda s_: b.cond(s_))
     fnum = fit(b, dr, [r[1] for r in rows], b.p(260), 40,
                lambda s_: b.mont(s_, 700))
@@ -403,26 +412,27 @@ def price_rows(b: B, y: float, rows, ink=WHITE, sub=ICE, card=(14, 34, 52),
             d.text((bx + bw / 2, cap_top(ftyp, b.p(yy))), typ, font=ftyp,
                    fill=NIGHT, anchor="ma")
 
-            track(b, d, (b.p(M + 32), b.p(yy + 52)), "PEŞİNAT", fl, (*sub, 225), spl)
+            track(b, d, (b.p(M + 32), b.p(yy + 52)), l1, fl, (*sub, 225), spl)
             wn = d.textlength(pesin, font=fnum)
             d.text((b.p(M + 32), b.p(yy + 132)), pesin, font=fnum, fill=(*ink, 255),
                    anchor="ls")
-            d.text((b.p(M + 32) + wn + b.p(4), b.p(yy + 132)), " ₺", font=ftl,
-                   fill=(*SAND_HI, 255), anchor="ls")
+            if unit:
+                d.text((b.p(M + 32) + wn + b.p(4), b.p(yy + 132)), " ₺", font=ftl,
+                       fill=(*SAND_HI, 255), anchor="ls")
 
             d.line([b.p(430), b.p(yy + 46), b.p(430), b.p(yy + 148)],
                    fill=(*SAND, 130), width=max(1, b.p(0.6)))
 
-            track(b, d, (b.p(462), b.p(yy + 52)), "AYLIK SADECE", fl, (*sub, 225), spl)
+            track(b, d, (b.p(462), b.p(yy + 52)), l2, fl, (*sub, 225), spl)
             wa = d.textlength(aylik, font=fay)
             d.text((b.p(462), b.p(yy + 126)), aylik, font=fay, fill=(*ink, 255),
                    anchor="ls")
-            d.text((b.p(462) + wa + b.p(4), b.p(yy + 126)), " ₺", font=ftl,
-                   fill=(*SAND_HI, 255), anchor="ls")
-            fv, spv = fit_track(b, d, ["VADE FARKSIZ 60 AY"], b.p(230), 9.5, 0.14,
+            if unit:
+                d.text((b.p(462) + wa + b.p(4), b.p(yy + 126)), " ₺", font=ftl,
+                       fill=(*SAND_HI, 255), anchor="ls")
+            fv, spv = fit_track(b, d, [l3], b.p(240), 9.5, 0.14,
                                 lambda s_: b.cond(s_))
-            track(b, d, (b.p(462), b.p(yy + 150)), "VADE FARKSIZ 60 AY", fv,
-                  (*SAND_HI, 250), spv)
+            track(b, d, (b.p(462), b.p(yy + 150)), l3, fv, (*SAND_HI, 250), spv)
         overlay(b, row)
 
 
@@ -734,8 +744,8 @@ def ru_modern() -> Image.Image:
 
 
 # ============================================================ 6 · ÖDEME
-def ru_odeme() -> Image.Image:
-    """Üç daire tipinin peşinat ve taksiti. 2+1 bu panoda var."""
+def _odeme(priced: bool) -> Image.Image:
+    """Üç daire tipi. 2+1 bu panoda var. priced=False ise rakam yok."""
     b = board()
     b.im = gradient((b.W, b.H), [
         (0.0, NIGHT), (0.22, NAVY), (0.44, SKY), (0.66, NAVY), (1.0, NIGHT),
@@ -767,7 +777,8 @@ def ru_odeme() -> Image.Image:
               fsub, (*ICE, 235), spsub, "ma")
     overlay(b, subline)
 
-    price_rows(b, 560, PRICES)
+    price_rows(b, 560, PRICES if priced else SIZES,
+               labels=LBL_PRICE if priced else LBL_FREE, unit=priced)
 
     fq, spq = fit_track(b, dr, ["BANKA YOK · FAİZ YOK · KEFİL YOK"], b.p(646), 17,
                         0.18, lambda s_: b.cond(s_))
@@ -779,17 +790,25 @@ def ru_odeme() -> Image.Image:
               "BANKA YOK · FAİZ YOK · KEFİL YOK", fq, NIGHT, spq, "ma")
     overlay(b, note)
 
-    fk, spk = fit_track(b, dr, ["TASARRUFA DAYALI FAİZSİZ FİNANSMAN SİSTEMİ"],
-                        b.p(640), 13, 0.20, lambda s_: b.cond(s_))
+    kick = ("TASARRUFA DAYALI FAİZSİZ FİNANSMAN SİSTEMİ" if priced
+            else "FİYAT VE KAT PLANLARI İÇİN KAREKODU OKUTUN")
+    fk, spk = fit_track(b, dr, [kick], b.p(646), 13, 0.20, lambda s_: b.cond(s_))
 
     def kicker(d):
-        track(b, d, (b.p(W_MM / 2), b.p(1340)),
-              "TASARRUFA DAYALI FAİZSİZ FİNANSMAN SİSTEMİ", fk, (*ICE, 235), spk, "ma")
+        track(b, d, (b.p(W_MM / 2), b.p(1340)), kick, fk, (*ICE, 235), spk, "ma")
     overlay(b, kicker)
 
     vignette(b, 0.38, 2.3)
     foot(b, 1836)
     return b.im.convert("RGB")
+
+
+def ru_odeme() -> Image.Image:
+    return _odeme(True)
+
+
+def ru_odeme_fiyatsiz() -> Image.Image:
+    return _odeme(False)
 
 
 DESIGNS = [
@@ -799,6 +818,7 @@ DESIGNS = [
     ("rollup-4-klasik", ru_klasik, "klasik · Marcellus"),
     ("rollup-5-modern", ru_modern, "modern · Montserrat"),
     ("rollup-6-odeme", ru_odeme, "ödeme · üç fiyat"),
+    ("rollup-7-odeme-fiyatsiz", ru_odeme_fiyatsiz, "ödeme · fiyatsız"),
 ]
 
 
