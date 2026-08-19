@@ -23,3 +23,7 @@ tabela/kaynak/
 
 # Katmanlı kaynak paketleri (teslim için üretilir)
 tabela/kaynak-zip/
+
+# Higgsfield ham çıktıları (~160 MB). tabela/fiyat-rollup/PROMPT.md'deki
+# istemlerle yeniden üretilip npm run fiyat:rollup ile işleniyor.
+signage-source/hf/

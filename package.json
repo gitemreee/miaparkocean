@@ -22,6 +22,7 @@
     "tabela:katman": "python scripts/build-signage.py --katman",
     "reels": "python scripts/build-reels.py",
     "rollup": "python scripts/build-rollup.py",
+    "fiyat:rollup": "python3 scripts/finish-fiyat-rollup.py",
     "bilbord": "python scripts/build-billboard.py"
   },
   "dependencies": {
