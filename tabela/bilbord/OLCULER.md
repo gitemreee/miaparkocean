@@ -60,3 +60,16 @@ okuyor, ikisi birden değişiyor.
 
 Karekod: `https://miaparkocean.com/?utm_source=bilbord`
 (roll-up'ınki `?utm_source=rollup` — hangisinden geldiği analitikte ayrışır)
+
+## 6 · Ödeme panosu
+
+`bilbord-6-odeme` üç fiyat kartını yan yana verir (1+0 · 1+1 · 2+1).
+Yatay panoda kart başına 1500 mm düşüyor, rakamlar rahat okunuyor.
+
+| Tip | Peşinat | Aylık | Vade |
+|---|---|---|---|
+| 1+0 | 699.000 ₺ | 29.900 ₺ | 60 ay, vade farksız |
+| 1+1 | 999.000 ₺ | 39.900 ₺ | 60 ay, vade farksız |
+| 2+1 | 2.000.000 ₺ | 50.000 ₺ | 60 ay, vade farksız |
+
+**2+1 yalnızca bu panoda var.**

@@ -53,7 +53,7 @@ WHITE, NIGHT, ICE = ru.WHITE, ru.NIGHT, ru.ICE
 SAND, SAND_HI = ru.SAND, ru.SAND_HI
 SITE, PHONES = ru.SITE, ru.PHONES
 QR_URL = "https://miaparkocean.com/?utm_source=bilbord"
-UNITS, PESIN = ru.UNITS, ru.PESIN
+UNITS, PESIN, PRICES = ru.UNITS, ru.PESIN, ru.PRICES
 
 OUT = os.path.join(ROOT, "tabela", "bilbord")
 PREVIEW = os.path.join(OUT, "onizleme")
@@ -237,6 +237,69 @@ def shock_h(b, cx: float, cy: float, r: float = 470) -> None:
     soft_shadow(b, paint, blur=26, alpha=150, dy=18)
 
 
+def price_cards_h(b, y: float, h: float, rows) -> None:
+    """Üç fiyat kartı yan yana. Yatay panoda genişlik bol, kart başına
+    1500 mm düşüyor — rakamlar rahat okunuyor."""
+    gap = 60
+    cw = (W_MM - M * 2 - gap * 2) / len(rows)
+    dr = b.draw
+    ftyp = fit(b, dr, [r[0] for r in rows], b.p(300), 130, lambda s_: b.mont(s_, 700))
+    fl, spl = fit_track(b, dr, ["PEŞİNAT", "AYLIK SADECE"], b.p(cw - 200), 58, 0.22,
+                        lambda s_: b.cond(s_))
+    fnum = fit(b, dr, [r[1] for r in rows], b.p(cw - 240), 190,
+               lambda s_: b.mont(s_, 700))
+    fay = fit(b, dr, [r[2] for r in rows], b.p(cw - 380), 150,
+              lambda s_: b.mont(s_, 700))
+    ftl = b.mont(70, 700)
+    fv, spv = fit_track(b, dr, ["VADE FARKSIZ 60 AY"], b.p(cw - 140), 62, 0.14,
+                        lambda s_: b.cond(s_))
+
+    for i, (typ, pesin, aylik) in enumerate(rows):
+        x = M + i * (cw + gap)
+
+        def card(d, x=x, typ=typ, pesin=pesin, aylik=aylik):
+            d.rounded_rectangle([b.p(x), b.p(y), b.p(x + cw), b.p(y + h)],
+                                radius=b.p(26), fill=(14, 34, 52, 232),
+                                outline=(*SAND, 200), width=max(2, b.p(3)))
+            bw, bh = b.p(360), b.p(150)
+            bx = b.p(x + cw / 2) - bw // 2
+            d.rounded_rectangle([bx, b.p(y) - bh // 2, bx + bw, b.p(y) + bh // 2],
+                                radius=bh // 2, fill=(*SAND_HI, 255))
+            d.text((bx + bw / 2, cap_top(ftyp, b.p(y))), typ, font=ftyp,
+                   fill=NIGHT, anchor="ma")
+
+            cx = b.p(x + cw / 2)
+            track(b, d, (cx, b.p(y + 190)), "PEŞİNAT", fl, (*ICE, 225), spl, "ma")
+            wn = d.textlength(pesin, font=fnum)
+            wt = d.textlength(" ₺", font=ftl)
+            x0 = cx - (wn + wt) / 2
+            d.text((x0, b.p(y + 430)), pesin, font=fnum, fill=WHITE, anchor="ls")
+            d.text((x0 + wn, b.p(y + 430)), " ₺", font=ftl, fill=(*SAND_HI, 255),
+                   anchor="ls")
+
+            d.line([b.p(x + 70), b.p(y + 500), b.p(x + cw - 70), b.p(y + 500)],
+                   fill=(*SAND, 140), width=max(2, b.p(2.4)))
+            track(b, d, (cx, b.p(y + 560)), "AYLIK SADECE", fl, (*ICE, 225), spl, "ma")
+
+            pw, ph = b.p(cw - 140), b.p(230)
+            px, py = b.p(x + 70), b.p(y + 660)
+            d.rounded_rectangle([px, py, px + pw, py + ph], radius=b.p(18),
+                                fill=(255, 255, 255, 252))
+            wa = d.textlength(aylik, font=fay)
+            wt2 = d.textlength(" ₺", font=ftl)
+            ax = cx - (wa + wt2) / 2
+            d.text((ax, py + ph - b.p(56)), aylik, font=fay, fill=NIGHT, anchor="ls")
+            d.text((ax + wa, py + ph - b.p(56)), " ₺", font=ftl, fill=(150, 116, 56),
+                   anchor="ls")
+
+            vy = b.p(y + h) - b.p(180)
+            d.rounded_rectangle([px, vy, px + pw, vy + b.p(120)], radius=b.p(14),
+                                fill=(*SAND_HI, 255))
+            track(b, d, (cx, cap_top(fv, vy + b.p(60))), "VADE FARKSIZ 60 AY", fv,
+                  NIGHT, spv, "ma")
+        overlay(b, card)
+
+
 SHOTS = ["ic-mekan/17-sus-havuzu", "ic-mekan/18-yuruyus-yolu",
          "ic-mekan/05-1plus1-salon"]
 CAPS = ["SÜS HAVUZLARI", "YÜRÜYÜŞ YOLLARI", "İÇ MEKÂN"]
@@ -417,12 +480,64 @@ def bb_modern() -> Image.Image:
     return b.im.convert("RGB")
 
 
+# ============================================================ 6 · ÖDEME
+def bb_odeme() -> Image.Image:
+    """Üç daire tipinin peşinat ve taksiti. 2+1 bu panoda var."""
+    b = board()
+    im = cover("night-gate", (b.W, b.H), 0.5)
+    b.im.alpha_composite(im, (0, 0))
+    b.im.alpha_composite(scrim((b.W, b.H), [
+        (0.0, (*NIGHT, 214)), (0.30, (*NIGHT, 196)), (0.62, (*NIGHT, 178)),
+        (1.0, (*NIGHT, 218)),
+    ]), (0, 0))
+    logos(b)
+    dr = b.draw
+
+    def script_word(d):
+        d.text((b.p(W_MM / 2), b.p(600)), "Kaçırılmayacak fırsat!",
+               font=b.script(150, 700), fill=(*SAND_HI, 250), anchor="ms")
+    overlay(b, script_word)
+
+    fn, spn = fit_track(b, dr, ["FİYAT AVANTAJI"], b.p(3600), 300, 0.02,
+                        lambda s: b.playfair(s, 800))
+
+    def name(d):
+        track(b, d, (b.p(W_MM / 2), cap_top(fn, b.p(830))), "FİYAT AVANTAJI", fn,
+              WHITE, spn, "ma")
+    overlay(b, name)
+
+    fsub, spsub = fit_track(b, dr, ["İZMİT'İN EN DEĞERLİ LOKASYONUNDA"], b.p(2600),
+                            72, 0.24, lambda s: b.cond(s))
+
+    def subline(d):
+        track(b, d, (b.p(W_MM / 2), b.p(1010)), "İZMİT'İN EN DEĞERLİ LOKASYONUNDA",
+              fsub, (*ICE, 235), spsub, "ma")
+    overlay(b, subline)
+
+    price_cards_h(b, 1240, 1060, PRICES)
+
+    fq, spq = fit_track(b, dr, ["BANKA YOK · FAİZ YOK · KEFİL YOK"], b.p(2400), 90,
+                        0.18, lambda s: b.cond(s))
+
+    def note(d):
+        d.rounded_rectangle([b.p(1300), b.p(2400), b.p(3700), b.p(2560)],
+                            radius=b.p(20), fill=(*SAND_HI, 255))
+        track(b, d, (b.p(2500), cap_top(fq, b.p(2480))),
+              "BANKA YOK · FAİZ YOK · KEFİL YOK", fq, NIGHT, spq, "ma")
+    overlay(b, note)
+
+    vignette(b, 0.34, 2.4)
+    foot_h(b)
+    return b.im.convert("RGB")
+
+
 DESIGNS = [
     ("bilbord-1-gece", bb_gece, "gece · Playfair"),
     ("bilbord-2-oswald", bb_oswald, "gündüz · Oswald"),
     ("bilbord-3-beyaz", bb_beyaz, "beyaz · Cormorant"),
     ("bilbord-4-klasik", bb_klasik, "klasik · Marcellus"),
     ("bilbord-5-modern", bb_modern, "modern · Montserrat"),
+    ("bilbord-6-odeme", bb_odeme, "ödeme · üç fiyat"),
 ]
 
 

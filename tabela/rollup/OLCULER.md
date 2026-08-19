@@ -74,3 +74,22 @@ alındı. Bastırmadan önce doğrulatın; tek değiştirme noktası betikteki
 | Daire tipleri | betikte `UNITS` |
 | Telefon, web, satıcı | `src/data/site.ts` |
 | Ölçü, çözünürlük | betikte `W_MM`, `H_MM`, `DPI` |
+
+## 6 · Ödeme panosu
+
+`rollup-6-odeme` üç daire tipinin peşinat ve taksitini gösterir:
+
+| Tip | Peşinat | Aylık | Vade |
+|---|---|---|---|
+| 1+0 | 699.000 ₺ | 29.900 ₺ | 60 ay, vade farksız |
+| 1+1 | 999.000 ₺ | 39.900 ₺ | 60 ay, vade farksız |
+| 2+1 | 2.000.000 ₺ | 50.000 ₺ | 60 ay, vade farksız |
+
+**2+1 yalnızca bu panoda var.** Diğer beş panoda daire kutuları
+1+0 · 1+1 · 1+1 Loft; 2+1 oralara eklenmedi.
+
+Kartlar yan yana değil ALT ALTA: 800 mm'lik roll-up'ta üç kart 217 mm'ye
+düşüyor ve 2.000.000 rakamı okunmaz puntoya iniyordu.
+
+Fiyatlar betikteki `PRICES` listesinde — bilbord betiği de oradan okuyor,
+biri değişince ikisi birden güncelleniyor.
