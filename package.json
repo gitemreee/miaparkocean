@@ -25,7 +25,8 @@
     "rollup": "python scripts/build-rollup.py",
     "fiyat:rollup": "python3 scripts/finish-fiyat-rollup.py",
     "bilbord": "python scripts/build-billboard.py",
-    "panolar": "python3 scripts/build-mia-panolar.py"
+    "panolar": "python3 scripts/build-mia-panolar.py",
+    "yaka": "python3 scripts/build-yaka-ekip.py"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
