@@ -503,6 +503,16 @@ BOARDS = [
     ("arsa-10-karekod",     p10_karekod),
 ]
 
+# Seçim için üretilen ek panolar. Aynı ölçü, aynı dalga bandı — hangisi
+# seçilirse çite doğrudan girer, sıraya da sokulabilir.
+EXTRA = [
+    ("arsa-11-ic-mekan",    lambda: from_ai("arsa-11-ic-mekan")),
+    ("arsa-12-dis-mekan",   lambda: from_ai("arsa-12-dis-mekan")),
+    ("arsa-13-sifir-faiz",  lambda: from_ai("arsa-13-sifir-faiz")),
+    ("arsa-14-pesinat",     lambda: from_ai("arsa-14-pesinat")),
+    ("arsa-15-burada",      lambda: from_ai("arsa-15-burada")),
+]
+
 
 def fence_run(paths) -> None:
     """On panoyu yan yana dizip çitin dışarıdan görünüşünü çıkarır."""
@@ -525,7 +535,8 @@ def main() -> None:
     print(f"Arsa tabelaları — {W_MM}x{H_MM} mm @ {DPI} dpi "
           f"({round(W_MM / 25.4 * DPI)}x{round(H_MM / 25.4 * DPI)} px)")
     made = []
-    for name, fn in BOARDS:
+    for name, fn in BOARDS + [e for e in EXTRA
+                              if os.path.exists(os.path.join(SRC, e[0] + ".png"))]:
         im = fn()
         im.save(os.path.join(OUT, name + ".jpg"), quality=92, subsampling=0,
                 optimize=True, dpi=(DPI, DPI))
@@ -533,7 +544,7 @@ def main() -> None:
             os.path.join(PREVIEW, name + ".jpg"), quality=88, optimize=True)
         print(f"  -> {name}.jpg")
         made.append(os.path.join(PREVIEW, name + ".jpg"))
-    fence_run(made)
+    fence_run(made[:len(BOARDS)])
 
 
 if __name__ == "__main__":

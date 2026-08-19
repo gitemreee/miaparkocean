@@ -24,7 +24,8 @@
     "reels": "python scripts/build-reels.py",
     "rollup": "python scripts/build-rollup.py",
     "fiyat:rollup": "python3 scripts/finish-fiyat-rollup.py",
-    "bilbord": "python scripts/build-billboard.py"
+    "bilbord": "python scripts/build-billboard.py",
+    "panolar": "python3 scripts/build-mia-panolar.py"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
