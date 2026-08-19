@@ -1797,7 +1797,15 @@ def _split(full: Image.Image, bg: Image.Image, rows: int = 900):
         a = np.clip(np.maximum(up, dn).max(axis=2), 0.0, 1.0)
         safe = np.maximum(a, 1.0 / 255.0)[:, :, None]
         c = np.clip(b + (f - b) / safe, 0, 255)
-        strip = np.dstack([c, a * 255.0]).astype(np.uint8)
+
+        # Alfası sıfır olan yerde renk zaten hiçbir şeye karışmıyor ama
+        # (f-b)/safe orada JPEG gürültüsünü 255 katına çıkarıp rastgele
+        # renk üretiyordu. Rastgele renk PNG'de sıkışmıyor: bilbordun
+        # yazı katmanı 38 MB'a çıkmıştı. Görünmeyen yeri siyaha çekmek
+        # sonucu değiştirmiyor, dosyayı onda birine indiriyor.
+        a8 = np.round(a * 255.0)
+        c = np.where(a8[:, :, None] > 0, c, 0.0)
+        strip = np.dstack([c, a8]).astype(np.uint8)
         out.paste(Image.fromarray(strip, "RGBA"), (0, y0))
     return out
 
@@ -1814,6 +1822,18 @@ def build_layers() -> None:
 
         bp = os.path.join(SRC_OUT, f"{name}-zemin.jpg")
         bg.save(bp, "JPEG", quality=94, subsampling=0, optimize=True, dpi=(dpi, dpi))
+
+        # Matbaa yazıyı SIKIŞTIRILMIŞ zeminin üstüne koyacak; çözüm de
+        # onun üstünden yapılmalı. Bellekteki zemine göre çözülünce
+        # JPEG'in kendi kaybı hesaba girmiyor, iki dosya üst üste
+        # konunca harf kenarlarında fark kalıyordu.
+        bg = Image.open(bp).convert("RGB")
+
+        # Hedef, onaylanan dosyanın kendisi — yeniden render değil.
+        ap = os.path.join(OUT, f"{name}.jpg")
+        if os.path.exists(ap):
+            full = Image.open(ap).convert("RGB")
+
         tp = os.path.join(SRC_OUT, f"{name}-yazi.png")
         _split(full, bg).save(tp, optimize=True)
         print(f"  {name:<34} zemin {os.path.getsize(bp)/1e6:5.1f} MB · "

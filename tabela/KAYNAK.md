@@ -7,8 +7,15 @@ Tasarımlar onaylandıktan sonra üzerinde oynanabilsin diye her tasarım
     kaynak/<ad>-yazi.png    yalnızca tipografi, saydam zeminde
     kaynak/yazi-tipleri/    Fraunces ve Manrope (kullanılan yazı tipleri)
 
-İkisi üst üste konunca onaylanan tasarımın **birebir aynısı** çıkar.
-Kontrol edildi: sapma 2/255, yani yalnızca yuvarlama.
+İkisi üst üste konunca onaylanan tasarımın **aynısı** çıkar. 43 tasarımın
+tamamı tek tek kontrol edildi: ortalama sapma 0,07/255.
+
+Ayrıştırma matematiksel olarak tam; kalan fark JPEG'den geliyor. Onaylı
+dosya ile zemin ayrı ayrı sıkıştırıldığı için harf kenarlarında JPEG'in
+kendi halkalanması iki dosyada birebir aynı düşmüyor — yazının hiç
+olmadığı yerlerde bile aynı fark var (en büyük 21/255), yani katman
+ayrımından değil sıkıştırmadan. Baskıda görünmez; %400 yakınlaştırıp
+harf kenarına bakarsanız fark eder.
 
 ## Photoshop / Illustrator ile değiştirmek
 
