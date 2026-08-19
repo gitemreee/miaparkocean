@@ -60,21 +60,26 @@ M = 44                                    # yan pay
 FOOT_Y = 1800                             # künye bandının üst kenarı
 
 # ---------------------------------------------------------------- palet
-# Render'lar SICAK: mor-turuncu gün batımı, kehribar iç ışıklar, taş cephe.
-# Marka teali (#095678) bu görselin üstünde kavga ediyordu; zemin
-# neredeyse siyah laciverte indirildi, sıcak görselin altında sessiz
-# kalıyor. Tek kromatik vurgu açık ŞAMPANYA — hardal (#BF943F) altın
-# değil çamur okunuyordu ve koyu zeminde kontrastı yetmiyordu.
+# Vurucu KIRMIZI. Marka teali sıcak render'la kavga ediyordu ve pano
+# sönük kalıyordu; kırmızı hem uzaktan çarpıyor hem emlak baskısının
+# bildiği bir dil.
+#
+# İKİ LOGO DA KENDİ RENGİNDE KALIR. Kırmızı zemine oturunca ikisini de
+# beyaza çevirmek gerekirdi — logoyu bozmak yerine ikisi de kendi BEYAZ
+# PLAKETİNE alınıyor.
 WHITE = (255, 255, 255)
-PAPER = (247, 244, 238)          # sıcak kırık beyaz; soğuk beyaz görselle uyuşmuyor
-INK = (24, 30, 38)
-GREY = (122, 131, 144)
-LINE = (222, 217, 208)
-DEEP = (10, 24, 34)              # zemin, panel, künye
-MID = (16, 40, 55)               # üst üste binen panel
-SAND = (223, 199, 154)           # TEK vurgu: ince çizgi, küçük etiket, madde
-SAND_DIM = (176, 150, 106)       # açık zeminde saç teli
-OCEAN = bs.MIA_OCEAN
+RED = (210, 55, 44)
+RED_DEEP = (166, 38, 30)
+CHAR = (24, 26, 30)              # nötr is siyahı; kırmızıyla çakışmaz
+PAPER = (247, 245, 241)
+INK = (28, 30, 34)
+GREY = (124, 126, 132)
+LINE = (224, 220, 214)
+DEEP = CHAR
+SAND = RED
+SAND_DIM = RED
+MID = (38, 41, 46)
+OCEAN = RED
 
 SITE, PHONES = bs.SITE, bs.PHONES
 SELLER, SELLER_ROLE = bs.SELLER, bs.SELLER_ROLE
@@ -146,28 +151,37 @@ def hero_bg(b: Board, name: str, h: float, focus: float = 0.5) -> None:
     """Arka plandaki tek ana fotoğraf. Alt yarısı yazı için koyulaşır."""
     im = cover(name, (b.W, b.p(h)), focus)
     im.alpha_composite(scrim((b.W, b.p(h)), [
-        (0.0, (4, 18, 32, 95)), (0.26, (4, 18, 32, 38)),
-        (0.44, (4, 18, 32, 120)), (0.56, (4, 18, 32, 212)),
-        (0.72, (4, 18, 32, 235)), (1.0, (4, 18, 32, 246)),
+        (0.0, (16, 18, 22, 95)), (0.26, (16, 18, 22, 38)),
+        (0.44, (16, 18, 22, 125)), (0.56, (16, 18, 22, 220)),
+        (0.72, (16, 18, 22, 243)), (1.0, (16, 18, 22, 250)),
     ]))
     b.im.alpha_composite(im, (0, 0))
 
 
-def banner(b: Board, w: float = 424, h: float = 176, notch: float = 38) -> None:
-    """Tepeden sarkan çentikli bayrak; MİA kilidi içinde. Referansın açılışı."""
+def banner(b: Board, w: float = 440, h: float = 196, notch: float = 42) -> None:
+    """Tepeden sarkan kırmızı çentikli bayrak.
+
+    Logo doğrudan kırmızının üstüne konsaydı beyaza çevirmek gerekirdi;
+    marka kilidi bozulmasın diye içine BEYAZ PLAKET konuyor, logo kendi
+    renginde duruyor.
+    """
     x0, x1 = b.p((W_MM - w) / 2), b.p((W_MM + w) / 2)
     cx = (x0 + x1) // 2
 
     def paint(d):
         d.polygon([(x0, 0), (x1, 0), (x1, b.p(h)), (cx, b.p(h + notch)),
-                   (x0, b.p(h))], fill=(*DEEP, 255))
-        # Kenarda kalın hardal bant vardı; tek saç teli çizgi yeterli.
-        d.line([(x0, 0), (x0, b.p(h)), (cx, b.p(h + notch)), (x1, b.p(h)), (x1, 0)],
-               fill=(*SAND, 210), width=max(2, b.p(0.8)), joint="curve")
+                   (x0, b.p(h))], fill=(*RED, 255))
+        d.polygon([(x0, b.p(h)), (cx, b.p(h + notch)), (cx, b.p(h + notch) - b.p(6)),
+                   (x0, b.p(h) - b.p(6))], fill=(*RED_DEEP, 255))
+        d.polygon([(x1, b.p(h)), (cx, b.p(h + notch)), (cx, b.p(h + notch) - b.p(6)),
+                   (x1, b.p(h) - b.p(6))], fill=(*RED_DEEP, 255))
+        pw = b.p(176)
+        d.rounded_rectangle([cx - pw, b.p(20), cx + pw, b.p(166)], radius=b.p(5),
+                            fill=(255, 255, 255, 255))
     overlay(b, paint)
 
-    lg = lockup(b.p(224), white=True)
-    b.im.alpha_composite(lg, (cx - lg.width // 2, b.p(14)))
+    lg = lockup(b.p(186), white=False)
+    b.im.alpha_composite(lg, (cx - lg.width // 2, b.p(28)))
 
 
 def stack_head(b: Board, y: float, lines, size: float = 74) -> float:
@@ -207,11 +221,9 @@ def three_cards(b: Board, y: float, items, ph: float = 168,
         b.im.alpha_composite(im, (b.p(x), b.p(y)))
 
         def card(d, x=x, title=title, area=area, note=note,
-                 ink=(*WHITE, 255), soft=(214, 206, 192, 240)):
+                 ink=(*WHITE, 255), soft=(255, 224, 220, 245)):
             d.rectangle([b.p(x), b.p(y + ph), b.p(x + cw), b.p(y + ph + cap)],
-                        fill=(*DEEP, 255))
-            d.rectangle([b.p(x), b.p(y + ph), b.p(x + cw), b.p(y + ph) + b.p(2)],
-                        fill=(*SAND, 255))
+                        fill=(*RED, 255))
             d.text((b.p(x + cw / 2), b.p(y + ph + 34)), title, font=ft, fill=ink,
                    anchor="ms")
             track(b, d, (b.p(x + cw / 2), b.p(y + ph + 46)), area, fa, soft, spa, "ma")
@@ -284,19 +296,26 @@ def burst(b: Board, cx: float, cy: float, r: float, lines,
 
 
 def contact_footer(b: Board) -> None:
-    """Koyu iletişim bandı: Ocean logosu, konum, telefon, web, karekod."""
+    """Kırmızı iletişim bandı. Ocean logosu kendi renginde, beyaz plakette."""
     y0 = b.p(FOOT_Y)
 
     def band(d):
-        d.rectangle([0, y0, b.W, b.H], fill=(*DEEP, 255))
-        d.rectangle([0, y0, b.W, y0 + b.p(5)], fill=(*SAND, 255))
+        d.rectangle([0, y0, b.W, b.H], fill=(*RED, 255))
+        d.rectangle([0, y0, b.W, y0 + b.p(6)], fill=(*CHAR, 255))
     overlay(b, band)
 
-    lg = ocean_logo(b, 82, white=True)
-    b.im.alpha_composite(lg, (b.p(M), y0 + b.p(34)))
+    pw, ph = b.p(126), b.p(62)
+    px, py = b.p(M), y0 + b.p(34)
+
+    def plate(d):
+        d.rounded_rectangle([px, py, px + pw, py + ph], radius=b.p(4),
+                            fill=(255, 255, 255, 255))
+    overlay(b, plate)
+    lg = ocean_logo(b, 104, white=False)
+    b.im.alpha_composite(lg, (px + (pw - lg.width) // 2, py + (ph - lg.height) // 2))
 
     dr = b.draw
-    fr, spr = fit_track(b, dr, [SELLER_ROLE], b.p(200), 6.4, 0.20,
+    fr, spr = fit_track(b, dr, [SELLER_ROLE], b.p(200), 6.6, 0.20,
                         lambda s: b.sans(s, "700"))
     rows = [("pin", "İzmit MİA Bölgesi · Kocaeli"),
             ("tel", "  ·  ".join(PHONES)),
@@ -304,44 +323,42 @@ def contact_footer(b: Board) -> None:
     fi = b.sans(12, "700")
 
     def paint(d):
-        track(b, d, (b.p(M), y0 + b.p(84)), SELLER_ROLE, fr, (*bs.MIA_LIGHT, 235), spr)
-        d.line([b.p(178), y0 + b.p(30), b.p(178), y0 + b.p(96)],
-               fill=(*bs.MIA_DARK, 255), width=max(1, b.p(0.6)))
+        track(b, d, (b.p(M), y0 + b.p(104)), SELLER_ROLE, fr, (255, 226, 222, 245), spr)
+        d.line([b.p(200), y0 + b.p(30), b.p(200), y0 + b.p(98)],
+               fill=(255, 255, 255, 90), width=max(1, b.p(0.6)))
         for k, (kind, txt) in enumerate(rows):
             yy = y0 + b.p(42 + k * 30)
-            icon(d, kind, b.p(206), yy, b.p(8), (*SAND, 255), max(2, b.p(0.8)))
-            d.text((b.p(226), yy + b.p(4)), txt, font=fi, fill=WHITE, anchor="ls")
+            icon(d, kind, b.p(228), yy, b.p(8), (255, 255, 255, 255), max(2, b.p(0.8)))
+            d.text((b.p(248), yy + b.p(4)), txt, font=fi, fill=WHITE, anchor="ls")
     overlay(b, paint)
 
     qs = b.p(58)
     qx, qy = b.W - b.p(M) - qs, y0 + b.p(36)
 
-    def plate(d):
+    def qplate(d):
         d.rounded_rectangle([qx - b.p(5), qy - b.p(5), qx + qs + b.p(5),
                              qy + qs + b.p(5)], radius=b.p(4),
-                            fill=(255, 255, 255, 252))
-    overlay(b, plate)
-    b.im.alpha_composite(qr_image(QR_URL, qs, DEEP), (qx, qy))
+                            fill=(255, 255, 255, 255))
+    overlay(b, qplate)
+    b.im.alpha_composite(qr_image(QR_URL, qs, CHAR), (qx, qy))
 
 
 # ==================================================================== tasarım
 FINE = "TASARRUFA DAYALI FAİZSİZ FİNANSMAN · KOOPBİS KAYITLI KOOPERATİF"
 
-SHOTS = ["ic-mekan/01-1plus0-salon", "ic-mekan/05-1plus1-salon",
-         "ic-mekan/07-1plus1-mutfak"]
+SHOTS = ["facade-warm", "ic-mekan/18-yuruyus-yolu", "ic-mekan/17-sus-havuzu"]
 
-CARDS = [("1+0 Salon", "28 m² · 472 DAİRE", "Açık plan salon, ankastre mutfak."),
-         ("1+1 Salon", "50 m² · 96 DAİRE", "Ayrı yatak odası, geniş balkon."),
-         ("1+1 Mutfak", "50 m² · 96 DAİRE", "Ankastre set, geniş tezgâh.")]
+CARDS = [("Dış Görünüm", "DÖRT BLOK · SEKİZ KAT", "Geniş balkonlu modern cephe."),
+         ("Yürüyüş Yolu", "GENİŞ PEYZAJ", "Sabah koşusu, akşam yürüyüşü."),
+         ("Süs Havuzu", "MERKEZİ AVLU", "Avlunun ortasında, sesiyle bile.")]
 
 
 def ru_kimlik() -> Image.Image:
     b = board()
-    hero_bg(b, "night-gate", 1120, 0.5)
+    hero_bg(b, "entrance-gate", 1120, 0.46)
     banner(b)
-    stack_head(b, 812, [("1+0 ve 1+1", (*WHITE, 255)), ("DAİRELER", (*WHITE, 255)),
-                        ("SATIŞTA", (*WHITE, 255))], 76)
-    burst(b, 650, 946, 96, ["KREDİ YOK", "BANKA YOK", "KEFİL YOK"])
+    stack_head(b, 812, [("1+0 ve 1+1", (*WHITE, 255)), ("DAİRELER", (*RED, 255)),
+                        ("SATIŞTA", (*RED, 255))], 76)
     three_cards(b, 1086, CARDS)
     price_block(b, 1470, "PEŞİNAT", "699.000",
                 "1+0 daire için. Kalanı 60 aya kadar sabit taksitle.",
