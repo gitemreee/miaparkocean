@@ -44,10 +44,21 @@ DESIGNS = [
     ("hf-2-gece-a",             "fiyat-rollup-gece-1"),
     ("hf-3-gece-b",             "fiyat-rollup-gece-2"),
     ("hf-10-gunduz-a-fiyatsiz", "fiyat-rollup-gunduz-1-fiyatsiz"),
-    ("hf-11-gunduz-b-fiyatsiz", "fiyat-rollup-gunduz-2-fiyatsiz"),
+    ("hf-21-gunduz-b-fiyatsiz", "fiyat-rollup-gunduz-2-fiyatsiz"),
     ("hf-12-gece-a-fiyatsiz",   "fiyat-rollup-gece-1-fiyatsiz"),
-    ("hf-13-gece-b-fiyatsiz",   "fiyat-rollup-gece-2-fiyatsiz"),
+    ("hf-23-gece-b-fiyatsiz",   "fiyat-rollup-gece-2-fiyatsiz"),
 ]
+
+# Bu ikisi sıfırdan üretilmedi, RAKAMLI panonun kendisi düzenletildi (bkz.
+# PROMPT.md, "Rakamı silme geçişi") — istenen, o iki panonun aynısının
+# fiyatsızıydı. Düzenleme panoyu baştan çiziyor ve fotoğraftaki kapı
+# yazısını bozuyor ("MİA PARK OCEAN" -> "HİA PRNE OGEAN"). Fotoğraf bandı
+# rakamlı panodan geri alınıyor; yüzde, bandın üstünde iki görüntünün
+# birbirinden ayrılmadığı satır.
+PHOTO_SRC = {
+    "hf-21-gunduz-b-fiyatsiz": ("hf-1-gunduz-b", 0.63),
+    "hf-23-gece-b-fiyatsiz":   ("hf-3-gece-b",   0.69),
+}
 
 
 # ------------------------------------------------------------------ ölçüm
@@ -95,6 +106,29 @@ def placeholder_cols(band: np.ndarray, bar: np.ndarray) -> tuple[int, int]:
     base = round(w * 0.13)
     return (max(base, int(left.max()) + pad if left.size else 0),
             min(w - base, w - lim + int(right.min()) - pad if right.size else w))
+
+
+def restore_photo(im: Image.Image, src: str, frac: float, feather: int = 80) -> Image.Image:
+    """Fotoğraf bandını kaynak panodan geri koy.
+
+    Hizalama künye bandının ÜST KENARINDAN yapılıyor, satır numarasından
+    değil: düzenleme künyeyi bir yüzde kaydırabiliyor, bant üst kenarı ise
+    iki görüntüde de aynı şey. Üstteki dikiş 80 pikselde çapraz geçişle
+    yumuşatılıyor — zaten iki görüntünün de arka planı olduğu için orada
+    fark yok, geçiş sadece emniyet.
+    """
+    A = np.asarray(Image.open(os.path.join(SRC, src + ".png")).convert("RGB"), np.float32)
+    B = np.asarray(im, np.float32)
+    st = int(A.shape[0] * frac)
+    band = A[st:bar_top(A, np.median(A[A.shape[0] - 8:, round(A.shape[1] * 0.42):
+                                        round(A.shape[1] * 0.58)], axis=(0, 1)))]
+    h = band.shape[0]
+    dt = bar_top(B, np.median(B[B.shape[0] - 8:, round(B.shape[1] * 0.42):
+                                round(B.shape[1] * 0.58)], axis=(0, 1))) - h
+    B[dt:dt + h] = band
+    w = np.clip(np.arange(feather) / feather, 0, 1)[:, None, None]
+    B[dt:dt + feather] = np.asarray(im, np.float32)[dt:dt + feather] * (1 - w) + band[:feather] * w
+    return Image.fromarray(np.clip(B, 0, 255).astype(np.uint8), "RGB")
 
 
 # ------------------------------------------------------------------ uzatma
@@ -194,6 +228,8 @@ def cap_top(f, cy: float) -> float:
 # -------------------------------------------------------------------- akış
 def build(src: str, name: str) -> None:
     im = Image.open(os.path.join(SRC, src + ".png")).convert("RGB")
+    if src in PHOTO_SRC:
+        im = restore_photo(im, *PHOTO_SRC[src])
     W = im.width
     a = np.asarray(im, np.float32)
     bar = np.median(a[im.height - 8:, round(W * 0.42):round(W * 0.58)], axis=(0, 1))

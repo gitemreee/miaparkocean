@@ -105,3 +105,43 @@ Card 1 — badge 1+0 — label DAİRE BÜYÜKLÜĞÜ, value 28 m² — label ÖD
 Card 2 — badge 1+1 — label DAİRE BÜYÜKLÜĞÜ, value 50 m² — label ÖDEME PLANI, value 60 AY VADE
 Card 3 — badge 2+1 — label DAİRE BÜYÜKLÜĞÜ, value 100 m² — label ÖDEME PLANI, value 60 AY VADE
 ```
+
+## Rakamı silme geçişi
+
+`gunduz-2` ve `gece-2`'nin fiyatsızları sıfırdan üretilmedi. İstenen, o iki
+panonun **aynısının** fiyatsızıydı; ayrı üretim ayrı bir pano veriyor
+(başka fotoğraf açısı, başka yerleşim). Bunun yerine rakamlı panonun
+kendisi `medias` olarak verilip düzenletildi:
+
+```
+EDIT the attached poster. Keep it OTHERWISE PIXEL-IDENTICAL: {zemin,
+fotoğraf, başlık, mühür, kartlar, sağdaki haplar, künye, boş köşeler —
+hepsi tek tek sayılıyor}. Do not re-compose, re-crop, re-light or redraw
+the poster. Change ONLY the words listed below.
+
+CHANGE 1 — inside each glass card:
+  1+0: PEŞİNAT → DAİRE BÜYÜKLÜĞÜ, 699.000 ₺ → 28 m² ;
+       AYLIK SADECE → ÖDEME PLANI, 29.900 ₺ → 60 AY VADE
+  1+1: … 999.000 ₺ → 50 m² ; 39.900 ₺ → 60 AY VADE
+  2+1: … 2.000.000 ₺ → 100 m² ; 50.000 ₺ → 60 AY VADE
+Yeni etiketler eskisinden uzun: hap genişlesin, renk/yükseklik/köşe
+aynı kalsın. Her değer TEK SATIRDA kalsın.
+
+CHANGE 2 — geniş çubuk: VADE FARKSIZ 60 AY TAKSİT →
+PEŞİNAT VE TAKSİT SEÇENEKLERİ İÇİN BİZİ ARAYIN
+
+No price anywhere. No ₺ anywhere. The only numbers left are 1+0, 1+1,
+2+1, 28, 50, 100, 60 and the phone numbers.
+```
+
+Düzenleme yazıları temiz değiştirdi ama **panoyu baştan çizdiği için
+fotoğrafı da yeniden üretti** ve kapıdaki tabelayı bozdu:
+`MİA PARK OCEAN` → `HİA PRNE OGEAN` (gündüz), `MİA PARK UCEAN` (gece).
+Yapay zekâya "fotoğrafa dokunma" demek işe yaramıyor; düzeltme kod
+tarafında: `finish-fiyat-rollup.py` içindeki `PHOTO_SRC` eşlemesi
+fotoğraf bandını **rakamlı panodan** geri koyuyor. Hizalama künye
+bandının üst kenarından yapılıyor, satır numarasından değil — düzenleme
+künyeyi bir yüzde kaydırabiliyor.
+
+Aynı yol her yeni rakam/metin değişikliğinde kullanılabilir: rakamlı
+panoyu düzenlet, fotoğrafı geri koy.
