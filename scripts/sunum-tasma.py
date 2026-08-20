@@ -17,18 +17,25 @@ from pptx import Presentation
 from pptx.util import Emu
 
 EMU = 914400.0
-_CAR = "/usr/share/fonts/truetype/crosextra/Carlito-Regular.ttf"
-_CARB = "/usr/share/fonts/truetype/crosextra/Carlito-Bold.ttf"
+# Sunumun gerçek yazı tipleri; ölçüm bunlarla yapılıyor.
+YAZI = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                    "sunum", "yazitipi")
+AILE = {
+    "playfair display": ("PlayfairDisplay-Regular.ttf", "PlayfairDisplay-Bold.ttf"),
+    "montserrat":       ("Montserrat-Regular.ttf",      "Montserrat-Bold.ttf"),
+}
 LIB = "/usr/share/fonts/truetype/liberation/LiberationSans-%s.ttf"
-CARLITO = {"Regular": _CAR, "Bold": _CARB}
 PX = 4  # punto başına piksel (ölçek; oranlar korunur)
 
 
 def font(face, size_pt, bold):
-    kes = "Bold" if bold else "Regular"
-    yol = CARLITO.get(kes) or ""
-    if not (yol and os.path.exists(yol) and "arlito" in yol):
-        yol = LIB % kes          # Calibri'den geniş — güvenli taraf
+    ad = (face or "").strip().lower()
+    dosyalar = AILE.get(ad)
+    yol = ""
+    if dosyalar:
+        yol = os.path.join(YAZI, dosyalar[1 if bold else 0])
+    if not os.path.exists(yol):
+        yol = LIB % ("Bold" if bold else "Regular")   # geniş — güvenli taraf
     return ImageFont.truetype(yol, max(4, round(size_pt * PX)))
 
 
@@ -46,6 +53,7 @@ def wrap(words, f, max_px, draw):
 
 def main(path):
     prs = Presentation(path)
+    n_slayt = len(prs.slides._sldIdLst)
     bad = []
     for i, slide in enumerate(prs.slides, 1):
         for sh in slide.shapes:
@@ -74,7 +82,7 @@ def main(path):
                 bad.append((i, sh.text_frame.text.strip()[:44].replace("\n", " / "),
                             round(total_h / PX / 72, 2), round(avail_h / PX / 72, 2)))
     if not bad:
-        print("TAŞMA YOK — 15 slaytta bütün metin kutuları sığıyor.")
+        print("TAŞMA YOK — %d slaytta bütün metin kutuları sığıyor." % n_slayt)
         return 0
     print(f"{len(bad)} kutu taşıyor:")
     for s, t, need, have in bad:
