@@ -28,7 +28,7 @@
     "panolar": "python3 scripts/build-mia-panolar.py",
     "yaka": "python3 scripts/build-yaka-ekip.py",
     "sunum": "python3 scripts/build-sunum-gorsel.py && node scripts/build-sunum.js",
-    "sunum:denetim": "python3 scripts/sunum-tasma.py sunum/MIA-PARK-OCEAN-Emlakci-Sunumu.pptx && python3 scripts/sunum-cakisma.py sunum/MIA-PARK-OCEAN-Emlakci-Sunumu.pptx",
+    "sunum:denetim": "python3 scripts/sunum-tasma.py sunum/MIA-PARK-OCEAN-Lansman-Sunumu.pptx && python3 scripts/sunum-cakisma.py sunum/MIA-PARK-OCEAN-Lansman-Sunumu.pptx",
     "sunum:gorsel": "python3 scripts/build-sunum-gorsel.py"
   },
   "dependencies": {

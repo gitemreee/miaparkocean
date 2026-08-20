@@ -1,7 +1,7 @@
-# MİA PARK OCEAN — Emlakçı / broker sunumu
+# MİA PARK OCEAN — Lansman sunumu (emlakçılara)
 
-- `MIA-PARK-OCEAN-Emlakci-Sunumu.pptx` — 25 slayt, 16:9, konuşmacı notlu
-- `MIA-PARK-OCEAN-Emlakci-Sunumu.pdf` — aynı sunumun PDF hâli
+- `MIA-PARK-OCEAN-Lansman-Sunumu.pptx` — 25 slayt, 16:9
+- `MIA-PARK-OCEAN-Lansman-Sunumu.pdf` — aynı sunumun PDF hâli
 - `onizleme/slide-01…25.jpg` — slayt slayt önizleme
 - `yazitipi/` — sunumun yazı tipi (**kurulması gerekiyor**, aşağıda)
 
@@ -45,8 +45,8 @@ Bölgesi) · **ürün** (kompakt stok) · **ödeme** (faizsiz model).
 | 18 | İtiraz yönetimi | 4 soru / cevap |
 | 19 | Güven | Lacivert panel + kurum listesi + logo bandı |
 | 20 | İş birliği süreci | 5 elmas adım + **doldurulacak form** |
-| 21 | Satış destek materyalleri | Liste + gerçek materyal önizlemeleri |
-| 22 | Galeri | Dergi ızgarası, altı render |
+| 21 | Kullanabileceğiniz materyaller | Liste + gerçek materyal önizlemeleri |
+| 22 | Galeri | 10 farklı dış cephe / peyzaj görseli |
 | 23 | Rakamlarla proje | Altı büyük rakam (koyu) |
 | 24 | Neden MİA PARK OCEAN | Altı madde + kapanış bandı |
 | 25 | Kapanış / iletişim | Elmas küme + iletişim + CTA |
@@ -82,7 +82,7 @@ ikonlar ve materyal önizlemeleri PIL'den geliyor
 - Her fotoğraf yerleşeceği kutunun tam pikseline kırpılıyor — PowerPoint'te
   **gerdirme yok**. Materyal önizlemeleri oran korunarak (contain) oturuyor.
 - **Yüzme havuzu algısı yaratılmıyor.** Sudaki öğeler süs havuzu / su aksı;
-  9. slaytta yazılı uyarı var, konuşmacı notlarında tekrarlanıyor.
+  9. slaytta yazılı uyarı var.
   (`src/data/amenities.ts` hâlâ "Kapalı Yüzme Havuzu, Fitness, Sauna"
   taşıyor ve sitede görünüyor — gerçekten yoksa sitede de düzeltilmeli.)
 

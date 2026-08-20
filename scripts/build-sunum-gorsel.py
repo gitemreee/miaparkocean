@@ -229,17 +229,20 @@ def main():
     kirp("r-gundem", "entrance-gate.webp", 6.00, 7.5, 0.42, zoom=1.20)
     kirp("r-konum", "street-corner.webp", 5.00, 7.5, 0.38, zoom=1.30)
     kirp("r-1plus0", "ic-mekan/01-1plus0-salon.webp", 5.60, 7.5, 0.50, zoom=1.40)
-    kirp("r-1plus1", "ic-mekan/06-1plus1-yatak-odasi.webp", 5.60, 7.5, 0.50, zoom=1.40)
+    kirp("r-1plus1", "ic-mekan/05-1plus1-salon.webp", 5.60, 7.5, 0.50, zoom=1.40)
     kirp("r-odeme", "balcony-dusk.webp", 4.60, 7.5, 0.55, zoom=1.30)
-    kirp("r-guven", "ic-mekan/16-giris-holu.webp", 4.60, 7.5, 0.50, zoom=1.10)
+    kirp("r-guven", "hero-courtyard-dusk.webp", 4.60, 7.5, 0.42, zoom=1.30)
 
     # ---- elmas fotoğraflar (şeffaf)
     elmas("e-kapak1", "hero-courtyard-dusk.webp", 3.80, 0.50, zoom=1.15)
-    elmas("e-kapak2", "ic-mekan/13-bahceli-daire-terasi.webp", 2.55, 0.50, zoom=1.10)
-    elmas("e-ozet", "balcony-dusk.webp", 4.00, 0.50, zoom=1.20)
+    elmas("e-kapak2", "ic-mekan/14-dubleks-bahcesi.webp", 2.55, 0.50, zoom=1.10)
+    elmas("e-ozet", "ic-mekan/21-balkondan-deniz.webp", 4.00, 0.50, zoom=1.10)
     elmas("e-neden", "terrace-pergola.webp", 3.90, 0.50, zoom=1.15)
     elmas("e-mia", "ic-mekan/18-yuruyus-yolu.webp", 2.00, 0.50, zoom=1.10)
-    elmas("e-profil", "ic-mekan/05-1plus1-salon.webp", 3.70, 0.50, zoom=1.15)
+    elmas("e-mia1", "ic-mekan/17-sus-havuzu.webp", 1.30, 0.50, zoom=1.10)
+    elmas("e-mia2", "ic-mekan/19-cocuk-oyun-parki.webp", 1.30, 0.50, zoom=1.10)
+    elmas("e-mia3", "entrance-gate.webp", 1.30, 0.45, zoom=1.30)
+    elmas("e-profil", "ic-mekan/13-bahceli-daire-terasi.webp", 3.70, 0.50, zoom=1.10)
     elmas("e-guven", "ic-mekan/15-balkondan-avlu.webp", 2.00, 0.50, zoom=1.10)
     elmas("e-kapanis1", "night-gate.webp", 3.40, 0.50, zoom=1.15)
     elmas("e-kapanis2", "ic-mekan/21-balkondan-deniz.webp", 2.30, 0.50, zoom=1.10)
@@ -248,15 +251,23 @@ def main():
     kirp("ya-1", "ic-mekan/17-sus-havuzu.webp", 3.55, 2.25, 0.50, zoom=1.05)
     kirp("ya-2", "ic-mekan/19-cocuk-oyun-parki.webp", 3.55, 2.25, 0.50, zoom=1.05)
     kirp("urun-1plus0", "ic-mekan/03-1plus0-balkon.webp", 5.30, 2.40, 0.50)
-    kirp("urun-1plus1", "ic-mekan/05-1plus1-salon.webp", 5.30, 2.40, 0.50)
+    kirp("urun-1plus1", "ic-mekan/07-1plus1-mutfak.webp", 5.30, 2.40, 0.50)
 
-    # ---- galeri (dergi ızgarası)
-    kirp("gal-1", "entrance-gate.webp", 7.07, 3.42, 0.45)
-    kirp("gal-2", "ic-mekan/15-balkondan-avlu.webp", 3.05, 3.42, 0.50, zoom=1.15)
-    kirp("gal-3", "ic-mekan/19-cocuk-oyun-parki.webp", 3.05, 3.42, 0.50, zoom=1.15)
-    kirp("gal-4", "terrace-pergola.webp", 3.05, 3.42, 0.50, zoom=1.35)
-    kirp("gal-5", "balcony-dusk.webp", 3.05, 3.42, 0.50, zoom=1.35)
-    kirp("gal-6", "facade-warm.webp", 7.07, 3.42, 0.50)
+    # ---- galeri: 10 farklı dış cephe / peyzaj görseli (5 x 2 ızgara)
+    GW, GH = 2.603, 3.42
+    for i, (src, fc, zm) in enumerate([
+        ("entrance-gate.webp", 0.45, 1.15),
+        ("hero-courtyard-dusk.webp", 0.50, 1.15),
+        ("facade-warm.webp", 0.50, 1.10),
+        ("street-corner.webp", 0.40, 1.10),
+        ("night-gate.webp", 0.50, 1.15),
+        ("balcony-dusk.webp", 0.55, 1.10),
+        ("terrace-pergola.webp", 0.50, 1.10),
+        ("ic-mekan/17-sus-havuzu.webp", 0.50, 1.05),
+        ("ic-mekan/18-yuruyus-yolu.webp", 0.50, 1.05),
+        ("ic-mekan/19-cocuk-oyun-parki.webp", 0.50, 1.05),
+    ], 1):
+        kirp("gal-%02d" % i, src, GW, GH, fc, zoom=zm)
 
     # ---- materyal önizlemeleri (oran korunarak)
     malzeme("m-bilbord", "tabela/bilbord-mia/onizleme/bilbord-2-kemer.jpg", 3.90, 2.34)
