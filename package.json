@@ -27,7 +27,9 @@
     "bilbord": "python scripts/build-billboard.py",
     "panolar": "python3 scripts/build-mia-panolar.py",
     "yaka": "python3 scripts/build-yaka-ekip.py",
-    "sunum": "node scripts/build-sunum.js"
+    "sunum": "python3 scripts/build-sunum-sekil.py && node scripts/build-sunum.js",
+    "sunum:sekil": "python3 scripts/build-sunum-sekil.py",
+    "sunum:denetim": "python3 scripts/sunum-alan.py && python3 scripts/sunum-tasma.py sunum/MIA-PARK-OCEAN-Lansman-Sunumu.pptx"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
