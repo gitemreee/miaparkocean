@@ -35,11 +35,9 @@ os.makedirs(SEKIL, exist_ok=True)
 DPI = 150                       # slayt 13.333 x 7.5 inç -> 2000 x 1125
 def px(inch): return int(round(inch * DPI))
 
-# ------------------------------------------------------------ palet
-GECE = (6, 25, 43)              # #06192B
-LACI = (14, 46, 70)             # #0E2E46
-KREM = (243, 237, 227)          # #F3EDE3
-ALTIN = (201, 169, 97)          # #C9A961
+# ------------------------------------------------- palet (marka: okyanus)
+GECE = (4, 40, 58)              # #04283A  marka laciverti
+VURGU = (26, 116, 150)          # #1A7496  okyanus
 BEYAZ = (255, 255, 255)
 
 
@@ -101,7 +99,7 @@ def perde(ad, w_in, h_in, duraklar, yon="alt", renk=GECE):
 
 # ================================================================ MATERYAL
 def malzeme(ad, yol, w_in, h_in):
-    """Önizlemeyi oran KORUYARAK kutuya oturtur; beyaz zemin, altın kenar."""
+    """Önizlemeyi oran KORUYARAK kutuya oturtur; beyaz zemin, okyanus kenar."""
     w, h = px(w_in), px(h_in)
     im = Image.open(os.path.join(ROOT, yol)).convert("RGB")
     iw, ih = im.size
@@ -111,7 +109,7 @@ def malzeme(ad, yol, w_in, h_in):
     c = Image.new("RGB", (w, h), BEYAZ)
     c.paste(im.resize((nw, nh), Image.LANCZOS), ((w - nw) // 2, (h - nh) // 2))
     d = ImageDraw.Draw(c)
-    d.rectangle([0, 0, w - 1, h - 1], outline=ALTIN, width=2)
+    d.rectangle([0, 0, w - 1, h - 1], outline=VURGU, width=2)
     c.save(os.path.join(FOTO, ad + ".jpg"), quality=90, optimize=True)
 
 
@@ -269,7 +267,7 @@ def main():
     for t in ["pin", "ev", "takvim", "grafik", "banknot", "bina", "anahtar",
               "mail", "telefon", "balon", "kalem", "globe", "insta", "belge",
               "onay", "kalkan"]:
-        ikon("i-" + t + "-altin", t, ALTIN)
+        ikon("i-" + t + "-vurgu", t, VURGU)
         ikon("i-" + t + "-beyaz", t, BEYAZ)
 
     print("hazir:", FOTO, "+", SEKIL)

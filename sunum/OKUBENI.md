@@ -55,14 +55,20 @@ Bölgesi) · **ürün** (kompakt stok) · **ödeme** (faizsiz model).
 
 Referans şablonun dili birebir: **elmas (45° kare) içine kırpılmış
 fotoğraflar**, ince elmas çerçeveler, elmas numara rozetleri, kesik
-çizgiyle bağlanan adım diyagramları, köşe elmas süsleri. Renkler bizim:
+çizgiyle bağlanan adım diyagramları, köşe elmas süsleri. Renkler markanın
+kendi okyanus paleti (siteyle aynı):
 
-| | |
-|---|---|
-| Gece lacivert | `#06192B` |
-| Lacivert blok | `#0E2E46` |
-| Sıcak krem | `#F3EDE3` |
-| Champagne gold | `#C9A961` |
+| | | WCAG |
+|---|---|---|
+| Marka laciverti | `#04283A` | zemin |
+| Lacivert blok | `#0A3A55` | zemin |
+| Kâğıt beyazı | `#F5FAFC` | zemin |
+| Okyanus (vurgu) | `#1A7496` | açık zeminde 5.0:1 |
+| Camgöbeği (koyu zemin vurgusu) | `#48ABC5` | koyu zeminde 5.8:1 |
+| İkincil metinler | `#47606E` / `#A9C9D8` | 6.3:1 / 8.8:1 |
+
+Bütün metin/zemin çiftleri WCAG AA eşiğinden geçecek şekilde ölçülerek
+seçildi; süsleme sayılan ince çizgiler ve elmaslar bu eşiğe tabi değil.
 
 Elmaslar ve çizgiler PowerPoint'in KENDİ vektör şekilleri (45° döndürülmüş
 kare) — keskin ve düzenlenebilir. Yalnızca fotoğraf maskeleri, perdeler,
