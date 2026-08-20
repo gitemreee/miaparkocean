@@ -1,6 +1,6 @@
 # MİA PARK OCEAN — Ekip yaka kartları · Ölçü ve baskı föyü
 
-Lansman yaka kartının kişiye özel basılmış hâli. Altı kart, tek tasarım.
+Lansman yaka kartının kişiye özel basılmış hâli. Yedi kart, tek tasarım.
 
 | Dosya | İsim | Unvan |
 |---|---|---|
@@ -10,6 +10,7 @@ Lansman yaka kartının kişiye özel basılmış hâli. Altı kart, tek tasarı
 | `yaka-emir-yavuz.jpg` | Emir YAVUZ | Satış Temsilcisi |
 | `yaka-kenan-duman.jpg` | Kenan DUMAN | Satış Temsilcisi |
 | `yaka-mert-guler.jpg` | Mert GÜLER | Satış Temsilcisi |
+| `yaka-betul-eken.jpg` | Betül EKEN | Satış Temsilcisi |
 
 `onizleme/` altında 1/3 ölçekli kontrol kopyaları var.
 

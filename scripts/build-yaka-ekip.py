@@ -65,6 +65,7 @@ EKIP = [
     ("Emir",    "YAVUZ",    "SATIŞ TEMSİLCİSİ"),
     ("Kenan",   "DUMAN",    "SATIŞ TEMSİLCİSİ"),
     ("Mert",    "GÜLER",    "SATIŞ TEMSİLCİSİ"),
+    ("Betül",   "EKEN",     "SATIŞ TEMSİLCİSİ"),
 ]
 
 
