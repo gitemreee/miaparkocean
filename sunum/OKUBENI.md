@@ -1,6 +1,14 @@
 # MİA PARK OCEAN — Lansman sunumu (emlakçılara)
 
 `MIA-PARK-OCEAN-Lansman-Sunumu.pptx` — 15 slayt, 16:9, konuşmacı notlu.
+`MIA-PARK-OCEAN-Lansman-Sunumu.pdf` — aynı sunumun PDF hâli (yedek; salondaki
+makinede Office yoksa bununla açın).
+`onizleme/slide-01…15.jpg` — slayt slayt önizleme.
+
+**Her slaytta fotoğraf var.** Düz beyaz zemine yazı yok; görsel ya tam
+kanama, ya yarım kanama, ya da kolon düzeninde. Fotoğrafın üstüne yazı
+gelen yerlerde okunurluk için gradyan perde (`kaynak/perde-*.png`)
+kullanılıyor.
 
 ## Sunumdan önce YAPILACAK
 
@@ -61,3 +69,16 @@ node scripts/build-sunum.js
 Görseller `sunum/kaynak/` altında. Yazı tipleri Cambria (başlık) ve
 Calibri (gövde) — ikisi de Office ile geliyor, sunumu açan makinede
 kesin var.
+
+Perde dosyaları (PIL ile üretilmiş saydam gradyanlar, pptxgenjs'te
+gradyan dolgu yok):
+
+| Dosya | Nerede | Ne yapıyor |
+|---|---|---|
+| `perde-alt.png` | 1. slayt | Üstü açık, dibe doğru koyulaşır |
+| `perde-yari.png` | 3. slayt | Alt yarıyı koyultur, istatistikler okunsun |
+| `perde-yatay.png` | 5. slayt | Solu koyultur, sağdaki fotoğraflar açık kalır |
+| `perde-tam.png` | 7, 14 | Her yeri eşit koyultur |
+| `perde-koyu.png` | 10. slayt | En koyusu; arka plan sadece doku olsun |
+| `perde-dip.png` | 11. slayt | Kolonların sadece alt %45'ini koyultur |
+| `perde-sol.png` | 8, 13 | Yandaki fotoğrafı hafifçe bastırır |
