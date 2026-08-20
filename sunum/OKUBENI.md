@@ -1,130 +1,112 @@
 # MİA PARK OCEAN — Emlakçı / broker sunumu
 
-- `MIA-PARK-OCEAN-Emlakci-Sunumu.pptx` — 17 slayt, 16:9, konuşmacı notlu
+- `MIA-PARK-OCEAN-Emlakci-Sunumu.pptx` — 25 slayt, 16:9, konuşmacı notlu
 - `MIA-PARK-OCEAN-Emlakci-Sunumu.pdf` — aynı sunumun PDF hâli
-- `onizleme/slide-01…17.jpg` — slayt slayt önizleme
-- `yazitipi/` — sunumun yazı tipleri (aşağıya bakın, **kurulması gerekiyor**)
+- `onizleme/slide-01…25.jpg` — slayt slayt önizleme
+- `yazitipi/` — sunumun yazı tipi (**kurulması gerekiyor**, aşağıda)
 
-## AÇMADAN ÖNCE: yazı tiplerini kurun
+## AÇMADAN ÖNCE: yazı tipini kurun
 
-Sunum **Playfair Display** (başlık) ve **Montserrat** (alt metin)
-kullanıyor. İkisi de Office ile gelmez. `yazitipi/` klasöründeki 10 dosyayı
-seçip sağ tık → **Yükle** deyin (Mac'te çift tıklayıp "Yazı Tipini Yükle").
-Otuz saniyelik iş; kurmazsanız PowerPoint başka bir yazı tipine düşer ve
-sunum bambaşka görünür.
+Sunumun tamamı **Montserrat** ile dizildi; Office ile gelmez.
+`yazitipi/` klasöründeki `Montserrat-*.ttf` dosyalarını seçip sağ tık →
+**Yükle** deyin (Mac'te çift tıklayıp "Yazı Tipini Yükle"). Kurmazsanız
+PowerPoint başka bir yazı tipine düşer ve sunum farklı görünür.
 
-**Kurulum yapamayacağınız bir makinede sunacaksanız PDF'i kullanın** —
-PDF'te yazı tipleri gömülü, her yerde aynı görünür.
+**Kurulum yapamayacağınız makinede PDF'i kullanın** — yazı tipleri
+gömülü, her yerde aynı görünür.
 
 ## Sunum ne yapıyor
 
-Bu bir konut kataloğu değil, **B2B satış sunumu**. Emlakçının kafasındaki
-soruya cevap veriyor: *bu projeyi neden portföyüme almalıyım, müşteriye
-nasıl anlatırım?* Üç satış ekseni üzerine kurulu:
+Konut kataloğu değil, **B2B satış sunumu**: *bu projeyi neden portföyüme
+almalıyım, müşteriye nasıl anlatırım?* Üç satış ekseni: **konum** (MİA
+Bölgesi) · **ürün** (kompakt stok) · **ödeme** (faizsiz model).
 
-1. **Konum** — İzmit'in gelişen MİA bölgesi
-2. **Ürün** — yatırımcıya uygun kompakt daire stoğu
-3. **Ödeme** — tasarrufa dayalı faizsiz finansman
+## Akış (25 slayt)
 
-## Akış
+| # | Slayt | Düzen |
+|---|---|---|
+| 1 | Kapak | Elmas fotoğraf kümesi |
+| 2 | Gündem | Yarım fotoğraf + 8 elmas numaralı başlık |
+| 3 | Proje özeti | Dört büyük rakam + elmas fotoğraf |
+| 4 | Emlakçı için neden önemli | İkon satırları + elmas fotoğraf |
+| 5 | Konum | Yarım fotoğraf + 8 mesafe listesi |
+| 6 | MİA nedir | Lacivert panel + 01-03 numaralı |
+| 7 | Stratejik avantaj | İki blok + kesik çizgili ulaşım aksı |
+| 8 | Mimari | Tam kanama render |
+| 9 | Site içinde yaşam | Madde listesi + iki fotoğraf + süs havuzu uyarısı |
+| 10 | Ürün dağılımı | İki büyük blok: 472 · 112 |
+| 11 | 1+0 detay | Yarım fotoğraf + 4 madde |
+| 12 | 1+1 detay | Aynanın simetriği |
+| 13 | Müşteri profilleri | 5 satır + elmas fotoğraf |
+| 14 | Ödeme modeli | %30 · 60 AY · "banka yok" bandı |
+| 15 | Fiyat örnekleri | İki lacivert kart + dönemsellik dipnotu |
+| 16 | Müşteri süreci | 4 elmas adım + kesik çizgi |
+| 17 | 60 saniyelik anlatım | 5 alıntı satırı (koyu) |
+| 18 | İtiraz yönetimi | 4 soru / cevap |
+| 19 | Güven | Lacivert panel + kurum listesi + logo bandı |
+| 20 | İş birliği süreci | 5 elmas adım + **doldurulacak form** |
+| 21 | Satış destek materyalleri | Liste + gerçek materyal önizlemeleri |
+| 22 | Galeri | Dergi ızgarası, altı render |
+| 23 | Rakamlarla proje | Altı büyük rakam (koyu) |
+| 24 | Neden MİA PARK OCEAN | Altı madde + kapanış bandı |
+| 25 | Kapanış / iletişim | Elmas küme + iletişim + CTA |
 
-| # | Slayt | Düzen | Ne yapıyor |
-|---|---|---|---|
-| 1 | Kapak | Tam kanama render | Marka, bölge, "yeni satış fırsatı" |
-| 2 | 30 saniyede proje | %60 metin + %40 görsel | Dört büyük rakam |
-| 3 | Emlakçı için neden önemli | Dört sütun | Satılabilirlik argümanı |
-| 4 | Konum | İnfografik | Sekiz mesafe, ışın uzunluğu süreyle orantılı |
-| 5 | MİA nedir | %60 metin + %40 görsel | Merkezi İş Alanı kavramı |
-| 6 | Stratejik avantaj | İki blok + ulaşım aksı | İzmit ve İstanbul yatırımcısı |
-| 7 | Mimari | Tam kanama render | Premium katalog sayfası |
-| 8 | Ürün dağılımı | İki büyük blok | 472 adet 1+0 · 112 adet 1+1 |
-| 9 | Müşteri profilleri | Beş satır | Kime satılır |
-| 10 | Ödeme modeli | Büyük rakam | %30 peşinat · 60 ay vade farksız |
-| 11 | Fiyat örneği | İki kart | Peşinat ve aylık |
-| 12 | Satış argümanı | Şerit + beş cümle | 60 saniyelik anlatım |
-| 13 | İtiraz yönetimi | Soru / cevap | Dört itiraz |
-| 14 | Güven ve şeffaflık | %60 metin + %40 görsel | Kooperatif, KOOPBİS, kanun |
-| 15 | Galeri | Dergi ızgarası | Altı render, başlıksız |
-| 16 | Özet | Altı madde + bant | "Doğru konum, doğru ürün" |
-| 17 | Kapanış | Tam kanama render | İletişim + çağrı |
+## Tasarım dili (elmas)
 
-Ritim bilinçli: aynı düzen arka arkaya gelmiyor. Tam kanama render → metin
-ağırlıklı → büyük rakam → infografik → dergi ızgarası.
-
-## Tasarım dili
+Referans şablonun dili birebir: **elmas (45° kare) içine kırpılmış
+fotoğraflar**, ince elmas çerçeveler, elmas numara rozetleri, kesik
+çizgiyle bağlanan adım diyagramları, köşe elmas süsleri. Renkler bizim:
 
 | | |
 |---|---|
-| Gece mavisi | `#06192B` |
+| Gece lacivert | `#06192B` |
 | Lacivert blok | `#0E2E46` |
 | Sıcak krem | `#F3EDE3` |
-| Krem ayraç | `#E6DCCB` |
 | Champagne gold | `#C9A961` |
-| Açık altın | `#E0CB9C` |
 
-Tek dekoratif öğe **ince altın çizgi**. Gölgeli kart, 3B ikon, dekoratif
-grafik yok. Kenar boşluğu bütün slaytlarda aynı (`M = 0.95"`), yani tek
-ızgara.
+Elmaslar ve çizgiler PowerPoint'in KENDİ vektör şekilleri (45° döndürülmüş
+kare) — keskin ve düzenlenebilir. Yalnızca fotoğraf maskeleri, perdeler,
+ikonlar ve materyal önizlemeleri PIL'den geliyor
+(`scripts/build-sunum-gorsel.py` → `kaynak/foto/`, `kaynak/sekil/`).
 
-## Görseller
+## Görsel kuralları
 
-Yalnızca MİA PARK OCEAN'ın kendi render'ları (`public/images/`). Stok
-görsel, başka proje, AI mimari yok.
-
-**Her fotoğraf yerleşeceği kutunun tam pikseline kırpılmış olarak
-üretiliyor** (`scripts/build-sunum-gorsel.py` → `kaynak/foto/`), yani
-PowerPoint'te hiçbir görsel gerdirilmiyor. Mimari okunabilir kalsın diye
-yakınlaştırma bilerek düşük; 7. slayt (mimari) hiç kırpılmadan tam
-kanama 16:9 kullanıyor.
-
-**Yüzme havuzu yok.** Sudaki öğeler peyzaj amaçlı süs havuzu ve su aksı.
-7. slaytta bu ayrıca yazıyor, konuşmacı notunda uyarı var, galeriye
-projenin kendi süs havuzu render'ı kondu. `src/data/amenities.ts` hâlâ
-"Kapalı Yüzme Havuzu", "Fitness Salonu", "Sauna ve Türk Hamamı"
-maddelerini taşıyor ve sitede görünüyor — gerçekten yoksa sitede de
-düzeltilmeli.
-
-## İnfografikler
-
-4. slayttaki konum diyagramının ve 6. slayttaki ulaşım aksının
-**geometrisi** PIL'de üretiliyor, **yazıları** gerçek metin kutusu olarak
-konuyor (`kaynak/info.json` etiket çapalarını taşıyor). Böylece yazılar
-PowerPoint'te düzenlenebilir ve keskin kalıyor.
-
-Konum diyagramında ışın uzunluğu süreyle orantılı: göz otomatik olarak en
-yakın hedefleri görüyor, diyagram süs değil bilgi taşıyor.
+- Yalnızca projenin kendi render'ları (`public/images/`); stok yok, AI
+  mimari yok.
+- Her fotoğraf yerleşeceği kutunun tam pikseline kırpılıyor — PowerPoint'te
+  **gerdirme yok**. Materyal önizlemeleri oran korunarak (contain) oturuyor.
+- **Yüzme havuzu algısı yaratılmıyor.** Sudaki öğeler süs havuzu / su aksı;
+  9. slaytta yazılı uyarı var, konuşmacı notlarında tekrarlanıyor.
+  (`src/data/amenities.ts` hâlâ "Kapalı Yüzme Havuzu, Fitness, Sauna"
+  taşıyor ve sitede görünüyor — gerçekten yoksa sitede de düzeltilmeli.)
 
 ## Denetim
 
-Dalgalı/blok zeminlerde yerleşim gözle değil ölçüyle kuruldu:
-
 ```
-python3 scripts/sunum-tasma.py   sunum/MIA-PARK-OCEAN-Emlakci-Sunumu.pptx
-python3 scripts/sunum-cakisma.py sunum/MIA-PARK-OCEAN-Emlakci-Sunumu.pptx
+npm run sunum:denetim
 ```
 
-- **tasma** — her metin kutusunun kendi kutusuna sığıp sığmadığı
-- **cakisma** — kutusuna sığan ama komşusunun ya da altın çizginin üstüne
-  binen metinler, ve slayt dışına taşanlar
+- `scripts/sunum-tasma.py` — her metin kendi kutusuna sığıyor mu
+  (gerçek Montserrat metrikleriyle ölçer)
+- `scripts/sunum-cakisma.py` — kutusuna sığan ama komşusunun/çizginin
+  üstüne binen metinler ve slayt dışına taşanlar
 
-İkinci denetim bu sunumda 10 gerçek hata yakaladı (konum etiketlerinin
-noktaların üstüne binmesi, aks etiketlerinin çakışması, 14. slaytta
-dipnotun slayt dışına çıkması). Yeniden düzenledikten sonra ikisi de temiz.
+Bu sunumda ikinci denetim 14 çakışma yakaladı (etiket kutuları yandaki
+açıklamanın altına uzanıyordu); düzeltildi, ikisi de temiz.
 
 ## Sunum öncesi kontrol
 
-- **Fiyatlar dönemseldir.** 11. slaytta dipnot var; sözlü anlatırken de
-  söyleyin. Yazılı teklif satış ofisinden çıkar.
-- **Değer artışı taahhüdü vermeyin.** 5. slayt "potansiyel" diyor,
-  "kesin artış" demiyor. Sözlü anlatımda da böyle kalsın.
-- **Yasal / finansal garanti vermeyin.** 13. ve 14. slaytlar bilgilendirme
-  amaçlı; belgeler satış ofisinden talep edilebilir.
-- **2+1 anlatılmıyor.** 8. slayt yalnızca 1+0 ve 1+1 gösteriyor.
+- **20. slayttaki üç alan bilerek boş:** komisyon oranı, hakediş zamanı,
+  müşteri koruma süresi. Bu rakamlar depoda yok; sunumdan önce doldurun.
+- **Fiyatlar dönemseldir** — 15. slaytta dipnot var, sözlü de söyleyin.
+- **Değer artışı taahhüdü vermeyin** — 6. slayt "potansiyel" der.
+- **Yasal/finansal garanti vermeyin** — 18-19. slaytlar bilgilendirmedir.
+- **2+1 anlatılmıyor** — ürün slaytları yalnızca 1+0 ve 1+1.
 
 ## Yeniden üretme
 
 ```
-python3 scripts/build-sunum-gorsel.py     # fotoğraf/perde/infografik (ÖNCE)
+python3 scripts/build-sunum-gorsel.py     # görseller (ÖNCE)
 node    scripts/build-sunum.js            # sunum
 ```
 

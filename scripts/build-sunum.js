@@ -1,51 +1,45 @@
 /**
- * MİA PARK OCEAN — emlakçı / broker lansman sunumu.
+ * MİA PARK OCEAN — emlakçı / broker sunumu (25 slayt, elmas dili).
  *
- * B2B satış sunumu formatı: "bu projeyi neden portföyünüze almalısınız,
- * müşteriye nasıl anlatırsınız". Konut kataloğu değil.
+ * Referans şablonun görsel dili birebir: elmas (45° kare) içine kırpılmış
+ * fotoğraflar, ince elmas çerçeveler, numaralı listeler, kesik çizgiyle
+ * bağlanan adım diyagramları, köşe elmas süsleri. Renkler bizim:
+ * gece lacivert · sıcak krem · champagne gold.
  *
- * Tasarım dili: koyu lacivert · sıcak krem · champagne gold. İnce altın
- * çizgiler, düz lacivert ve krem bloklar, büyük Playfair Display başlık,
- * Montserrat alt metin. Dekoratif grafik, 3B ikon, gölgeli kart yok.
+ * Elmas ve çizgiler PowerPoint'in KENDİ vektör şekilleri (45° döndürülmüş
+ * kare) — keskin ve düzenlenebilir. Yalnızca fotoğraf maskeleri, perdeler
+ * ve ikonlar PIL'den geliyor (scripts/build-sunum-gorsel.py).
  *
- * Ritim bilinçli: tam kanama render → %60 görsel + %40 metin → büyük
- * rakam → infografik → dergi ızgarası. Aynı düzen arka arkaya gelmiyor.
- *
- *   python3 scripts/build-sunum-gorsel.py    # fotoğraf/perde/infografik
+ *   python3 scripts/build-sunum-gorsel.py    # görseller (önce bu)
  *   node    scripts/build-sunum.js           # sunum
  *
- * Fotoğraflar yerleşecekleri kutunun tam pikseline kırpılmış olarak
- * geliyor; burada hiçbir görsel gerdirilmiyor.
+ * Fotoğraflar yerleşecekleri kutunun tam pikseline kırpılmış geliyor;
+ * burada hiçbir görsel gerdirilmiyor.
  */
 const pptxgen = require("pptxgenjs");
 const path = require("path");
-const fs = require("fs");
 
 const KOK = path.join(__dirname, "..");
 const KAYNAK = path.join(KOK, "sunum", "kaynak");
 const fo = (n) => path.join(KAYNAK, "foto", n + ".jpg");
+const sk = (n) => path.join(KAYNAK, "sekil", n + ".png");
 const ka = (n) => path.join(KAYNAK, n + ".png");
 const mk = (n) => path.join(KOK, "public", n);
-const INFO = JSON.parse(fs.readFileSync(path.join(KAYNAK, "info.json"), "utf-8"));
 
 /* ---------------------------------------------------------------- palet */
-const GECE   = "06192B",   // gece mavisi — tam kanama zeminler
+const GECE   = "06192B",   // gece lacivert — koyu zemin
       LACI   = "0E2E46",   // lacivert blok
-      KREM   = "F3EDE3",   // sıcak kırık beyaz
+      KREM   = "F3EDE3",   // sıcak krem — açık zemin
       KREM_K = "E6DCCB",   // krem ayraç
       ALTIN  = "C9A961",   // champagne gold
       ALTIN_A= "E0CB9C",
-      SU     = "6FA8BE",   // çok sınırlı açık mavi
       BEYAZ  = "FFFFFF",
       KURSUN = "6E6357",   // krem üstünde ikincil metin
       SIS    = "AFC0CC";   // lacivert üstünde ikincil metin
 
-/* Başlık: premium editorial serif. Alt metin: modern sans. */
-const SERIF = "Playfair Display";
-const SANS  = "Montserrat";
-
+const F = "Montserrat";            // referans gibi tek sans aile
 const W = 13.333, HT = 7.5;
-const M = 0.95;                    // tek kenar boşluğu — bütün slaytlarda aynı ızgara
+const M = 0.90;                    // ortak kenar boşluğu
 
 const p = new pptxgen();
 p.layout = "LAYOUT_WIDE";
@@ -56,377 +50,611 @@ p.subject = "İzmit MİA Bölgesi · Broker Presentation";
 
 /* --------------------------------------------------------------- parçalar */
 function blok(s, x, y, w, h, renk) {
-  /* line verilmezse pptxgenjs kenarlık çizmiyor; verince ince koyu çizgi
-     kalıyordu ve krem bloklarda görünüyordu. */
   s.addShape(p.ShapeType.rect, { x, y, w, h, fill: { color: renk } });
 }
-function zeminFoto(s, ad, perdeAd) {
-  s.addImage({ path: fo(ad), x: 0, y: 0, w: W, h: HT });
-  if (perdeAd) s.addImage({ path: ka(perdeAd), x: 0, y: 0, w: W, h: HT });
-}
-/* ince altın çizgi — bu sunumun tek dekoratif öğesi */
-function cizgi(s, x, y, w, renk, kalinlik) {
+function cizgi(s, x, y, w, renk, kalin, kesik) {
   s.addShape(p.ShapeType.line, { x, y, w, h: 0,
-    line: { color: renk || ALTIN, width: kalinlik || 1 } });
+    line: { color: renk || ALTIN, width: kalin || 1, dashType: kesik ? "dash" : "solid" } });
 }
-function dikeyCizgi(s, x, y, h, renk, kalinlik) {
+function dikey(s, x, y, h, renk, kalin) {
   s.addShape(p.ShapeType.line, { x, y, w: 0, h,
-    line: { color: renk || KREM_K, width: kalinlik || 0.75 } });
+    line: { color: renk || KREM_K, width: kalin || 0.75 } });
 }
-/* harf aralıklı küçük etiket */
+/* elmas: 45° döndürülmüş kare. boy = köşeden köşeye genişlik (bbox). */
+function elmasDolu(s, cx, cy, boy, renk) {
+  const a = boy / Math.SQRT2;
+  s.addShape(p.ShapeType.rect, { x: cx - a / 2, y: cy - a / 2, w: a, h: a,
+    rotate: 45, fill: { color: renk } });
+}
+function elmasCizgi(s, cx, cy, boy, renk, kalin) {
+  const a = boy / Math.SQRT2;
+  s.addShape(p.ShapeType.rect, { x: cx - a / 2, y: cy - a / 2, w: a, h: a,
+    rotate: 45, fill: { type: "none" }, line: { color: renk || ALTIN, width: kalin || 1 } });
+}
+/* elmas fotoğraf + dış çerçeve elması */
+function elmasFoto(s, ad, cx, cy, boy, cerceveRenk) {
+  elmasCizgi(s, cx, cy, boy * 1.13, cerceveRenk || ALTIN, 1);
+  s.addImage({ path: sk(ad), x: cx - boy / 2, y: cy - boy / 2, w: boy, h: boy });
+}
+/* köşe süsü: bir dolu + bir çizgi elmas */
+function kose(s, cx, cy, renkDolu, renkCizgi, k) {
+  k = k || 1;
+  elmasDolu(s, cx, cy, 0.30 * k, renkDolu || ALTIN);
+  elmasCizgi(s, cx + 0.42 * k, cy + 0.30 * k, 0.52 * k, renkCizgi || ALTIN, 0.9);
+}
 function etiket(s, t, x, y, renk, w, boy) {
-  s.addText(t, { x, y, w: w || 5.0, h: 0.24, fontFace: SANS, fontSize: boy || 9,
-    bold: true, color: renk || ALTIN, charSpacing: 3.4, margin: 0 });
+  s.addText(t, { x, y, w: w || 5.4, h: 0.26, fontFace: F, fontSize: boy || 10,
+    bold: true, color: renk || ALTIN, charSpacing: 3.2, margin: 0 });
 }
 function baslik(s, t, x, y, o) {
   o = o || {};
-  s.addText(t, { x, y, w: o.w || 6.4, h: o.h || 1.0, fontFace: SERIF,
-    fontSize: o.boy || 34, color: o.renk || GECE, bold: o.kalin !== false,
-    italic: !!o.italik, align: o.hiza || "left", valign: o.dikey || "top",
-    lineSpacingMultiple: o.satir || 1.02, charSpacing: o.aralik || 0, margin: 0 });
+  s.addText(t, { x, y, w: o.w || 7.0, h: o.h || 0.9, fontFace: F,
+    fontSize: o.boy || 30, color: o.renk || GECE, bold: true,
+    align: o.hiza || "left", valign: o.dikeyH || "top",
+    lineSpacingMultiple: o.satir || 1.04, charSpacing: o.aralik || 0.6, margin: 0 });
 }
 function metin(s, t, x, y, o) {
   o = o || {};
-  s.addText(t, { x, y, w: o.w || 5.0, h: o.h || 0.6, fontFace: SANS,
+  s.addText(t, { x, y, w: o.w || 5.0, h: o.h || 0.6, fontFace: F,
     fontSize: o.boy || 10.5, color: o.renk || KURSUN, bold: !!o.kalin,
-    italic: !!o.italik, align: o.hiza || "left", valign: o.dikey || "top",
+    italic: !!o.italik, align: o.hiza || "left", valign: o.dikeyH || "top",
     lineSpacingMultiple: o.satir || 1.30, charSpacing: o.aralik || 0, margin: 0 });
 }
-/* Playfair rakam — büyük sayılar bu sunumun omurgası */
 function rakam(s, t, x, y, o) {
   o = o || {};
-  s.addText(t, { x, y, w: o.w || 3.0, h: o.h || 1.15, fontFace: SERIF,
-    fontSize: o.boy || 54, bold: true, color: o.renk || GECE,
+  s.addText(t, { x, y, w: o.w || 3.0, h: o.h || 1.0, fontFace: F,
+    fontSize: o.boy || 44, bold: true, color: o.renk || GECE,
     align: o.hiza || "left", valign: "bottom", margin: 0 });
 }
-/* sayfa altı imza — logo her slaytta değil, künye her slaytta */
+/* numara rozeti: dolu elmas + beyaz numara */
+function noElmas(s, cx, cy, n, renk, boy) {
+  elmasDolu(s, cx, cy, boy || 0.52, renk || ALTIN);
+  s.addText(String(n), { x: cx - 0.35, y: cy - 0.22, w: 0.7, h: 0.44, align: "center",
+    valign: "middle", fontFace: F, fontSize: 11, bold: true, color: GECE, margin: 0 });
+}
+/* ikon karesi: ince çerçeve + ikon */
+function ikonKare(s, ad, x, y, boy, renk) {
+  s.addShape(p.ShapeType.rect, { x, y, w: boy, h: boy, fill: { type: "none" },
+    line: { color: renk || ALTIN, width: 1 } });
+  s.addImage({ path: sk(ad), x: x + boy * 0.16, y: y + boy * 0.16,
+    w: boy * 0.68, h: boy * 0.68 });
+}
+/* adım elması: çerçeve + dolu lacivert elmas + beyaz ikon */
+function adimElmas(s, cx, cy, boy, ikonAd, koyuZemin) {
+  elmasCizgi(s, cx, cy, boy, ALTIN, 1);
+  elmasDolu(s, cx, cy, boy * 0.80, koyuZemin ? LACI : GECE);
+  const ib = boy * 0.34;
+  s.addImage({ path: sk(ikonAd), x: cx - ib / 2, y: cy - ib / 2, w: ib, h: ib });
+}
 function kunye(s, koyu, sagSinir) {
-  /* sagSinir: içerik alanının bittiği x. Sağda tam boy fotoğraf varsa
-     künyenin sağ yarısı fotoğrafın altında kaybolduğu için hiç basılmıyor. */
   const renk = koyu ? "5C6B78" : "A79C8C";
-  metin(s, "MİA PARK OCEAN  ·  İZMİT MİA BÖLGESİ", M, 7.02,
+  metin(s, "MİA PARK OCEAN  ·  İZMİT MİA BÖLGESİ", M, 7.04,
     { w: 6.0, boy: 7.5, aralik: 2.2, renk });
   const sag = sagSinir || (W - M);
   if (sag > 9.6) {
-    metin(s, "OCEAN GAYRİMENKUL — TEK YETKİLİ SATICI", sag - 5.2, 7.02,
+    metin(s, "OCEAN GAYRİMENKUL — TEK YETKİLİ SATICI", sag - 5.2, 7.04,
       { w: 5.2, boy: 7.5, aralik: 2.2, hiza: "right", renk });
   }
 }
 
 let s;
 
-/* ═══════════════════════════════════════════════════════ 1 · KAPAK */
-s = p.addSlide();
-zeminFoto(s, "tam-kapak", "perde-kapak");
-s.addImage({ path: mk("brand/logo-ocean-white.png"), x: M, y: 3.10, w: 3.70, h: 2.53 });
-cizgi(s, M, 5.92, 1.30, ALTIN, 1.5);
-etiket(s, "İZMİT MİA BÖLGESİ", M, 6.14, ALTIN_A, 5.0, 9.5);
-baslik(s, "Emlakçılar İçin Yeni Bir Satış Fırsatı", M, 6.48,
-  { w: 6.2, h: 0.6, boy: 21, renk: BEYAZ, kalin: false });
-metin(s, "OCEAN GAYRİMENKUL — TEK YETKİLİ SATICI", W - M - 5.0, 6.98,
-  { w: 5.0, boy: 8.5, aralik: 2.4, hiza: "right", renk: SIS });
-s.addNotes("Açılış. Kendinizi ve Ocean Gayrimenkul'ü tanıtın. Bu sunum bir konut kataloğu değil; bugün emlakçıya 'bu projeyi neden portföyüne almalı' sorusunun cevabını veriyoruz. Süre 20 dakika, sonrasında soru-cevap.");
-
-/* ══════════════════════════════════════ 2 · PROJEYİ 30 SANİYEDE ANLAT */
+/* ════════════════════════════════════════════════════════ 1 · KAPAK */
 s = p.addSlide();
 s.background = { color: KREM };
-s.addImage({ path: fo("yar-ozet"), x: W - 5.35, y: 0, w: 5.35, h: HT });
+/* sağda elmas kümesi (referans kapağı) */
+elmasCizgi(s, 9.55, 2.62, 4.55, ALTIN, 1);
+elmasFoto(s, "e-kapak1", 9.75, 2.48, 3.80);
+elmasFoto(s, "e-kapak2", 7.45, 5.05, 2.55);
+elmasDolu(s, 11.85, 4.98, 1.15, GECE);
+elmasDolu(s, 6.62, 3.28, 0.46, ALTIN);
+elmasCizgi(s, 12.25, 1.05, 0.85, ALTIN, 0.9);
+kose(s, 12.55, 6.85, ALTIN, GECE, 1);
+/* sol içerik */
+s.addImage({ path: mk("brand/logo-ocean-trim.png"), x: M, y: 0.72, w: 1.95, h: 1.34 });
+etiket(s, "OCEAN GAYRİMENKUL — TEK YETKİLİ SATICI", M, 2.55, KURSUN, 5.6, 8.5);
+baslik(s, "MİA PARK\nOCEAN", M, 2.95, { w: 6.0, h: 2.0, boy: 54, satir: 0.98, aralik: 1 });
+cizgi(s, M, 5.10, 1.30, ALTIN, 1.5);
+metin(s, "İZMİT MİA BÖLGESİ", M, 5.28, { w: 5.0, boy: 12, kalin: true, aralik: 3.0, renk: GECE });
+metin(s, "Emlakçılar için yeni bir satış fırsatı", M, 5.66,
+  { w: 5.4, boy: 12.5, renk: KURSUN });
+blok(s, M, 6.28, 3.55, 0.52, GECE);
+metin(s, "21 AĞUSTOS 2026  ·  EMEX OTEL, KOCAELİ", M + 0.22, 6.28,
+  { w: 3.2, h: 0.52, boy: 8.5, kalin: true, aralik: 1.4, renk: ALTIN_A, dikeyH: "middle" });
+s.addNotes("Açılış. Kendinizi ve Ocean Gayrimenkul'ü tanıtın. Bu sunum bir konut kataloğu değil; bugün emlakçıya 'bu projeyi neden portföyüne almalı' sorusunun cevabını veriyoruz. Süre 25 dakika, sonrasında soru-cevap.");
+
+/* ════════════════════════════════════════════════════════ 2 · GÜNDEM */
+s = p.addSlide();
+s.background = { color: GECE };
+s.addImage({ path: fo("r-gundem"), x: 0, y: 0, w: 6.0, h: HT });
+elmasCizgi(s, 3.0, 3.75, 4.6, ALTIN, 1.2);
+elmasDolu(s, 0.85, 6.6, 0.5, ALTIN);
+blok(s, 5.35, 0.72, 1.30, 0.52, ALTIN);
+metin(s, "2026", 5.35, 0.72, { w: 1.30, h: 0.52, boy: 13, kalin: true, hiza: "center",
+  dikeyH: "middle", renk: GECE, aralik: 1.5 });
+etiket(s, "GÜNDEM", 6.85, 0.86, ALTIN);
+baslik(s, "BUGÜN NELER\nKONUŞACAĞIZ?", 6.85, 1.22, { w: 5.6, h: 1.5, boy: 30, renk: KREM });
+[["Proje Özeti", "01"], ["Konum ve MİA Bölgesi", "02"], ["Mimari ve Yaşam", "03"],
+ ["Ürün Dağılımı", "04"], ["Ödeme Modeli", "05"], ["Müşteri Profilleri", "06"],
+ ["Satış Süreci ve İş Birliği", "07"], ["Güven ve İletişim", "08"]].forEach((g, i) => {
+  const y = 3.06 + i * 0.50;
+  noElmas(s, 7.12, y + 0.17, g[1], ALTIN, 0.40);
+  metin(s, g[0], 7.55, y, { w: 4.8, h: 0.36, boy: 12, kalin: true, renk: KREM, dikeyH: "middle" });
+});
+s.addNotes("Gündemi hızlı geçin. Vurgu 5. ve 7. başlıkta: ödeme modeli ve iş birliği. Emlakçı bu ikisini anlarsa gerisi kolay.");
+
+/* ═══════════════════════════════════════════════════ 3 · PROJE ÖZETİ */
+s = p.addSlide();
+s.background = { color: KREM };
 etiket(s, "PROJE ÖZETİ", M, 0.86);
-baslik(s, "MİA PARK OCEAN\nNedir?", M, 1.24, { w: 6.0, h: 1.9, boy: 44, satir: 0.98 });
-cizgi(s, M, 3.16, 1.30, ALTIN, 1.5);
-[["600", "Konut"], ["60 AY", "Vade farksız ödeme"],
- ["584", "1+0 ve 1+1 stok"], ["MİA", "İzmit Merkezi İş Alanı"]].forEach((k, i) => {
-  const x = M + (i % 2) * 3.35, y = 3.52 + Math.floor(i / 2) * 1.42;
-  rakam(s, k[0], x, y, { w: 3.05, h: 0.82, boy: k[0].length > 3 ? 34 : 42 });
-  metin(s, k[1], x, y + 0.88, { w: 3.05, h: 0.30, boy: 9.5, aralik: 1.4, renk: KURSUN });
-  cizgi(s, x, y + 1.22, 2.90, KREM_K, 0.75);
+baslik(s, "MİA PARK OCEAN NEDİR?", M, 1.22, { w: 7.4, boy: 30 });
+cizgi(s, M, 2.18, 1.30, ALTIN, 1.5);
+[["600", "KONUT", "İzmit MİA Bölgesi'nde tek etapta"],
+ ["584", "1+0 VE 1+1 STOK", "Satışın omurgası kompakt segment"],
+ ["60 AY", "VADE FARKSIZ", "Banka yok, faiz yok, kefil yok"],
+ ["%30", "PEŞİNAT", "Kalan tutar 60 aya kadar taksit"]].forEach((k, i) => {
+  const x = M + (i % 2) * 3.45, y = 2.62 + Math.floor(i / 2) * 1.72;
+  rakam(s, k[0], x, y, { w: 3.1, h: 0.78, boy: 36 });
+  metin(s, k[1], x, y + 0.84, { w: 3.1, h: 0.26, boy: 8.5, kalin: true, aralik: 2.0, renk: ALTIN });
+  metin(s, k[2], x, y + 1.10, { w: 3.1, h: 0.28, boy: 9, renk: KURSUN });
+  cizgi(s, x, y + 1.48, 3.0, KREM_K, 0.75);
 });
 metin(s, "MİA PARK OCEAN, İzmit'in gelişen merkezi iş alanında konumlanan; yatırım ve yaşam talebini aynı noktada buluşturan modern konut projesidir.",
-  M, 6.36, { w: 6.55, h: 0.60, boy: 10.5, italik: true, renk: "8A7F70" });
-kunye(s, true, W - 5.35);
-s.addNotes("Projeyi 30 saniyede anlatın: 600 konut, İzmit MİA Bölgesi, 60 aya kadar vade farksız ödeme, ağırlıklı olarak 1+0 ve 1+1. Emlakçı bu dört rakamı aklında tutsun.");
+  M, 6.28, { w: 6.9, h: 0.6, boy: 10.5, italik: true, renk: "8A7F70" });
+elmasFoto(s, "e-ozet", 10.35, 3.55, 4.00);
+elmasDolu(s, 12.55, 5.75, 0.52, ALTIN);
+elmasCizgi(s, 8.30, 1.35, 0.72, ALTIN, 0.9);
+kunye(s, true);
+s.addNotes("Projeyi 30 saniyede anlatın: 600 konut, MİA Bölgesi, 60 aya kadar vade farksız, %30 peşinat. Emlakçı bu dört rakamı aklında tutsun.");
 
-/* ═════════════════════════════════ 3 · EMLAKÇI İÇİN NEDEN ÖNEMLİ */
+/* ══════════════════════════════ 4 · EMLAKÇI İÇİN NEDEN ÖNEMLİ */
 s = p.addSlide();
 s.background = { color: KREM };
 etiket(s, "PORTFÖY DEĞERLENDİRMESİ", M, 0.86);
-baslik(s, "Satılması Kolay Bir Ürün Neden Oluşur?", M, 1.24, { w: 11.44, h: 0.9, boy: 34 });
-cizgi(s, M, 2.44, 1.30, ALTIN, 1.5);
-[["01", "Merkezi lokasyon", "Müşteriye konumu anlatmak kolay. Dakika bazlı mesafeler tek cümlede aktarılır."],
- ["02", "Kompakt daire seçenekleri", "Daha geniş yatırımcı kitlesine hitap eder. Giriş bütçesi düşer, talep genişler."],
- ["03", "Uzun vadeli ödeme", "Alıcının giriş bariyerini azaltır. Kredisi çıkmayan müşteri portföyde kalır."],
- ["04", "Güçlü proje görselliği", "Sunum ve dijital satışta yüksek algı oluşturur. Materyal hazır gelir."]]
+baslik(s, "SATILMASI KOLAY BİR ÜRÜN\nNEDEN OLUŞUR?", M, 1.22, { w: 7.2, h: 1.5, boy: 26 });
+cizgi(s, M, 2.78, 1.30, ALTIN, 1.5);
+[["i-pin-altin", "Merkezi lokasyon", "Müşteriye konumu anlatmak kolay; dakika bazlı mesafeler tek cümlede aktarılır."],
+ ["i-ev-altin", "Kompakt daire seçenekleri", "Daha geniş yatırımcı kitlesine hitap eder; giriş bütçesi düşer, talep genişler."],
+ ["i-takvim-altin", "Uzun vadeli ödeme", "Alıcının giriş bariyerini azaltır; kredisi çıkmayan müşteri portföyde kalır."],
+ ["i-grafik-altin", "Güçlü proje görselliği", "Sunum ve dijital satışta yüksek algı oluşturur; materyal hazır gelir."]]
 .forEach((k, i) => {
-  const x = M + i * 2.94;
-  if (i) dikeyCizgi(s, x - 0.30, 3.00, 2.55, KREM_K, 0.75);
-  rakam(s, k[0], x, 2.96, { w: 1.4, h: 0.72, boy: 30, renk: ALTIN });
-  baslik(s, k[1], x, 3.88, { w: 2.50, h: 0.72, boy: 16, satir: 1.06 });
-  metin(s, k[2], x, 4.66, { w: 2.50, h: 1.10, boy: 9.5 });
+  const y = 3.12 + i * 0.94;
+  ikonKare(s, k[0], M, y, 0.56);
+  metin(s, k[1], M + 0.82, y - 0.02, { w: 5.6, h: 0.30, boy: 12.5, kalin: true, renk: GECE });
+  metin(s, k[2], M + 0.82, y + 0.30, { w: 6.2, h: 0.50, boy: 9.5, renk: KURSUN });
 });
-blok(s, 0, 6.06, W, 1.44, LACI);
-baslik(s, "İyi proje yalnızca güzel değildir; doğru müşteriye kolay anlatılabilir.",
-  0, 6.06, { w: W, h: 1.44, boy: 19, renk: KREM, kalin: false, italik: true,
-             hiza: "center", dikey: "middle" });
-s.addNotes("Bu slayt sunumun tezi. Emlakçı 'güzel proje' duymaktan sıkılmıştır; ona satılabilirlik argümanı verin. Dördüncü maddede materyal desteğini vurgulayın.");
+elmasFoto(s, "e-neden", 10.55, 3.30, 3.90);
+elmasDolu(s, 8.55, 5.42, 0.44, GECE);
+elmasCizgi(s, 12.45, 1.25, 0.72, ALTIN, 0.9);
+metin(s, "İyi proje yalnızca güzel değildir; doğru müşteriye kolay anlatılabilir.",
+  8.20, 6.20, { w: 4.6, h: 0.55, boy: 10, italik: true, hiza: "center", renk: "8A7F70" });
+kunye(s, true);
+s.addNotes("Bu slayt sunumun tezi. Emlakçı 'güzel proje' duymaktan sıkılmıştır; ona satılabilirlik argümanı verin.");
 
-/* ══════════════════════════════════════════════════════ 4 · KONUM */
-s = p.addSlide();
-s.background = { color: GECE };
-etiket(s, "KONUM", M, 0.86, ALTIN);
-baslik(s, "İzmit'in Yeni\nDeğer Aksı", M, 1.24, { w: 4.1, h: 1.9, boy: 38, renk: KREM, satir: 0.98 });
-cizgi(s, M, 3.18, 1.30, ALTIN, 1.5);
-metin(s, "Günlük yaşam, ulaşım, sağlık, eğitim ve alışveriş birkaç dakikalık erişim alanında.",
-  M, 3.50, { w: 3.90, h: 0.90, boy: 11, renk: SIS, satir: 1.42 });
-metin(s, "Işınların uzunluğu süreyle orantılıdır.", M, 6.20,
-  { w: 3.90, h: 0.30, boy: 8.5, italik: true, renk: "6E7F8C" });
-/* diyagram: geometri PIL'den, etiketler gerçek metin kutusu */
-/* Kutu genişlikleri ölçüyle seçildi: en dıştaki etiket 5.75"–12.71"
-   aralığında kalıyor; ne sol sütuna ne sağ kenara değiyor. */
-const DX = 6.35, DY = 1.05, EW = 1.70;
-s.addImage({ path: ka("info-konum"), x: DX, y: DY, w: 6.30, h: 5.30 });
-baslik(s, "MİA PARK\nOCEAN", DX + INFO.konum.merkez.x - 1.00, DY + INFO.konum.merkez.y - 0.32,
-  { w: 2.00, h: 0.64, boy: 11, renk: GECE, hiza: "center", satir: 1.02 });
-INFO.konum.capalar.forEach((c) => {
-  const x = c.hiza === "left" ? DX + c.x
-          : c.hiza === "right" ? DX + c.x - EW
-          : DX + c.x - EW / 2;
-  metin(s, c.ad, x, DY + c.y - 0.32, { w: EW, h: 0.24, boy: 8.5, hiza: c.hiza, renk: SIS });
-  baslik(s, c.dk + " dk", x, DY + c.y - 0.08, { w: EW, h: 0.32, boy: 15, renk: ALTIN, hiza: c.hiza });
-});
-kunye(s, false, 5.35);
-s.addNotes("Mesafeleri ezberleyin; en çok D100 ve şehir hastanesi sorulur. Diyagramda ışın uzunluğu süreyle orantılı, yani göz otomatik olarak en yakınları görüyor. İzmit Sahili süresi teyide açık, kesin konuşmayın.");
-
-/* ═══════════════════════════════════════════════ 5 · MİA BÖLGESİ NEDİR */
+/* ═══════════════════════════════════════════════════════ 5 · KONUM */
 s = p.addSlide();
 s.background = { color: KREM };
-s.addImage({ path: fo("yar-mia"), x: W - 5.10, y: 0, w: 5.10, h: HT });
-etiket(s, "BÖLGE", M, 0.86);
-baslik(s, "MİA Neden Önemli?", M, 1.24, { w: 6.6, h: 0.9, boy: 40 });
+s.addImage({ path: fo("r-konum"), x: 0, y: 0, w: 5.0, h: HT });
+elmasCizgi(s, 2.5, 3.75, 3.8, ALTIN, 1.2);
+elmasDolu(s, 4.62, 0.80, 0.44, ALTIN);
+etiket(s, "KONUM", 5.75, 0.86);
+baslik(s, "HER YERE\nDAKİKALAR İÇİNDE", 5.75, 1.22, { w: 6.7, h: 1.5, boy: 26 });
+cizgi(s, 5.75, 2.78, 1.30, ALTIN, 1.5);
+[["D100 Karayolu", "1 DK"], ["İzmit Sahili", "2 DK"], ["41 Burada AVM", "3 DK"],
+ ["Şehir Merkezi", "5 DK"], ["Şehir Hastanesi", "5 DK"], ["TEM Otoyolu", "5 DK"],
+ ["Symbol AVM", "7 DK"], ["Kocaeli Üniversitesi", "10 DK"]].forEach((d, i) => {
+  const y = 3.10 + i * 0.44;
+  elmasDolu(s, 5.90, y + 0.15, 0.16, ALTIN);
+  metin(s, d[0], 6.18, y, { w: 4.2, h: 0.32, boy: 11, renk: GECE, dikeyH: "middle" });
+  metin(s, d[1], 10.60, y, { w: 1.8, h: 0.32, boy: 12, kalin: true, hiza: "right",
+    renk: ALTIN, dikeyH: "middle", aralik: 1 });
+  if (i < 7) cizgi(s, 5.90, y + 0.42, 6.50, KREM_K, 0.5);
+});
+metin(s, "Günlük yaşam, ulaşım, sağlık, eğitim ve alışveriş birkaç dakikalık erişim alanında.",
+  5.75, 6.72, { w: 6.6, h: 0.30, boy: 9, italik: true, renk: "8A7F70" });
+s.addNotes("Mesafeleri ezberleyin; en çok D100 ve şehir hastanesi sorulur. İzmit Sahili süresi teyide açık, kesin konuşmayın.");
+
+/* ══════════════════════════════════════════════ 6 · MİA BÖLGESİ NEDİR */
+s = p.addSlide();
+s.background = { color: KREM };
+blok(s, 0, 0, 5.30, HT, GECE);
+etiket(s, "BÖLGE", M, 0.86, ALTIN);
+baslik(s, "MİA NEDEN\nÖNEMLİ?", M, 1.22, { w: 3.9, h: 1.6, boy: 30, renk: KREM });
+cizgi(s, M, 2.92, 1.30, ALTIN, 1.5);
 metin(s, "MİA, Merkezi İş Alanı demektir: bir şehrin ofis, ticaret ve hizmet fonksiyonlarının yoğunlaşması için planlanan bölge.",
-  M, 2.28, { w: 6.5, h: 0.70, boy: 11, renk: KURSUN });
-cizgi(s, M, 3.16, 1.30, ALTIN, 1.5);
+  M, 3.22, { w: 3.6, h: 1.0, boy: 10.5, renk: SIS, satir: 1.45 });
+elmasFoto(s, "e-mia", 3.65, 5.95, 2.00);
+elmasDolu(s, 1.35, 5.35, 0.4, ALTIN);
 [["01", "Yeni ticari merkez", "Ofis, ticaret ve hizmet fonksiyonlarının yoğunlaşacağı bölge."],
  ["02", "Yeni yaşam aksı", "Yeni konut ve karma kullanımlı projelerin geliştiği bölge."],
  ["03", "Değerlenme potansiyeli", "Altyapı ve ticari hareketlilik arttıkça bölgenin yatırım çekiciliği artar."]]
 .forEach((k, i) => {
-  const y = 3.50 + i * 1.10;
-  rakam(s, k[0], M, y, { w: 0.75, h: 0.44, boy: 19, renk: ALTIN });
-  baslik(s, k[1], M + 0.90, y - 0.02, { w: 5.4, h: 0.40, boy: 17 });
-  metin(s, k[2], M + 0.90, y + 0.40, { w: 5.5, h: 0.52, boy: 9.5 });
+  const y = 1.30 + i * 1.66;
+  rakam(s, k[0], 5.95, y, { w: 1.0, h: 0.62, boy: 26, renk: ALTIN });
+  metin(s, k[1], 7.10, y + 0.06, { w: 5.2, h: 0.34, boy: 14, kalin: true, renk: GECE });
+  metin(s, k[2], 7.10, y + 0.46, { w: 5.2, h: 0.60, boy: 10, renk: KURSUN });
+  if (i < 2) cizgi(s, 5.95, y + 1.30, 6.45, KREM_K, 0.75);
 });
+kose(s, 12.45, 6.55, ALTIN, ALTIN, 0.9);
 metin(s, "Bölgesel gelişim bir potansiyeldir; değer artışı taahhüdü değildir.",
-  M, 6.94, { w: 6.5, h: 0.28, boy: 8, italik: true, renk: "9A9082" });
-s.addNotes("MİA kısaltmasını mutlaka açın; emlakçıların çoğu bilmiyor. DİKKAT: 'kesin değer artışı' demeyin. 'Potansiyel', 'gelişim aksı', 'yatırım çekiciliği' deyin.");
+  5.95, 6.70, { w: 6.4, h: 0.28, boy: 8.5, italik: true, renk: "9A9082" });
+s.addNotes("MİA kısaltmasını mutlaka açın. DİKKAT: 'kesin değer artışı' demeyin; 'potansiyel', 'gelişim aksı', 'yatırım çekiciliği' deyin.");
 
-/* ══════════════════════════════════ 6 · BÖLGENİN STRATEJİK AVANTAJI */
+/* ═══════════════════════════════ 7 · STRATEJİK AVANTAJ (AKS) */
 s = p.addSlide();
 s.background = { color: KREM };
 etiket(s, "PAZAR", M, 0.86);
-baslik(s, "İstanbul'a Yakın, İzmit'in Merkezinde", M, 1.24, { w: 10.2, h: 0.9, boy: 38 });
-cizgi(s, M, 2.44, 1.30, ALTIN, 1.5);
-blok(s, M, 2.86, 5.42, 1.98, LACI);
-etiket(s, "İZMİT YATIRIMCISI İÇİN", M + 0.46, 3.24, ALTIN_A, 4.6);
-baslik(s, "Şehrin gelişen yeni merkezinde konum", M + 0.46, 3.58,
-  { w: 4.6, h: 0.86, boy: 19, renk: KREM, kalin: false, satir: 1.06 });
-blok(s, 6.96, 2.86, 5.42, 1.98, KREM_K);
-etiket(s, "İSTANBUL YATIRIMCISI İÇİN", 7.42, 3.24, "8A6B2E", 4.6);
-baslik(s, "Anadolu Yakası'na kıyasla erişilebilir bütçe", 7.42, 3.58,
-  { w: 4.6, h: 0.86, boy: 19, renk: GECE, kalin: false, satir: 1.06 });
-/* ulaşım aksı */
-const AX = M - 0.09, AY = 5.32;
-s.addImage({ path: ka("info-aks"), x: AX, y: AY, w: 11.60, h: 1.30 });
-const AKS = INFO.aks.capalar;
-AKS.forEach((c) => {
-  const w = 3.30, x = AX + c.x - w / 2;
-  if (c.ana) {
-    baslik(s, c.ad, x, AY + c.y - 0.88, { w, h: 0.34, boy: 15, hiza: "center", renk: GECE });
-  } else {
-    metin(s, c.ad, x, AY + c.y + 0.26, { w, h: 0.28, boy: 10, hiza: "center", renk: GECE, kalin: true });
-  }
-});
-/* süreler duraklar ARASINDA, çizginin üstünde — uçlara koyunca durak
-   adlarının üstüne biniyordu (sunum-cakisma.py yakaladı) */
-[["yaklaşık 1,5–2 saat", 0, 1], ["yaklaşık 45–60 dakika", 1, 2]].forEach((d) => {
-  const orta = (AKS[d[1]].x + AKS[d[2]].x) / 2, w = 2.60;
-  metin(s, d[0], AX + orta - w / 2, AY + AKS[0].y - 0.46,
-    { w, h: 0.26, boy: 9, hiza: "center", italik: true, renk: "9A9082" });
-});
-s.addNotes("İki yönlü anlatı: İzmit yatırımcısına merkeziyet, İstanbul yatırımcısına bütçe. Marmara yatırımcısı bu projenin ikinci müşteri havuzu — emlakçıya bunu hatırlatın.");
+baslik(s, "İSTANBUL'A YAKIN, İZMİT'İN MERKEZİNDE", M, 1.22, { w: 11.5, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+blok(s, M, 2.48, 5.55, 1.85, GECE);
+etiket(s, "İZMİT YATIRIMCISI İÇİN", M + 0.40, 2.82, ALTIN_A, 4.6, 8.5);
+metin(s, "Şehrin gelişen yeni merkezinde konum", M + 0.40, 3.16,
+  { w: 4.8, h: 0.8, boy: 15, kalin: true, renk: KREM, satir: 1.2 });
+blok(s, 6.88, 2.48, 5.55, 1.85, KREM_K);
+etiket(s, "İSTANBUL YATIRIMCISI İÇİN", 7.28, 2.82, "8A6B2E", 4.6, 8.5);
+metin(s, "Anadolu Yakası'na kıyasla erişilebilir bütçeyle konut", 7.28, 3.16,
+  { w: 4.8, h: 0.8, boy: 15, kalin: true, renk: GECE, satir: 1.2 });
+/* ulaşım aksı: kesik çizgi + elmas duraklar */
+const AY = 5.55;
+cizgi(s, M + 0.3, AY, 11.25, ALTIN, 1.25, true);
+elmasDolu(s, M + 0.55, AY, 0.30, GECE);
+elmasCizgi(s, 7.05, AY, 0.62, ALTIN, 1.2);
+elmasDolu(s, 7.05, AY, 0.36, ALTIN);
+elmasDolu(s, 12.10, AY, 0.30, GECE);
+metin(s, "İSTANBUL ANADOLU YAKASI", M - 0.20, AY + 0.32, { w: 2.6, h: 0.3, boy: 8.5,
+  kalin: true, renk: GECE, aralik: 1 });
+metin(s, "MİA PARK OCEAN · İZMİT", 5.75, AY - 0.66, { w: 2.6, h: 0.3, boy: 9,
+  kalin: true, hiza: "center", renk: GECE, aralik: 1 });
+metin(s, "SAKARYA", 11.15, AY + 0.32, { w: 1.4, h: 0.3, boy: 8.5, kalin: true,
+  hiza: "right", renk: GECE, aralik: 1 });
+metin(s, "yaklaşık 1,5–2 saat", 2.90, AY - 0.40, { w: 2.6, h: 0.26, boy: 9, italik: true,
+  hiza: "center", renk: "9A9082" });
+metin(s, "yaklaşık 45–60 dakika", 8.60, AY - 0.40, { w: 2.6, h: 0.26, boy: 9, italik: true,
+  hiza: "center", renk: "9A9082" });
+metin(s, "Proje yalnız İzmit'e değil; İstanbul ve Sakarya'dan gelen Marmara yatırımcısına da hitap eder.",
+  M, 6.60, { w: 11.5, h: 0.32, boy: 10.5, italik: true, hiza: "center", renk: "8A7F70" });
+s.addNotes("İki yönlü anlatı: İzmit yatırımcısına merkeziyet, İstanbul yatırımcısına bütçe. Marmara yatırımcısı ikinci müşteri havuzu.");
 
-/* ═══════════════════════════════════════════════════ 7 · PROJE MİMARİSİ */
+/* ═══════════════════════════════════════════════════════ 8 · MİMARİ */
 s = p.addSlide();
-zeminFoto(s, "tam-mimari", "perde-mimari");
-etiket(s, "MİMARİ", M, 4.34, ALTIN_A);
-baslik(s, "Modern ve\nZamansız Mimari", M, 4.70,
-  { w: 5.4, h: 1.60, boy: 36, renk: BEYAZ, satir: 1.0 });
-cizgi(s, M, 6.52, 1.30, ALTIN, 1.5);
+s.addImage({ path: fo("tam-mimari"), x: 0, y: 0, w: W, h: HT });
+s.addImage({ path: ka("perde-mimari"), x: 0, y: 0, w: W, h: HT });
+etiket(s, "MİMARİ", M, 4.30, ALTIN_A);
+baslik(s, "MODERN VE\nZAMANSIZ MİMARİ", M, 4.66, { w: 5.4, h: 1.5, boy: 28, renk: BEYAZ });
+cizgi(s, M, 6.36, 1.30, ALTIN, 1.5);
 ["Modern cephe dili", "Geniş peyzaj alanları", "Süs havuzu ve su aksları",
- "Düzenli site içi ulaşım", "Balkonlu daireler", "Güvenlikli site yaklaşımı",
- "Gün ışığı odaklı cepheler"].forEach((o, i) => {
-  const x = 7.00 + (i % 2) * 3.10, y = 4.72 + Math.floor(i / 2) * 0.52;
-  cizgi(s, x, y + 0.14, 0.16, ALTIN, 1);
-  metin(s, o, x + 0.30, y, { w: 2.76, h: 0.28, boy: 10.5, renk: BEYAZ });
+ "Düzenli site içi ulaşım", "Balkonlu daireler", "Güvenlikli site yaklaşımı"]
+.forEach((o, i) => {
+  const x = 7.05 + (i % 2) * 3.00, y = 4.72 + Math.floor(i / 2) * 0.52;
+  elmasDolu(s, x + 0.08, y + 0.15, 0.15, ALTIN);
+  metin(s, o, x + 0.30, y, { w: 2.68, h: 0.30, boy: 10, renk: BEYAZ, dikeyH: "middle" });
 });
 metin(s, "Projedeki su öğeleri peyzaj amaçlı süs havuzu ve su akslarıdır.",
-  7.00, 6.68, { w: 5.4, h: 0.26, boy: 8.5, italik: true, renk: SIS });
-s.addNotes("DİKKAT: Projede yüzme havuzu YOK. Sudaki öğeler peyzaj amaçlı süs havuzu ve su aksı. Yüzme havuzu sözü verilirse teslimde sorun çıkar.");
+  7.05, 6.44, { w: 5.4, h: 0.26, boy: 8.5, italik: true, renk: SIS });
+s.addNotes("DİKKAT: Projede yüzme havuzu YOK. Sudaki öğeler peyzaj amaçlı süs havuzu ve su aksı.");
 
-/* ═════════════════════════════════════════════════ 8 · ÜRÜN DAĞILIMI */
+/* ═══════════════════════════════════════════ 9 · SİTE İÇİNDE YAŞAM */
+s = p.addSlide();
+s.background = { color: KREM };
+etiket(s, "SİTE KONSEPTİ", M, 0.86);
+baslik(s, "MERKEZİ AVLU ÇEVRESİNDE YAŞAM", M, 1.22, { w: 10.4, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+["Merkezi avlu", "Süs havuzları ve su aksları", "Geniş peyzaj alanları",
+ "Yürüyüş ve dinlenme yolları", "Çocuk oyun alanı", "Kapalı otopark",
+ "7/24 güvenlik", "Gün ışığı odaklı cepheler"].forEach((o, i) => {
+  const x = M + (i % 2) * 3.62, y = 2.56 + Math.floor(i / 2) * 0.56;
+  elmasDolu(s, x + 0.08, y + 0.16, 0.16, ALTIN);
+  metin(s, o, x + 0.32, y, { w: 3.2, h: 0.34, boy: 11, renk: GECE, dikeyH: "middle" });
+});
+blok(s, M, 5.02, 7.15, 0.70, GECE);
+s.addImage({ path: sk("i-kalkan-beyaz"), x: M + 0.22, y: 5.18, w: 0.38, h: 0.38 });
+metin(s, "Avludaki su SÜS havuzudur — yüzme havuzu diye anlatmayın.",
+  M + 0.75, 5.02, { w: 6.2, h: 0.70, boy: 11, kalin: true, renk: ALTIN_A, dikeyH: "middle" });
+s.addImage({ path: fo("ya-1"), x: 8.42, y: 2.42, w: 3.55, h: 2.25 });
+s.addImage({ path: fo("ya-2"), x: 8.42, y: 4.82, w: 3.55, h: 2.25 });
+elmasCizgi(s, 8.42, 2.42, 0.85, ALTIN, 1);
+kose(s, 12.35, 1.35, ALTIN, ALTIN, 0.8);
+kunye(s, true, 8.3);
+s.addNotes("ÖNEMLİ: Süs havuzu ile yüzme havuzunu karıştırmayın. Yüzme havuzu sözü verilirse teslimde sorun çıkar.");
+
+/* ═══════════════════════════════════════════ 10 · ÜRÜN DAĞILIMI */
 s = p.addSlide();
 s.background = { color: KREM };
 etiket(s, "ÜRÜN", M, 0.86);
-baslik(s, "Satışın Omurgası: 1+0 ve 1+1", M, 1.24, { w: 9.6, h: 0.9, boy: 38 });
-cizgi(s, M, 2.42, 1.30, ALTIN, 1.5);
+baslik(s, "SATIŞIN OMURGASI: 1+0 VE 1+1", M, 1.22, { w: 10.0, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
 [["urun-1plus0", "1+0", "472", "Yatırım, kiralama ve kompakt yaşam talebine yönelik güçlü stok."],
  ["urun-1plus1", "1+1", "112", "Tek kişi, çiftler ve yatırımcı müşteriler için dengeli ürün."]]
 .forEach((u, i) => {
-  const x = M + i * 5.72;
-  s.addImage({ path: fo(u[0]), x, y: 2.84, w: 5.30, h: 2.55 });
-  blok(s, x, 5.39, 5.30, 1.44, i ? LACI : GECE);
-  baslik(s, u[1], x + 0.40, 5.56, { w: 1.6, h: 0.52, boy: 26, renk: ALTIN });
-  metin(s, "ADET", x + 2.10, 5.50, { w: 2.8, h: 0.22, boy: 8.5, aralik: 2.4,
-    hiza: "right", renk: ALTIN_A });
-  rakam(s, u[2], x + 2.10, 5.66, { w: 2.8, h: 0.60, boy: 34, renk: KREM, hiza: "right" });
-  metin(s, u[3], x + 0.40, 6.34, { w: 4.5, h: 0.40, boy: 9.5, renk: SIS });
+  const x = M + i * 5.80;
+  s.addImage({ path: fo(u[0]), x, y: 2.52, w: 5.30, h: 2.40 });
+  blok(s, x, 4.92, 5.30, 1.52, i ? LACI : GECE);
+  elmasDolu(s, x + 0.62, 5.42, 0.72, ALTIN);
+  metin(s, u[1], x + 0.62 - 0.5, 5.42 - 0.22, { w: 1.0, h: 0.44, boy: 14, kalin: true,
+    hiza: "center", renk: GECE, dikeyH: "middle" });
+  metin(s, "ADET", x + 2.45, 5.06, { w: 2.5, h: 0.24, boy: 8, aralik: 2.4, hiza: "right", renk: ALTIN_A });
+  rakam(s, u[2], x + 2.45, 5.20, { w: 2.5, h: 0.62, boy: 34, renk: KREM, hiza: "right" });
+  metin(s, u[3], x + 0.30, 5.94, { w: 4.7, h: 0.44, boy: 9, renk: SIS });
 });
-metin(s, "Projenin ana satış gücü kompakt daire segmentidir.", M, 6.96,
-  { w: 11.4, h: 0.30, boy: 10.5, italik: true, hiza: "center", renk: "8A7F70" });
-s.addNotes("584 dairenin ikisi de kompakt. Emlakçı için bu şu demek: tek bir müşteri profiline değil, çok geniş bir havuza satabilirsiniz. Bu slaytta 2+1'den söz etmiyoruz.");
+metin(s, "Projenin ana satış gücü kompakt daire segmentidir.", M, 6.68,
+  { w: 11.5, h: 0.30, boy: 10.5, italik: true, hiza: "center", renk: "8A7F70" });
+s.addNotes("584 dairenin ikisi de kompakt: çok geniş bir müşteri havuzuna satarsınız. Bu sunumda 2+1'den söz etmiyoruz.");
 
-/* ═══════════════════════════════════════════════ 9 · MÜŞTERİ PROFİLLERİ */
+/* ══════════════════════════════════════════════════ 11 · 1+0 DETAY */
 s = p.addSlide();
 s.background = { color: KREM };
-s.addImage({ path: fo("yar-profil"), x: W - 4.10, y: 0, w: 4.10, h: HT });
-etiket(s, "HEDEF KİTLE", M, 0.86);
-baslik(s, "Bu Projeyi Kime Satabilirsiniz?", M, 1.24, { w: 7.4, h: 1.5, boy: 38, satir: 0.98 });
-cizgi(s, M, 2.86, 1.30, ALTIN, 1.5);
-[["İlk kez konut alanlar", "Düşük başlangıç bariyeri arayanlar."],
- ["Yatırımcılar", "Kiralama potansiyeli olan kompakt konut arayanlar."],
- ["İstanbul yatırımcıları", "İstanbul dışında alternatif arayanlar."],
- ["Çalışan profesyoneller", "Merkezi ve ulaşımı kolay daire isteyenler."],
- ["Çocuğu üniversitede okuyan aileler", "Kocaeli Üniversitesi ve şehir merkezine yakınlık arayanlar."]]
+s.addImage({ path: fo("r-1plus0"), x: 0, y: 0, w: 5.60, h: HT });
+elmasCizgi(s, 2.8, 3.75, 4.0, ALTIN, 1.2);
+blok(s, 4.55, 0.72, 1.55, 0.55, GECE);
+metin(s, "1+0", 4.55, 0.72, { w: 1.55, h: 0.55, boy: 15, kalin: true, hiza: "center",
+  dikeyH: "middle", renk: ALTIN, aralik: 2 });
+etiket(s, "ÜRÜN DETAYI", 6.35, 0.86);
+baslik(s, "1+0 — YATIRIMIN\nKOMPAKT YÜZÜ", 6.35, 1.22, { w: 6.1, h: 1.5, boy: 26 });
+cizgi(s, 6.35, 2.78, 1.30, ALTIN, 1.5);
+[["Brüt 28 m²", "Verimli plan; her metrekare kullanımda."],
+ ["472 adet", "Projenin en derin stoğu — sürekli satış imkânı."],
+ ["Yatırım odaklı", "Kiralama talebi güçlü, likiditesi yüksek segment."],
+ ["Hedef müşteri", "Genç profesyonel, öğrenci velisi, kira geliri arayan yatırımcı."]]
 .forEach((k, i) => {
-  const y = 3.22 + i * 0.80;
-  rakam(s, "0" + (i + 1), M, y, { w: 0.70, h: 0.38, boy: 17, renk: ALTIN });
-  baslik(s, k[0], M + 0.86, y - 0.04, { w: 4.0, h: 0.36, boy: 15 });
-  metin(s, k[1], M + 4.96, y + 0.02, { w: 3.4, h: 0.44, boy: 9, renk: KURSUN });
-  if (i < 4) cizgi(s, M, y + 0.60, 7.44, KREM_K, 0.75);
+  const y = 3.14 + i * 0.86;
+  noElmas(s, 6.55, y + 0.16, "0" + (i + 1), ALTIN, 0.42);
+  metin(s, k[0], 7.02, y - 0.02, { w: 1.95, h: 0.32, boy: 12.5, kalin: true, renk: GECE });
+  metin(s, k[1], 9.10, y - 0.02, { w: 3.3, h: 0.64, boy: 9.5, renk: KURSUN });
+  if (i < 3) cizgi(s, 6.35, y + 0.66, 6.05, KREM_K, 0.6);
 });
-s.addNotes("Beş profili sırayla okuyun ve her birinde emlakçıya sorun: portföyünüzde böyle kaç müşteri var? Salonda isim çıkarsa satış başlamış demektir.");
+metin(s, "Kompakt daire, geniş kiracı havuzu demektir: kiralama süresi kısalır, boş kalma riski düşer.",
+  6.35, 6.62, { w: 6.05, h: 0.5, boy: 9.5, italik: true, renk: "8A7F70" });
+s.addNotes("1+0 anlatırken metrekareyi savunmayın, kiracı havuzunu anlatın. 472 adet: emlakçı için bitmeyen stok.");
 
-/* ══════════════════════════════════════════════════ 10 · ÖDEME MODELİ */
+/* ══════════════════════════════════════════════════ 12 · 1+1 DETAY */
+s = p.addSlide();
+s.background = { color: KREM };
+s.addImage({ path: fo("r-1plus1"), x: W - 5.60, y: 0, w: 5.60, h: HT });
+elmasCizgi(s, W - 2.8, 3.75, 4.0, ALTIN, 1.2);
+blok(s, W - 6.10, 0.72, 1.55, 0.55, GECE);
+metin(s, "1+1", W - 6.10, 0.72, { w: 1.55, h: 0.55, boy: 15, kalin: true, hiza: "center",
+  dikeyH: "middle", renk: ALTIN, aralik: 2 });
+etiket(s, "ÜRÜN DETAYI", M, 0.86);
+baslik(s, "1+1 — DENGELİ\nYAŞAM ÜRÜNÜ", M, 1.22, { w: 6.1, h: 1.5, boy: 26 });
+cizgi(s, M, 2.78, 1.30, ALTIN, 1.5);
+[["Brüt 50 m²", "Yaşam alanı ile yatak odası ayrışır; konfor artar."],
+ ["112 adet", "Talebi dengeleyen, kıtlığı hissedilen stok."],
+ ["Çift ve küçük aile", "Oturum amaçlı alıcının ilk tercihi."],
+ ["Kiracı profili", "Çalışan çiftler ve profesyoneller; istikrarlı kira."]]
+.forEach((k, i) => {
+  const y = 3.14 + i * 0.86;
+  noElmas(s, M + 0.20, y + 0.16, "0" + (i + 1), ALTIN, 0.42);
+  metin(s, k[0], M + 0.67, y - 0.02, { w: 1.95, h: 0.32, boy: 12.5, kalin: true, renk: GECE });
+  metin(s, k[1], M + 2.75, y - 0.02, { w: 3.3, h: 0.64, boy: 9.5, renk: KURSUN });
+  if (i < 3) cizgi(s, M, y + 0.66, 6.05, KREM_K, 0.6);
+});
+metin(s, "1+0'dan taşınan kiracının doğal adresi: site içinde yükselme merdiveni kurar.",
+  M, 6.62, { w: 6.05, h: 0.5, boy: 9.5, italik: true, renk: "8A7F70" });
+s.addNotes("1+1'i 'bir üst adım' olarak konumlayın: hem oturum alıcısı hem yatırımcı için dengeli ürün.");
+
+/* ══════════════════════════════════════════ 13 · MÜŞTERİ PROFİLLERİ */
+s = p.addSlide();
+s.background = { color: KREM };
+etiket(s, "HEDEF KİTLE", M, 0.86);
+baslik(s, "BU PROJEYİ KİME\nSATABİLİRSİNİZ?", M, 1.22, { w: 7.0, h: 1.5, boy: 26 });
+cizgi(s, M, 2.78, 1.30, ALTIN, 1.5);
+[["İlk kez konut alanlar", "Düşük başlangıç bariyeri arayanlar"],
+ ["Yatırımcılar", "Kiralama potansiyeli olan kompakt konut arayanlar"],
+ ["İstanbul yatırımcıları", "İstanbul dışında alternatif arayanlar"],
+ ["Çalışan profesyoneller", "Merkezi ve ulaşımı kolay daire isteyenler"],
+ ["Üniversiteli aileleri", "Kocaeli Üniversitesi'ne yakınlık arayanlar"]]
+.forEach((k, i) => {
+  const y = 3.10 + i * 0.74;
+  noElmas(s, M + 0.20, y + 0.16, "0" + (i + 1), ALTIN, 0.42);
+  metin(s, k[0], M + 0.68, y, { w: 3.05, h: 0.34, boy: 12.5, kalin: true, renk: GECE, dikeyH: "middle" });
+  metin(s, k[1], M + 3.85, y, { w: 3.60, h: 0.34, boy: 9.5, renk: KURSUN, dikeyH: "middle" });
+  if (i < 4) cizgi(s, M, y + 0.56, 7.0, KREM_K, 0.6);
+});
+elmasFoto(s, "e-profil", 10.60, 3.60, 3.70);
+elmasDolu(s, 8.75, 5.55, 0.44, ALTIN);
+elmasCizgi(s, 12.50, 1.30, 0.72, ALTIN, 0.9);
+metin(s, "Reddedilen kredi başvurusu burada satışa dönüyor.", 8.55, 6.10,
+  { w: 4.2, h: 0.55, boy: 10, italik: true, hiza: "center", renk: "8A7F70" });
+kunye(s, true);
+s.addNotes("Beş profili okurken emlakçıya sorun: portföyünüzde böyle kaç müşteri var? Salonda isim çıkarsa satış başlamıştır.");
+
+/* ═══════════════════════════════════════════════ 14 · ÖDEME MODELİ */
 s = p.addSlide();
 s.background = { color: GECE };
-s.addImage({ path: fo("yar-odeme"), x: W - 4.35, y: 0, w: 4.35, h: HT });
+s.addImage({ path: fo("r-odeme"), x: W - 4.60, y: 0, w: 4.60, h: HT });
+elmasCizgi(s, W - 2.3, 3.75, 3.4, ALTIN, 1.2);
 etiket(s, "FİNANSMAN", M, 0.86, ALTIN);
-baslik(s, "Alıcının Önündeki Finansman\nEngelini Azaltan Model", M, 1.24,
-  { w: 7.4, h: 1.6, boy: 34, renk: KREM, satir: 1.0 });
-cizgi(s, M, 3.02, 1.30, ALTIN, 1.5);
-[["%30", "Peşinat"], ["60 AY", "Vade farksız"]].forEach((k, i) => {
-  const x = M + i * 3.70;
-  rakam(s, k[0], x, 3.42, { w: 3.4, h: 1.10, boy: 60, renk: ALTIN });
-  metin(s, k[1], x, 4.60, { w: 3.4, h: 0.30, boy: 10, aralik: 2.6, renk: SIS });
+baslik(s, "ALICININ ÖNÜNDEKİ ENGELİ\nAZALTAN ÖDEME MODELİ", M, 1.22,
+  { w: 7.4, h: 1.5, boy: 25, renk: KREM });
+cizgi(s, M, 2.80, 1.30, ALTIN, 1.5);
+[["%30", "PEŞİNAT"], ["60 AY", "VADE FARKSIZ"]].forEach((k, i) => {
+  const x = M + i * 3.80;
+  rakam(s, k[0], x, 3.20, { w: 3.4, h: 1.05, boy: 54, renk: ALTIN });
+  metin(s, k[1], x, 4.34, { w: 3.4, h: 0.28, boy: 9.5, kalin: true, aralik: 2.6, renk: SIS });
 });
-blok(s, M, 5.24, 7.44, 0.78, LACI);
-baslik(s, "BANKA YOK   ·   FAİZ YOK   ·   KEFİL YOK", M, 5.24,
-  { w: 7.44, h: 0.78, boy: 19, renk: ALTIN, hiza: "center", dikey: "middle", aralik: 1.4 });
+blok(s, M, 4.98, 7.45, 0.74, LACI);
+metin(s, "BANKA YOK   ·   FAİZ YOK   ·   KEFİL YOK", M, 4.98,
+  { w: 7.45, h: 0.74, boy: 16, kalin: true, hiza: "center", dikeyH: "middle",
+    renk: ALTIN, aralik: 1.6 });
 metin(s, "Tasarrufa dayalı finansman yaklaşımı sayesinde konut alımında banka kredisine alternatif bir ödeme modeli sunulur.",
-  M, 6.30, { w: 7.3, h: 0.60, boy: 10.5, renk: SIS, satir: 1.36 });
-kunye(s);
-s.addNotes("Sunumun en güçlü slaydı. Emlakçı buradan tek cümle götürsün: bankaya gitmeden, faiz ödemeden, kefil bulmadan ev. Kredisi çıkmayan müşteri artık kayıp müşteri değil.");
+  M, 6.02, { w: 7.3, h: 0.6, boy: 10.5, renk: SIS, satir: 1.4 });
+kunye(s, false, 8.6);
+s.addNotes("Sunumun en güçlü slaydı. Tek cümle: bankaya gitmeden, faiz ödemeden, kefil bulmadan ev. Kredisi çıkmayan müşteri artık kayıp değil.");
 
-/* ══════════════════════════════════════════════════ 11 · FİYAT ÖRNEĞİ */
+/* ═══════════════════════════════════════════════ 15 · FİYAT ÖRNEĞİ */
 s = p.addSlide();
 s.background = { color: KREM };
 etiket(s, "ÖRNEK ÖDEME", M, 0.86);
-baslik(s, "Bugünkü Ödeme Örnekleri", M, 1.24, { w: 9.0, h: 0.9, boy: 38 });
-cizgi(s, M, 2.42, 1.30, ALTIN, 1.5);
+baslik(s, "BUGÜNKÜ ÖDEME ÖRNEKLERİ", M, 1.22, { w: 9.4, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
 [["1+0", "699.000 TL", "29.900 TL"], ["1+1", "999.000 TL", "39.900 TL"]].forEach((f, i) => {
-  const x = M + i * 5.72;
-  blok(s, x, 2.86, 5.30, 2.94, i ? LACI : GECE);
-  baslik(s, f[0], x + 0.46, 3.14, { w: 2.0, h: 0.62, boy: 30, renk: ALTIN });
-  cizgi(s, x + 0.46, 3.94, 4.38, "2C4459", 0.75);
-  metin(s, "PEŞİNAT", x + 0.46, 4.14, { w: 2.2, h: 0.26, boy: 8.5, aralik: 2.4, renk: SIS });
-  baslik(s, f[1], x + 0.46, 4.40, { w: 4.4, h: 0.52, boy: 24, renk: KREM });
-  metin(s, "AYLIK", x + 0.46, 5.02, { w: 2.2, h: 0.26, boy: 8.5, aralik: 2.4, renk: SIS });
-  baslik(s, f[2], x + 0.46, 5.24, { w: 4.4, h: 0.46, boy: 21, renk: ALTIN_A });
+  const x = M + i * 5.80;
+  blok(s, x, 2.50, 5.30, 3.30, i ? LACI : GECE);
+  elmasDolu(s, x + 0.78, 3.16, 0.82, ALTIN);
+  metin(s, f[0], x + 0.28, 2.94, { w: 1.0, h: 0.44, boy: 15, kalin: true, hiza: "center",
+    dikeyH: "middle", renk: GECE });
+  cizgi(s, x + 1.55, 3.16, 3.35, "2C4459", 0.75);
+  metin(s, "PEŞİNAT", x + 0.42, 3.78, { w: 2.4, h: 0.24, boy: 8.5, aralik: 2.4, renk: SIS });
+  metin(s, f[1], x + 0.42, 4.04, { w: 4.4, h: 0.52, boy: 24, kalin: true, renk: KREM });
+  metin(s, "AYLIK", x + 0.42, 4.72, { w: 2.4, h: 0.24, boy: 8.5, aralik: 2.4, renk: SIS });
+  metin(s, f[2], x + 0.42, 4.98, { w: 4.4, h: 0.46, boy: 19, kalin: true, renk: ALTIN_A });
 });
-blok(s, M, 6.06, 11.44, 0.66, KREM_K);
-baslik(s, "60 AY  ·  VADE FARKSIZ", M, 6.06,
-  { w: 11.44, h: 0.66, boy: 17, renk: "8A6B2E", hiza: "center", dikey: "middle", aralik: 2.0 });
+blok(s, M, 6.06, 11.53, 0.60, KREM_K);
+metin(s, "60 AY  ·  VADE FARKSIZ", M, 6.06, { w: 11.53, h: 0.60, boy: 14, kalin: true,
+  hiza: "center", dikeyH: "middle", renk: "8A6B2E", aralik: 2.2 });
 metin(s, "Fiyatlar ve kampanya koşulları dönemsel olarak değişebilir. Güncel bilgi için satış ofisiyle iletişime geçiniz.",
-  M, 6.94, { w: 11.44, h: 0.28, boy: 8, italik: true, hiza: "center", renk: "9A9082" });
-s.addNotes("Rakamları verirken mutlaka dipnotu da söyleyin: fiyat ve kampanya koşulları dönemseldir. Yazılı teklif satış ofisinden çıkar.");
+  M, 6.86, { w: 11.53, h: 0.28, boy: 8, italik: true, hiza: "center", renk: "9A9082" });
+s.addNotes("Rakamları verirken mutlaka dipnotu söyleyin: fiyat ve kampanya koşulları dönemseldir. Yazılı teklif satış ofisinden çıkar.");
 
-/* ═════════════════════════════════════════ 12 · EMLAKÇININ SATIŞ ARGÜMANI */
+/* ══════════════════════════════ 16 · MÜŞTERİ SÜRECİ (4 ADIM) */
 s = p.addSlide();
 s.background = { color: KREM };
-s.addImage({ path: fo("ser-arguman"), x: 0, y: 0, w: W, h: 2.10 });
-s.addImage({ path: ka("perde-serit"), x: 0, y: 0, w: W, h: 2.10 });
-etiket(s, "SAHA", M, 0.62, ALTIN_A);
-baslik(s, "Müşteriye 60 Saniyede Nasıl Anlatılır?", M, 0.96,
-  { w: 9.4, h: 0.9, boy: 34, renk: BEYAZ });
-[["Proje İzmit'in gelişen MİA Bölgesi'nde."],
- ["D100'e 1 dakika, sahile 2 dakika."],
- ["Projede ağırlıklı olarak yatırımcıya uygun 1+0 ve 1+1 daireler var."],
- ["Bankasız, faizsiz ve kefilsiz 60 aya kadar ödeme modeli bulunuyor."],
- ["İstanbul'a yakınlığı nedeniyle yalnız İzmit'e değil, Marmara yatırımcısına da hitap ediyor."]]
-.forEach((c, i) => {
-  const y = 2.72 + i * 0.86;
-  rakam(s, String(i + 1), M, y, { w: 0.64, h: 0.46, boy: 22, renk: ALTIN });
-  baslik(s, "“" + c[0] + "”", M + 0.86, y - 0.02, { w: 10.5, h: 0.52, boy: 18,
-    kalin: false, italik: true });
-  if (i < 4) cizgi(s, M, y + 0.62, 11.44, KREM_K, 0.75);
+etiket(s, "MÜŞTERİ SÜRECİ", M, 0.86);
+baslik(s, "PEŞİNATTAN TAPUYA DÖRT ADIM", M, 1.22, { w: 10.4, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+cizgi(s, 1.60, 3.82, 10.15, ALTIN, 1.25, true);
+[["i-banknot-beyaz", "Peşinat", "Avantajlı peşinatla başlar; kalan tutar 60 aya kadar taksitlenir."],
+ ["i-takvim-beyaz", "Sabit taksit", "Faiz yok, kefil yok, banka yok; ara ödeme ve balon taksit yok."],
+ ["i-bina-beyaz", "İnşaat ve takip", "Ödemeler ve inşaat aşamaları KOOPBİS üzerinden izlenir."],
+ ["i-anahtar-beyaz", "Tapu", "İnşaat bitince ferdileşme ile daire adınıza tapuya bağlanır."]]
+.forEach((a, i) => {
+  const cx = 2.10 + i * 3.05;
+  adimElmas(s, cx, 3.82, 1.85, a[0]);
+  metin(s, "ADIM 0" + (i + 1), cx - 1.35, 5.02, { w: 2.7, h: 0.24, boy: 8, kalin: true,
+    aralik: 2.2, hiza: "center", renk: ALTIN });
+  metin(s, a[1], cx - 1.35, 5.28, { w: 2.7, h: 0.32, boy: 13, kalin: true,
+    hiza: "center", renk: GECE });
+  metin(s, a[2], cx - 1.35, 5.64, { w: 2.7, h: 0.85, boy: 9, hiza: "center", renk: KURSUN });
 });
-kunye(s, true);
-s.addNotes("Bu beş cümleyi emlakçıya ezberletin. Sırası önemli: konum, mesafe, ürün, ödeme, pazar. Beşinci cümle projeyi İzmit'in dışına açıyor.");
+metin(s, "Tapu sorusu mutlaka gelir: ferdileşme, inşaat bitiminde.", M, 6.72,
+  { w: 11.5, h: 0.28, boy: 9.5, italik: true, hiza: "center", renk: "9A9082" });
+s.addNotes("Süreci dört adımda anlatın. 'Ferdileşme' kelimesini kullanın ve tapunun inşaat bitiminde olduğunu net söyleyin.");
 
-/* ════════════════════════════════════════════════ 13 · İTİRAZ YÖNETİMİ */
+/* ═══════════════════════════ 17 · SATIŞ ARGÜMANI (60 SANİYE) */
+s = p.addSlide();
+s.background = { color: GECE };
+etiket(s, "SAHA", M, 0.86, ALTIN);
+baslik(s, "MÜŞTERİYE 60 SANİYEDE NASIL ANLATILIR?", M, 1.22, { w: 11.5, boy: 25, renk: KREM });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+["Proje, İzmit'in gelişen MİA Bölgesi'nde.",
+ "D100'e 1 dakika, sahile 2 dakika.",
+ "Ağırlıklı olarak yatırımcıya uygun 1+0 ve 1+1 daireler var.",
+ "Bankasız, faizsiz ve kefilsiz 60 aya kadar ödeme modeli bulunuyor.",
+ "İstanbul'a yakınlığıyla yalnız İzmit'e değil, Marmara yatırımcısına da hitap ediyor."]
+.forEach((c, i) => {
+  const y = 2.52 + i * 0.86;
+  noElmas(s, M + 0.22, y + 0.20, i + 1, ALTIN, 0.46);
+  metin(s, "“" + c + "”", M + 0.75, y, { w: 10.6, h: 0.44, boy: 14, italik: true,
+    renk: KREM, dikeyH: "middle" });
+  if (i < 4) cizgi(s, M, y + 0.66, 11.53, "1E3A54", 0.6);
+});
+kose(s, 12.45, 0.95, ALTIN, ALTIN, 0.8);
+kunye(s);
+s.addNotes("Bu beş cümleyi emlakçıya ezberletin. Sırası önemli: konum, mesafe, ürün, ödeme, pazar.");
+
+/* ════════════════════════════════════════════ 18 · İTİRAZ YÖNETİMİ */
 s = p.addSlide();
 s.background = { color: KREM };
 etiket(s, "İTİRAZ YÖNETİMİ", M, 0.86);
-baslik(s, "Müşteri Sorarsa Ne Söyleyeceğiz?", M, 1.24, { w: 9.6, h: 0.9, boy: 38 });
-cizgi(s, M, 2.42, 1.30, ALTIN, 1.5);
-[["Kooperatif modeli güvenli mi?", "Proje, 1163 sayılı Kooperatifler Kanunu çerçevesinde faaliyet gösteren bir yapı kooperatifi bünyesinde; resmî kayıtlar T.C. Ticaret Bakanlığı'nın KOOPBİS sisteminde tutulur."],
- ["Banka kredisi gerekiyor mu?", "Hayır. Proje kendi tasarrufa dayalı ödeme modelini sunuyor; banka, faiz ve kefil devrede değil."],
- ["Konum gerçekten merkezi mi?", "D100 1 dakika, İzmit Sahili 2 dakika, 41 Burada AVM 3 dakika, şehir merkezi 5 dakika."],
- ["Yatırım için neden 1+0 / 1+1?", "Kompakt daireler daha geniş kiracı ve yatırımcı segmentine hitap eder; kiralama süresi kısalır, likidite artar."]]
+baslik(s, "MÜŞTERİ SORARSA NE SÖYLEYECEĞİZ?", M, 1.22, { w: 11.0, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+[["“Kooperatif modeli güvenli mi?”", "Proje, 1163 sayılı Kooperatifler Kanunu çerçevesinde faaliyet gösterir; resmî kayıtlar T.C. Ticaret Bakanlığı'nın KOOPBİS sisteminde tutulur."],
+ ["“Banka kredisi gerekiyor mu?”", "Hayır. Proje kendi tasarrufa dayalı ödeme modelini sunar; banka, faiz ve kefil devrede değildir."],
+ ["“Konum gerçekten merkezi mi?”", "D100 1 dakika, İzmit Sahili 2 dakika, 41 Burada AVM 3 dakika, şehir merkezi 5 dakika."],
+ ["“Yatırım için neden 1+0 / 1+1?”", "Kompakt daireler daha geniş kiracı ve yatırımcı segmentine hitap eder; kiralama hızlanır, likidite artar."]]
 .forEach((q, i) => {
-  const y = 2.86 + i * 1.06;
-  baslik(s, "“" + q[0] + "”", M, y, { w: 4.30, h: 0.72, boy: 16, satir: 1.06 });
-  metin(s, q[1], M + 4.66, y + 0.02, { w: 6.78, h: 0.80, boy: 9.5 });
-  if (i < 3) cizgi(s, M, y + 0.88, 11.44, KREM_K, 0.75);
+  const y = 2.52 + i * 1.02;
+  elmasDolu(s, M + 0.10, y + 0.16, 0.18, ALTIN);
+  metin(s, q[0], M + 0.40, y - 0.04, { w: 3.95, h: 0.70, boy: 12, kalin: true,
+    italik: true, renk: GECE, satir: 1.12 });
+  metin(s, q[1], M + 4.70, y - 0.02, { w: 6.85, h: 0.80, boy: 9.5, renk: KURSUN });
+  if (i < 3) cizgi(s, M, y + 0.84, 11.53, KREM_K, 0.6);
 });
 metin(s, "Bilgilendirme amaçlıdır; yasal veya finansal garanti niteliği taşımaz. Belgeler satış ofisinden talep edilebilir.",
-  M, 7.00, { w: 11.44, h: 0.28, boy: 8, italik: true, renk: "9A9082" });
-s.addNotes("İlk soru en çok gelen soru. KOOPBİS'i telefonda canlı gösterin — en ikna edici hamle. Yasal ya da finansal garanti cümlesi KURMAYIN.");
+  M, 6.72, { w: 11.53, h: 0.28, boy: 8, italik: true, renk: "9A9082" });
+s.addNotes("İlk soru en çok gelen soru. KOOPBİS'i telefonda canlı gösterin — en ikna edici hamle. Garanti cümlesi KURMAYIN.");
 
-/* ══════════════════════════════════════════════ 14 · GÜVEN VE ŞEFFAFLIK */
+/* ═══════════════════════════════════════ 19 · GÜVEN VE ŞEFFAFLIK */
 s = p.addSlide();
-s.background = { color: GECE };
-s.addImage({ path: fo("yar-guven"), x: W - 4.35, y: 0, w: 4.35, h: HT });
+s.background = { color: KREM };
+blok(s, 0, 0, 5.30, HT, GECE);
 etiket(s, "KURUMSAL", M, 0.86, ALTIN);
-baslik(s, "Satışta En Güçlü\nUnsur: Güven", M, 1.24,
-  { w: 7.0, h: 1.6, boy: 36, renk: KREM, satir: 1.0 });
-cizgi(s, M, 3.02, 1.30, ALTIN, 1.5);
+baslik(s, "SATIŞTA EN GÜÇLÜ\nUNSUR: GÜVEN", M, 1.22, { w: 3.9, h: 1.6, boy: 27, renk: KREM });
+cizgi(s, M, 2.92, 1.30, ALTIN, 1.5);
+metin(s, "Emlakçının müşterisine karşı arkasında duracağı zemin: kayıtlı, denetlenen, belgeli bir yapı.",
+  M, 3.22, { w: 3.6, h: 1.0, boy: 10.5, renk: SIS, satir: 1.45 });
+elmasFoto(s, "e-guven", 3.65, 5.95, 2.00);
+elmasDolu(s, 1.35, 5.35, 0.4, ALTIN);
 [["S.S. Yahya Kaptan Birlik Yapı Kooperatifi", "Projeyi geliştiren yapı kooperatifi"],
  ["T.C. Ticaret Bakanlığı — KOOPBİS", "Kooperatif Bilgi Sistemi'nde kayıtlı"],
  ["1163 Sayılı Kooperatifler Kanunu", "Kuruluş, genel kurul ve denetim bu kanuna tabi"],
  ["Ocean Gayrimenkul", "Tek yetkili satıcı"]].forEach((g, i) => {
-  const y = 3.36 + i * 0.82;
-  cizgi(s, M, y + 0.17, 0.18, ALTIN, 1);
-  baslik(s, g[0], M + 0.36, y - 0.04, { w: 7.0, h: 0.36, boy: 15, renk: KREM });
-  metin(s, g[1], M + 0.36, y + 0.34, { w: 7.0, h: 0.28, boy: 9, renk: SIS });
+  const y = 1.26 + i * 1.14;
+  cizgi(s, 5.95, y + 0.16, 0.20, ALTIN, 1.5);
+  metin(s, g[0], 6.35, y - 0.02, { w: 6.1, h: 0.34, boy: 13, kalin: true, renk: GECE });
+  metin(s, g[1], 6.35, y + 0.34, { w: 6.1, h: 0.28, boy: 9.5, renk: KURSUN });
+  if (i < 3) cizgi(s, 5.95, y + 0.86, 6.45, KREM_K, 0.6);
 });
-blok(s, M, 6.50, 7.44, 0.62, KREM);
-s.addImage({ path: mk("ykb-logo.png"), x: M + 0.80, y: 6.59, w: 0.44, h: 0.44 });
-s.addImage({ path: mk("koopbis-logo.png"), x: M + 3.14, y: 6.65, w: 1.16, h: 0.36 });
-s.addImage({ path: mk("ticaret-bakanligi-logo.webp"), x: M + 6.18, y: 6.59, w: 0.44, h: 0.44 });
-metin(s, "Belgeler satış ofisinden talep edilebilir.", M, 7.22,
-  { w: 7.44, h: 0.24, boy: 8, italik: true, renk: "6E7F8C" });
-s.addNotes("Sade ve kurumsal anlatın. Emlakçının müşterisine karşı arkasında duracağı zemin bu slayt. Belgeleri gösterme sözü verin ve tutun.");
+blok(s, 5.95, 5.90, 6.45, 0.72, BEYAZ);
+s.addImage({ path: mk("ykb-logo.png"), x: 6.55, y: 6.02, w: 0.48, h: 0.48 });
+s.addImage({ path: mk("koopbis-logo.png"), x: 8.35, y: 6.08, w: 1.25, h: 0.38 });
+s.addImage({ path: mk("ticaret-bakanligi-logo.webp"), x: 10.85, y: 6.02, w: 0.48, h: 0.48 });
+metin(s, "Belgeler satış ofisinden talep edilebilir.", 5.95, 6.76,
+  { w: 6.45, h: 0.26, boy: 8.5, italik: true, renk: "9A9082" });
+s.addNotes("Sade ve kurumsal anlatın. KOOPBİS kaydını göstermeyi teklif edin; belgeleri gösterme sözü verin ve tutun.");
 
-/* ═════════════════════════════════════════════════ 15 · PROJE GALERİSİ */
+/* ═══════════════════════════ 20 · İŞ BİRLİĞİ SÜRECİ (5 ADIM) */
+s = p.addSlide();
+s.background = { color: KREM };
+etiket(s, "İŞ BİRLİĞİ", M, 0.86);
+baslik(s, "EMLAKÇIYLA NASIL ÇALIŞIYORUZ?", M, 1.22, { w: 10.4, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+cizgi(s, 1.35, 3.72, 10.65, ALTIN, 1.25, true);
+[["i-belge-beyaz", "Kayıt", "Emlakçı kaydı ve yetki belgesi"],
+ ["i-mail-beyaz", "Bildirim", "Müşteri ofise gelmeden bildirilir"],
+ ["i-balon-beyaz", "Görüşme", "Satış ofisinde birlikte"],
+ ["i-kalem-beyaz", "Sözleşme", "Ortaklık işlemleri ve peşinat"],
+ ["i-banknot-beyaz", "Hakediş", "Komisyon ödemesi"]].forEach((a, i) => {
+  const cx = 1.75 + i * 2.48;
+  adimElmas(s, cx, 3.72, 1.55, a[0]);
+  metin(s, "0" + (i + 1), cx - 1.1, 4.74, { w: 2.2, h: 0.24, boy: 8.5, kalin: true,
+    aralik: 2.4, hiza: "center", renk: ALTIN });
+  metin(s, a[1], cx - 1.1, 5.00, { w: 2.2, h: 0.30, boy: 12.5, kalin: true,
+    hiza: "center", renk: GECE });
+  metin(s, a[2], cx - 1.1, 5.34, { w: 2.2, h: 0.62, boy: 8.5, hiza: "center", renk: KURSUN });
+});
+s.addShape(p.ShapeType.rect, { x: M, y: 6.14, w: 11.53, h: 0.92,
+  fill: { color: BEYAZ }, line: { color: ALTIN, width: 1.25 } });
+metin(s, "SUNUMDAN ÖNCE NETLEŞTİRİN", M + 0.30, 6.26, { w: 4.0, h: 0.22, boy: 8,
+  kalin: true, aralik: 2.0, renk: "8A6B2E" });
+metin(s, "Komisyon oranı  ______        Hakediş zamanı  ______        Müşteri koruma süresi  ______",
+  M + 0.30, 6.52, { w: 11.0, h: 0.40, boy: 11, renk: GECE });
+s.addNotes("DİKKAT: Komisyon oranı, hakediş zamanı ve müşteri koruma süresi BOŞ bırakıldı — bu rakamlar sizde. Sunumdan önce doldurun; emlakçının en çok merak ettiği slayt bu.");
+
+/* ═══════════════════════════════════ 21 · SATIŞ DESTEK MATERYALLERİ */
+s = p.addSlide();
+s.background = { color: KREM };
+etiket(s, "SATIŞ DESTEĞİ", M, 0.86);
+baslik(s, "ELİNİZE NE VERİYORUZ?", M, 1.22, { w: 7.2, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+["8 bilbord tasarımı", "8 arsa panosu", "Roll-up ve totem", "Yaka kartları",
+ "Dijital katalog", "miaparkocean.com", "Sosyal medya seti", "Tanıtım filmi"]
+.forEach((d, i) => {
+  const x = M + (i % 2) * 3.55, y = 2.56 + Math.floor(i / 2) * 0.62;
+  elmasDolu(s, x + 0.08, y + 0.16, 0.16, ALTIN);
+  metin(s, d, x + 0.32, y, { w: 3.1, h: 0.34, boy: 11, renk: GECE, dikeyH: "middle" });
+});
+blok(s, M, 5.20, 7.10, 0.86, GECE);
+metin(s, "Hepsi baskıya hazır dosya olarak paylaşılır. Bugün en az katalog ve site linki elinizde olsun.",
+  M + 0.32, 5.20, { w: 6.5, h: 0.86, boy: 10.5, renk: ALTIN_A, dikeyH: "middle" });
+s.addImage({ path: fo("m-bilbord"), x: 8.42, y: 1.10, w: 3.90, h: 2.34 });
+s.addImage({ path: fo("m-rollup"), x: 8.42, y: 3.62, w: 1.30, h: 2.60 });
+s.addImage({ path: fo("m-arsa"), x: 9.90, y: 3.62, w: 2.42, h: 1.62 });
+elmasDolu(s, 10.35, 5.85, 0.4, ALTIN);
+kunye(s, true, 8.3);
+s.addNotes("Somut olun: hangi dosyayı ne zaman göndereceğinizi söyleyin. Emlakçı eli boş dönmesin.");
+
+/* ═══════════════════════════════════════════════════ 22 · GALERİ */
 s = p.addSlide();
 s.background = { color: GECE };
 s.addImage({ path: fo("gal-1"), x: 0.00, y: 0.00, w: 7.07, h: 3.42 });
@@ -439,50 +667,81 @@ metin(s, "MİA PARK OCEAN  ·  PROJE GÖRSELLERİ", M, 7.06,
   { w: 6.0, boy: 8, aralik: 2.6, renk: ALTIN_A });
 metin(s, "Görseller projenin kendi render'larıdır.", W - M - 5.0, 7.06,
   { w: 5.0, boy: 8, aralik: 1.2, hiza: "right", renk: "5C6B78" });
-s.addNotes("Bu slaytta konuşmayın, bıraktırın. Gerekirse tek cümle: 'Bunların hepsi projenin kendi görselleri.' Sudaki öğeler süs havuzu.");
+s.addNotes("Bu slaytta konuşmayın, bıraktırın. Gerekirse tek cümle: bunların hepsi projenin kendi görselleri.");
 
-/* ═══════════════════════════════════════════════ 16 · EMLAKÇI İÇİN ÖZET */
+/* ═══════════════════════════════════ 23 · RAKAMLARLA MİA PARK OCEAN */
+s = p.addSlide();
+s.background = { color: GECE };
+etiket(s, "ÖZET", M, 0.86, ALTIN);
+baslik(s, "RAKAMLARLA MİA PARK OCEAN", M, 1.22, { w: 10.4, boy: 26, renk: KREM });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+[["600", "KONUT"], ["472", "ADET 1+0"], ["112", "ADET 1+1"],
+ ["60 AY", "VADE FARKSIZ"], ["%30", "PEŞİNAT"], ["1 DK", "D100 KARAYOLU"]]
+.forEach((k, i) => {
+  const x = M + (i % 3) * 3.90, y = 2.66 + Math.floor(i / 3) * 1.95;
+  elmasDolu(s, x + 0.16, y + 0.24, 0.22, ALTIN);
+  rakam(s, k[0], x + 0.48, y - 0.24, { w: 3.0, h: 0.92, boy: 40, renk: KREM });
+  metin(s, k[1], x + 0.50, y + 0.76, { w: 3.0, h: 0.26, boy: 9, kalin: true,
+    aralik: 2.2, renk: ALTIN_A });
+  cizgi(s, x + 0.50, y + 1.16, 2.9, "1E3A54", 0.75);
+});
+kose(s, 12.45, 0.95, ALTIN, ALTIN, 0.8);
+kunye(s);
+s.addNotes("Kapanıştan önce rakam özeti. Altı rakamı tek tek okumayın; emlakçının aklında 600 / 60 ay / %30 kalsın.");
+
+/* ═══════════════════════════════════════ 24 · NEDEN MİA PARK OCEAN */
 s = p.addSlide();
 s.background = { color: KREM };
-etiket(s, "ÖZET", M, 0.86);
-baslik(s, "Neden MİA PARK OCEAN?", M, 1.24, { w: 9.0, h: 0.9, boy: 38 });
-cizgi(s, M, 2.42, 1.30, ALTIN, 1.5);
-[["Merkezi Lokasyon", "D100'e 1 dk"], ["Gelişen MİA Bölgesi", "Yeni ticari aks"],
- ["472 Adet 1+0", "Kompakt stok"], ["112 Adet 1+1", "Dengeli ürün"],
- ["60 Ay Vade Farksız", "Banka, faiz, kefil yok"], ["Geniş Müşteri Profili", "Beş ayrı persona"]]
+etiket(s, "SONUÇ", M, 0.86);
+baslik(s, "NEDEN MİA PARK OCEAN?", M, 1.22, { w: 9.4, boy: 26 });
+cizgi(s, M, 2.10, 1.30, ALTIN, 1.5);
+[["Merkezi lokasyon", "D100'e 1 dk, merkeze 5 dk"],
+ ["Gelişen MİA Bölgesi", "İzmit'in yeni değer aksı"],
+ ["Derin kompakt stok", "472 adet 1+0, 112 adet 1+1"],
+ ["Erişilebilir ödeme", "%30 peşinat, 60 ay vade farksız"],
+ ["Geniş müşteri profili", "Beş ayrı alıcı segmenti"],
+ ["Kurumsal güven", "KOOPBİS kayıtlı, kanuna tabi yapı"]]
 .forEach((o, i) => {
-  const x = M + (i % 3) * 3.82, y = 2.88 + Math.floor(i / 3) * 1.10;
-  cizgi(s, x, y, 3.44, ALTIN, 1);
-  baslik(s, o[0], x, y + 0.16, { w: 3.44, h: 0.40, boy: 17 });
-  metin(s, o[1], x, y + 0.60, { w: 3.44, h: 0.28, boy: 9.5, renk: KURSUN });
+  const x = M + (i % 3) * 3.90, y = 2.58 + Math.floor(i / 3) * 1.42;
+  cizgi(s, x, y, 3.5, ALTIN, 1);
+  metin(s, o[0], x, y + 0.14, { w: 3.5, h: 0.32, boy: 13, kalin: true, renk: GECE });
+  metin(s, o[1], x, y + 0.50, { w: 3.5, h: 0.30, boy: 9.5, renk: KURSUN });
 });
-blok(s, 0, 5.42, W, 1.36, GECE);
-baslik(s, "Doğru Konum.  Doğru Ürün.  Güçlü Satış Hikâyesi.", 0, 5.42,
-  { w: W, h: 1.36, boy: 30, renk: KREM, hiza: "center", dikey: "middle" });
+blok(s, 0, 5.66, W, 1.30, GECE);
+metin(s, "DOĞRU KONUM.  DOĞRU ÜRÜN.  GÜÇLÜ SATIŞ HİKÂYESİ.", 0, 5.66,
+  { w: W, h: 1.30, boy: 22, kalin: true, hiza: "center", dikeyH: "middle",
+    renk: KREM, aralik: 1.6 });
 metin(s, "MİA PARK OCEAN  ·  İZMİT MİA BÖLGESİ  ·  OCEAN GAYRİMENKUL, TEK YETKİLİ SATICI",
-  0, 7.00, { w: W, h: 0.30, boy: 8.5, aralik: 2.2, hiza: "center", renk: "9A9082" });
-s.addNotes("Kapanıştan önce özet. Altı maddeyi tek tek okumayın; emlakçının aklında kalması gereken üç kelimeyi söyleyin: konum, ürün, hikâye.");
+  0, 7.08, { w: W, h: 0.28, boy: 8, aralik: 2.0, hiza: "center", renk: "9A9082" });
+s.addNotes("Kapanıştan önce özet. Üç kelime kalsın: konum, ürün, hikâye.");
 
-/* ═══════════════════════════════════════════════════════ 17 · KAPANIŞ */
+/* ═══════════════════════════════════════════ 25 · KAPANIŞ / İLETİŞİM */
 s = p.addSlide();
-zeminFoto(s, "tam-kapanis", "perde-kapanis");
-s.addImage({ path: mk("brand/logo-ocean-white.png"), x: M, y: 0.80, w: 3.30, h: 2.26 });
-cizgi(s, M, 3.42, 1.30, ALTIN, 1.5);
-baslik(s, "İzmit'in Yeni Satış Fırsatını\nPortföyünüze Ekleyin.", M, 3.72,
-  { w: 7.6, h: 1.6, boy: 33, renk: BEYAZ, satir: 1.04 });
-[["0540 028 00 41   ·   0541 128 40 41"],
- ["info@oceangayrimenkul41.com"],
- ["miaparkocean.com"]].forEach((c, i) => {
-  metin(s, c[0], M, 5.48 + i * 0.42, { w: 6.4, h: 0.34, boy: 12, renk: BEYAZ, kalin: i === 0 });
+s.background = { color: GECE };
+elmasCizgi(s, 10.35, 3.10, 4.15, ALTIN, 1);
+elmasFoto(s, "e-kapanis1", 10.50, 2.95, 3.40);
+elmasFoto(s, "e-kapanis2", 8.35, 5.35, 2.30);
+elmasDolu(s, 12.35, 5.30, 0.95, LACI);
+elmasDolu(s, 7.50, 1.35, 0.42, ALTIN);
+s.addImage({ path: mk("brand/logo-ocean-white.png"), x: M, y: 0.70, w: 2.55, h: 1.75 });
+cizgi(s, M, 2.78, 1.30, ALTIN, 1.5);
+baslik(s, "İZMİT'İN YENİ SATIŞ FIRSATINI\nPORTFÖYÜNÜZE EKLEYİN.", M, 3.02,
+  { w: 6.4, h: 1.4, boy: 22, renk: KREM });
+[["i-telefon-beyaz", "0540 028 00 41  ·  0541 128 40 41"],
+ ["i-mail-beyaz", "info@oceangayrimenkul41.com"],
+ ["i-globe-beyaz", "miaparkocean.com"],
+ ["i-insta-beyaz", "@miaparkocean"]].forEach((c, i) => {
+  const y = 4.58 + i * 0.50;
+  s.addImage({ path: sk(c[0]), x: M, y: y + 0.03, w: 0.30, h: 0.30 });
+  metin(s, c[1], M + 0.48, y, { w: 5.4, h: 0.36, boy: 11.5, kalin: i === 0,
+    renk: KREM, dikeyH: "middle" });
 });
-blok(s, W - M - 4.10, 5.42, 4.10, 0.86, ALTIN);
-baslik(s, "Satış Ekibimizle İletişime Geçin", W - M - 4.10, 5.42,
-  { w: 4.10, h: 0.86, boy: 16, renk: GECE, hiza: "center", dikey: "middle" });
-metin(s, "OCEAN GAYRİMENKUL — TEK YETKİLİ SATICI", W - M - 4.10, 6.40,
-  { w: 4.10, h: 0.28, boy: 8, aralik: 2.2, hiza: "center", renk: SIS });
-metin(s, "S.S. Yahya Kaptan Birlik Yapı Kooperatifi", M, 6.94,
-  { w: 6.4, h: 0.28, boy: 8.5, aralik: 1.6, renk: SIS });
-s.addNotes("Kapanış: net çağrı yapın. Kayıt formunu dağıtın; bugün kaydolan emlakçıya katalog, görsel seti ve fiyat listesini akşam gönderin. Randevu almadan salondan çıkarmayın.");
+blok(s, M, 6.62, 3.85, 0.58, ALTIN);
+metin(s, "SATIŞ EKİBİMİZLE İLETİŞİME GEÇİN", M, 6.62, { w: 3.85, h: 0.58, boy: 10,
+  kalin: true, hiza: "center", dikeyH: "middle", renk: GECE, aralik: 1.2 });
+metin(s, "OCEAN GAYRİMENKUL — TEK YETKİLİ SATICI  ·  S.S. YAHYA KAPTAN BİRLİK YAPI KOOPERATİFİ",
+  5.05, 7.08, { w: 7.4, h: 0.26, boy: 7.5, aralik: 1.6, hiza: "right", renk: "5C6B78" });
+s.addNotes("Kapanış: net çağrı yapın. Kayıt formunu dağıtın; bugün kaydolan emlakçıya katalog ve görsel setini akşam gönderin. Randevu almadan salondan çıkarmayın.");
 
 p.writeFile({ fileName: path.join(KOK, "sunum", "MIA-PARK-OCEAN-Emlakci-Sunumu.pptx") })
   .then((f) => console.log("yazildi:", f));
