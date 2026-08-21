@@ -370,8 +370,267 @@ def kontak():
     print("   kontak.jpg")
 
 
+
+# ═══════════════════════════ V2 — KAZANAN KALIP GRAMERİ ═══════════════════
+# TR faizsiz-konut kategorisinin tutan dili: üçlü YOK kısaltması/mührü,
+# dev tek rakam, tam genişlik iddia bantları, ✗/✓ karşıtlığı, WhatsApp
+# yeşili buton + büyük numara, dürüst aciliyet şeridi (lansman gerçek).
+WA_YESIL = (37, 211, 102)
+TEL = "0540 028 00 41"
+
+
+def wa_buton(im, dr, cy, t="WHATSAPP'TAN YAZIN", gen=560, yuk=92, tel=True):
+    """WhatsApp yeşili hap buton + ahize-balon ikonu + numara altta."""
+    x0 = (W - gen) / 2
+    dr.rounded_rectangle([x0, cy, x0 + gen, cy + yuk], radius=yuk / 2, fill=WA_YESIL)
+    # ikon: beyaz konuşma balonu + ahize
+    ic = cy + yuk / 2
+    bx = x0 + 62
+    dr.ellipse([bx - 26, ic - 26, bx + 26, ic + 26], fill=BEYAZ)
+    dr.polygon([(bx - 18, ic + 14), (bx - 8, ic + 26), (bx - 4, ic + 12)], fill=BEYAZ)
+    dr.arc([bx - 14, ic - 14, bx + 14, ic + 14], 200, 40, fill=WA_YESIL, width=7)
+    f = mont("Bold", 34)
+    dr.text((x0 + gen / 2 + 28, ic), t, font=f, fill=BEYAZ, anchor="mm")
+    if tel:
+        py = min(H - 60, cy + yuk + 44)
+        koyu = im.getpixel((int(W / 2), int(py)))[0] < 128
+        dr.text((W / 2, py), TEL, font=mont("Bold", 40),
+                fill=BEYAZ if koyu else GECE, anchor="mm")
+
+
+def yasal(dr, koyu=True, y=None):
+    y = y or H - 34
+    dr.text((W / 2, y), YASAL, font=mont("Regular", 18),
+            fill=SIS if koyu else KURSUN, anchor="mm")
+
+
+def serit_kurdele(im, dr, t="LANSMANA ÖZEL DÖNEM"):
+    """Sol üst çapraz kurdele — köşegeni tam kaplar, metin köşede okunur."""
+    B = 860
+    kat = Image.new("RGBA", (B, B), (0, 0, 0, 0))
+    kd = ImageDraw.Draw(kat)
+    bant = Image.new("RGBA", (int(B * 1.5), 96), (72, 171, 197, 255))
+    bd = ImageDraw.Draw(bant)
+    bd.text((bant.width / 2, 48), t, font=mont("Bold", 34), fill=(4, 40, 58, 255), anchor="mm")
+    bant = bant.rotate(-45, expand=True, resample=Image.BICUBIC)
+    # bandın merkezi köşegen üstünde (k, k) noktasına gelsin
+    k = 235
+    kat.alpha_composite(bant, (int(k - bant.width / 2), int(k - bant.height / 2)))
+    im.alpha_composite(kat, (0, 0))
+
+
+def v01():
+    """Üç tam genişlik iddia bandı — kategori klasiği, dev punto."""
+    im = perde(foto("night-gate.webp", W, H, 0.5, 1.05),
+               [(0, 0.35), (0.30, 0.55), (1, 0.94)]).convert("RGBA")
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-beyaz", (W - 320) // 2, 56, 320)
+    bantlar = [("BANKA", "YOK"), ("FAİZ", "YOK"), ("KEFİL", "YOK")]
+    y = 360
+    fA = mont("Bold", 96)
+    for i, (a, b) in enumerate(bantlar):
+        renk = (10, 58, 85, 235) if i % 2 == 0 else (26, 116, 150, 235)
+        kat = Image.new("RGBA", (W, 150), renk)
+        im.alpha_composite(kat, (0, y))
+        dr.text((W / 2 - 90, y + 75), a, font=fA, fill=BEYAZ, anchor="rm")
+        dr.text((W / 2 - 50, y + 75), "YOK", font=fA, fill=(72, 171, 197) if i % 2 == 0 else GECE, anchor="lm")
+        y += 172
+    dr.text((W / 2, y + 60), "60 AY SABİT TAKSİT · %30 PEŞİNAT",
+            font=mont("Bold", 44), fill=BEYAZ, anchor="mm")
+    wa_buton(im, dr, y + 130)
+    yasal(dr)
+    kaydet(im, "meta-v2-01-uc-bant")
+
+
+def v02():
+    """%0 FAİZ mührü — damga estetiği."""
+    im = perde(foto("hero-courtyard-dusk.webp", W, H, 0.5, 1.05),
+               [(0, 0.45), (0.5, 0.62), (1, 0.94)]).convert("RGBA")
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-beyaz", (W - 300) // 2, 54, 300)
+    cx, cy, R = W / 2, 560, 300
+    for r, wdt in [(R, 10), (R - 26, 4)]:
+        dr.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(72, 171, 197), width=wdt)
+    dr.text((cx, cy - 78), "%0", font=mont("Bold", 210), fill=BEYAZ, anchor="mm")
+    dr.text((cx, cy + 92), "FAİZ", font=mont("Bold", 96), fill=(72, 171, 197), anchor="mm")
+    dr.text((cx, cy + 180), "VADE FARKI YOK · KOMİSYON YOK", font=mont("SemiBold", 30),
+            fill=SIS, anchor="mm")
+    # kurdele bant
+    ky = 950
+    dr.rectangle([0, ky, W, ky + 96], fill=(26, 116, 150))
+    dr.text((W / 2, ky + 48), "60 AY SABİT TAKSİT", font=mont("Bold", 52), fill=BEYAZ, anchor="mm")
+    wa_buton(im, dr, 1105)
+    yasal(dr)
+    kaydet(im, "meta-v2-02-muhur")
+
+
+def v03():
+    """6 YOK + 1 VAR — pul ızgarası."""
+    im = Image.new("RGBA", (W, H), GECE + (255,))
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-beyaz", (W - 300) // 2, 60, 300)
+    dr.text((W / 2, 300), "BU PROJEDE", font=mont("SemiBold", 40), fill=SIS, anchor="mm")
+    puls = ["BANKA", "FAİZ", "KEFİL", "KOMİSYON", "ARA ÖDEME", "BALON"]
+    fP = mont("Bold", 40); fY = mont("Bold", 34)
+    for i, t in enumerate(puls):
+        r, c = divmod(i, 2)
+        cx = W / 2 - 245 + c * 490
+        cy = 430 + r * 170
+        dr.rounded_rectangle([cx - 225, cy - 62, cx + 225, cy + 62], radius=28,
+                             fill=(10, 58, 85), outline=(72, 171, 197), width=3)
+        dr.text((cx, cy - 16), t, font=fP, fill=BEYAZ, anchor="mm")
+        dr.text((cx, cy + 30), "YOK", font=fY, fill=(72, 171, 197), anchor="mm")
+    dr.text((W / 2, 985), "VAR OLAN TEK ŞEY:", font=mont("SemiBold", 34), fill=SIS, anchor="mm")
+    dr.text((W / 2, 1055), "60 AY SABİT TAKSİT", font=mont("Bold", 72), fill=BEYAZ, anchor="mm")
+    wa_buton(im, dr, 1120)
+    yasal(dr)
+    kaydet(im, "meta-v2-03-pul-izgara")
+
+
+def v04():
+    """Dev 60 — sayfayı kaplayan rakam."""
+    im = perde(foto("balcony-dusk.webp", W, H, 0.55, 1.1),
+               [(0, 0.50), (0.45, 0.68), (1, 0.94)]).convert("RGBA")
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-beyaz", (W - 300) // 2, 50, 300)
+    dr.text((W / 2, 520), "60", font=mont("Bold", 470), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, 810), "AY SABİT TAKSİT", font=mont("Bold", 76), fill=(72, 171, 197), anchor="mm")
+    dr.text((W / 2, 895), "Bugün belirlenen taksit 60 ay değişmez.",
+            font=mont("Regular", 34), fill=SIS, anchor="mm")
+    yok_seridi(dr, 975, ["BANKA YOK", "FAİZ YOK", "KEFİL YOK"], koyu=True, boy=34)
+    wa_buton(im, dr, 1050)
+    yasal(dr)
+    kaydet(im, "meta-v2-04-dev-60")
+
+
+def v05():
+    """✗ / ✓ dev karşıtlık."""
+    im = Image.new("RGBA", (W, H), KAGIT + (255,))
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-renkli", (W - 280) // 2, 54, 280)
+    ust = ["KREDİ", "FAİZ", "KEFİL"]
+    fX = mont("Bold", 74)
+    y = 350
+    for t in ust:
+        x0 = W / 2 - (dr.textlength("✗  " + t + "  DERDİ", font=fX)) / 2
+        dr.line([(x0 + 6, y - 22), (x0 + 50, y + 22)], fill=(163, 74, 74), width=13)
+        dr.line([(x0 + 50, y - 22), (x0 + 6, y + 22)], fill=(163, 74, 74), width=13)
+        dr.text((x0 + 76, y), t + " DERDİ", font=fX, fill=KURSUN, anchor="lm")
+        y += 118
+    dr.text((W / 2, y + 30), "BURADA YOK.", font=mont("Bold", 110), fill=GECE, anchor="mm")
+    y += 170
+    dr.rectangle([0, y, W, y + 108], fill=GECE)
+    elmas_dolu(dr, W / 2 - 400, y + 54, 30, (72, 171, 197))
+    dr.line([(W / 2 - 410, y + 54), (W / 2 - 400, y + 66), (W / 2 - 384, y + 40)],
+            fill=GECE, width=6, joint="curve")
+    dr.text((W / 2 + 16, y + 54), "60 AY SABİT TAKSİT · %30 PEŞİNAT",
+            font=mont("Bold", 42), fill=BEYAZ, anchor="mm")
+    wa_buton(im, dr, y + 160)
+    yasal(dr, koyu=False)
+    kaydet(im, "meta-v2-05-carpi-tik")
+
+
+def v06():
+    """Lansman kurdelesi + yok pulları serpme."""
+    im = perde(foto("entrance-gate.webp", W, H, 0.45, 1.15),
+               [(0, 0.30), (0.40, 0.52), (1, 0.94)]).convert("RGBA")
+    dr = ImageDraw.Draw(im)
+    serit_kurdele(im, dr)
+    logo(im, "mia-beyaz", W - 360, 56, 300)
+    dr.text((W / 2, 620), "İZMİT MİA BÖLGESİ'NDE", font=mont("SemiBold", 40), fill=SIS, anchor="mm")
+    dr.text((W / 2, 700), "600 KONUT", font=mont("Bold", 110), fill=BEYAZ, anchor="mm")
+    puls = ["BANKA YOK", "FAİZ YOK", "KEFİL YOK", "KOMİSYON YOK", "ARA ÖDEME YOK"]
+    fP = mont("Bold", 30)
+    y = 830
+    x = 90
+    for t in puls:
+        tw = dr.textlength(t, font=fP) + 56
+        if x + tw > W - 90:
+            x = 90; y += 96
+        dr.rounded_rectangle([x, y, x + tw, y + 74], radius=37,
+                             fill=(10, 58, 85, 220), outline=(72, 171, 197), width=3)
+        dr.text((x + tw / 2, y + 37), t, font=fP, fill=BEYAZ, anchor="mm")
+        x += tw + 26
+    dr.text((W / 2, y + 150), "21 AĞUSTOS'TA LANSMAN · 60 AY SABİT TAKSİT",
+            font=mont("Bold", 34), fill=(72, 171, 197), anchor="mm")
+    wa_buton(im, dr, y + 196, tel=False)
+    yasal(dr)
+    kaydet(im, "meta-v2-06-lansman")
+
+
+def v07():
+    """WhatsApp sohbeti kalıbı — temsili yazışma."""
+    im = Image.new("RGBA", (W, H), GECE + (255,))
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-beyaz", (W - 300) // 2, 56, 300)
+    dr.text((W / 2, 300), "TEMSİLİ YAZIŞMA", font=mont("SemiBold", 22),
+            fill=(126, 154, 171), anchor="mm")
+    def balon(t1, t2, y, sag=False, renk=(10, 58, 85), yazi=BEYAZ):
+        fB = mont("SemiBold", 34)
+        wmax = max(dr.textlength(t1, font=fB), dr.textlength(t2, font=fB) if t2 else 0) + 66
+        h = 136 if t2 else 92
+        x0 = W - 90 - wmax if sag else 90
+        dr.rounded_rectangle([x0, y, x0 + wmax, y + h], radius=28, fill=renk)
+        dr.text((x0 + 33, y + 46), t1, font=fB, fill=yazi, anchor="lm")
+        if t2:
+            dr.text((x0 + 33, y + 96), t2, font=fB, fill=yazi, anchor="lm")
+        return y + h + 26
+    y = 340
+    y = balon("Merhaba, ev bakıyorum ama", "bankadan kredim çıkmıyor…", y, sag=False,
+              renk=(233, 240, 244), yazi=GECE)
+    y = balon("Bizde banka YOK, faiz YOK,", "kefil YOK 🙂", y, sag=True,
+              renk=WA_YESIL, yazi=GECE)
+    y = balon("Taksitler artar mı?", None, y, sag=False, renk=(233, 240, 244), yazi=GECE)
+    y = balon("60 ay SABİT. Ara ödeme ve", "balon ödeme de YOK.", y, sag=True,
+              renk=WA_YESIL, yazi=GECE)
+    y = balon("Nasıl başvuruyorum?", None, y, sag=False, renk=(233, 240, 244), yazi=GECE)
+    dr.text((W / 2, y + 34), "CEVABI SİZ YAZIN:", font=mont("Bold", 30),
+            fill=(72, 171, 197), anchor="mm")
+    wa_buton(im, dr, y + 74, tel=False)
+    yasal(dr)
+    kaydet(im, "meta-v2-07-sohbet")
+
+
+def v08():
+    """Kilitli taksit — dev kilit + sabitlik vurgusu."""
+    im = perde(foto("terrace-pergola.webp", W, H, 0.5, 1.1),
+               [(0, 0.42), (0.42, 0.62), (1, 0.94)]).convert("RGBA")
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-beyaz", (W - 300) // 2, 52, 300)
+    cx, cy = W / 2, 470
+    dr.rounded_rectangle([cx - 130, cy - 20, cx + 130, cy + 170], radius=34,
+                         fill=(72, 171, 197))
+    dr.arc([cx - 88, cy - 150, cx + 88, cy + 30], 180, 360, fill=(72, 171, 197), width=34)
+    dr.ellipse([cx - 26, cy + 34, cx + 26, cy + 86], fill=GECE)
+    dr.rectangle([cx - 12, cy + 70, cx + 12, cy + 130], fill=GECE)
+    dr.text((W / 2, 780), "TAKSİTİNİZ", font=mont("Bold", 76), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, 872), "60 AY KİLİTLİ", font=mont("Bold", 100), fill=(72, 171, 197), anchor="mm")
+    dr.text((W / 2, 968), "Zam yok, sürpriz yok: ara ödeme YOK, balon ödeme YOK.",
+            font=mont("SemiBold", 32), fill=SIS, anchor="mm")
+    yok_seridi(dr, 1030, ["BANKA YOK", "FAİZ YOK", "KEFİL YOK"], koyu=True, boy=30)
+    wa_buton(im, dr, 1090)
+    yasal(dr)
+    kaydet(im, "meta-v2-08-kilitli-taksit")
+
+
+def kontak_v2():
+    fs = sorted(f for f in os.listdir(OUT) if f.startswith("meta-v2-") and f.endswith(".jpg"))
+    tw = 430
+    th = int(tw * H / W)
+    cols, rows = 4, 2
+    sheet = Image.new("RGB", (cols * tw + (cols + 1) * 8, rows * th + (rows + 1) * 8), (16, 20, 26))
+    for i, f in enumerate(fs[:8]):
+        im = Image.open(os.path.join(OUT, f)).resize((tw, th), Image.LANCZOS)
+        sheet.paste(im, (8 + (i % cols) * (tw + 8), 8 + (i // cols) * (th + 8)))
+    sheet.save(os.path.join(OUT, "kontak-v2.jpg"), quality=88)
+    print("   kontak-v2.jpg")
+
+
 if __name__ == "__main__":
     for g in [g01, g02, g03, g04, g05, g06, g07, g08, g09, g10]:
         g()
     kontak()
+    for v in [v01, v02, v03, v04, v05, v06, v07, v08]:
+        v()
+    kontak_v2()
     print("tamam ->", OUT)
