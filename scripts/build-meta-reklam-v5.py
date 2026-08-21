@@ -38,9 +38,9 @@ NAVY = (10, 42, 74)          # başlık laciverti (Katılımevim tonu)
 GECE = (4, 40, 58)           # marka laciverti
 SARI = (255, 209, 74)        # fosforlu vurgu çipi
 KIRMIZI = (200, 32, 42)      # yıldız / kırmızı alan
-BORDO = (146, 20, 40)        # arsaVev kırmızı alan
-YESIL = (10, 78, 60)         # arsaVev yeşil alan
-YESIL_A = (16, 104, 80)
+BORDO = (196, 40, 54)        # canlı kırmızı alan (koyu bordo açıldı)
+YESIL = (16, 118, 90)        # canlı yeşil alan (koyu yeşil açıldı)
+YESIL_A = (22, 140, 108)
 GOK = (129, 195, 224)        # açık gök
 BEYAZ = (255, 255, 255)
 KAGIT = (245, 250, 252)
@@ -177,11 +177,11 @@ def k01():
     yildiz(im, W - 168, 585, 112, ["ÜSTELİK", "FAİZSİZ!"])
     dr = ImageDraw.Draw(im)
     # alt logo çipi
-    dr.rounded_rectangle([(W - 420) / 2, H - 172, (W + 420) / 2, H - 84],
+    dr.rounded_rectangle([(W - 320) / 2, H - 200, (W + 320) / 2, H - 88],
                          radius=18, fill=NAVY)
-    logo(im, "beyaz", (W - 300) / 2, H - 168, 300)
+    logo(im, "beyaz", (W - 140) / 2, H - 196, 140)
     dr = ImageDraw.Draw(im)
-    dr.text((W / 2, H - 52), TEL + "  ·  " + SITE, font=mont("Bold", 26),
+    dr.text((W / 2, H - 56), TEL + "  ·  " + SITE, font=mont("Bold", 26),
             fill=BEYAZ, anchor="mm")
     dipnot(dr, [DONEM + " " + YASAL], renk=(52, 74, 92))
     kaydet(im, "meta-v5-01-izmit-oluyor")
@@ -214,8 +214,8 @@ def k02():
         dr.text((cx, 512), kucuk, font=fk, fill=BEYAZ, anchor="mm")
     cip(dr, W / 2, 596, "60 AY VADE FARKSIZ · BANKA YOK", mont("ExtraBold", 27),
         dolgu=SARI, yazi=YESIL)
-    foto_kart(im, "ic-mekan/17-sus-havuzu.webp", 90, 660, W // 2 - 12, 1030, zoom=1.05)
-    foto_kart(im, "terrace-pergola.webp", W // 2 + 12, 660, W - 90, 1030, zoom=1.15)
+    foto_kart(im, "facade-warm.webp", 90, 660, W // 2 - 12, 1030, zoom=1.0)
+    foto_kart(im, "night-gate.webp", W // 2 + 12, 660, W - 90, 1030, 0.5, 1.10)
     dr = ImageDraw.Draw(im)
     dr.text((W / 2, 1084), "İzmit MİA Bölgesi", font=mont("Bold", 30),
             fill=(196, 226, 214), anchor="mm")
@@ -235,24 +235,24 @@ def k03():
     dr.text((W / 2, 262), "SATIŞ OFİSİMİZE BEKLERİZ", font=mont("SemiBold", 34),
             fill=(255, 205, 205), anchor="mm")
     # üç çip
-    fs1 = mont("ExtraBold", 34)
+    fs1 = mont("ExtraBold", 30)
     fs2 = mont("SemiBold", 21)
     ic = [("699.000 TL'den", "başlayan peşinat"), ("%0", "faiz"),
           ("29.900 TL", "taksit")]
     for i, (a, b) in enumerate(ic):
-        cx = W / 2 - 340 + i * 340
-        dr.rounded_rectangle([cx - 158, 328, cx + 158, 446], radius=16,
+        cx = W / 2 - 348 + i * 348
+        dr.rounded_rectangle([cx - 166, 328, cx + 166, 446], radius=16,
                              outline=BEYAZ, width=3)
         dr.text((cx, 372), a, font=fs1, fill=SARI, anchor="mm")
         dr.text((cx, 416), b, font=fs2, fill=BEYAZ, anchor="mm")
-    foto_kart(im, "night-gate.webp", 90, 500, W - 90, 1080, 0.5, 1.05, radius=22)
+    foto_kart(im, "night-gate.webp", 90, 500, W - 90, 1090, 0.5, 1.05, radius=22)
     dr = ImageDraw.Draw(im)
-    logo(im, "beyaz", (W - 260) / 2, 1108, 260)
+    logo(im, "beyaz", (W - 190) / 2, 1112, 190)
     dr = ImageDraw.Draw(im)
-    dr.rounded_rectangle([W - 420, 1258, W - 60, 1318], radius=30, fill=BEYAZ)
-    dr.text((W - 240, 1286), TEL, font=mont("ExtraBold", 27), fill=BORDO, anchor="mm")
-    dr.text((60, 1286), "İzmit satış ofisi", font=mont("SemiBold", 25),
-            fill=(255, 205, 205), anchor="lm")
+    dr.rounded_rectangle([W - 400, 1262, W - 60, 1320], radius=29, fill=BEYAZ)
+    dr.text((W - 230, 1289), TEL, font=mont("ExtraBold", 26), fill=BORDO, anchor="mm")
+    dr.text((60, 1289), "İzmit satış ofisi", font=mont("SemiBold", 25),
+            fill=(255, 216, 216), anchor="lm")
     dipnot(dr, [DONEM + " " + YASAL], renk=(232, 178, 178))
     kaydet(im, "meta-v5-03-bordo")
 
@@ -280,32 +280,40 @@ def k04():
 
 
 def k05():
-    """Sarı vurgulu YOK duvarı: koyu zemin, her YOK sarı çipte."""
-    im = gok_uzat("hero-courtyard-dusk.webp", 560, 0.5, 1.02, gok=(9, 33, 53))
+    """AÇIK YOK duvarı: beyaz zemin, sarı çipli YOK'lar, dış cephe altta."""
+    im = Image.new("RGBA", (W, H), (250, 252, 254, 255))
     dr = ImageDraw.Draw(im)
-    dr.text((W / 2, 120), "EV SAHİBİ OLMAK İÇİN", font=mont("SemiBold", 40),
-            fill=(180, 208, 226), anchor="mm")
+    logo(im, "renkli", (W - 210) / 2, 44, 210)
+    dr = ImageDraw.Draw(im)
+    dr.text((W / 2, 240), "EV SAHİBİ OLMAK İÇİN", font=mont("ExtraBold", 42),
+            fill=NAVY, anchor="mm")
     f1 = mont("Black", 56)
-    f2 = mont("Black", 56)
-    satirlar = [("BANKA", "YOK"), ("FAİZ", "YOK"), ("KEFİL", "YOK")]
-    y = 226
-    for a, b in satirlar:
+    y = 330
+    for a in ["BANKA", "FAİZ", "KEFİL"]:
         aw = dr.textlength(a + "  ", font=f1)
-        bw = dr.textlength(b, font=f2) + 44
+        bw = dr.textlength("YOK", font=f1) + 44
         x = (W - aw - bw - 16) / 2
-        dr.text((x, y), a, font=f1, fill=BEYAZ, anchor="lm")
-        cip(dr, x + aw + 16 + bw / 2, y, b, f2, dolgu=SARI, yazi=NAVY, pad_x=22, pad_y=6)
+        dr.text((x, y), a, font=f1, fill=NAVY, anchor="lm")
+        cip(dr, x + aw + 16 + bw / 2, y, "YOK", f1, dolgu=SARI, yazi=NAVY,
+            pad_x=22, pad_y=6)
         y += 96
     cip(dr, W / 2, y + 26, "60 AY SABİT TAKSİT", mont("ExtraBold", 40),
-        dolgu=BEYAZ, yazi=NAVY, pad_x=36, pad_y=14)
-    yildiz(im, W - 150, 200, 100, ["%30", "PEŞİNAT"], dolgu=KIRMIZI, don=10)
+        dolgu=NAVY, yazi=BEYAZ, pad_x=36, pad_y=14)
+    yildiz(im, W - 150, 210, 100, ["%30", "PEŞİNAT"], dolgu=KIRMIZI, don=10)
     dr = ImageDraw.Draw(im)
-    logo(im, "beyaz", 64, H - 150, 150)
+    ft = foto("hero-courtyard-dusk.webp", W, 520, 0.5, 1.02)
+    im.paste(ft, (0, H - 520))
+    bl = 90
+    band = np.asarray(ft.crop((0, 0, W, bl)), np.float32)
+    alfa = np.linspace(1, 0, bl, dtype=np.float32)[:, None, None]
+    kar = (np.array((250, 252, 254), np.float32) * alfa + band * (1 - alfa)).astype(np.uint8)
+    im.paste(Image.fromarray(kar, "RGB"), (0, H - 520))
     dr = ImageDraw.Draw(im)
-    dr.text((W - 64, H - 118), TEL, font=mont("Bold", 32), fill=BEYAZ, anchor="rm")
-    dr.text((W - 64, H - 80), SITE, font=mont("SemiBold", 22),
-            fill=(180, 208, 226), anchor="rm")
-    dipnot(dr, [YASAL])
+    dr.rounded_rectangle([(W - 620) / 2, H - 120, (W + 620) / 2, H - 56],
+                         radius=32, fill=NAVY)
+    dr.text((W / 2, H - 88), TEL + "  ·  " + SITE, font=mont("Bold", 27),
+            fill=BEYAZ, anchor="mm")
+    dipnot(dr, [YASAL], renk=(210, 224, 232))
     kaydet(im, "meta-v5-05-yok-cipleri")
 
 
@@ -323,7 +331,7 @@ def k06():
             fill=BEYAZ, anchor="mm")
     dr.text((W / 2, 534), "60 ay sabit taksit · %30 peşinat",
             font=mont("SemiBold", 30), fill=(196, 226, 214), anchor="mm")
-    foto_kart(im, "ic-mekan/18-yuruyus-yolu.webp", 90, 600, W - 90, 1120, zoom=1.05)
+    foto_kart(im, "entrance-gate.webp", 90, 600, W - 90, 1120, 0.45, 1.05)
     dr = ImageDraw.Draw(im)
     cip(dr, W / 2, 1180, "İZMİT MİA BÖLGESİ", mont("ExtraBold", 28),
         dolgu=SARI, yazi=YESIL)
@@ -334,22 +342,23 @@ def k06():
 
 
 def k07():
-    """Bordo varyant: dev 60 AY + sarı çip + gece foto kartı."""
-    im = Image.new("RGBA", (W, H), BORDO + (255,))
+    """AÇIK 60 AY: beyaz zemin, kırmızı dev rakam, dış cephe kartı."""
+    im = Image.new("RGBA", (W, H), (252, 250, 248, 255))
     dr = ImageDraw.Draw(im)
-    logo(im, "beyaz", (W - 220) / 2, 52, 220)
+    logo(im, "renkli", (W - 210) / 2, 44, 210)
     dr = ImageDraw.Draw(im)
-    dr.text((W / 2, 292), "60 AY", font=mont("Black", 200), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, 300), "60 AY", font=mont("Black", 190), fill=KIRMIZI, anchor="mm")
     cip(dr, W / 2, 448, "VADE FARKSIZ · SABİT TAKSİT", mont("ExtraBold", 36),
-        dolgu=SARI, yazi=BORDO, pad_x=34, pad_y=14)
-    dr.text((W / 2, 530), "Banka yok · Faiz yok · Kefil yok · Komisyon yok",
-            font=mont("SemiBold", 29), fill=(255, 210, 210), anchor="mm")
-    foto_kart(im, "balcony-dusk.webp", 90, 594, W - 90, 1120, 0.55, 1.05)
+        dolgu=SARI, yazi=NAVY, pad_x=34, pad_y=14)
+    dr.text((W / 2, 528), "Banka yok · Faiz yok · Kefil yok · Komisyon yok",
+            font=mont("SemiBold", 29), fill=(96, 74, 70), anchor="mm")
+    foto_kart(im, "terrace-pergola.webp", 90, 592, W - 90, 1140, 0.5, 1.05)
     dr = ImageDraw.Draw(im)
-    dr.rounded_rectangle([(W - 560) / 2, 1170, (W + 560) / 2, 1240], radius=35, fill=BEYAZ)
-    dr.text((W / 2, 1204), TEL, font=mont("ExtraBold", 34), fill=BORDO, anchor="mm")
-    dipnot(dr, [YASAL], renk=(232, 178, 178))
-    kaydet(im, "meta-v5-07-bordo-60")
+    dr.rounded_rectangle([(W - 560) / 2, 1188, (W + 560) / 2, 1256], radius=34,
+                         fill=KIRMIZI)
+    dr.text((W / 2, 1222), TEL, font=mont("ExtraBold", 34), fill=BEYAZ, anchor="mm")
+    dipnot(dr, [YASAL], renk=KURSUN)
+    kaydet(im, "meta-v5-07-acik-60")
 
 
 def k08():
@@ -376,11 +385,11 @@ def k08():
             font=mont("SemiBold", 27), fill=(36, 74, 108), anchor="mm")
     yildiz(im, 158, 545, 104, ["BANKA", "YOK!"])
     dr = ImageDraw.Draw(im)
-    dr.rounded_rectangle([(W - 420) / 2, H - 168, (W + 420) / 2, H - 82],
+    dr.rounded_rectangle([(W - 320) / 2, H - 196, (W + 320) / 2, H - 86],
                          radius=18, fill=NAVY)
-    logo(im, "beyaz", (W - 300) / 2, H - 164, 300)
+    logo(im, "beyaz", (W - 140) / 2, H - 192, 140)
     dr = ImageDraw.Draw(im)
-    dr.text((W / 2, H - 50), TEL + "  ·  " + SITE, font=mont("Bold", 26),
+    dr.text((W / 2, H - 54), TEL + "  ·  " + SITE, font=mont("Bold", 26),
             fill=BEYAZ, anchor="mm")
     dipnot(dr, [DONEM + " " + YASAL], renk=(52, 74, 92))
     kaydet(im, "meta-v5-08-kocaeli")
@@ -418,11 +427,11 @@ def k09():
 
 def k10():
     """Lacivert-sarı kampanya: 'taksitle EV SAHİBİ OL' karışık vurgu."""
-    im = Image.new("RGBA", (W, H), NAVY + (255,))
+    im = Image.new("RGBA", (W, H), (16, 58, 100, 255))
     dr = ImageDraw.Draw(im)
     for i in range(5):
         dr.line([(-60 + i * 46, 0), (240 + i * 46, 300)],
-                fill=(16, 56, 94, 255), width=16)
+                fill=(24, 74, 122, 255), width=16)
     logo(im, "beyaz", (W - 230) / 2, 58, 230)
     dr = ImageDraw.Draw(im)
     dr.text((W / 2, 268), "29.900 TL taksitle", font=mont("SemiBold", 44),
@@ -432,7 +441,7 @@ def k10():
                    dolgu=SARI, yazi=NAVY, pad_x=36, pad_y=10)
     dr.text((W / 2, 580), "Banka yok · Faiz yok · Kefil yok · Ara ödeme yok",
             font=mont("SemiBold", 29), fill=(180, 208, 226), anchor="mm")
-    foto_kart(im, "hero-courtyard-dusk.webp", 90, 646, W - 90, 1140, 0.5, 1.05)
+    foto_kart(im, "balcony-dusk.webp", 90, 646, W - 90, 1140, 0.55, 1.05)
     dr = ImageDraw.Draw(im)
     yildiz(im, W - 172, 680, 100, ["60 AY", "VADE", "FARKSIZ"], dolgu=KIRMIZI, don=12)
     dr = ImageDraw.Draw(im)
