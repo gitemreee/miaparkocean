@@ -749,6 +749,294 @@ def kontak_v3():
     print("   kontak-v3.jpg")
 
 
+
+# ═════════════ V4 — REFERANS GRAMERİ: YAZI GÖKYÜZÜNDE, PROJE ALTTA ═════════
+# Kullanıcının verdiği 5 örneğin ortak dili: başlık fotoğrafın BOŞ göğünde
+# ya da fotoğraf dışında; bina hiç kapatılmıyor. Karışık ağırlıklı başlık
+# (beyaz satır + renkli vurgu satırı), yıldız rozet, ödeme tablosu, ışık
+# hüzmeleri, altta logo + telefon. Fiyatlı olanlarda onaylı örnek rakamlar
+# + dönemsellik dipnotu.
+
+DONEMSEL = "Fiyatlar ve kampanya koşulları dönemsel olarak değişebilir. Güncel bilgi: satış ofisi."
+
+
+def gok_uzat(kaynak, foto_h, focus=0.5, zoom=1.0, gok=(8, 34, 56)):
+    """Foto altta; üstü fotoğrafın göğüyle harmanlanan lacivert gökyüzü."""
+    im = Image.new("RGB", (W, H), gok)
+    ust = np.linspace(0, 1, H - foto_h, dtype=np.float32)[:, None, None]
+    g1 = np.array((4, 22, 40), np.float32)
+    g2 = np.array(gok, np.float32)
+    grad = (g1 * (1 - ust) + g2 * ust).astype(np.uint8)
+    im.paste(Image.fromarray(np.repeat(grad, W, axis=1), "RGB"), (0, 0))
+    ft = foto(kaynak, W, foto_h, focus, zoom)
+    im.paste(ft, (0, H - foto_h))
+    # dikiş: fotoğrafın üst 110 px'ine göğe doğru alfa geçişi
+    bl = 110
+    band = np.asarray(ft.crop((0, 0, W, bl)), np.float32)
+    alfa = np.linspace(1, 0, bl, dtype=np.float32)[:, None, None]
+    karisim = (np.array(gok, np.float32) * alfa + band * (1 - alfa)).astype(np.uint8)
+    im.paste(Image.fromarray(karisim, "RGB"), (0, H - foto_h))
+    return im.convert("RGBA")
+
+
+def huzmeler(im, taban_y, n=5):
+    """Projeden yükselen ışık hüzmeleri (Toprak Tan referansı)."""
+    kat = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    kd = ImageDraw.Draw(kat)
+    import random
+    random.seed(7)
+    for i in range(n):
+        cx = 120 + i * (W - 240) / (n - 1) + random.randint(-30, 30)
+        gen = random.randint(26, 44)
+        kd.polygon([(cx - gen, taban_y), (cx + gen, taban_y),
+                    (cx + gen * 2.2, taban_y - 640), (cx - gen * 2.2, taban_y - 640)],
+                   fill=(120, 200, 230, 26))
+        kd.polygon([(cx - gen * 0.4, taban_y), (cx + gen * 0.4, taban_y),
+                    (cx + gen, taban_y - 640), (cx - gen, taban_y - 640)],
+                   fill=(160, 220, 245, 30))
+    kat = kat.filter(__import__("PIL.ImageFilter", fromlist=["GaussianBlur"]).GaussianBlur(6))
+    im.alpha_composite(kat)
+
+
+def yildiz_rozet(im, cx, cy, r, satirlar, dolgu=CAM, yazi=GECE, don=-12):
+    """Yıldız patlaması rozet (referanslardaki kampanya damgası)."""
+    import math
+    kat = Image.new("RGBA", (r * 3, r * 3), (0, 0, 0, 0))
+    kd = ImageDraw.Draw(kat)
+    c = r * 1.5
+    pts = []
+    N = 24
+    for i in range(N * 2):
+        rr = r if i % 2 == 0 else r * 0.82
+        a = math.pi * i / N
+        pts.append((c + rr * math.cos(a), c + rr * math.sin(a)))
+    kd.polygon(pts, fill=dolgu + (255,))
+    fb = mont("Bold", int(r * (0.30 if len(satirlar) > 1 else 0.36)))
+    y0 = c - (len(satirlar) - 1) * r * 0.19
+    for i, t in enumerate(satirlar):
+        kd.text((c, y0 + i * r * 0.38), t, font=fb, fill=yazi, anchor="mm")
+    kat = kat.rotate(don, resample=Image.BICUBIC, expand=False)
+    im.alpha_composite(kat, (int(cx - c), int(cy - c)))
+
+
+def karma_baslik(dr, y, satirlar, aralik=1.16):
+    """Karışık ağırlık/renk başlık: [(metin, boy, kalinlik, renk), ...]"""
+    for t, boy, kes, renk in satirlar:
+        dr.text((W / 2, y), t, font=mont(kes, boy), fill=renk, anchor="mm")
+        y += boy * aralik
+    return y
+
+
+def alt_kimlik(im, dr, koyu=True):
+    logo(im, "mia-beyaz" if koyu else "mia-renkli", 64, H - 158, 150)
+    dr.text((W - 64, H - 122), TEL, font=mont("Bold", 34),
+            fill=BEYAZ if koyu else GECE, anchor="rm")
+    dr.text((W - 64, H - 84), "miaparkocean.com", font=mont("SemiBold", 22),
+            fill=SIS if koyu else KURSUN, anchor="rm")
+    dr.text((W / 2, H - 20), YASAL, font=mont("Regular", 15),
+            fill=(150, 175, 190) if koyu else KURSUN, anchor="mm")
+
+
+def w01():
+    """Toprak Tan grameri: gece proje + hüzmeler + gök başlığı + rozet."""
+    im = gok_uzat("night-gate.webp", 620, 0.5, 1.02)
+    huzmeler(im, H - 560)
+    dr = ImageDraw.Draw(im)
+    karma_baslik(dr, 170, [
+        ("KREDİYE TAKILMAYIN,", 46, "SemiBold", BEYAZ),
+        ("BANKA YOK · FAİZ YOK", 62, "Bold", BEYAZ),
+        ("60 AY SABİT TAKSİT!", 74, "Bold", CAM),
+    ], aralik=1.28)
+    yildiz_rozet(im, W - 190, 520, 118, ["KEFİL", "YOK"])
+    dr = ImageDraw.Draw(im)
+    alt_kimlik(im, dr)
+    kaydet(im, "meta-v4-01-gece-huzme")
+
+
+def w02():
+    """arsaVev grameri: minimal, fiyat cümlesi gökte, proje dokunulmamış."""
+    im = gok_uzat("entrance-gate.webp", 700, 0.45, 1.1, gok=(10, 44, 66))
+    dr = ImageDraw.Draw(im)
+    karma_baslik(dr, 168, [
+        ("Aylık 29.900 TL'ye", 72, "SemiBold", BEYAZ),
+        ("ev sahibi olmak var.", 72, "SemiBold", BEYAZ),
+    ], aralik=1.18)
+    dr.text((W / 2, 360), "1+0 dairelerde · 60 ay vade farksız · Banka yok, faiz yok",
+            font=mont("Regular", 28), fill=SIS, anchor="mm")
+    dr.text((W / 2, 428), "Fırsatı kaçırmayın…", font=mont("SemiBold", 26),
+            fill=CAM, anchor="mm")
+    logo(im, "mia-beyaz", (W - 250) // 2, 470, 250)
+    dr = ImageDraw.Draw(im)
+    dr.text((W / 2, H - 40), DONEMSEL + "  ·  " + YASAL,
+            font=mont("Regular", 14), fill=(150, 175, 190), anchor="mm")
+    dr.text((W / 2, H - 84), TEL + "   ·   miaparkocean.com",
+            font=mont("Bold", 28), fill=BEYAZ, anchor="mm")
+    kaydet(im, "meta-v4-02-aylik")
+
+
+def w03():
+    """Eminevim grameri: ödeme tablosu kahraman."""
+    im = Image.new("RGBA", (W, H), KAGIT + (255,))
+    alt = foto("ic-mekan/18-yuruyus-yolu.webp", W, 430, 0.5, 1.05)
+    im.paste(alt, (0, H - 430))
+    dr = ImageDraw.Draw(im)
+    # foto-panel dikişi yumuşak
+    bl = 90
+    band = np.asarray(alt.crop((0, 0, W, bl)), np.float32)
+    alfa = np.linspace(1, 0, bl, dtype=np.float32)[:, None, None]
+    kar = (np.array(KAGIT, np.float32) * alfa + band * (1 - alfa)).astype(np.uint8)
+    im.paste(Image.fromarray(kar, "RGB"), (0, H - 430))
+    logo(im, "mia-renkli", (W - 240) // 2, 44, 240)
+    dr = ImageDraw.Draw(im)
+    karma_baslik(dr, 260, [
+        ("Tasarrufa Şimdi Başlayın", 40, "SemiBold", VURGU),
+        ("EVİNİZİ KOLAYCA ALIN", 66, "Bold", GECE),
+    ], aralik=1.35)
+    # tablo
+    tx, ty, tw_, rh = 90, 420, W - 180, 92
+    kols = [0.26, 0.40, 0.34]
+    bas = ["DAİRE", "PEŞİNAT", "AYLIK TAKSİT"]
+    dr.rounded_rectangle([tx, ty, tx + tw_, ty + rh * 3], radius=18, fill=BEYAZ,
+                         outline=AYRAC, width=2)
+    dr.rounded_rectangle([tx, ty, tx + tw_, ty + rh], radius=18, fill=GECE)
+    dr.rectangle([tx, ty + rh * 0.5, tx + tw_, ty + rh], fill=GECE)
+    x = tx
+    for i, b in enumerate(bas):
+        cw = tw_ * kols[i]
+        dr.text((x + cw / 2, ty + rh / 2), b, font=mont("Bold", 26),
+                fill=CAM if i == 2 else BEYAZ, anchor="mm")
+        x += cw
+    veriler = [("1+0", "699.000 TL", "29.900 TL"), ("1+1", "999.000 TL", "39.900 TL")]
+    for r_i, satir in enumerate(veriler):
+        y0 = ty + rh * (r_i + 1)
+        if r_i == 0:
+            dr.rectangle([tx + 2, y0, tx + tw_ - 2, y0 + rh], fill=(238, 246, 250))
+        # aylık kolonu vurgulu
+        dr.rectangle([tx + tw_ * (kols[0] + kols[1]), y0, tx + tw_ - 2, y0 + rh],
+                     fill=(213, 238, 246) if r_i == 0 else (225, 243, 249))
+        x = tx
+        for c_i, hucre in enumerate(satir):
+            cw = tw_ * kols[c_i]
+            dr.text((x + cw / 2, y0 + rh / 2), hucre,
+                    font=mont("Bold", 34 if c_i else 30),
+                    fill=VURGU if c_i == 2 else GECE, anchor="mm")
+            x += cw
+        dr.line([(tx + 8, y0), (tx + tw_ - 8, y0)], fill=AYRAC, width=2)
+    by = ty + rh * 3 + 34
+    dr.rounded_rectangle([(W - 720) / 2, by, (W + 720) / 2, by + 66], radius=33, fill=VURGU)
+    dr.text((W / 2, by + 33), "60 AY VADE FARKSIZ · BANKA YOK · FAİZ YOK",
+            font=mont("Bold", 27), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, by + 104), DONEMSEL, font=mont("Regular", 19), fill=KURSUN, anchor="mm")
+    dr.text((W / 2, H - 34), YASAL, font=mont("Regular", 15), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, H - 74), TEL + "   ·   miaparkocean.com",
+            font=mont("Bold", 27), fill=BEYAZ, anchor="mm")
+    kaydet(im, "meta-v4-03-odeme-tablosu")
+
+
+def w04():
+    """Fuzul grameri: açık gök, bulutlar, kartta proje."""
+    im = Image.new("RGBA", (W, H))
+    t = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
+    g1 = np.array((120, 190, 220), np.float32)
+    g2 = np.array((225, 243, 250), np.float32)
+    grad = (g1 * (1 - t) + g2 * t).astype(np.uint8)
+    im.paste(Image.fromarray(np.repeat(grad, W, axis=1), "RGB"), (0, 0))
+    dr = ImageDraw.Draw(im)
+    # bulutlar
+    for (bx, by_, r_) in [(140, 760, 90), (300, 800, 120), (860, 700, 100),
+                          (1000, 760, 80), (560, 830, 130)]:
+        for dx, dy, rr in [(-r_ * 0.7, 10, r_ * 0.62), (0, 0, r_), (r_ * 0.7, 12, r_ * 0.58)]:
+            dr.ellipse([bx + dx - rr, by_ + dy - rr * 0.62, bx + dx + rr, by_ + dy + rr * 0.62],
+                       fill=(255, 255, 255, 235))
+    # üst afiş
+    dr.rounded_rectangle([120, 96, W - 120, 300], radius=40, fill=GECE)
+    karma_baslik(dr, 160, [
+        ("Faizsiz Finansman ile", 38, "SemiBold", (140, 205, 228)),
+        ("EV SAHİBİ OL!", 66, "Bold", BEYAZ),
+    ], aralik=1.30)
+    # çipler
+    y = 360
+    for t2 in ["BANKA YOK", "FAİZ YOK", "KEFİL YOK"]:
+        hap(dr, W / 2, y, t2, mont("Bold", 27), BEYAZ, VURGU, pad=30)
+        y += 78
+    # kartta proje
+    kx0, ky0, kx1, ky1 = 130, 640, W - 130, 1170
+    dr.rounded_rectangle([kx0 - 10, ky0 - 10, kx1 + 10, ky1 + 10], radius=34, fill=BEYAZ)
+    kf = foto("facade-warm.webp", kx1 - kx0, ky1 - ky0, 0.5, 1.0)
+    maske = Image.new("L", kf.size, 0)
+    ImageDraw.Draw(maske).rounded_rectangle([0, 0, kf.width, kf.height], radius=26, fill=255)
+    im.paste(kf, (kx0, ky0), maske)
+    dr = ImageDraw.Draw(im)
+    yildiz_rozet(im, W - 185, 655, 105, ["60 AY", "SABİT"], dolgu=GECE, yazi=CAM, don=10)
+    dr = ImageDraw.Draw(im)
+    dr.text((W / 2, 1226), TEL + "   ·   miaparkocean.com",
+            font=mont("Bold", 30), fill=GECE, anchor="mm")
+    dr.text((W / 2, H - 64), "MİA PARK OCEAN · İZMİT MİA BÖLGESİ",
+            font=mont("Bold", 24), fill=VURGU, anchor="mm")
+    dr.text((W / 2, H - 28), YASAL, font=mont("Regular", 15), fill=KURSUN, anchor="mm")
+    kaydet(im, "meta-v4-04-acik-gok")
+
+
+def w05():
+    """Toprak Tan varyantı: alacakaranlık, farklı başlık."""
+    im = gok_uzat("hero-courtyard-dusk.webp", 640, 0.5, 1.02, gok=(12, 38, 60))
+    huzmeler(im, H - 580, n=4)
+    dr = ImageDraw.Draw(im)
+    karma_baslik(dr, 175, [
+        ("DOĞRU PROJEYİ SEÇİN,", 46, "SemiBold", BEYAZ),
+        ("İZMİT MİA'DA", 60, "Bold", CAM),
+        ("EV SAHİBİ OLUN!", 76, "Bold", BEYAZ),
+    ], aralik=1.28)
+    yildiz_rozet(im, 178, 540, 118, ["BANKA", "FAİZ·KEFİL", "YOK"], don=-10)
+    dr = ImageDraw.Draw(im)
+    dr.text((W / 2, 640), "%30 peşinat · 60 ay sabit taksit",
+            font=mont("SemiBold", 30), fill=SIS, anchor="mm")
+    alt_kimlik(im, dr)
+    kaydet(im, "meta-v4-05-dusk")
+
+
+def w06():
+    """Turyap grameri modern: taksit başlığı + yuvarlak foto + büyük telefon."""
+    im = Image.new("RGBA", (W, H), KAGIT + (255,))
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-renkli", (W - 240) // 2, 40, 240)
+    dr = ImageDraw.Draw(im)
+    karma_baslik(dr, 250, [
+        ("29.900 TL'den Başlayan", 52, "Bold", VURGU),
+        ("Taksitlerle", 52, "Bold", VURGU),
+        ("EV SAHİBİ OLMA", 72, "Bold", GECE),
+        ("FIRSATI", 72, "Bold", GECE),
+    ], aralik=1.16)
+    dr.text((W / 2, 620), "Banka yok · Faiz yok · Kefil yok · Komisyon yok",
+            font=mont("SemiBold", 28), fill=KURSUN, anchor="mm")
+    ky0 = 680
+    kf = foto("balcony-dusk.webp", W - 180, 430, 0.55, 1.05)
+    maske = Image.new("L", kf.size, 0)
+    ImageDraw.Draw(maske).rounded_rectangle([0, 0, kf.width, kf.height], radius=30, fill=255)
+    im.paste(kf, (90, ky0), maske)
+    dr = ImageDraw.Draw(im)
+    yildiz_rozet(im, W - 175, ky0 + 30, 108, ["60 AY", "VADE", "FARKSIZ"], don=12)
+    dr = ImageDraw.Draw(im)
+    dr.rounded_rectangle([120, 1168, W - 120, 1252], radius=42, fill=GECE)
+    dr.text((W / 2, 1210), TEL, font=mont("Bold", 46), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, 1290), DONEMSEL, font=mont("Regular", 18), fill=KURSUN, anchor="mm")
+    dr.text((W / 2, H - 26), YASAL, font=mont("Regular", 15), fill=KURSUN, anchor="mm")
+    kaydet(im, "meta-v4-06-kampanya")
+
+
+def kontak_v4():
+    fs = sorted(f for f in os.listdir(OUT) if f.startswith("meta-v4-") and f.endswith(".jpg"))
+    tw = 430
+    th = int(tw * H / W)
+    cols, rows = 3, 2
+    sheet = Image.new("RGB", (cols * tw + (cols + 1) * 8, rows * th + (rows + 1) * 8), (16, 20, 26))
+    for i, f in enumerate(fs[:6]):
+        im2 = Image.open(os.path.join(OUT, f)).resize((tw, th), Image.LANCZOS)
+        sheet.paste(im2, (8 + (i % cols) * (tw + 8), 8 + (i // cols) * (th + 8)))
+    sheet.save(os.path.join(OUT, "kontak-v4.jpg"), quality=88)
+    print("   kontak-v4.jpg")
+
+
 if __name__ == "__main__":
     for g in [g01, g02, g03, g04, g05, g06, g07, g08, g09, g10]:
         g()
@@ -758,4 +1046,7 @@ if __name__ == "__main__":
     kontak_v2()
     v3_hepsi()
     kontak_v3()
+    for w in [w01, w02, w03, w04, w05, w06]:
+        w()
+    kontak_v4()
     print("tamam ->", OUT)
