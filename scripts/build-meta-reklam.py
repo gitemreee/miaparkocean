@@ -632,6 +632,123 @@ def kontak_v2():
     print("   kontak-v2.jpg")
 
 
+
+# ═══════════════════ V3 — PROJE KAHRAMAN (fotoğraf üstünde yazı YOK) ═══════
+# Geri bildirim: "fotoğrafın üstüne yazmıştın, proje görünmüyor."
+# Bu sette render'a hiçbir şey binmiyor — logo dahil. Bütün mesaj, fotoğrafın
+# dışındaki düz panelde. Metinler copywriter prensibiyle kısaltıldı:
+# fayda dili ("taksitin değişmez", "sürpriz yok"), tek aksiyon CTA'sı.
+
+def panel_icerik(im, dr, y0, y1, baslik1, baslik2, altyazi, acik=False):
+    """Panele: logo + başlık(lar) + yok satırı + buton + tel + yasal."""
+    zem = KAGIT if acik else GECE
+    dr.rectangle([0, y0, W, y1], fill=zem)
+    dr.rectangle([0, y0, W, y0 + 8], fill=CAM)          # foto-panel ayracı
+    logo(im, "mia-renkli" if acik else "mia-beyaz", (W - 190) // 2, y0 + 18, 190)
+    ana = GECE if acik else BEYAZ
+    dr.text((W / 2, y0 + 196), baslik1, font=mont("Bold", 58 if baslik2 else 66),
+            fill=ana, anchor="mm")
+    if baslik2:
+        dr.text((W / 2, y0 + 258), baslik2, font=mont("Bold", 40),
+                fill=VURGU if acik else CAM, anchor="mm")
+    dr.text((W / 2, y0 + (306 if baslik2 else 258)), altyazi,
+            font=mont("SemiBold", 28), fill=KURSUN if acik else SIS, anchor="mm")
+    by = y0 + (344 if baslik2 else 296)
+    x0 = (W - 500) / 2
+    dr.rounded_rectangle([x0, by, x0 + 500, by + 72], radius=36, fill=WA_YESIL)
+    ic = by + 36
+    bx = x0 + 52
+    dr.ellipse([bx - 21, ic - 21, bx + 21, ic + 21], fill=BEYAZ)
+    dr.polygon([(bx - 14, ic + 11), (bx - 6, ic + 21), (bx - 2, ic + 9)], fill=BEYAZ)
+    dr.arc([bx - 11, ic - 11, bx + 11, ic + 11], 200, 40, fill=WA_YESIL, width=6)
+    dr.text((x0 + 500 / 2 + 22, ic), "WHATSAPP'TAN YAZIN", font=mont("Bold", 29),
+            fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, by + 104), TEL, font=mont("Bold", 33), fill=ana, anchor="mm")
+    dr.text((W / 2, y1 - 22), YASAL, font=mont("Regular", 17),
+            fill=KURSUN if acik else (126, 154, 171), anchor="mm")
+
+
+def u_split_alt(ad, kaynak, focus, zoom, b1, b2, alt):
+    """Foto üstte TEMİZ (%60), panel altta."""
+    im = Image.new("RGBA", (W, H))
+    im.paste(foto(kaynak, W, 810, focus, zoom), (0, 0))
+    dr = ImageDraw.Draw(im)
+    panel_icerik(im, dr, 810, H, b1, b2, alt)
+    kaydet(im, ad)
+
+
+def u_split_ust(ad, kaynak, focus, zoom, b1, b2, alt):
+    """Panel üstte, foto altta TEMİZ (%60) — akışta önce mesaj görünür."""
+    im = Image.new("RGBA", (W, H))
+    im.paste(foto(kaynak, W, 810, focus, zoom), (0, 540))
+    dr = ImageDraw.Draw(im)
+    panel_icerik(im, dr, 0, 540, b1, b2, alt)
+    # ayracı alta çevir
+    dr.rectangle([0, 532, W, 540], fill=CAM)
+    kaydet(im, ad)
+
+
+def u_cerceve(ad, kaynak, focus, zoom, b1, alt):
+    """Açık zemin; foto ortada büyük ve çerçeveli, yazılar dışında."""
+    im = Image.new("RGBA", (W, H), KAGIT + (255,))
+    dr = ImageDraw.Draw(im)
+    logo(im, "mia-renkli", (W - 250) // 2, 40, 250)
+    dr.text((W / 2, 258), b1, font=mont("Bold", 66), fill=GECE, anchor="mm")
+    fy0, fy1 = 330, 1030
+    im.paste(foto(kaynak, W - 112, fy1 - fy0, focus, zoom), (56, fy0))
+    dr.rectangle([56, fy0, W - 56, fy1], outline=VURGU, width=4)
+    elmas_dolu(dr, 56, fy0, 26, VURGU)
+    elmas_dolu(dr, W - 56, fy1, 26, VURGU)
+    dr.text((W / 2, 1080), alt, font=mont("Bold", 34), fill=VURGU, anchor="mm")
+    x0 = (W - 520) / 2
+    by = 1128
+    dr.rounded_rectangle([x0, by, x0 + 520, by + 78], radius=39, fill=WA_YESIL)
+    ic = by + 39
+    bx = x0 + 56
+    dr.ellipse([bx - 22, ic - 22, bx + 22, ic + 22], fill=BEYAZ)
+    dr.polygon([(bx - 15, ic + 12), (bx - 7, ic + 22), (bx - 3, ic + 10)], fill=BEYAZ)
+    dr.arc([bx - 12, ic - 12, bx + 12, ic + 12], 200, 40, fill=WA_YESIL, width=6)
+    dr.text((x0 + 520 / 2 + 24, ic), "WHATSAPP'TAN YAZIN", font=mont("Bold", 30),
+            fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, by + 116), TEL, font=mont("Bold", 34), fill=GECE, anchor="mm")
+    dr.text((W / 2, H - 26), YASAL, font=mont("Regular", 17), fill=KURSUN, anchor="mm")
+    kaydet(im, ad)
+
+
+def v3_hepsi():
+    u_split_alt("meta-v3-01-gece", "night-gate.webp", 0.5, 1.02,
+                "BANKA YOK. FAİZ YOK.", "KEFİL YOK.",
+                "60 ay sabit taksit · %30 peşinat")
+    u_split_alt("meta-v3-02-avlu", "hero-courtyard-dusk.webp", 0.5, 1.02,
+                "60 AY SABİT TAKSİT", None,
+                "Banka yok · Faiz yok · Kefil yok · Komisyon yok")
+    u_split_alt("meta-v3-03-deniz", "ic-mekan/21-balkondan-deniz.webp", 0.5, 1.0,
+                "TAKSİTİN 60 AY", "DEĞİŞMEZ.",
+                "Ara ödeme yok · Balon ödeme yok")
+    u_split_ust("meta-v3-04-balkon", "balcony-dusk.webp", 0.55, 1.05,
+                "SÜRPRİZ ÖDEME YOK", None,
+                "Ara ödeme yok · Balon yok · Komisyon yok")
+    u_split_ust("meta-v3-05-teras", "terrace-pergola.webp", 0.5, 1.05,
+                "KREDİSİZ", "EV SAHİPLİĞİ",
+                "Banka yok · Faiz yok · 60 ay sabit taksit")
+    u_cerceve("meta-v3-06-cephe", "street-corner.webp", 0.42, 1.05,
+              "EVİNİZ İZMİT MİA'DA",
+              "BANKA YOK · FAİZ YOK · 60 AY SABİT TAKSİT")
+
+
+def kontak_v3():
+    fs = sorted(f for f in os.listdir(OUT) if f.startswith("meta-v3-") and f.endswith(".jpg"))
+    tw = 430
+    th = int(tw * H / W)
+    cols, rows = 3, 2
+    sheet = Image.new("RGB", (cols * tw + (cols + 1) * 8, rows * th + (rows + 1) * 8), (16, 20, 26))
+    for i, f in enumerate(fs[:6]):
+        im = Image.open(os.path.join(OUT, f)).resize((tw, th), Image.LANCZOS)
+        sheet.paste(im, (8 + (i % cols) * (tw + 8), 8 + (i // cols) * (th + 8)))
+    sheet.save(os.path.join(OUT, "kontak-v3.jpg"), quality=88)
+    print("   kontak-v3.jpg")
+
+
 if __name__ == "__main__":
     for g in [g01, g02, g03, g04, g05, g06, g07, g08, g09, g10]:
         g()
@@ -639,4 +756,6 @@ if __name__ == "__main__":
     for v in [v01, v02, v03, v04, v05, v06, v07, v08]:
         v()
     kontak_v2()
+    v3_hepsi()
+    kontak_v3()
     print("tamam ->", OUT)
