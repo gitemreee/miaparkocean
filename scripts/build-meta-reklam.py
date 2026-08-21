@@ -169,7 +169,7 @@ def g01():
     elmas_dolu(dr, W / 2, 980, 18, CAM)
     dr.text((W / 2, 1052), "60 AY SABİT TAKSİTLE EV SAHİBİ OLUN",
             font=mont("SemiBold", 40), fill=SIS, anchor="mm")
-    hap(dr, W / 2, 1110, "İZMİT MİA BÖLGESİ · 600 KONUT", mont("Bold", 30), CAM, GECE)
+    hap(dr, W / 2, 1110, "İZMİT MİA BÖLGESİ", mont("Bold", 30), CAM, GECE)
     alt_bant(im, dr)
     kaydet(im, "meta-01-banka-faiz-kefil")
 
@@ -422,7 +422,7 @@ def serit_kurdele(im, dr, t="LANSMANA ÖZEL DÖNEM"):
 def v01():
     """Üç tam genişlik iddia bandı — kategori klasiği, dev punto."""
     im = perde(foto("night-gate.webp", W, H, 0.5, 1.05),
-               [(0, 0.35), (0.30, 0.55), (1, 0.94)]).convert("RGBA")
+               [(0, 0.10), (0.55, 0.16), (0.72, 0.62), (1, 0.94)]).convert("RGBA")
     dr = ImageDraw.Draw(im)
     logo(im, "mia-beyaz", (W - 320) // 2, 56, 320)
     bantlar = [("BANKA", "YOK"), ("FAİZ", "YOK"), ("KEFİL", "YOK")]
@@ -445,10 +445,15 @@ def v01():
 def v02():
     """%0 FAİZ mührü — damga estetiği."""
     im = perde(foto("hero-courtyard-dusk.webp", W, H, 0.5, 1.05),
-               [(0, 0.45), (0.5, 0.62), (1, 0.94)]).convert("RGBA")
+               [(0, 0.12), (0.55, 0.20), (0.72, 0.60), (1, 0.94)]).convert("RGBA")
     dr = ImageDraw.Draw(im)
     logo(im, "mia-beyaz", (W - 300) // 2, 54, 300)
     cx, cy, R = W / 2, 560, 300
+    # mühür içi lokal koyuluk — rakam okunur, çevrede proje görünür
+    sc = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    sd = ImageDraw.Draw(sc)
+    sd.ellipse([cx - R + 14, cy - R + 14, cx + R - 14, cy + R - 14], fill=(4, 40, 58, 150))
+    im.alpha_composite(sc)
     for r, wdt in [(R, 10), (R - 26, 4)]:
         dr.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(72, 171, 197), width=wdt)
     dr.text((cx, cy - 78), "%0", font=mont("Bold", 210), fill=BEYAZ, anchor="mm")
@@ -490,9 +495,10 @@ def v03():
 def v04():
     """Dev 60 — sayfayı kaplayan rakam."""
     im = perde(foto("balcony-dusk.webp", W, H, 0.55, 1.1),
-               [(0, 0.50), (0.45, 0.68), (1, 0.94)]).convert("RGBA")
+               [(0, 0.14), (0.48, 0.24), (0.66, 0.62), (1, 0.94)]).convert("RGBA")
     dr = ImageDraw.Draw(im)
     logo(im, "mia-beyaz", (W - 300) // 2, 50, 300)
+    dr.text((W / 2 + 8, 528), "60", font=mont("Bold", 470), fill=(4, 40, 58), anchor="mm")
     dr.text((W / 2, 520), "60", font=mont("Bold", 470), fill=BEYAZ, anchor="mm")
     dr.text((W / 2, 810), "AY SABİT TAKSİT", font=mont("Bold", 76), fill=(72, 171, 197), anchor="mm")
     dr.text((W / 2, 895), "Bugün belirlenen taksit 60 ay değişmez.",
@@ -533,12 +539,12 @@ def v05():
 def v06():
     """Lansman kurdelesi + yok pulları serpme."""
     im = perde(foto("entrance-gate.webp", W, H, 0.45, 1.15),
-               [(0, 0.30), (0.40, 0.52), (1, 0.94)]).convert("RGBA")
+               [(0, 0.08), (0.42, 0.16), (0.60, 0.60), (1, 0.94)]).convert("RGBA")
     dr = ImageDraw.Draw(im)
     serit_kurdele(im, dr)
     logo(im, "mia-beyaz", W - 360, 56, 300)
-    dr.text((W / 2, 620), "İZMİT MİA BÖLGESİ'NDE", font=mont("SemiBold", 40), fill=SIS, anchor="mm")
-    dr.text((W / 2, 700), "600 KONUT", font=mont("Bold", 110), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, 628), "İZMİT MİA BÖLGESİ'NDE", font=mont("SemiBold", 40), fill=BEYAZ, anchor="mm")
+    dr.text((W / 2, 706), "EV SAHİBİ OLUN", font=mont("Bold", 92), fill=BEYAZ, anchor="mm")
     puls = ["BANKA YOK", "FAİZ YOK", "KEFİL YOK", "KOMİSYON YOK", "ARA ÖDEME YOK"]
     fP = mont("Bold", 30)
     y = 830
@@ -594,7 +600,7 @@ def v07():
 def v08():
     """Kilitli taksit — dev kilit + sabitlik vurgusu."""
     im = perde(foto("terrace-pergola.webp", W, H, 0.5, 1.1),
-               [(0, 0.42), (0.42, 0.62), (1, 0.94)]).convert("RGBA")
+               [(0, 0.10), (0.42, 0.20), (0.60, 0.62), (1, 0.94)]).convert("RGBA")
     dr = ImageDraw.Draw(im)
     logo(im, "mia-beyaz", (W - 300) // 2, 52, 300)
     cx, cy = W / 2, 470
