@@ -94,8 +94,7 @@ def logolar(im):
     im.alpha_composite(og, (W - PAD - 880, 130))
 
 
-def iletisim(dr, cy):
-    boy = 200
+def iletisim(dr, cy, acik=False, boy=200):
     while boy > 60:
         fe, f = mont("SemiBold", boy), mont("Bold", boy)
         ik = int(boy * 1.05)
@@ -110,32 +109,62 @@ def iletisim(dr, cy):
             break
         boy -= 4
     kal = max(3, int(boy * 0.09))
+    r1 = (46, 96, 106) if acik else (214, 234, 238)
+    r2 = PETROL if acik else BEYAZ
+    r3 = (110, 150, 160) if acik else (200, 222, 228)
     x = W / 2 - toplam / 2
-    dr.text((x, cy), "Satış Ofisi:", font=fe, fill=(214, 234, 238), anchor="lm")
+    dr.text((x, cy), "Satış Ofisi:", font=fe, fill=r1, anchor="lm")
     x += w_l + boy * 0.8
-    dr.text((x, cy), TEL, font=f, fill=BEYAZ, anchor="lm")
+    dr.text((x, cy), TEL, font=f, fill=r2, anchor="lm")
     x += w_t + bosluk
-    dr.line([(x, cy - boy * 0.62), (x, cy + boy * 0.62)],
-            fill=(200, 222, 228), width=5)
+    dr.line([(x, cy - boy * 0.62), (x, cy + boy * 0.62)], fill=r3, width=5)
     x += 5 + bosluk
-    dr.text((x, cy), SITE, font=f, fill=BEYAZ, anchor="lm")
+    dr.text((x, cy), SITE, font=f, fill=r2, anchor="lm")
     x += w_s + bosluk
-    dr.line([(x, cy - boy * 0.62), (x, cy + boy * 0.62)],
-            fill=(200, 222, 228), width=5)
+    dr.line([(x, cy - boy * 0.62), (x, cy + boy * 0.62)], fill=r3, width=5)
     x += 5 + bosluk
     dr.rounded_rectangle([x, cy - ik / 2, x + ik, cy + ik / 2],
-                         radius=int(ik * 0.24), outline=BEYAZ, width=kal)
+                         radius=int(ik * 0.24), outline=r2, width=kal)
     dr.ellipse([x + ik * 0.26, cy - ik * 0.24, x + ik * 0.74, cy + ik * 0.24],
-               outline=BEYAZ, width=kal)
+               outline=r2, width=kal)
     dr.ellipse([x + ik * 0.70, cy - ik * 0.40, x + ik * 0.87, cy - ik * 0.23],
-               fill=BEYAZ)
+               fill=r2)
     x += ik + int(boy * 0.5)
     dr.rounded_rectangle([x, cy - ik / 2, x + ik, cy + ik / 2],
-                         radius=int(ik * 0.24), outline=BEYAZ, width=kal)
+                         radius=int(ik * 0.24), outline=r2, width=kal)
     dr.text((x + ik * 0.55, cy + 4), "f", font=mont("Bold", int(ik * 0.8)),
-            fill=BEYAZ, anchor="mm")
+            fill=r2, anchor="mm")
     x += ik + int(boy * 0.55)
-    dr.text((x, cy), "miaparkocean", font=f, fill=BEYAZ, anchor="lm")
+    dr.text((x, cy), "miaparkocean", font=f, fill=r2, anchor="lm")
+
+
+def _ciktilar(im, ad):
+    rgb = im.convert("RGB")
+    p = os.path.join(OUT, ad + ".jpg")
+    rgb.save(p, "JPEG", quality=92, optimize=True, dpi=(DPI, DPI))
+    kucuk = rgb.copy()
+    kucuk.thumbnail((1500, 1500), Image.LANCZOS)
+    kucuk.save(os.path.join(OUT, "onizleme", ad + ".jpg"),
+               quality=86, optimize=True)
+    ps = rgb.resize((3937, 2362), Image.LANCZOS)
+    pp = os.path.join(OUT, "psd", ad + ".psd")
+    psd_yaz(ps, pp, 200)
+    print("   %s  jpg %.1f MB · psd %.1f MB"
+          % (ad, os.path.getsize(p) / 1e6, os.path.getsize(pp) / 1e6))
+
+
+def proje_alani():
+    """3x5 arsa panosu: logolar + PROJE ALANI + iletişim — başka öğe yok."""
+    im = zemin()
+    logolar(im)
+    dr = ImageDraw.Draw(im)
+    dr.text((W / 2, 2160), "PROJE ALANI",
+            font=sigdir(dr, "PROJE ALANI", "Black", 950, W - 2 * PAD),
+            fill=PETROL, anchor="mm")
+    dr.rounded_rectangle([W / 2 - 850, 2800, W / 2 + 850, 2842], radius=21,
+                         fill=tz.TURKUAZ + (255,))
+    iletisim(dr, H - 430, acik=True, boy=250)
+    _ciktilar(im, "turkuaz-proje-alani-3x5")
 
 
 def main():
@@ -151,19 +180,9 @@ def main():
     yildiz(im, W - 1150, 3260, 680, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     dr = ImageDraw.Draw(im)
     iletisim(dr, H - 260)
-    rgb = im.convert("RGB")
-    p = os.path.join(OUT, "turkuaz-01-kocaeli-3x5.jpg")
-    rgb.save(p, "JPEG", quality=92, optimize=True, dpi=(DPI, DPI))
-    kucuk = rgb.copy()
-    kucuk.thumbnail((1500, 1500), Image.LANCZOS)
-    kucuk.save(os.path.join(OUT, "onizleme", "turkuaz-01-kocaeli-3x5.jpg"),
-               quality=86, optimize=True)
-    ps = rgb.resize((3937, 2362), Image.LANCZOS)
-    pp = os.path.join(OUT, "psd", "turkuaz-01-kocaeli-3x5.psd")
-    psd_yaz(ps, pp, 200)
-    print("   turkuaz-01-kocaeli-3x5  jpg %.1f MB · psd %.1f MB"
-          % (os.path.getsize(p) / 1e6, os.path.getsize(pp) / 1e6))
+    _ciktilar(im, "turkuaz-01-kocaeli-3x5")
 
 
 if __name__ == "__main__":
     main()
+    proje_alani()
