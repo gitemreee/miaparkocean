@@ -90,33 +90,40 @@ def foto_sag(im, ust, alt, ad, gen=7600, focus=0.5, zoom=1.0, focus_y=0.45,
     return x0
 
 
-def logo_glow(im, logo, x, y, blur=45, kat=6):
-    """Gece zeminlerinde logonun biçimini izleyen beyaz parlama;
-    alfa eğriltilir ki artık yarı saydam zemin plakalaşmasın."""
-    a = np.asarray(logo.split()[3], np.float32) / 255.0
-    a = (a ** 1.6 * 255).astype(np.uint8)
-    sil = Image.new("RGBA", logo.size, (255, 255, 255, 255))
-    sil.putalpha(Image.fromarray(a, "L"))
-    sil = sil.filter(ImageFilter.GaussianBlur(blur))
-    for _ in range(kat):
-        im.alpha_composite(sil, (x, y))
+_KOSE = None
+
+
+def _kose_kat():
+    """Köşe beyazlatma katmanı (bir kez hesaplanır): logoya doğru alan
+    yavaşça beyazlar — plaka değil, yumuşak ışık geçişi."""
+    global _KOSE
+    if _KOSE is None:
+        R = 2700
+        yy, xx = np.mgrid[0:2 * R, 0:2 * R].astype(np.float32)
+        d = np.sqrt((xx - R) ** 2 + ((yy - R) * 1.25) ** 2)
+        a = (np.clip(1 - d / R, 0, 1) ** 1.2 * 250).astype(np.uint8)
+        kat = np.zeros((2 * R, 2 * R, 4), np.uint8)
+        kat[..., :3] = 255
+        kat[..., 3] = a
+        _KOSE = Image.fromarray(kat, "RGBA")
+    return _KOSE
 
 
 def logolar(im, gece=False):
     """İkisi de KENDİ renklerinde, plakasız şeffaf PNG: MİA (2026 kurumsal
-    çizim) solda, OCEAN sağda; koyu zeminde biçimi izleyen beyaz parlama."""
+    çizim) solda, OCEAN sağda. Üst köşeler logoya doğru yavaşça beyazlar."""
+    kat = _kose_kat()
+    R = kat.width // 2
+    im.alpha_composite(kat, (PAD + 520 - R, 300 - R))
+    im.alpha_composite(kat, (W - PAD - 520 - R, 300 - R))
     lg = Image.open(os.path.join(ROOT, "public", "brand",
                                  "logo-mia-2026.png")).convert("RGBA")
-    lg = lg.resize((1040, int(lg.height * 1040 / lg.width)), Image.LANCZOS)
-    if gece:
-        logo_glow(im, lg, PAD, 60)
-    im.alpha_composite(lg, (PAD, 60))
+    lg = lg.resize((1200, int(lg.height * 1200 / lg.width)), Image.LANCZOS)
+    im.alpha_composite(lg, (PAD, 50))
     og = Image.open(os.path.join(ROOT, "sunum", "kaynak", "sekil",
                                  "ocean-logo-renkli2.png")).convert("RGBA")
-    og = og.resize((980, int(og.height * 980 / og.width)), Image.LANCZOS)
-    if gece:
-        logo_glow(im, og, W - PAD - 980, 110)
-    im.alpha_composite(og, (W - PAD - 980, 110))
+    og = og.resize((1100, int(og.height * 1100 / og.width)), Image.LANCZOS)
+    im.alpha_composite(og, (W - PAD - 1100, 100))
 
 
 def alt_bar(im):
@@ -227,7 +234,7 @@ def t01():
     x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.5, 1.05, 0.45)
     logolar(im)
     dr = ImageDraw.Draw(im)
-    govde_a(im, dr, x0 / 2, "KOCAELİ EV SAHİBİ OLUYOR", 430)
+    govde_a(im, dr, x0 / 2, "KOCAELİ EV SAHİBİ OLUYOR!", 430)
     yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-01-kocaeli", im)
@@ -237,7 +244,7 @@ def t02():
     """Gündüz · havadan havuzlar · buz-turkuaz zemin."""
     Z = (BUZ, (168, 224, 230))
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "aerial-pools.webp", 7600, 0.5, 1.0, 0.5)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.62, 1.2, 0.40)
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_b(im, dr, x0 / 2, "İZMİT MİA'DA YENİ YAŞAM", 420)
@@ -250,8 +257,8 @@ def t03():
     """Gündüz · avlu havuzları · turkuaz blok zemin."""
     Z = (TURKUAZ, TURKUAZ_K)
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "courtyard-pools.webp", 7600, 0.5, 1.0, 0.45)
-    logolar(im, gece=True)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.5, 1.0, 0.35)
+    logolar(im)
     dr = ImageDraw.Draw(im)
     dr.text((x0 / 2, 770), "EV SAHİBİ OLMA ZAMANI",
             font=sigdir(dr, "EV SAHİBİ OLMA ZAMANI", "Black", 430, 10400),
@@ -267,7 +274,7 @@ def t04():
     """Gündüz · sokak köşesi · beyaz zemin, sol hizalı manşet."""
     Z = ((252, 254, 255), (236, 248, 250))
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "street-corner.webp", 7400, 0.42, 1.0, 0.35)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.72, 1.3, 0.50)
     logolar(im)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
@@ -286,7 +293,7 @@ def t05():
     """Gündüz · giriş kapısı yakın · beyaz-turkuaz, dev 60 AY."""
     Z = (BEYAZ, (206, 240, 244))
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.72, 1.3, 0.5)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.45, 1.15, 0.50)
     logolar(im)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
@@ -306,7 +313,7 @@ def t06():
     """Gündüz · pergola terası · buz zemin."""
     Z = ((240, 250, 252), (214, 240, 244))
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "terrace-pergola.webp", 7600, 0.5, 1.0, 0.42)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.55, 1.1, 0.42)
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "HAYALİNİZDEKİ EVE KAVUŞUN", 400)
@@ -319,7 +326,7 @@ def t07():
     """Gündüz · sıcak cephe · beyaz zemin, turkuaz manşet."""
     Z = (BEYAZ, BUZ)
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "facade-warm.webp", 7000, 0.5, 1.0, 0.22, bl=460)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.35, 1.2, 0.45, bl=460)
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_b(im, dr, x0 / 2, "TASARRUFA DAYALI FİNANSMAN", 380)
@@ -331,7 +338,7 @@ def t08():
     """Gündüz · havuzlar yakın havadan · açık turkuaz zemin."""
     Z = ((190, 232, 238), (240, 250, 252))
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "aerial-pools.webp", 7600, 0.75, 1.3, 0.45)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.5, 1.0, 0.28)
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "SATIŞ OFİSİMİZE BEKLERİZ", 410)
@@ -345,11 +352,11 @@ def t09():
     Z = ((3, 48, 56), (0, 96, 108))
     im = grad_zemin(*Z)
     x0 = foto_sag(im, *Z, "night-gate.webp", 7600, 0.5, 1.0, 0.45, bl=600)
-    logolar(im, gece=True)
+    logolar(im)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
-    dr.text((cx, 770), "KOCAELİ EV SAHİBİ OLUYOR",
-            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR", "Black", 420, 10400),
+    dr.text((cx, 770), "KOCAELİ EV SAHİBİ OLUYOR!",
+            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 420, 10400),
             fill=BEYAZ, anchor="mm")
     yok_satiri(dr, cx, 1340)
     kartlar(dr, cx + 300, 1700, cerceve=False)
@@ -359,22 +366,22 @@ def t09():
 
 
 def t10():
-    """GECE · avlu alacakaranlık havuzlar · koyu petrol zemin."""
+    """Gündüz · giriş kapısı · koyu petrol zemin."""
     Z = ((2, 40, 48), (0, 84, 96))
     im = grad_zemin(*Z)
-    x0 = foto_sag(im, *Z, "hero-courtyard-dusk.webp", 7600, 0.5, 1.0, 0.5, bl=600)
-    logolar(im, gece=True)
+    x0 = foto_sag(im, *Z, "entrance-gate.webp", 7600, 0.65, 1.25, 0.45, bl=600)
+    logolar(im)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
-    dr.text((cx, 790), "AKŞAM IŞIKLARI EVİNİZDEN YANSISIN",
-            font=sigdir(dr, "AKŞAM IŞIKLARI EVİNİZDEN YANSISIN", "Black", 340,
-                        10400), fill=BEYAZ, anchor="mm")
+    dr.text((cx, 780), "YENİ EVİNİZ SİZİ BEKLİYOR",
+            font=sigdir(dr, "YENİ EVİNİZ SİZİ BEKLİYOR", "Black", 400, 10400),
+            fill=BEYAZ, anchor="mm")
     kartlar(dr, cx, 1180, cerceve=False)
     yok_satiri(dr, cx, 2300, 185)
     sabit_taksit(dr, cx, 2660, 215, dolgu=BEYAZ, yazi=PETROL)
     yildiz(im, x0 + 500, 850, 600, ["FAİZSİZ!"], don=10)
     alt_bar(im)
-    kaydet("turkuaz-10-gece-avlu", im)
+    kaydet("turkuaz-10-yeni-ev", im)
 
 
 def kontak():
