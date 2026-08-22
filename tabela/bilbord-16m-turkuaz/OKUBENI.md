@@ -9,12 +9,12 @@ tam boy durur, sol kenarı gradyan zemine karışır.
 - **Ödeme kartları (1+0 ve 1+1 birlikte):**
   1+0 → 699.000 TL peşinat · 29.900 TL TAKSİT
   1+1 → 999.000 TL peşinat · 39.900 TL TAKSİT
-- **Vurgulu çipler:** BANKA YOK · FAİZ YOK · KREDİ YOK · ARA ÖDEME YOK
-- **60 AY SABİT TAKSİT** (büyük çip)
-- **Kırmızı burgu rozet** (tasarıma göre): ARA ÖDEME YOK! / FAİZSİZ! /
-  KREDİ YOK! / BANKA YOK! / 60 AY SABİT TAKSİT
-- **Logolar kendi renklerinde**, yumuşak köşeli beyaz plaka üzerinde:
-  MİA solda, OCEAN GAYRİMENKUL sağda.
+- **Vurgulu KIRMIZI çipler:** BANKA YOK · FAİZ YOK · KREDİ YOK ·
+  ARA ÖDEME YOK
+- **Kırmızı burgu rozet üstte:** 60 AY SABİT TAKSİT! (02 ve 10'da
+  FAİZSİZ!; 60 ay vurgusu o tasarımlarda çip/manşette)
+- **Logolar kendi renklerinde, plakasız şeffaf PNG:** MİA solda, OCEAN
+  GAYRİMENKUL sağda; koyu zeminlerde biçimi izleyen beyaz parlama.
 - **Alt bant (petrol):** solda 0540 028 00 41 · ortada miaparkocean.com ·
   sağda Instagram + Facebook ikonları ve miaparkocean.
 

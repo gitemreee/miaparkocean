@@ -53,6 +53,7 @@ for d in (OUT, PSD, ONIZ):
     os.makedirs(d, exist_ok=True)
 
 # ------------------------------------------------------------ turkuaz palet
+KIRMIZI = b16.KIRMIZI            # vurgu çipleri ve burgu rozetler
 TURKUAZ = (0, 154, 168)
 TURKUAZ_K = (0, 106, 118)        # koyu turkuaz / petrol
 TURKUAZ_A = (72, 189, 200)
@@ -61,7 +62,7 @@ BUZ = (224, 246, 248)
 BEYAZ = (255, 255, 255)
 GRI = (66, 108, 116)
 
-BAR_H = 260                      # alt iletişim bandı
+BAR_H = 300                      # alt iletişim bandı
 
 
 def foto_sag(im, ust, alt, ad, gen=7600, focus=0.5, zoom=1.0, focus_y=0.45,
@@ -89,23 +90,33 @@ def foto_sag(im, ust, alt, ad, gen=7600, focus=0.5, zoom=1.0, focus_y=0.45,
     return x0
 
 
+def logo_glow(im, logo, x, y, blur=45, kat=6):
+    """Gece zeminlerinde logonun biçimini izleyen beyaz parlama;
+    alfa eğriltilir ki artık yarı saydam zemin plakalaşmasın."""
+    a = np.asarray(logo.split()[3], np.float32) / 255.0
+    a = (a ** 1.6 * 255).astype(np.uint8)
+    sil = Image.new("RGBA", logo.size, (255, 255, 255, 255))
+    sil.putalpha(Image.fromarray(a, "L"))
+    sil = sil.filter(ImageFilter.GaussianBlur(blur))
+    for _ in range(kat):
+        im.alpha_composite(sil, (x, y))
+
+
 def logolar(im, gece=False):
-    """İkisi de KENDİ renklerinde, yumuşak köşeli beyaz plaka üzerinde:
-    MİA solda, OCEAN sağda — her zeminde (gece dahil) net okunur."""
-    dr = ImageDraw.Draw(im)
+    """İkisi de KENDİ renklerinde, plakasız şeffaf PNG: MİA solda,
+    OCEAN sağda; koyu zeminde biçimi izleyen beyaz parlama."""
     lg = Image.open(os.path.join(ROOT, "public", "brand",
                                  "logo-ocean-trim.png")).convert("RGBA")
-    lg = lg.resize((740, int(lg.height * 740 / lg.width)), Image.LANCZOS)
-    dr.rounded_rectangle([PAD - 60, 72, PAD + 740 + 60, 72 + lg.height + 96],
-                         radius=55, fill=(255, 255, 255, 250))
-    im.alpha_composite(lg, (PAD, 120))
+    lg = lg.resize((900, int(lg.height * 900 / lg.width)), Image.LANCZOS)
+    if gece:
+        logo_glow(im, lg, PAD, 80)
+    im.alpha_composite(lg, (PAD, 80))
     og = Image.open(os.path.join(ROOT, "sunum", "kaynak", "sekil",
-                                 "ocean-logo-renkli.png")).convert("RGBA")
-    og = og.resize((700, int(og.height * 700 / og.width)), Image.LANCZOS)
-    dr.rounded_rectangle([W - PAD - 700 - 70, 110, W - PAD + 70,
-                          110 + og.height + 110], radius=55,
-                         fill=(255, 255, 255, 250))
-    im.alpha_composite(og, (W - PAD - 700, 165))
+                                 "ocean-logo-renkli2.png")).convert("RGBA")
+    og = og.resize((860, int(og.height * 860 / og.width)), Image.LANCZOS)
+    if gece:
+        logo_glow(im, og, W - PAD - 860, 130)
+    im.alpha_composite(og, (W - PAD - 860, 130))
 
 
 def alt_bar(im):
@@ -114,14 +125,14 @@ def alt_bar(im):
     y0 = H - BAR_H
     dr.rectangle([0, y0, W, H], fill=PETROL + (255,))
     cy = y0 + BAR_H / 2
-    f = mont("Bold", 150)
+    f = mont("Bold", 190)
     dr.text((PAD, cy), TEL, font=f, fill=BEYAZ, anchor="lm")
     dr.text((W / 2, cy), SITE, font=f, fill=BEYAZ, anchor="mm")
     t = "miaparkocean"
     tw = dr.textlength(t, font=f)
     tx = W - PAD - tw
     dr.text((tx, cy), t, font=f, fill=BEYAZ, anchor="lm")
-    ik, kal = 150, 13
+    ik, kal = 185, 15
     fx = tx - 80 - ik                       # facebook
     ix = fx - 60 - ik                       # instagram
     dr.rounded_rectangle([ix, cy - ik / 2, ix + ik, cy + ik / 2], radius=42,
@@ -132,11 +143,11 @@ def alt_bar(im):
                fill=BEYAZ)
     dr.rounded_rectangle([fx, cy - ik / 2, fx + ik, cy + ik / 2], radius=42,
                          outline=BEYAZ, width=kal)
-    dr.text((fx + ik * 0.55, cy + 6), "f", font=mont("Bold", 124), fill=BEYAZ,
+    dr.text((fx + ik * 0.55, cy + 6), "f", font=mont("Bold", 152), fill=BEYAZ,
             anchor="mm")
 
 
-def yok_satiri(dr, cx, y, boy=195, dolgu=PETROL, yazi=BEYAZ, ara=190):
+def yok_satiri(dr, cx, y, boy=195, dolgu=KIRMIZI, yazi=BEYAZ, ara=190):
     ts = ["BANKA YOK", "FAİZ YOK", "KREDİ YOK", "ARA ÖDEME YOK"]
     f = mont("ExtraBold", boy)
     gs = [dr.textlength(t, font=f) + 2 * 140 for t in ts]
@@ -189,13 +200,13 @@ def kaydet(ad, im):
 
 
 def govde_a(im, dr, cx, baslik, boy, koyu_metin=True):
-    """Düzen A: manşet / YOK satırı / kartlar + yanda 60 AY çipi."""
+    """Düzen A: manşet / (aralık) / YOK satırı / ortalı kartlar.
+    60 AY SABİT TAKSİT vurgusu fotodaki kırmızı burguda."""
     renk = PETROL if koyu_metin else BEYAZ
-    dr.text((cx, 800), baslik, font=sigdir(dr, baslik, "Black", boy, 10400),
+    dr.text((cx, 770), baslik, font=sigdir(dr, baslik, "Black", boy, 10400),
             fill=renk, anchor="mm")
-    yok_satiri(dr, cx, 1180)
-    kartlar(dr, cx - 1900, 1560)
-    sabit_taksit(dr, cx + 2950, 2000, 245)
+    yok_satiri(dr, cx, 1340)
+    kartlar(dr, cx + 300, 1700)
 
 
 def govde_b(im, dr, cx, baslik, boy, koyu_metin=True):
@@ -204,8 +215,8 @@ def govde_b(im, dr, cx, baslik, boy, koyu_metin=True):
     dr.text((cx, 780), baslik, font=sigdir(dr, baslik, "Black", boy, 10400),
             fill=renk, anchor="mm")
     kartlar(dr, cx, 1180)
-    yok_satiri(dr, cx, 2330, 185)
-    sabit_taksit(dr, cx, 2700, 215)
+    yok_satiri(dr, cx, 2300, 185)
+    sabit_taksit(dr, cx, 2660, 215)
 
 
 # ═══════════════════════════════════ 10 TASARIM (8 gündüz · 2 gece)
@@ -217,7 +228,7 @@ def t01():
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "KOCAELİ EV SAHİBİ OLUYOR", 430)
-    yildiz(im, x0 + 400, 2450, 620, ["ARA ÖDEME", "YOK!"])
+    yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-01-kocaeli", im)
 
@@ -230,7 +241,7 @@ def t02():
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_b(im, dr, x0 / 2, "İZMİT MİA'DA YENİ YAŞAM", 420)
-    yildiz(im, x0 + 400, 2450, 600, ["FAİZSİZ!"], don=10)
+    yildiz(im, x0 + 500, 850, 600, ["FAİZSİZ!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-02-yeni-yasam", im)
 
@@ -242,12 +253,12 @@ def t03():
     x0 = foto_sag(im, *Z, "courtyard-pools.webp", 7600, 0.5, 1.0, 0.45)
     logolar(im, gece=True)
     dr = ImageDraw.Draw(im)
-    dr.text((x0 / 2, 800), "EV SAHİBİ OLMA ZAMANI",
+    dr.text((x0 / 2, 770), "EV SAHİBİ OLMA ZAMANI",
             font=sigdir(dr, "EV SAHİBİ OLMA ZAMANI", "Black", 430, 10400),
             fill=BEYAZ, anchor="mm")
-    yok_satiri(dr, x0 / 2, 1180, dolgu=BEYAZ, yazi=PETROL)
-    kartlar(dr, x0 / 2 - 1900, 1560, cerceve=False)
-    sabit_taksit(dr, x0 / 2 + 2950, 2000, 245, dolgu=BEYAZ, yazi=TURKUAZ_K)
+    yok_satiri(dr, x0 / 2, 1340)
+    kartlar(dr, x0 / 2 + 300, 1700, cerceve=False)
+    yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-03-olma-zamani", im)
 
@@ -260,13 +271,13 @@ def t04():
     logolar(im)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
-    dr.text((PAD + 100, 830), "İZMİT MİA BÖLGESİ'NDE",
+    dr.text((PAD + 100, 880), "İZMİT MİA BÖLGESİ'NDE",
             font=mont("Black", 330), fill=TURKUAZ_K, anchor="lm")
-    dr.text((PAD + 100, 1210), "EV SAHİBİ OLUYORSUNUZ",
+    dr.text((PAD + 100, 1260), "EV SAHİBİ OLUYORSUNUZ",
             font=mont("Black", 330), fill=PETROL, anchor="lm")
-    kartlar(dr, cx - 1900, 1560)
-    sabit_taksit(dr, cx + 2950, 2000, 235)
-    yok_satiri(dr, cx, 2700, 180)
+    kartlar(dr, cx + 300, 1680)
+    yok_satiri(dr, cx, 2680, 180)
+    yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-04-izmit-mia", im)
 
@@ -286,7 +297,7 @@ def t05():
     dr.text((cx + 1500, 1290), "EV SAHİBİ OLUN", font=mont("Black", 330),
             fill=PETROL, anchor="mm")
     kartlar(dr, cx, 1620)
-    yok_satiri(dr, cx, 2720, 180)
+    yok_satiri(dr, cx, 2680, 180)
     alt_bar(im)
     kaydet("turkuaz-05-60ay", im)
 
@@ -299,7 +310,7 @@ def t06():
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "HAYALİNİZDEKİ EVE KAVUŞUN", 400)
-    yildiz(im, x0 + 400, 2450, 620, ["KREDİ", "YOK!"], don=10)
+    yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-06-hayal", im)
 
@@ -324,7 +335,7 @@ def t08():
     logolar(im)
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "SATIŞ OFİSİMİZE BEKLERİZ", 410)
-    yildiz(im, x0 + 400, 2450, 620, ["BANKA", "YOK!"])
+    yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-08-satis-ofisi", im)
 
@@ -337,13 +348,12 @@ def t09():
     logolar(im, gece=True)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
-    dr.text((cx, 810), "KOCAELİ EV SAHİBİ OLUYOR",
+    dr.text((cx, 770), "KOCAELİ EV SAHİBİ OLUYOR",
             font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR", "Black", 420, 10400),
             fill=BEYAZ, anchor="mm")
-    yok_satiri(dr, cx, 1180, dolgu=TURKUAZ, yazi=BEYAZ)
-    kartlar(dr, cx - 1900, 1560, cerceve=False)
-    sabit_taksit(dr, cx + 2950, 2000, 245, dolgu=TURKUAZ, yazi=BEYAZ)
-    yildiz(im, x0 + 400, 2450, 620, ["60 AY", "SABİT", "TAKSİT"], don=10)
+    yok_satiri(dr, cx, 1340)
+    kartlar(dr, cx + 300, 1700, cerceve=False)
+    yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-09-gece-kapi", im)
 
@@ -360,9 +370,9 @@ def t10():
             font=sigdir(dr, "AKŞAM IŞIKLARI EVİNİZDEN YANSISIN", "Black", 340,
                         10400), fill=BEYAZ, anchor="mm")
     kartlar(dr, cx, 1180, cerceve=False)
-    yok_satiri(dr, cx, 2330, 185, dolgu=TURKUAZ, yazi=BEYAZ)
-    sabit_taksit(dr, cx, 2700, 215, dolgu=BEYAZ, yazi=PETROL)
-    yildiz(im, x0 + 400, 2450, 600, ["FAİZSİZ!"], don=10)
+    yok_satiri(dr, cx, 2300, 185)
+    sabit_taksit(dr, cx, 2660, 215, dolgu=BEYAZ, yazi=PETROL)
+    yildiz(im, x0 + 500, 850, 600, ["FAİZSİZ!"], don=10)
     alt_bar(im)
     kaydet("turkuaz-10-gece-avlu", im)
 
