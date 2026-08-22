@@ -48,19 +48,18 @@ Z_UST, Z_ALT = (255, 255, 255), (224, 246, 248)
 OUT = os.path.join(ROOT, "tabela", "bilbord-16m-turkuaz")
 
 
-def zemin():
+def zemin(ust=Z_UST, alt=Z_ALT):
     t = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
-    g = (np.array(Z_UST, np.float32) * (1 - t)
-         + np.array(Z_ALT, np.float32) * t).astype(np.uint8)
+    g = (np.array(ust, np.float32) * (1 - t)
+         + np.array(alt, np.float32) * t).astype(np.uint8)
     im = Image.new("RGBA", (W, H))
     im.paste(Image.fromarray(np.repeat(g, W, axis=1), "RGB"), (0, 0))
     return im
 
 
-def foto_alt(im, yuk, bl=280):
+def foto_alt(im, yuk, bl=280, ad="entrance-gate.webp", ust=Z_UST, alt=Z_ALT):
     from PIL import ImageFilter
-    kay = Image.open(os.path.join(ROOT, "public", "images",
-                                  "entrance-gate.webp")).convert("RGB")
+    kay = Image.open(os.path.join(ROOT, "public", "images", ad)).convert("RGB")
     iw, ih = kay.size
     s = max(W / iw, yuk / ih) * 1.05
     sw, sh = W / s, yuk / s
@@ -72,7 +71,7 @@ def foto_alt(im, yuk, bl=280):
         ft = ft.filter(ImageFilter.UnsharpMask(radius=3, percent=52, threshold=3))
     im.paste(ft, (0, H - yuk))
     t = (H - yuk) / H
-    zc = np.array([u * (1 - t) + a * t for u, a in zip(Z_UST, Z_ALT)], np.float32)
+    zc = np.array([u * (1 - t) + a * t for u, a in zip(ust, alt)], np.float32)
     band = np.asarray(ft.crop((0, 0, W, bl)), np.float32)
     alfa = np.linspace(1, 0, bl, dtype=np.float32)[:, None, None]
     kar = (zc * alfa + band * (1 - alfa)).astype(np.uint8)
@@ -167,6 +166,24 @@ def proje_alani():
     _ciktilar(im, "turkuaz-proje-alani-3x5")
 
 
+def gece():
+    """16 m'deki turkuaz-09'un (gece Kocaeli) 3x5 sürümü."""
+    U, A = (3, 48, 56), (0, 96, 108)
+    im = zemin(U, A)
+    foto_alt(im, 1850, bl=360, ad="night-gate.webp", ust=U, alt=A)
+    logolar(im)
+    dr = ImageDraw.Draw(im)
+    dr.text((W / 2, 960), "KOCAELİ EV SAHİBİ OLUYOR!",
+            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 430,
+                        W - 2 * PAD), fill=BEYAZ, anchor="mm")
+    tz.yok_satiri(dr, W / 2, 1390, boy=210, ara=170)
+    tz.kartlar(dr, W / 2, 1700, cerceve=False)
+    yildiz(im, W - 1150, 3260, 680, ["60 AY", "SABİT", "TAKSİT!"], don=10)
+    dr = ImageDraw.Draw(im)
+    iletisim(dr, H - 260)
+    _ciktilar(im, "turkuaz-09-gece-3x5")
+
+
 def main():
     im = zemin()
     foto_alt(im, 1850)
@@ -186,3 +203,4 @@ def main():
 if __name__ == "__main__":
     main()
     proje_alani()
+    gece()
