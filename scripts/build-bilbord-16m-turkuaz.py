@@ -236,7 +236,29 @@ def t01():
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "KOCAELİ EV SAHİBİ OLUYOR!", 430)
     yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
-    alt_bar(im)
+    # Alt bant yok: iletişim satırı bantsız, büyük ve biraz yukarıda.
+    dr = ImageDraw.Draw(im)
+    f = mont("Bold", 250)
+    cy = H - 250
+    dr.text((PAD, cy), TEL, font=f, fill=PETROL, anchor="lm")
+    dr.text((W / 2, cy), SITE, font=f, fill=PETROL, anchor="mm")
+    t = "miaparkocean"
+    tw = dr.textlength(t, font=f)
+    tx = W - PAD - tw
+    dr.text((tx, cy), t, font=f, fill=BEYAZ, anchor="lm")
+    ik, kal = 240, 19
+    fx = tx - 100 - ik
+    ix = fx - 80 - ik
+    dr.rounded_rectangle([ix, cy - ik / 2, ix + ik, cy + ik / 2], radius=55,
+                         outline=BEYAZ, width=kal)
+    dr.ellipse([ix + ik * 0.26, cy - ik * 0.24, ix + ik * 0.74, cy + ik * 0.24],
+               outline=BEYAZ, width=kal)
+    dr.ellipse([ix + ik * 0.72, cy - ik * 0.40, ix + ik * 0.86, cy - ik * 0.26],
+               fill=BEYAZ)
+    dr.rounded_rectangle([fx, cy - ik / 2, fx + ik, cy + ik / 2], radius=55,
+                         outline=BEYAZ, width=kal)
+    dr.text((fx + ik * 0.55, cy + 8), "f", font=mont("Bold", 196), fill=BEYAZ,
+            anchor="mm")
     kaydet("turkuaz-01-kocaeli", im)
 
 
