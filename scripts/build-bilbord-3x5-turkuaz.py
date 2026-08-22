@@ -167,20 +167,19 @@ def proje_alani():
 
 
 def gece():
-    """16 m'deki turkuaz-09'un (gece Kocaeli) 3x5 sürümü."""
+    """16 m'deki turkuaz-09'un 3x5 sürümü — FİYATSIZ marka panosu.
+    İletişim satırı fotoğrafın değil, temiz petrol zeminin üzerinde."""
     U, A = (3, 48, 56), (0, 96, 108)
     im = zemin(U, A)
-    foto_alt(im, 1850, bl=360, ad="night-gate.webp", ust=U, alt=A)
+    foto_alt(im, 2300, bl=380, ad="night-gate.webp", ust=U, alt=A)
     logolar(im)
     dr = ImageDraw.Draw(im)
-    dr.text((W / 2, 960), "KOCAELİ EV SAHİBİ OLUYOR!",
-            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 430,
+    dr.text((W / 2, 1010), "KOCAELİ EV SAHİBİ OLUYOR!",
+            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 470,
                         W - 2 * PAD), fill=BEYAZ, anchor="mm")
-    tz.yok_satiri(dr, W / 2, 1390, boy=210, ara=170)
-    tz.kartlar(dr, W / 2, 1700, cerceve=False)
-    yildiz(im, W - 1150, 3260, 680, ["60 AY", "SABİT", "TAKSİT!"], don=10)
-    dr = ImageDraw.Draw(im)
-    iletisim(dr, H - 260)
+    tz.yok_satiri(dr, W / 2, 1520, boy=230, ara=190)
+    iletisim(dr, 2080, boy=240)
+    yildiz(im, W - 1150, 3100, 700, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     _ciktilar(im, "turkuaz-09-gece-3x5")
 
 
