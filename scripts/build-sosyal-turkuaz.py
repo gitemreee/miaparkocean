@@ -304,9 +304,59 @@ def kontak():
     print("   kontak-sosyal-turkuaz.jpg")
 
 
+def profil():
+    """Facebook/Instagram profil fotoğrafı — yuvarlak kırpıma güvenli."""
+    W = H = 1080
+    im = zemin(W, H)
+    lg = Image.open(os.path.join(ROOT, "public", "brand",
+                                 "logo-mia-2026.png")).convert("RGBA")
+    lg = lg.resize((720, int(lg.height * 720 / lg.width)), Image.LANCZOS)
+    im.alpha_composite(lg, ((W - lg.width) // 2, (H - lg.height) // 2 - 10))
+    kaydet(im, "facebook-profil")
+
+
+def kapak():
+    """Facebook sayfa kapağı — 1640x624; kritik içerik mobil güvenli
+    orta bantta (kenarlardan ~165 px içeride)."""
+    W, H = 1640, 624
+    im = zemin(W, H)
+    ft = foto("entrance-gate.webp", 700, H, 0.55, 1.1, 0.45)
+    im.paste(ft, (W - 700, 0))
+    band = np.asarray(ft.crop((0, 0, 240, H)), np.float32)
+    alfa = np.linspace(1, 0, 240, dtype=np.float32)[None, :, None]
+    gr = np.zeros((H, 1, 3), np.float32)
+    for y in range(H):
+        gr[y, 0] = grad_renk(H, y)
+    kar = (gr * alfa + band * (1 - alfa)).astype(np.uint8)
+    im.paste(Image.fromarray(kar, "RGB"), (W - 700, 0))
+    kose(im, 330, 130, 420)
+    lg = Image.open(os.path.join(ROOT, "public", "brand",
+                                 "logo-mia-2026.png")).convert("RGBA")
+    lg = lg.resize((300, int(lg.height * 300 / lg.width)), Image.LANCZOS)
+    im.alpha_composite(lg, (185, 36))
+    dr = ImageDraw.Draw(im)
+    dr.text((520, 330), "KOCAELİ EV SAHİBİ OLUYOR!",
+            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 54, 860),
+            fill=PETROL, anchor="mm")
+    f = mont("ExtraBold", 24)
+    ts = ["BANKA YOK", "FAİZ YOK", "KREDİ YOK", "ARA ÖDEME YOK"]
+    gs = [dr.textlength(t, font=f) + 30 for t in ts]
+    x = 520 - (sum(gs) + 3 * 12) / 2
+    for t, g in zip(ts, gs):
+        cip(dr, x + g / 2, 408, t, f, pad_x=15, pad_y=8, r=9)
+        x += g + 12
+    cip(dr, 520, 478, "60 AY SABİT TAKSİT", mont("ExtraBold", 26),
+        dolgu=TURKUAZ_K, pad_x=18, pad_y=9, r=10)
+    dr.text((520, 552), TEL + "  ·  " + SITE, font=mont("Bold", 26),
+            fill=PETROL, anchor="mm")
+    kaydet(im, "facebook-kapak")
+
+
 if __name__ == "__main__":
     s45()
     skare()
     sstory()
+    profil()
+    kapak()
     kontak()
     print("tamam ->", OUT)
