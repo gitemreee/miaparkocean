@@ -236,36 +236,43 @@ def t01():
     dr = ImageDraw.Draw(im)
     govde_a(im, dr, x0 / 2, "KOCAELİ EV SAHİBİ OLUYOR!", 430)
     yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
-    # Alt bant yok: iletişim TEK satırda, metin bölgesinde ortalı —
-    # "Satış ofisi: numara · web · sosyal" (fotoğrafa/binaya taşmaz).
+    # Alt bant yok: iletişim TEK satırda, ferah ve ortalı —
+    # "Satış ofisi:  numara | web | sosyal" (ince dikey ayraçlarla).
     dr = ImageDraw.Draw(im)
     cy = H - 250
     fe, f = mont("SemiBold", 230), mont("Bold", 230)
     ik, kal = 230, 18
-    ayrac = 200
-    parcalar = [("Satış ofisi:", fe), (TEL, f), (SITE, f)]
-    genlik = [dr.textlength(t, font=ft) for t, ft in parcalar]
-    ikonlar = ik * 2 + 70 + 90 + dr.textlength("miaparkocean", font=f)
-    toplam = genlik[0] + 140 + genlik[1] + ayrac + genlik[2] + ayrac + ikonlar
-    x = x0 / 2 - toplam / 2
+    bosluk = 340                      # ayraç çizgisinin iki yanı
+    cizgi = (110, 150, 160)
+    w_l = dr.textlength("Satış ofisi:", font=fe)
+    w_t = dr.textlength(TEL, font=f)
+    w_s = dr.textlength(SITE, font=f)
+    w_h = dr.textlength("miaparkocean", font=f)
+    w_sos = ik * 2 + 80 + 100 + w_h
+    toplam = w_l + 180 + w_t + (bosluk * 2 + 6) * 2 + w_s + w_sos
+    x = x0 / 2 - 150 - toplam / 2     # blok ortalı, hafif sola
     dr.text((x, cy), "Satış ofisi:", font=fe, fill=(46, 96, 106), anchor="lm")
-    x += genlik[0] + 140
+    x += w_l + 180
     dr.text((x, cy), TEL, font=f, fill=PETROL, anchor="lm")
-    x += genlik[1] + ayrac
+    x += w_t + bosluk
+    dr.line([(x, cy - 135), (x, cy + 135)], fill=cizgi, width=6)
+    x += 6 + bosluk
     dr.text((x, cy), SITE, font=f, fill=PETROL, anchor="lm")
-    x += genlik[2] + ayrac
+    x += w_s + bosluk
+    dr.line([(x, cy - 135), (x, cy + 135)], fill=cizgi, width=6)
+    x += 6 + bosluk
     dr.rounded_rectangle([x, cy - ik / 2, x + ik, cy + ik / 2], radius=52,
                          outline=PETROL, width=kal)
     dr.ellipse([x + ik * 0.26, cy - ik * 0.24, x + ik * 0.74, cy + ik * 0.24],
                outline=PETROL, width=kal)
     dr.ellipse([x + ik * 0.72, cy - ik * 0.40, x + ik * 0.86, cy - ik * 0.26],
                fill=PETROL)
-    x += ik + 70
+    x += ik + 80
     dr.rounded_rectangle([x, cy - ik / 2, x + ik, cy + ik / 2], radius=52,
                          outline=PETROL, width=kal)
     dr.text((x + ik * 0.55, cy + 8), "f", font=mont("Bold", 188), fill=PETROL,
             anchor="mm")
-    x += ik + 90
+    x += ik + 100
     dr.text((x, cy), "miaparkocean", font=f, fill=PETROL, anchor="lm")
     kaydet("turkuaz-01-kocaeli", im)
 
