@@ -237,21 +237,21 @@ def t01():
     govde_a(im, dr, x0 / 2, "KOCAELİ EV SAHİBİ OLUYOR!", 430)
     yildiz(im, x0 + 500, 850, 620, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     # Alt bant yok: iletişim TEK satırda, ferah ve ortalı —
-    # "Satış ofisi:  numara | web | sosyal" (ince dikey ayraçlarla).
+    # "Satış Ofisi:  numara | web | sosyal" (ince dikey ayraçlarla).
     dr = ImageDraw.Draw(im)
     cy = H - 250
     fe, f = mont("SemiBold", 230), mont("Bold", 230)
     ik, kal = 230, 18
     bosluk = 340                      # ayraç çizgisinin iki yanı
     cizgi = (110, 150, 160)
-    w_l = dr.textlength("Satış ofisi:", font=fe)
+    w_l = dr.textlength("Satış Ofisi:", font=fe)
     w_t = dr.textlength(TEL, font=f)
     w_s = dr.textlength(SITE, font=f)
     w_h = dr.textlength("miaparkocean", font=f)
     w_sos = ik * 2 + 80 + 100 + w_h
     toplam = w_l + 180 + w_t + (bosluk * 2 + 6) * 2 + w_s + w_sos
     x = x0 / 2 - 150 - toplam / 2     # blok ortalı, hafif sola
-    dr.text((x, cy), "Satış ofisi:", font=fe, fill=(46, 96, 106), anchor="lm")
+    dr.text((x, cy), "Satış Ofisi:", font=fe, fill=(46, 96, 106), anchor="lm")
     x += w_l + 180
     dr.text((x, cy), TEL, font=f, fill=PETROL, anchor="lm")
     x += w_t + bosluk
