@@ -184,18 +184,17 @@ def gece():
 
 
 def main():
+    """Gündüz Kocaeli — gece ile aynı FİYATSIZ düzen, açık zemin."""
     im = zemin()
-    foto_alt(im, 1850)
+    foto_alt(im, 2300, bl=340)
     logolar(im)
     dr = ImageDraw.Draw(im)
-    dr.text((W / 2, 960), "KOCAELİ EV SAHİBİ OLUYOR!",
-            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 430,
+    dr.text((W / 2, 1010), "KOCAELİ EV SAHİBİ OLUYOR!",
+            font=sigdir(dr, "KOCAELİ EV SAHİBİ OLUYOR!", "Black", 470,
                         W - 2 * PAD), fill=PETROL, anchor="mm")
-    tz.yok_satiri(dr, W / 2, 1390, boy=210, ara=170)
-    tz.kartlar(dr, W / 2, 1700)
-    yildiz(im, W - 1150, 3260, 680, ["60 AY", "SABİT", "TAKSİT!"], don=10)
-    dr = ImageDraw.Draw(im)
-    iletisim(dr, H - 260)
+    tz.yok_satiri(dr, W / 2, 1520, boy=230, ara=190)
+    iletisim(dr, 2080, acik=True, boy=240)
+    yildiz(im, W - 1150, 3100, 700, ["60 AY", "SABİT", "TAKSİT!"], don=10)
     _ciktilar(im, "turkuaz-01-kocaeli-3x5")
 
 
