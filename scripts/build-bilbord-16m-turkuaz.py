@@ -103,20 +103,20 @@ def logo_glow(im, logo, x, y, blur=45, kat=6):
 
 
 def logolar(im, gece=False):
-    """İkisi de KENDİ renklerinde, plakasız şeffaf PNG: MİA solda,
-    OCEAN sağda; koyu zeminde biçimi izleyen beyaz parlama."""
+    """İkisi de KENDİ renklerinde, plakasız şeffaf PNG: MİA (2026 kurumsal
+    çizim) solda, OCEAN sağda; koyu zeminde biçimi izleyen beyaz parlama."""
     lg = Image.open(os.path.join(ROOT, "public", "brand",
-                                 "logo-ocean-trim.png")).convert("RGBA")
-    lg = lg.resize((900, int(lg.height * 900 / lg.width)), Image.LANCZOS)
+                                 "logo-mia-2026.png")).convert("RGBA")
+    lg = lg.resize((1040, int(lg.height * 1040 / lg.width)), Image.LANCZOS)
     if gece:
-        logo_glow(im, lg, PAD, 80)
-    im.alpha_composite(lg, (PAD, 80))
+        logo_glow(im, lg, PAD, 60)
+    im.alpha_composite(lg, (PAD, 60))
     og = Image.open(os.path.join(ROOT, "sunum", "kaynak", "sekil",
                                  "ocean-logo-renkli2.png")).convert("RGBA")
-    og = og.resize((860, int(og.height * 860 / og.width)), Image.LANCZOS)
+    og = og.resize((980, int(og.height * 980 / og.width)), Image.LANCZOS)
     if gece:
-        logo_glow(im, og, W - PAD - 860, 130)
-    im.alpha_composite(og, (W - PAD - 860, 130))
+        logo_glow(im, og, W - PAD - 980, 110)
+    im.alpha_composite(og, (W - PAD - 980, 110))
 
 
 def alt_bar(im):
@@ -271,9 +271,9 @@ def t04():
     logolar(im)
     dr = ImageDraw.Draw(im)
     cx = x0 / 2
-    dr.text((PAD + 100, 880), "İZMİT MİA BÖLGESİ'NDE",
+    dr.text((PAD + 100, 940), "İZMİT MİA BÖLGESİ'NDE",
             font=mont("Black", 330), fill=TURKUAZ_K, anchor="lm")
-    dr.text((PAD + 100, 1260), "EV SAHİBİ OLUYORSUNUZ",
+    dr.text((PAD + 100, 1310), "EV SAHİBİ OLUYORSUNUZ",
             font=mont("Black", 330), fill=PETROL, anchor="lm")
     kartlar(dr, cx + 300, 1680)
     yok_satiri(dr, cx, 2680, 180)
