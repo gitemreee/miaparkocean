@@ -75,29 +75,29 @@ def main():
     st.cip(dr, x + tw1 + 14 + tw2 / 2, 378, "%5 İNDİRİM", fb,
            dolgu=SARI, yazi=NAVY, pad_x=22, pad_y=8, r=12)
 
-    satirlar = [("1+0", "664.000 TL", "29.900 TL x 60 ay taksit"),
-                ("1+1", "950.000 TL", "39.900 TL x 60 ay taksit"),
-                ("2+1", "1.900.000 TL", "49.900 TL x 60 ay taksit")]
-    ft = mont("Black", 50)
-    fc = mont("ExtraBold", 38)
-    fk = mont("SemiBold", 27)
-    y = 486
+    satirlar = [("1+0", "664.000 TL PEŞİNAT", "29.900 TL x 60 ay taksit"),
+                ("1+1", "950.000 TL PEŞİNAT", "39.900 TL x 60 ay taksit"),
+                ("2+1", "1.900.000 TL PEŞİNAT", "49.900 TL x 60 ay taksit")]
+    ft = mont("Black", 48)
+    fc = mont("ExtraBold", 33)
+    fk = mont("SemiBold", 26)
+    y = 476
     for tip, pesin, taksit in satirlar:
         wt = dr.textlength(tip, font=ft)
-        wc = dr.textlength(pesin, font=fc) + 2 * 20
+        wc = dr.textlength(pesin, font=fc) + 2 * 18
         wk = dr.textlength(taksit, font=fk)
-        x = (W - wt - 18 - wc - 20 - wk) / 2
+        x = (W - wt - 16 - wc - 18 - wk) / 2
         dr.text((x, y), tip, font=ft, fill=NAVY, anchor="lm")
-        st.cip(dr, x + wt + 18 + wc / 2, y, pesin, fc, dolgu=SARI,
-               yazi=NAVY, pad_x=20, pad_y=9, r=11)
-        dr.text((x + wt + 18 + wc + 20, y + 2), taksit, font=fk,
+        st.cip(dr, x + wt + 16 + wc / 2, y, pesin, fc, dolgu=SARI,
+               yazi=NAVY, pad_x=18, pad_y=10, r=11)
+        dr.text((x + wt + 16 + wc + 18, y + 2), taksit, font=fk,
                 fill=(36, 74, 108), anchor="lm")
-        y += 92
-    dr.text((W / 2, y + 4), "peşinat fiyatlarıdır", font=mont("SemiBold", 24),
-            fill=(96, 116, 130), anchor="mm")
+        y += 90
+    dr.text((W / 2, y + 8), "Banka yok · Faiz yok · Kefil yok · Komisyon yok",
+            font=mont("SemiBold", 29), fill=(36, 74, 108), anchor="mm")
 
-    st.cip(dr, W / 2, y + 74, "60 AY SABİT TAKSİT", mont("ExtraBold", 40),
-           dolgu=NAVY, yazi=BEYAZ, pad_x=30, pad_y=13, r=14)
+    st.cip(dr, W / 2, y + 82, "60 AY SABİT TAKSİT", mont("ExtraBold", 38),
+           dolgu=NAVY, yazi=BEYAZ, pad_x=28, pad_y=12, r=14)
 
     yildiz(im, ["BANKA", "YOK!"], 915, 985, 100)
     dr = ImageDraw.Draw(im)

@@ -41,7 +41,7 @@ kullanılabilir.
 > 🏠 1+1 → 950.000 TL peşinat · 39.900 TL x 60 ay sabit taksit
 > 🏠 2+1 → 1.900.000 TL peşinat · 49.900 TL x 60 ay sabit taksit
 >
-> Banka yok, faiz yok, kredi yok, ara ödeme yok.
+> Banka yok, faiz yok, kefil yok, komisyon yok.
 > İzmit MİA Bölgesi'nde yeni yaşam: MİA PARK OCEAN
 >
 > ☎ 0540 028 00 41 · 🌐 miaparkocean.com
