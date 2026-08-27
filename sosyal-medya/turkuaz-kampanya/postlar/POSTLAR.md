@@ -46,3 +46,33 @@ kullanılabilir.
 >
 > ☎ 0540 028 00 41 · 🌐 miaparkocean.com
 > #miaparkocean #kocaeli #izmit #emniyet #polis #evsahibiol #60aytaksit
+
+**WhatsApp paylaşım metni (post-16 ile birlikte gönderin):**
+
+```
+👮‍♂️ *Değerli Kocaeli Emniyet Personelimize Özel* 👮‍♀️
+
+Şehrimizin huzuru için gece gündüz görev yapan kıymetli Emniyet
+mensuplarımıza, MİA PARK OCEAN'da *peşinatta %5 indirim* ayrıcalığı
+sunuyoruz! 🏠
+
+📌 *Kampanyalı Peşinat Fiyatlarımız:*
+▪️ 1+0 → *664.000 TL peşinat* · 29.900 TL x 60 ay sabit taksit
+▪️ 1+1 → *950.000 TL peşinat* · 39.900 TL x 60 ay sabit taksit
+▪️ 2+1 → *1.900.000 TL peşinat* · 49.900 TL x 60 ay sabit taksit
+
+✅ Banka yok
+✅ Faiz yok
+✅ Kefil yok
+✅ Komisyon yok
+🔴 *60 AY SABİT TAKSİT!*
+
+📍 İzmit MİA Bölgesi'nde yeni yaşam: *MİA PARK OCEAN*
+Tek yetkili satış: Ocean Gayrimenkul
+
+📞 Bilgi ve randevu: 0540 028 00 41
+🌐 https://miaparkocean.com
+📸 https://instagram.com/miaparkocean
+
+Satış ofisimize bekleriz ☕
+```
