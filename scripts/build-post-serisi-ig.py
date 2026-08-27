@@ -351,6 +351,50 @@ def p15():
     kaydet(p, "post-15-marka")
 
 
+def p16():
+    """Kocaeli Emniyet personeline %5 peşinat indirimi — kampanya kartı."""
+    p = zemin()
+    def c(dr):
+        caps(dr, 400, "KOCAELİ EMNİYET PERSONELİNE ÖZEL", 34, 13,
+             (*WHITE, 252))
+        dr.text((W / 2, 540), "Peşinatta %5 indirim.", font=fit_serif(
+            dr, "Peşinatta %5 indirim.", 96, w="600"), fill=WHITE,
+            anchor="ms")
+        cizgi(dr, 610)
+        veriler = [("1+0", "664.000 TL", "29.900 TL x 60 AY SABİT TAKSİT"),
+                   ("1+1", "950.000 TL", "39.900 TL x 60 AY SABİT TAKSİT"),
+                   ("2+1", "1.900.000 TL", "49.900 TL x 60 AY SABİT TAKSİT")]
+        y = 748
+        for tip, pesin, taksit in veriler:
+            caps(dr, y - 64, tip + " · PEŞİNAT", 26, 11)
+            dr.text((W / 2, y), pesin, font=serif(64, "600"), fill=WHITE,
+                    anchor="ms")
+            caps(dr, y + 30, taksit, 25, 9)
+            y += 186
+    golge(p, c)
+    dr = ImageDraw.Draw(p)
+    track(dr, (SAFE, 1196), TEL + "  ·  " + SITE, sans_sb(26),
+          (*LIGHT, 255), 7, "la")
+    ik, kal = 34, 3
+    x, cy = SAFE, 1254
+    dr.rounded_rectangle([x, cy - ik / 2, x + ik, cy + ik / 2], radius=9,
+                         outline=WHITE, width=kal)
+    dr.ellipse([x + ik * 0.26, cy - ik * 0.24, x + ik * 0.74, cy + ik * 0.24],
+               outline=WHITE, width=kal)
+    dr.ellipse([x + ik * 0.70, cy - ik * 0.42, x + ik * 0.88, cy - ik * 0.24],
+               fill=WHITE)
+    x += ik + 14
+    dr.rounded_rectangle([x, cy - ik / 2, x + ik, cy + ik / 2], radius=9,
+                         outline=WHITE, width=kal)
+    dr.text((x + ik * 0.55, cy + 1), "f", font=sans_b(26), fill=WHITE,
+            anchor="mm")
+    x += ik + 16
+    track(dr, (x, cy + 10), "MIAPARKOCEAN", sans_sb(24), (*LIGHT, 255), 7,
+          "la")
+    marka(p)
+    kaydet(p, "post-16-emniyet-kampanya")
+
+
 def kontak():
     fs = sorted(f for f in os.listdir(OUT)
                 if f.startswith("post-") and f.endswith(".jpg"))

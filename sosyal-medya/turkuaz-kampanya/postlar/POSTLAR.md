@@ -29,3 +29,20 @@ Hepsi 1080×1350 (4:5), Facebook + Instagram akışına tek tek paylaşılır
 Reklama çıkarken: 1, 2, 5, 7 ve 11 numaralı görseller kampanya
 kreatifleriyle aynı dili taşır — Meta planındaki setlerde doğrudan
 kullanılabilir.
+
+## Kampanya: Kocaeli Emniyet personeli (post-16)
+
+**Görsel:** `post-16-emniyet-kampanya.jpg`
+
+**Açıklama metni:**
+> 👮 Kocaeli Emniyet personeline özel: PEŞİNATTA %5 İNDİRİM!
+>
+> 🏠 1+0 → 664.000 TL peşinat · 29.900 TL x 60 ay sabit taksit
+> 🏠 1+1 → 950.000 TL peşinat · 39.900 TL x 60 ay sabit taksit
+> 🏠 2+1 → 1.900.000 TL peşinat · 49.900 TL x 60 ay sabit taksit
+>
+> Banka yok, faiz yok, kredi yok, ara ödeme yok.
+> İzmit MİA Bölgesi'nde yeni yaşam: MİA PARK OCEAN
+>
+> ☎ 0540 028 00 41 · 🌐 miaparkocean.com
+> #miaparkocean #kocaeli #izmit #emniyet #polis #evsahibiol #60aytaksit
