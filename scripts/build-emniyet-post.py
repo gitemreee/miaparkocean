@@ -96,11 +96,8 @@ def main():
     dr.text((W / 2, y + 8), "Banka yok · Faiz yok · Kefil yok · Komisyon yok",
             font=mont("SemiBold", 29), fill=(36, 74, 108), anchor="mm")
 
-    st.cip(dr, W / 2, y + 82, "60 AY SABİT TAKSİT", mont("ExtraBold", 38),
-           dolgu=NAVY, yazi=BEYAZ, pad_x=28, pad_y=12, r=14)
-
-    yildiz(im, ["BANKA", "YOK!"], 915, 985, 100)
-    dr = ImageDraw.Draw(im)
+    st.cip(dr, W / 2, y + 82, "60 AY SABİT TAKSİT!", mont("ExtraBold", 38),
+           dolgu=KIRMIZI, yazi=BEYAZ, pad_x=28, pad_y=12, r=14)
 
     # Lacivert iletişim hapı: tel · web · ikonlar · miaparkocean
     f1 = mont("Bold", 27)
