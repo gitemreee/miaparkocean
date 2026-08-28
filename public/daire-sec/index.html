@@ -282,22 +282,22 @@ function grs(ad){ return GOMULU[ad] || ("/images/"+ad+".webp"); }
 
 /* ── veri (FAQ ile birebir): 1+0 472 · 1+1 96 · Loft 16 · Dubleks 16 ── */
 const TIPLER = {
-  s:{ad:"1+0 Stüdyo", m2:28, adet:472, renk:0x48ABC5, oran:1.0,
+  s:{ad:"1+0 Stüdyo", m2:28, adet:472, renk:0x9CCFDE, oran:1.0,
      odeme:"<b>699.000 TL peşinat</b> · <b>29.900 TL × 60 ay</b> sabit taksit<br>Banka yok · Faiz yok · Kefil yok",
      galeri:["unit-1plus0-a","ic-mekan/01-1plus0-salon","plan-1plus0"],
      odalar:[["Salon","ic-mekan/01-1plus0-salon"],["Mutfak","ic-mekan/02-1plus0-mutfak"],
              ["Balkon","ic-mekan/03-1plus0-balkon"],["Banyo","ic-mekan/04-1plus0-banyo"]]},
-  b:{ad:"1+1 Daire", m2:50, adet:96, renk:0x92D1DF, oran:1.8,
+  b:{ad:"1+1 Daire", m2:50, adet:96, renk:0xFFFFFF, oran:1.8,
      odeme:"<b>999.000 TL peşinat</b> · <b>39.900 TL × 60 ay</b> sabit taksit<br>Banka yok · Faiz yok · Kefil yok",
      galeri:["unit-1plus1-a","ic-mekan/05-1plus1-salon","plan-1plus1"],
      odalar:[["Salon","ic-mekan/05-1plus1-salon"],["Yatak Odası","ic-mekan/06-1plus1-yatak-odasi"],
              ["Mutfak","ic-mekan/07-1plus1-mutfak"],["Banyo","ic-mekan/08-1plus1-banyo"]]},
-  l:{ad:"1+1 Bahçe Loft", m2:50, adet:16, renk:0xE9C46A, oran:1.8,
+  l:{ad:"1+1 Bahçe Loft", m2:50, adet:16, renk:0xF0C878, oran:1.8,
      odeme:"Yükseltilmiş tavanlı, bahçeli sınırlı sayıda daire.<br>Güncel fiyat için satış ofisi: <b>0540 028 00 41</b>",
      galeri:["loft-living","ic-mekan/09-loft-salon"],
      odalar:[["Salon","ic-mekan/09-loft-salon"],["Mezanin","ic-mekan/10-loft-mezanin"],
              ["Teras","ic-mekan/13-bahceli-daire-terasi"]]},
-  d:{ad:"2+1 Bahçe Dubleks", m2:100, adet:16, renk:0x2E86A8, oran:3.4,
+  d:{ad:"2+1 Bahçe Dubleks", m2:100, adet:16, renk:0x6FB4CC, oran:3.4,
      odeme:"Bahçeli dubleks, sınırlı sayıda.<br>Güncel fiyat için satış ofisi: <b>0540 028 00 41</b>",
      galeri:["unit-2plus1-a","ic-mekan/11-dubleks-salon","unit-2plus1-cutaway"],
      odalar:[["Salon","ic-mekan/11-dubleks-salon"],["Yatak Odası","ic-mekan/12-dubleks-yatak-odasi"],
@@ -329,9 +329,21 @@ kok.appendChild(ciz.domElement);
 sahne.add(new THREE.HemisphereLight(0xBFE8F2, 0x0A2233, .95));
 const gun = new THREE.DirectionalLight(0xFFF4DC, .85); gun.position.set(30,42,18); sahne.add(gun);
 const dolgu = new THREE.DirectionalLight(0x48ABC5, .25); dolgu.position.set(-26,20,-24); sahne.add(dolgu);
-const zeminM = new THREE.Mesh(new THREE.CircleGeometry(120,64),
-  new THREE.MeshLambertMaterial({color:0x07293C}));
-zeminM.rotation.x=-Math.PI/2; zeminM.position.y=-.05; sahne.add(zeminM);
+/* gerçek konum: uydu görüntüsü zemin (İzmit MİA · 40.7367, 29.9449) */
+const dokuYukleyici = new THREE.TextureLoader();
+const haritaTex = dokuYukleyici.load("/images/harita-zemin.jpg");
+haritaTex.anisotropy = 4;
+const MPX = 0.1875;                              // 1280 px ≈ 240 birim
+const zeminM = new THREE.Mesh(new THREE.PlaneGeometry(240,240),
+  new THREE.MeshLambertMaterial({map:haritaTex}));
+zeminM.rotation.x=-Math.PI/2; zeminM.position.set((640-563)*MPX, -.05, (640-557)*MPX);
+sahne.add(zeminM);
+const golge = new THREE.Mesh(new THREE.CircleGeometry(46,48),
+  new THREE.MeshBasicMaterial({color:0x02141F, transparent:true, opacity:.28}));
+golge.rotation.x=-Math.PI/2; golge.scale.set(1,.45,1); golge.position.y=-.02;
+sahne.add(golge);
+const cepheTex = dokuYukleyici.load("/images/tex-cephe.jpg");
+cepheTex.wrapS = THREE.RepeatWrapping; cepheTex.anisotropy = 4;
 const su = new THREE.Mesh(new THREE.PlaneGeometry(30,4.2),
   new THREE.MeshBasicMaterial({color:0x1A7496, transparent:true, opacity:.55}));
 su.rotation.x=-Math.PI/2; su.position.set(0,.02,0); sahne.add(su);
@@ -352,11 +364,17 @@ function blokKur(harf, x, z, don){
       dizi.forEach((c,ui)=>{
         const w = TIPLER[c].oran/toplamOran*L;
         const g = new THREE.BoxGeometry(w-.07, KAT_H, DERINLIK/2-.05);
-        const m = new THREE.MeshLambertMaterial({color:TIPLER[c].renk});
+        const tekrar = Math.max(1, Math.round(w/1.6));
+        const uv = g.attributes.uv;
+        for(let i2=0;i2<uv.count;i2++) uv.setX(i2, uv.getX(i2)*tekrar);
+        const m = new THREE.MeshLambertMaterial({map:cepheTex, color:TIPLER[c].renk});
         const kutu = new THREE.Mesh(g,m);
         kutu.position.set(cx+w/2, ki*(KAT_H+ARA)+KAT_H/2+.06, yon*(DERINLIK/4+.02));
         kutu.userData={tip:c, blok:harf, kat:ki+1,
-                       no:(si===0?"Ö":"A")+(ui+1)};
+                       no:(si===0?"Ö":"A")+(ui+1),
+                       ev:new THREE.Vector3(cx+w/2, ki*(KAT_H+ARA)+KAT_H/2+.06,
+                                            yon*(DERINLIK/4+.02)),
+                       yon:yon};
         grup.add(kutu);
         kutu.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), kenarMat));
         birimler.push(kutu);
@@ -448,10 +466,25 @@ function galeriKay(y){
 }
 document.getElementById("g-geri").onclick=()=>galeriKay(-1);
 document.getElementById("g-ileri").onclick=()=>galeriKay(1);
+let ucus=null;
+function birakGeri(){
+  if(!secili) return;
+  const u=secili.userData;
+  ucus={mesh:secili, hedefPos:u.ev.clone(), hedefOlcek:1, sonra:null};
+  birimler.forEach(m=>{ m.material.transparent=true;
+    m.material.opacity = (!filtre || m.userData.tip===filtre) ? 1 : .13; });
+}
 function seciliYap(kutu){
   document.getElementById("p-katsec").hidden=true;
+  if(secili && secili!==kutu) birakGeri();
   if(secili) secili.material.emissive.setHex(0x000000);
   secili=kutu; kutu.material.emissive.setHex(0x2E5E6E);
+  const uu=kutu.userData;
+  const disari = uu.ev.clone().add(new THREE.Vector3(0, 2.2, uu.yon*7));
+  ucus={mesh:kutu, hedefPos:disari, hedefOlcek:1.5, sonra:null};
+  birimler.forEach(m=>{ if(m!==kutu){ m.material.transparent=true;
+    m.material.opacity=.45; } });
+  kutu.material.opacity=1;
   const u=kutu.userData, t=TIPLER[u.tip]; seciliTip=u.tip;
   document.getElementById("p-tip").textContent=t.ad;
   document.getElementById("p-m2").textContent=t.m2;
@@ -469,7 +502,7 @@ function seciliYap(kutu){
 function panelKapat(){
   document.getElementById("panel").classList.remove("acik");
   document.body.classList.remove("panelli");
-  if(secili){secili.material.emissive.setHex(0x000000); secili=null;}
+  if(secili){ birakGeri(); secili.material.emissive.setHex(0x000000); secili=null; }
 }
 document.getElementById("kapat").onclick=panelKapat;
 
@@ -506,7 +539,7 @@ lj.innerHTML = ["s","b","l","d"].map(kod=>{
     "<span class='m2'>"+t.m2+" m²</span></div>";
 }).join("")+"<div class='not'>4 blok · 8 kat · 600 daire. Köşe daireler 1+1, aralar 1+0; bahçe "+
   "katında köşeler dubleks, yanları loft. Kutu genişlikleri brüt m² ile orantılıdır; "+
-  "yerleşim şematiktir.</div>";
+  "yerleşim şematiktir. Zemin: Esri World Imagery.</div>";
 
 /* ── proje fotoğrafları modu ── */
 const fm=document.getElementById("fotomod");
@@ -587,6 +620,16 @@ addEventListener("resize",()=>{
 (function dongu(){
   requestAnimationFrame(dongu);
   if(otoDon) yaw+=.0016;
+  if(ucus){
+    const m=ucus.mesh;
+    m.position.lerp(ucus.hedefPos,.14);
+    const o=m.scale.x+(ucus.hedefOlcek-m.scale.x)*.14;
+    m.scale.set(o,o,o);
+    if(m.position.distanceTo(ucus.hedefPos)<.02){
+      m.position.copy(ucus.hedefPos); m.scale.set(ucus.hedefOlcek,ucus.hedefOlcek,ucus.hedefOlcek);
+      ucus=null;
+    }
+  }
   kameraGuncelle();
   ciz.render(sahne,kamera);
 })();
