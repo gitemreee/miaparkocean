@@ -18,16 +18,24 @@
   #sahne.tut{cursor:grabbing}
 
   .ust{position:fixed; top:0; left:0; right:0; display:flex; align-items:flex-start;
-    justify-content:space-between; padding:22px 26px 0; pointer-events:none; z-index:5}
+    justify-content:space-between; padding:20px 26px 0; pointer-events:none; z-index:6}
   .marka{pointer-events:auto}
   .marka .eyebrow{font-size:11px; font-weight:700; letter-spacing:.28em; color:var(--sis);
     text-transform:uppercase; margin-bottom:6px}
-  .marka h1{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:clamp(22px,3.2vw,34px);
-    letter-spacing:.01em; color:var(--ice); text-wrap:balance}
+  .marka h1{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:clamp(21px,3vw,32px);
+    color:var(--ice); text-wrap:balance}
   .marka h1 em{font-style:normal; color:var(--cyan)}
-  .tel{pointer-events:auto; text-align:right; font-size:13px; font-weight:700;
-    color:var(--pale); letter-spacing:.06em; line-height:1.7}
+  .sag-ust{pointer-events:auto; display:flex; flex-direction:column; align-items:flex-end; gap:10px}
+  .tel{text-align:right; font-size:13px; font-weight:700; color:var(--pale);
+    letter-spacing:.06em; line-height:1.6}
   .tel a{color:var(--ice); text-decoration:none}
+  body.panelli .modlar{opacity:0; pointer-events:none}
+  .modlar{transition:opacity .2s; display:flex; border:1px solid var(--cizgi); border-radius:999px; overflow:hidden;
+    background:rgba(10,51,72,.72); backdrop-filter:blur(6px)}
+  .modlar button{border:0; background:transparent; color:var(--pale);
+    font:700 12.5px 'Manrope'; padding:9px 14px; cursor:pointer; letter-spacing:.02em}
+  .modlar button[aria-pressed="true"]{background:var(--cyan); color:#062B3E}
+  .modlar button:focus-visible{outline:2px solid var(--ice); outline-offset:-2px}
 
   .filtreler{position:fixed; left:50%; transform:translateX(-50%); top:96px;
     display:flex; gap:8px; flex-wrap:wrap; justify-content:center; z-index:5; padding:0 12px}
@@ -49,60 +57,122 @@
   .lejant .m2{margin-left:auto; font-weight:800; font-variant-numeric:tabular-nums; color:var(--ice)}
   .lejant .not{margin-top:8px; padding-top:8px; border-top:1px solid var(--cizgi);
     color:var(--sis); font-size:11px; line-height:1.5}
-
-  .ipucu{position:fixed; right:26px; bottom:22px; z-index:4; font-size:12px; color:var(--sis);
-    letter-spacing:.04em}
+  .ipucu{position:fixed; right:26px; bottom:22px; z-index:4; font-size:12px; color:var(--sis)}
 
   /* seçim paneli */
-  .panel{position:fixed; top:0; right:0; bottom:0; width:min(400px,92vw);
+  .panel{position:fixed; top:0; right:0; bottom:0; width:min(410px,94vw);
     background:linear-gradient(180deg,#0B3A50 0%,#082C40 100%);
-    border-left:1px solid var(--cizgi); z-index:8; padding:26px 26px 30px;
+    border-left:1px solid var(--cizgi); z-index:8; padding:24px 24px 28px;
     transform:translateX(105%); transition:transform .32s cubic-bezier(.2,.8,.2,1);
-    display:flex; flex-direction:column; gap:16px; overflow-y:auto}
+    display:flex; flex-direction:column; gap:14px; overflow-y:auto}
   .panel.acik{transform:none; box-shadow:-30px 0 60px rgba(2,16,24,.55)}
-  .panel .kapat{position:absolute; top:16px; right:16px; width:36px; height:36px;
-    border-radius:50%; border:1px solid var(--cizgi); background:transparent; color:var(--pale);
-    font-size:17px; cursor:pointer}
+  .panel .kapat{position:absolute; top:14px; right:14px; width:36px; height:36px; z-index:2;
+    border-radius:50%; border:1px solid var(--cizgi); background:rgba(6,35,50,.6);
+    color:var(--pale); font-size:17px; cursor:pointer}
   .panel .kapat:hover{color:var(--ice); border-color:var(--cyan)}
   .panel .eyebrow{font-size:11px; font-weight:700; letter-spacing:.26em; color:var(--sis);
     text-transform:uppercase}
-  .panel h2{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:30px; margin-top:-6px}
-  .metre{display:flex; align-items:baseline; gap:8px; padding:14px 16px;
+  .panel h2{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:28px; margin-top:-4px}
+  .galeri{position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--cizgi);
+    aspect-ratio:16/10; background:#06293C}
+  .galeri img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transition:opacity .35s}
+  .galeri img.gorunur{opacity:1}
+  .galeri .ok{position:absolute; top:50%; transform:translateY(-50%); width:34px; height:34px;
+    border-radius:50%; border:0; background:rgba(4,29,44,.62); color:var(--ice);
+    font-size:16px; cursor:pointer; z-index:2}
+  .galeri .ok:hover{background:rgba(72,171,197,.85); color:#062B3E}
+  .galeri .ok.sol{left:10px}.galeri .ok.sag{right:10px}
+  .metre{display:flex; align-items:baseline; gap:8px; padding:12px 16px;
     background:rgba(72,171,197,.12); border:1px solid rgba(72,171,197,.4); border-radius:14px}
-  .metre b{font-size:40px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--ice)}
+  .metre b{font-size:36px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--ice)}
   .metre span{font-size:14px; font-weight:600; color:var(--pale)}
-  .satirlar{display:grid; gap:0; border:1px solid var(--cizgi); border-radius:14px; overflow:hidden}
-  .satirlar .s{display:flex; justify-content:space-between; gap:12px; padding:11px 14px;
+  .satirlar{display:grid; border:1px solid var(--cizgi); border-radius:14px; overflow:hidden}
+  .satirlar .s{display:flex; justify-content:space-between; gap:12px; padding:10px 14px;
     font-size:13.5px; color:var(--pale); background:rgba(6,35,50,.4)}
-  .satirlar .s+ .s{border-top:1px solid var(--cizgi)}
-  .satirlar .s b{color:var(--ice); font-weight:700; font-variant-numeric:tabular-nums; text-align:right}
-  .odeme{border:1px solid var(--cizgi); border-radius:14px; padding:14px 16px; font-size:13.5px;
-    line-height:1.65; color:var(--pale)}
+  .satirlar .s + .s{border-top:1px solid var(--cizgi)}
+  .satirlar .s b{color:var(--ice); font-weight:700; font-variant-numeric:tabular-nums}
+  .odeme{border:1px solid var(--cizgi); border-radius:14px; padding:12px 16px; font-size:13.5px;
+    line-height:1.6; color:var(--pale)}
   .odeme .baslik{font-size:11px; font-weight:700; letter-spacing:.24em; color:var(--sis);
-    text-transform:uppercase; margin-bottom:6px}
+    text-transform:uppercase; margin-bottom:5px}
   .odeme b{color:var(--ice)}
-  .plan{border-radius:14px; overflow:hidden; border:1px solid var(--cizgi)}
-  .plan img{display:block; width:100%; height:auto; background:#fff}
+  .gez{display:flex; align-items:center; justify-content:center; gap:10px; border:0;
+    background:var(--cyan); color:#062B3E; font:800 15px 'Manrope';
+    padding:14px; border-radius:14px; cursor:pointer}
+  .gez:hover{filter:brightness(1.08)}
   .wa{display:flex; align-items:center; justify-content:center; gap:10px;
     background:var(--wa); color:#04331B; font:800 15px 'Manrope'; text-decoration:none;
-    padding:14px; border-radius:14px; margin-top:auto}
+    padding:14px; border-radius:14px}
   .wa:hover{filter:brightness(1.06)}
-  .wa svg{flex:none}
   .panel .dipnot{font-size:11.5px; color:var(--sis); line-height:1.55}
 
+  /* proje fotoğrafları modu */
+  .fotomod{position:fixed; inset:0; z-index:7; background:#041D2C; display:none}
+  .fotomod.acik{display:block}
+  .fotomod img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transition:opacity .5s}
+  .fotomod img.gorunur{opacity:1}
+  .fotomod .karart{position:absolute; inset:auto 0 0 0; height:180px;
+    background:linear-gradient(0deg,rgba(4,22,33,.85),transparent)}
+  .fotomod .altyazi{position:absolute; left:26px; bottom:26px; z-index:2}
+  .fotomod .altyazi .eyebrow{font-size:11px; font-weight:700; letter-spacing:.26em;
+    color:var(--aqua); text-transform:uppercase; margin-bottom:4px}
+  .fotomod .altyazi b{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:26px}
+  .fotomod .ok{position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px;
+    border-radius:50%; border:1px solid rgba(221,247,250,.35); background:rgba(4,29,44,.5);
+    color:var(--ice); font-size:20px; cursor:pointer; z-index:2}
+  .fotomod .ok:hover{background:rgba(72,171,197,.85); color:#062B3E}
+  .fotomod .ok.sol{left:20px}.fotomod .ok.sag{right:20px}
+
+  /* evi gez (tur) modu */
+  .tur{position:fixed; inset:0; z-index:12; background:#02141F; display:none}
+  .tur.acik{display:block}
+  .tur .kat{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0;
+    transition:opacity .6s}
+  .tur .kat.gorunur{opacity:1}
+  .tur .kat.gezinti{animation:kenburns 14s ease-in-out infinite alternate}
+  @keyframes kenburns{from{transform:scale(1) translate(0,0)}to{transform:scale(1.08) translate(-1.4%,-1%)}}
+  .tur .govde-karart{position:absolute; inset:auto 0 0 0; height:200px;
+    background:linear-gradient(0deg,rgba(2,16,26,.88),transparent)}
+  .tur .ust-karart{position:absolute; inset:0 0 auto 0; height:120px;
+    background:linear-gradient(180deg,rgba(2,16,26,.75),transparent)}
+  .tur .baslik{position:absolute; top:20px; left:26px; z-index:2}
+  .tur .baslik .eyebrow{font-size:11px; font-weight:700; letter-spacing:.26em;
+    color:var(--aqua); text-transform:uppercase; margin-bottom:4px}
+  .tur .baslik b{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:26px}
+  .tur .baslik span{font-weight:600; color:var(--pale); font-size:14px; margin-left:10px}
+  .tur .cik{position:absolute; top:20px; right:20px; z-index:3; width:42px; height:42px;
+    border-radius:50%; border:1px solid rgba(221,247,250,.35); background:rgba(4,29,44,.55);
+    color:var(--ice); font-size:18px; cursor:pointer}
+  .tur .odalar{position:absolute; left:50%; transform:translateX(-50%); bottom:24px; z-index:3;
+    display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:0 14px}
+  .tur .odalar button{border:1px solid rgba(221,247,250,.3); background:rgba(4,29,44,.55);
+    color:var(--pale); font:700 13px 'Manrope'; padding:10px 16px; border-radius:999px;
+    cursor:pointer; backdrop-filter:blur(6px)}
+  .tur .odalar button[aria-pressed="true"]{background:var(--cyan); border-color:var(--cyan);
+    color:#062B3E}
+  .tur .ok{position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px;
+    border-radius:50%; border:1px solid rgba(221,247,250,.35); background:rgba(4,29,44,.5);
+    color:var(--ice); font-size:20px; cursor:pointer; z-index:2}
+  .tur .ok:hover{background:rgba(72,171,197,.85); color:#062B3E}
+  .tur .ok.sol{left:20px}.tur .ok.sag{right:20px}
+
   @media (max-width:720px){
-    .ust{padding:16px 16px 0}
+    .ust{padding:14px 16px 0}
     .tel{display:none}
-    .filtreler{top:84px}
+    .filtreler{top:104px}
     .lejant{display:none}
-    .ipucu{left:16px; right:auto; bottom:14px}
-    .panel{top:auto; left:0; right:0; width:auto; max-height:72vh;
+    .ipucu{left:16px; right:auto; bottom:12px}
+    .panel{top:auto; left:0; right:0; width:auto; max-height:78vh;
       border-left:0; border-top:1px solid var(--cizgi); border-radius:20px 20px 0 0;
       transform:translateY(110%)}
     .panel.acik{transform:none}
+    .fotomod .altyazi{left:16px; bottom:16px}
   }
   @media (prefers-reduced-motion:reduce){
     .panel{transition:none}
+    .tur .kat.gezinti{animation:none}
   }
 </style>
 
@@ -113,18 +183,34 @@
     <div class="eyebrow">MİA PARK OCEAN · İzmit MİA Bölgesi</div>
     <h1>Dijital Daire <em>Maketi</em></h1>
   </div>
-  <div class="tel">Satış Ofisi<br><a href="tel:+905400280041">0540 028 00 41</a></div>
+  <div class="sag-ust">
+    <div class="modlar" role="tablist">
+      <button id="mod-maket" aria-pressed="true">3D Maket</button>
+      <button id="mod-foto" aria-pressed="false">Proje Fotoğrafları</button>
+    </div>
+    <div class="tel">Satış Ofisi<br><a href="tel:+905400280041">0540 028 00 41</a></div>
+  </div>
 </header>
 
 <nav class="filtreler" id="filtreler" aria-label="Daire tipi filtresi"></nav>
-
 <aside class="lejant" id="lejant"></aside>
-<div class="ipucu">Sürükle: döndür · Tekerlek / iki parmak: yakınlaş · Daireye dokun: bilgi</div>
+<div class="ipucu" id="ipucu">Sürükle: döndür · Tekerlek / iki parmak: yakınlaş · Daireye dokun: bilgi</div>
+
+<div class="fotomod" id="fotomod" aria-label="Proje fotoğrafları">
+  <div class="karart"></div>
+  <div class="altyazi"><div class="eyebrow">Projenin Kendi Görselleri</div><b id="f-ad">—</b></div>
+  <button class="ok sol" id="f-geri" aria-label="Önceki fotoğraf">‹</button>
+  <button class="ok sag" id="f-ileri" aria-label="Sonraki fotoğraf">›</button>
+</div>
 
 <section class="panel" id="panel" aria-live="polite">
   <button class="kapat" id="kapat" aria-label="Paneli kapat">✕</button>
   <div class="eyebrow">Seçili Daire</div>
   <h2 id="p-tip">—</h2>
+  <div class="galeri" id="p-galeri">
+    <button class="ok sol" id="g-geri" aria-label="Önceki görsel">‹</button>
+    <button class="ok sag" id="g-ileri" aria-label="Sonraki görsel">›</button>
+  </div>
   <div class="metre"><b id="p-m2">—</b><span>brüt m²</span></div>
   <div class="satirlar">
     <div class="s"><span>Blok / Kat</span><b id="p-konum">—</b></div>
@@ -135,43 +221,65 @@
     <div class="baslik">Ödeme</div>
     <div id="p-odeme">—</div>
   </div>
-  <div class="plan" id="p-plan-kutu" hidden><img id="p-plan" alt="Kat planı"></div>
+  <button class="gez" id="p-gez">▶ Evi Gez</button>
   <a class="wa" id="p-wa" href="#" target="_blank" rel="noopener">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.5a1.8 1.8 0 0 0 .3-.4.5.5 0 0 0 0-.4c0-.1-.6-1.4-.8-1.9s-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9 14.5 14.5 0 0 0 1.5.5 3.5 3.5 0 0 0 1.6.1 2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.2-.2-.4-.3Z"/></svg>
     WhatsApp'tan Bilgi Al
   </a>
-  <div class="dipnot">Yerleşim şematiktir; kesin daire planı, konum ve müsaitlik satış
-  ofisinden teyit edilir. Fiyatlar örnek ödeme planıdır.</div>
+  <div class="dipnot">Görseller projenin kendi render'larıdır. Yerleşim şematiktir;
+  kesin daire planı, konum ve müsaitlik satış ofisinden teyit edilir.</div>
 </section>
+
+<div class="tur" id="tur" role="dialog" aria-label="Daire içi tur">
+  <img class="kat" id="t-a" alt="">
+  <img class="kat" id="t-b" alt="">
+  <div class="ust-karart"></div><div class="govde-karart"></div>
+  <div class="baslik"><div class="eyebrow">Evi Gez</div><b id="t-tip">—</b><span id="t-oda">—</span></div>
+  <button class="cik" id="t-cik" aria-label="Turu kapat">✕</button>
+  <button class="ok sol" id="t-geri" aria-label="Önceki oda">‹</button>
+  <button class="ok sag" id="t-ileri" aria-label="Sonraki oda">›</button>
+  <div class="odalar" id="t-odalar"></div>
+</div>
 
 <script src="./three.min.js"></script>
 <script>
 "use strict";
-/* ── veri: gerçek dağılım (FAQ): 1+0 472 · 1+1 96 · Loft 16 · Dubleks 16 ── */
+/* ── gömülü görseller (artifact kopyasında doldurulur; boşsa /images/ kökünden okunur) ── */
+const GOMULU = /*GOMULU*/{};
+function grs(ad){ return GOMULU[ad] || ("/images/"+ad+".webp"); }
+
+/* ── veri (FAQ ile birebir): 1+0 472 · 1+1 96 · Loft 16 · Dubleks 16 ── */
 const TIPLER = {
-  s:{ad:"1+0 Stüdyo",       m2:28,  adet:472, renk:0x48ABC5, oran:1.0,
+  s:{ad:"1+0 Stüdyo", m2:28, adet:472, renk:0x48ABC5, oran:1.0,
      odeme:"<b>699.000 TL peşinat</b> · <b>29.900 TL × 60 ay</b> sabit taksit<br>Banka yok · Faiz yok · Kefil yok",
-     plan:"/images/plan-1plus0.webp"},
-  b:{ad:"1+1 Daire",        m2:50,  adet:96,  renk:0x92D1DF, oran:1.8,
+     galeri:["unit-1plus0-a","ic-mekan/01-1plus0-salon","plan-1plus0"],
+     odalar:[["Salon","ic-mekan/01-1plus0-salon"],["Mutfak","ic-mekan/02-1plus0-mutfak"],
+             ["Balkon","ic-mekan/03-1plus0-balkon"],["Banyo","ic-mekan/04-1plus0-banyo"]]},
+  b:{ad:"1+1 Daire", m2:50, adet:96, renk:0x92D1DF, oran:1.8,
      odeme:"<b>999.000 TL peşinat</b> · <b>39.900 TL × 60 ay</b> sabit taksit<br>Banka yok · Faiz yok · Kefil yok",
-     plan:"/images/plan-1plus1.webp"},
-  l:{ad:"1+1 Bahçe Loft",   m2:50,  adet:16,  renk:0xE9C46A, oran:1.8,
-     odeme:"Yükseltilmiş tavanlı, bahçeli sınırlı sayıda daire.<br>Güncel fiyat için satış ofisini arayın: <b>0540 028 00 41</b>",
-     plan:null},
-  d:{ad:"2+1 Bahçe Dubleks",m2:100, adet:16,  renk:0x2E86A8, oran:3.4,
-     odeme:"Bahçeli dubleks, sınırlı sayıda.<br>Güncel fiyat için satış ofisini arayın: <b>0540 028 00 41</b>",
-     plan:"/images/unit-2plus1-cutaway.webp"}
+     galeri:["unit-1plus1-a","ic-mekan/05-1plus1-salon","plan-1plus1"],
+     odalar:[["Salon","ic-mekan/05-1plus1-salon"],["Yatak Odası","ic-mekan/06-1plus1-yatak-odasi"],
+             ["Mutfak","ic-mekan/07-1plus1-mutfak"],["Banyo","ic-mekan/08-1plus1-banyo"]]},
+  l:{ad:"1+1 Bahçe Loft", m2:50, adet:16, renk:0xE9C46A, oran:1.8,
+     odeme:"Yükseltilmiş tavanlı, bahçeli sınırlı sayıda daire.<br>Güncel fiyat için satış ofisi: <b>0540 028 00 41</b>",
+     galeri:["loft-living","ic-mekan/09-loft-salon"],
+     odalar:[["Salon","ic-mekan/09-loft-salon"],["Mezanin","ic-mekan/10-loft-mezanin"],
+             ["Teras","ic-mekan/13-bahceli-daire-terasi"]]},
+  d:{ad:"2+1 Bahçe Dubleks", m2:100, adet:16, renk:0x2E86A8, oran:3.4,
+     odeme:"Bahçeli dubleks, sınırlı sayıda.<br>Güncel fiyat için satış ofisi: <b>0540 028 00 41</b>",
+     galeri:["unit-2plus1-a","ic-mekan/11-dubleks-salon","unit-2plus1-cutaway"],
+     odalar:[["Salon","ic-mekan/11-dubleks-salon"],["Yatak Odası","ic-mekan/12-dubleks-yatak-odasi"],
+             ["Bahçe","ic-mekan/14-dubleks-bahcesi"]]}
 };
-/* blok başına kat kurgusu (şematik; toplamlar gerçek) */
+const DIS = [["Site Girişi","entrance-gate"],["Havadan Görünüm","aerial-pools"],
+             ["Merkezi Avlu","courtyard-pools"],["Gece Aydınlatması","night-gate"]];
+
 function katDizisi(){
-  // K1 (bahçe katı): 4 loft + 4 dubleks + 11 stüdyo
   const katlar = [];
   katlar.push(["l","s","d","s","l","s","s","d","s","s","l","s","d","s","s","l","s","d","s"]);
-  const birNerede = [4,3,4,3,4,3,3];               // K2..K8 1+1 adetleri (24)
-  const stuNerede = [15,16,15,16,15,15,15];        // K2..K8 1+0 adetleri (107)
+  const birNerede=[4,3,4,3,4,3,3], stuNerede=[15,16,15,16,15,15,15];
   for(let i=0;i<7;i++){
-    const dizi=[]; const b=birNerede[i], s=stuNerede[i], n=b+s;
-    let bk=0;
+    const dizi=[]; const b=birNerede[i], s=stuNerede[i], n=b+s; let bk=0;
     for(let j=0;j<n;j++){
       const hedef=Math.round((j+1)*b/n);
       if(hedef>bk){dizi.push("b");bk++;}else dizi.push("s");
@@ -182,7 +290,7 @@ function katDizisi(){
 }
 const KATLAR = katDizisi();
 
-/* ── sahne ── */
+/* ── üç boyutlu sahne ── */
 const kok = document.getElementById("sahne");
 const sahne = new THREE.Scene();
 sahne.fog = new THREE.Fog(0x062B3E, 70, 150);
@@ -193,15 +301,11 @@ ciz.setSize(innerWidth,innerHeight);
 kok.appendChild(ciz.domElement);
 
 sahne.add(new THREE.HemisphereLight(0xBFE8F2, 0x0A2233, .95));
-const gun = new THREE.DirectionalLight(0xFFF4DC, .85);
-gun.position.set(30,42,18); sahne.add(gun);
-const dolgu = new THREE.DirectionalLight(0x48ABC5, .25);
-dolgu.position.set(-26,20,-24); sahne.add(dolgu);
-
-const zemin = new THREE.Mesh(new THREE.CircleGeometry(120,64),
+const gun = new THREE.DirectionalLight(0xFFF4DC, .85); gun.position.set(30,42,18); sahne.add(gun);
+const dolgu = new THREE.DirectionalLight(0x48ABC5, .25); dolgu.position.set(-26,20,-24); sahne.add(dolgu);
+const zeminM = new THREE.Mesh(new THREE.CircleGeometry(120,64),
   new THREE.MeshLambertMaterial({color:0x07293C}));
-zemin.rotation.x=-Math.PI/2; zemin.position.y=-.05; sahne.add(zemin);
-/* avlu su aksı */
+zeminM.rotation.x=-Math.PI/2; zeminM.position.y=-.05; sahne.add(zeminM);
 const su = new THREE.Mesh(new THREE.PlaneGeometry(30,4.2),
   new THREE.MeshBasicMaterial({color:0x1A7496, transparent:true, opacity:.55}));
 su.rotation.x=-Math.PI/2; su.position.set(0,.02,0); sahne.add(su);
@@ -209,9 +313,8 @@ const su2 = new THREE.Mesh(new THREE.PlaneGeometry(28,2.6),
   new THREE.MeshBasicMaterial({color:0x48ABC5, transparent:true, opacity:.35}));
 su2.rotation.x=-Math.PI/2; su2.position.set(0,.04,0); sahne.add(su2);
 
-/* bloklar */
 const L=26, DERINLIK=5.2, KAT_H=1.06, ARA=.16;
-const birimler=[]; const secilebilir=[];
+const birimler=[];
 const kenarMat = new THREE.LineBasicMaterial({color:0x041D2C, transparent:true, opacity:.35});
 function blokKur(harf, x, z, don){
   const grup = new THREE.Group();
@@ -227,13 +330,11 @@ function blokKur(harf, x, z, don){
       kutu.position.set(cx+w/2, ki*(KAT_H+ARA)+KAT_H/2+.06, 0);
       kutu.userData={tip:c, blok:harf, kat:ki+1, no:ui+1};
       grup.add(kutu);
-      const kenar = new THREE.LineSegments(new THREE.EdgesGeometry(g), kenarMat);
-      kutu.add(kenar);
-      birimler.push(kutu); secilebilir.push(kutu);
+      kutu.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), kenarMat));
+      birimler.push(kutu);
       cx+=w;
     });
   });
-  /* çatı bandı + etiket */
   const cati = new THREE.Mesh(new THREE.BoxGeometry(L+.4,.22,DERINLIK+.4),
     new THREE.MeshLambertMaterial({color:0x0B3A50}));
   cati.position.y = KATLAR.length*(KAT_H+ARA)+.12; grup.add(cati);
@@ -245,21 +346,19 @@ function blokKur(harf, x, z, don){
   sp.scale.set(3.4,3.4,1); sp.position.y=cati.position.y+2.6; grup.add(sp);
   sahne.add(grup);
 }
-blokKur("A",-16.5,-9.6,  .06);
-blokKur("B", 16.5,-9.6, -.06);
-blokKur("C",-16.5, 9.6, -.06);
-blokKur("D", 16.5, 9.6,  .06);
+blokKur("A",-16.5,-9.6,.06); blokKur("B",16.5,-9.6,-.06);
+blokKur("C",-16.5,9.6,-.06); blokKur("D",16.5,9.6,.06);
 
-/* ── kamera kontrolü (mini orbit) ── */
+/* kamera */
 let yaw=.62, pitch=.46, mesafe=52, hYaw=yaw, hPitch=pitch, hMesafe=mesafe;
 const hedefNokta = new THREE.Vector3(0,5.2,0);
 let otoDon = !matchMedia("(prefers-reduced-motion: reduce)").matches;
 function kameraGuncelle(){
-  hYaw+= (yaw-hYaw)*.12; hPitch+=(pitch-hPitch)*.12; hMesafe+=(mesafe-hMesafe)*.14;
+  hYaw+=(yaw-hYaw)*.12; hPitch+=(pitch-hPitch)*.12; hMesafe+=(mesafe-hMesafe)*.14;
   kamera.position.set(
-    hedefNokta.x + hMesafe*Math.cos(hPitch)*Math.sin(hYaw),
-    hedefNokta.y + hMesafe*Math.sin(hPitch),
-    hedefNokta.z + hMesafe*Math.cos(hPitch)*Math.cos(hYaw));
+    hedefNokta.x+hMesafe*Math.cos(hPitch)*Math.sin(hYaw),
+    hedefNokta.y+hMesafe*Math.sin(hPitch),
+    hedefNokta.z+hMesafe*Math.cos(hPitch)*Math.cos(hYaw));
   kamera.lookAt(hedefNokta);
 }
 let tut=false, sonX=0, sonY=0, hareket=0, cifte=null;
@@ -290,39 +389,56 @@ kok.addEventListener("touchmove",e=>{ if(e.touches.length===2 && cifte){
   mesafe=Math.min(85,Math.max(20,mesafe*cifte/d)); cifte=d;}},{passive:true});
 addEventListener("touchend",()=>cifte=null);
 
-/* ── seçim ── */
+/* ── seçim + galeri ── */
 const isin = new THREE.Raycaster(); const nk = new THREE.Vector2();
-let secili=null, filtre=null;
+let secili=null, filtre=null, galeriDizi=[], galeriIx=0, seciliTip="s";
 function sec(x,y){
   nk.set(x/innerWidth*2-1, -(y/innerHeight)*2+1);
   isin.setFromCamera(nk,kamera);
-  const v = isin.intersectObjects(secilebilir,false);
+  const v = isin.intersectObjects(birimler,false);
   if(!v.length){ panelKapat(); return; }
   const kutu = v[0].object;
   if(filtre && kutu.userData.tip!==filtre) return;
   seciliYap(kutu);
 }
+function galeriGoster(){
+  const kutu=document.getElementById("p-galeri");
+  [...kutu.querySelectorAll("img")].forEach(i=>i.remove());
+  galeriDizi.forEach((ad,i)=>{
+    const im=document.createElement("img");
+    im.src=grs(ad); im.alt="";
+    im.onerror=()=>{ im.remove(); };
+    if(i===galeriIx) im.classList.add("gorunur");
+    kutu.appendChild(im);
+  });
+}
+function galeriKay(y){
+  galeriIx=(galeriIx+y+galeriDizi.length)%galeriDizi.length;
+  const imgs=[...document.getElementById("p-galeri").querySelectorAll("img")];
+  imgs.forEach((im,i)=>im.classList.toggle("gorunur", i===galeriIx));
+}
+document.getElementById("g-geri").onclick=()=>galeriKay(-1);
+document.getElementById("g-ileri").onclick=()=>galeriKay(1);
 function seciliYap(kutu){
   if(secili) secili.material.emissive.setHex(0x000000);
-  secili=kutu;
-  kutu.material.emissive.setHex(0x2E5E6E);
-  const u=kutu.userData, t=TIPLER[u.tip];
+  secili=kutu; kutu.material.emissive.setHex(0x2E5E6E);
+  const u=kutu.userData, t=TIPLER[u.tip]; seciliTip=u.tip;
   document.getElementById("p-tip").textContent=t.ad;
   document.getElementById("p-m2").textContent=t.m2;
   document.getElementById("p-konum").textContent=u.blok+" Blok · "+u.kat+". Kat";
   document.getElementById("p-no").textContent=u.blok+"-K"+u.kat+"-"+String(u.no).padStart(2,"0");
   document.getElementById("p-adet").textContent=t.adet+" adet";
   document.getElementById("p-odeme").innerHTML=t.odeme;
-  const pk=document.getElementById("p-plan-kutu"), pi=document.getElementById("p-plan");
-  if(t.plan){ pk.hidden=false; pi.src=t.plan;
-    pi.onerror=()=>{pk.hidden=true;}; } else pk.hidden=true;
+  galeriDizi=t.galeri; galeriIx=0; galeriGoster();
   const mesaj=encodeURIComponent("Merhaba, MİA PARK OCEAN "+u.blok+" Blok "+u.kat+
     ". kattaki "+t.ad+" ("+t.m2+" m²) hakkında bilgi almak istiyorum.");
   document.getElementById("p-wa").href="https://wa.me/905400280041?text="+mesaj;
   document.getElementById("panel").classList.add("acik");
+  document.body.classList.add("panelli");
 }
 function panelKapat(){
   document.getElementById("panel").classList.remove("acik");
+  document.body.classList.remove("panelli");
   if(secili){secili.material.emissive.setHex(0x000000); secili=null;}
 }
 document.getElementById("kapat").onclick=panelKapat;
@@ -345,8 +461,7 @@ SIRA.forEach(kod=>{
     b.setAttribute("aria-pressed","true");
     birimler.forEach(m=>{
       const uy = !filtre || m.userData.tip===filtre;
-      m.material.transparent=true;
-      m.material.opacity = uy?1:.13;
+      m.material.transparent=true; m.material.opacity = uy?1:.13;
       m.children[0].material.opacity = uy?.35:.05;
     });
     if(secili && filtre && secili.userData.tip!==filtre) panelKapat();
@@ -361,6 +476,76 @@ lj.innerHTML = ["s","b","l","d"].map(kod=>{
     "<span class='m2'>"+t.m2+" m²</span></div>";
 }).join("")+"<div class='not'>4 blok · 8 kat · 600 daire. Kutu genişlikleri brüt m² ile "+
   "orantılıdır. Yerleşim şematiktir.</div>";
+
+/* ── proje fotoğrafları modu ── */
+const fm=document.getElementById("fotomod");
+let disIx=0;
+DIS.forEach(([ad,dosya],i)=>{
+  const im=document.createElement("img"); im.src=grs(dosya); im.alt=ad;
+  if(i===0) im.classList.add("gorunur");
+  fm.insertBefore(im, fm.querySelector(".karart"));
+});
+function disGoster(){
+  [...fm.querySelectorAll("img")].forEach((im,i)=>
+    im.classList.toggle("gorunur", i===disIx));
+  document.getElementById("f-ad").textContent=DIS[disIx][0];
+}
+document.getElementById("f-geri").onclick=()=>{disIx=(disIx+DIS.length-1)%DIS.length; disGoster();};
+document.getElementById("f-ileri").onclick=()=>{disIx=(disIx+1)%DIS.length; disGoster();};
+disGoster();
+const mMaket=document.getElementById("mod-maket"), mFoto=document.getElementById("mod-foto");
+function modAyarla(foto){
+  fm.classList.toggle("acik",foto);
+  mMaket.setAttribute("aria-pressed", String(!foto));
+  mFoto.setAttribute("aria-pressed", String(foto));
+  document.getElementById("filtreler").style.display = foto?"none":"";
+  document.getElementById("lejant").style.display = foto?"none":"";
+  document.getElementById("ipucu").style.display = foto?"none":"";
+  if(foto) panelKapat();
+}
+mMaket.onclick=()=>modAyarla(false);
+mFoto.onclick=()=>modAyarla(true);
+
+/* ── evi gez (tur) ── */
+const tur=document.getElementById("tur");
+const tA=document.getElementById("t-a"), tB=document.getElementById("t-b");
+let turOdalar=[], turIx=0, aktifKat=tA;
+function turAc(){
+  const t=TIPLER[seciliTip];
+  turOdalar=t.odalar; turIx=0;
+  document.getElementById("t-tip").textContent=t.ad;
+  const ok=document.getElementById("t-odalar"); ok.innerHTML="";
+  turOdalar.forEach(([ad],i)=>{
+    const b=document.createElement("button"); b.textContent=ad;
+    b.onclick=()=>odaGit(i); ok.appendChild(b);
+  });
+  tA.classList.remove("gorunur","gezinti"); tB.classList.remove("gorunur","gezinti");
+  aktifKat=tA;
+  tur.classList.add("acik");
+  odaGit(0,true);
+}
+function odaGit(i,ilk){
+  turIx=(i+turOdalar.length)%turOdalar.length;
+  const [ad,dosya]=turOdalar[turIx];
+  const yeni = ilk? tA : (aktifKat===tA? tB : tA);
+  yeni.src=grs(dosya);
+  yeni.classList.add("gorunur","gezinti");
+  if(!ilk){ aktifKat.classList.remove("gorunur","gezinti"); }
+  aktifKat=yeni;
+  document.getElementById("t-oda").textContent=ad;
+  [...document.getElementById("t-odalar").children].forEach((b,j)=>
+    b.setAttribute("aria-pressed", String(j===turIx)));
+}
+document.getElementById("p-gez").onclick=turAc;
+document.getElementById("t-cik").onclick=()=>tur.classList.remove("acik");
+document.getElementById("t-geri").onclick=()=>odaGit(turIx-1);
+document.getElementById("t-ileri").onclick=()=>odaGit(turIx+1);
+addEventListener("keydown",e=>{
+  if(!tur.classList.contains("acik")) return;
+  if(e.key==="ArrowRight") odaGit(turIx+1);
+  if(e.key==="ArrowLeft") odaGit(turIx-1);
+  if(e.key==="Escape") tur.classList.remove("acik");
+});
 
 /* ── döngü ── */
 addEventListener("resize",()=>{
