@@ -107,6 +107,37 @@
   .wa:hover{filter:brightness(1.06)}
   .panel .dipnot{font-size:11.5px; color:var(--sis); line-height:1.55}
 
+  /* cephe (render üzerinde seçim) modu */
+  .cephe{position:fixed; inset:0; z-index:4; display:flex; align-items:center;
+    justify-content:center; background:#041D2C}
+  .cephe.gizli{display:none}
+  .cephe .kutu{position:relative; width:min(100vw, calc(100vh*16/9));
+    aspect-ratio:16/9}
+  .cephe img{position:absolute; inset:0; width:100%; height:100%; object-fit:fill;
+    opacity:0; transition:opacity .6s}
+  .cephe img.gorunur{opacity:1}
+  .cephe svg{position:absolute; inset:0; width:100%; height:100%; z-index:2}
+  .cephe svg polygon{fill:rgba(72,171,197,0); stroke:rgba(221,247,250,0);
+    stroke-width:1.4; cursor:pointer; transition:fill .15s, stroke .15s}
+  .cephe svg polygon:hover{fill:rgba(72,171,197,.30); stroke:rgba(221,247,250,.85)}
+  .cephe svg polygon.secili{fill:rgba(72,171,197,.42); stroke:#fff; stroke-width:2}
+  .gunbtn{position:fixed; left:50%; transform:translateX(-50%); bottom:22px; z-index:5;
+    display:flex; border:1px solid var(--cizgi); border-radius:999px; overflow:hidden;
+    background:rgba(10,51,72,.72); backdrop-filter:blur(6px)}
+  .gunbtn button{border:0; background:transparent; color:var(--pale);
+    font:700 13px 'Manrope'; padding:10px 18px; cursor:pointer}
+  .gunbtn button[aria-pressed="true"]{background:var(--cyan); color:#062B3E}
+  .cephe-ipucu{position:fixed; left:26px; bottom:26px; z-index:5; font-size:12px;
+    color:var(--sis); max-width:250px; line-height:1.5}
+  .katsec{display:flex; flex-wrap:wrap; gap:8px}
+  .katsec button{display:flex; align-items:center; gap:7px; border:1px solid var(--cizgi);
+    background:rgba(6,35,50,.5); color:var(--pale); font:600 12.5px 'Manrope';
+    padding:9px 12px; border-radius:999px; cursor:pointer}
+  .katsec button .nokta{width:9px;height:9px;border-radius:3px}
+  .katsec button[aria-pressed="true"]{background:var(--cyan); border-color:var(--cyan);
+    color:#062B3E}
+  .katsec button b{font-weight:800}
+
   /* proje fotoğrafları modu */
   .fotomod{position:fixed; inset:0; z-index:7; background:#041D2C; display:none}
   .fotomod.acik{display:block}
@@ -185,7 +216,8 @@
   </div>
   <div class="sag-ust">
     <div class="modlar" role="tablist">
-      <button id="mod-maket" aria-pressed="true">3D Maket</button>
+      <button id="mod-cephe" aria-pressed="true">Cephede Seç</button>
+      <button id="mod-maket" aria-pressed="false">3D Maket</button>
       <button id="mod-foto" aria-pressed="false">Proje Fotoğrafları</button>
     </div>
     <div class="tel">Satış Ofisi<br><a href="tel:+905400280041">0540 028 00 41</a></div>
@@ -195,6 +227,20 @@
 <nav class="filtreler" id="filtreler" aria-label="Daire tipi filtresi"></nav>
 <aside class="lejant" id="lejant"></aside>
 <div class="ipucu" id="ipucu">Sürükle: döndür · Tekerlek / iki parmak: yakınlaş · Daireye dokun: bilgi</div>
+
+<div class="cephe" id="cephe">
+  <div class="kutu" id="cephe-kutu">
+    <img id="c-gece" alt="MİA PARK OCEAN gece görünümü">
+    <img id="c-gunduz" alt="MİA PARK OCEAN gündüz görünümü">
+    <svg id="c-svg" viewBox="0 0 1600 900" preserveAspectRatio="none"></svg>
+  </div>
+</div>
+<div class="gunbtn" id="gunbtn">
+  <button id="g-gunduz" aria-pressed="true">☀ Gündüz</button>
+  <button id="g-gece" aria-pressed="false">☾ Gece</button>
+</div>
+<div class="cephe-ipucu" id="cephe-ipucu">Binadaki bir KATA dokunun; o kattaki
+daire tiplerini panelden seçin.</div>
 
 <div class="fotomod" id="fotomod" aria-label="Proje fotoğrafları">
   <div class="karart"></div>
@@ -211,6 +257,7 @@
     <button class="ok sol" id="g-geri" aria-label="Önceki görsel">‹</button>
     <button class="ok sag" id="g-ileri" aria-label="Sonraki görsel">›</button>
   </div>
+  <div class="katsec" id="p-katsec" hidden></div>
   <div class="metre"><b id="p-m2">—</b><span>brüt m²</span></div>
   <div class="satirlar">
     <div class="s"><span>Blok / Kat</span><b id="p-konum">—</b></div>
@@ -420,6 +467,7 @@ function galeriKay(y){
 document.getElementById("g-geri").onclick=()=>galeriKay(-1);
 document.getElementById("g-ileri").onclick=()=>galeriKay(1);
 function seciliYap(kutu){
+  document.getElementById("p-katsec").hidden=true;
   if(secili) secili.material.emissive.setHex(0x000000);
   secili=kutu; kutu.material.emissive.setHex(0x2E5E6E);
   const u=kutu.userData, t=TIPLER[u.tip]; seciliTip=u.tip;
@@ -440,6 +488,8 @@ function panelKapat(){
   document.getElementById("panel").classList.remove("acik");
   document.body.classList.remove("panelli");
   if(secili){secili.material.emissive.setHex(0x000000); secili=null;}
+  if(typeof seciliPoly!=="undefined" && seciliPoly){
+    seciliPoly.classList.remove("secili"); seciliPoly=null;}
 }
 document.getElementById("kapat").onclick=panelKapat;
 
@@ -493,18 +543,107 @@ function disGoster(){
 document.getElementById("f-geri").onclick=()=>{disIx=(disIx+DIS.length-1)%DIS.length; disGoster();};
 document.getElementById("f-ileri").onclick=()=>{disIx=(disIx+1)%DIS.length; disGoster();};
 disGoster();
-const mMaket=document.getElementById("mod-maket"), mFoto=document.getElementById("mod-foto");
-function modAyarla(foto){
-  fm.classList.toggle("acik",foto);
-  mMaket.setAttribute("aria-pressed", String(!foto));
-  mFoto.setAttribute("aria-pressed", String(foto));
-  document.getElementById("filtreler").style.display = foto?"none":"";
-  document.getElementById("lejant").style.display = foto?"none":"";
-  document.getElementById("ipucu").style.display = foto?"none":"";
-  if(foto) panelKapat();
+/* ── cephe modu: render üzerinde kat seçimi ── */
+const cepheEl=document.getElementById("cephe");
+const cGece=document.getElementById("c-gece"), cGun=document.getElementById("c-gunduz");
+cGece.src=grs("night-gate");
+cGun.src=grs("gate-gunduz");
+let gunduzVar=true;
+cGun.onerror=()=>{ gunduzVar=false; gunAyarla(false);
+  document.getElementById("gunbtn").style.display="none"; };
+function gunAyarla(gunduz){
+  cGun.classList.toggle("gorunur", gunduz && gunduzVar);
+  cGece.classList.toggle("gorunur", !(gunduz && gunduzVar));
+  document.getElementById("g-gunduz").setAttribute("aria-pressed", String(gunduz));
+  document.getElementById("g-gece").setAttribute("aria-pressed", String(!gunduz));
 }
-mMaket.onclick=()=>modAyarla(false);
-mFoto.onclick=()=>modAyarla(true);
+document.getElementById("g-gunduz").onclick=()=>gunAyarla(true);
+document.getElementById("g-gece").onclick=()=>gunAyarla(false);
+gunAyarla(true);
+
+/* iki blok grubunun cephe dörtgenleri (1600x900 tuvalde) */
+const CEPHELER=[
+  {ad:"Sol Blok", ust:[[8,286],[660,300]], alt:[[8,650],[660,588]]},
+  {ad:"Sağ Blok", ust:[[935,300],[1592,286]], alt:[[935,588],[1592,650]]}
+];
+const csvg=document.getElementById("c-svg");
+let seciliPoly=null;
+function lerp(a,b,t){return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];}
+CEPHELER.forEach((c,ci)=>{
+  for(let k=0;k<8;k++){                       // k=0 en alt kat
+    const t0=k/8, t1=(k+1)/8;
+    const a0=lerp(c.alt[0],c.ust[0],t0), b0=lerp(c.alt[1],c.ust[1],t0);
+    const a1=lerp(c.alt[0],c.ust[0],t1), b1=lerp(c.alt[1],c.ust[1],t1);
+    const pl=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    pl.setAttribute("points",[a0,b0,b1,a1].map(n=>n.join(",")).join(" "));
+    pl.addEventListener("click",()=>{
+      if(seciliPoly) seciliPoly.classList.remove("secili");
+      seciliPoly=pl; pl.classList.add("secili");
+      katSec(c.ad, k+1);
+    });
+    csvg.appendChild(pl);
+  }
+});
+function katSec(blokAd, kat){
+  const dizi=KATLAR[kat-1];
+  const say={};
+  dizi.forEach(c=>say[c]=(say[c]||0)+1);
+  const ks=document.getElementById("p-katsec");
+  ks.hidden=false; ks.innerHTML="";
+  Object.keys(say).forEach((kod,i)=>{
+    const t=TIPLER[kod];
+    const b=document.createElement("button");
+    b.innerHTML="<span class='nokta' style='background:#"+
+      t.renk.toString(16).padStart(6,"0")+"'></span><b>"+say[kod]+
+      "×</b> "+t.ad;
+    b.onclick=()=>{
+      [...ks.children].forEach(x=>x.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");
+      tipDoldur(kod, blokAd+" · "+kat+". Kat",
+        blokAd.split(" ")[0].toUpperCase()+"-K"+kat);
+    };
+    ks.appendChild(b);
+    if(i===0){ b.setAttribute("aria-pressed","true");
+      tipDoldur(kod, blokAd+" · "+kat+". Kat",
+        blokAd.split(" ")[0].toUpperCase()+"-K"+kat); }
+  });
+  document.getElementById("panel").classList.add("acik");
+  document.body.classList.add("panelli");
+}
+function tipDoldur(kod, konum, no){
+  const t=TIPLER[kod]; seciliTip=kod;
+  document.getElementById("p-tip").textContent=t.ad;
+  document.getElementById("p-m2").textContent=t.m2;
+  document.getElementById("p-konum").textContent=konum;
+  document.getElementById("p-no").textContent=no;
+  document.getElementById("p-adet").textContent=t.adet+" adet";
+  document.getElementById("p-odeme").innerHTML=t.odeme;
+  galeriDizi=t.galeri; galeriIx=0; galeriGoster();
+  const mesaj=encodeURIComponent("Merhaba, MİA PARK OCEAN "+konum+" "+t.ad+
+    " ("+t.m2+" m²) hakkında bilgi almak istiyorum.");
+  document.getElementById("p-wa").href="https://wa.me/905400280041?text="+mesaj;
+}
+
+const mCephe=document.getElementById("mod-cephe");
+const mMaket=document.getElementById("mod-maket"), mFoto=document.getElementById("mod-foto");
+function modAyarla(mod){                       // "cephe" | "maket" | "foto"
+  cepheEl.classList.toggle("gizli", mod!=="cephe");
+  document.getElementById("gunbtn").style.display = mod==="cephe" && gunduzVar ? "" : "none";
+  document.getElementById("cephe-ipucu").style.display = mod==="cephe" ? "" : "none";
+  fm.classList.toggle("acik", mod==="foto");
+  mCephe.setAttribute("aria-pressed", String(mod==="cephe"));
+  mMaket.setAttribute("aria-pressed", String(mod==="maket"));
+  mFoto.setAttribute("aria-pressed", String(mod==="foto"));
+  document.getElementById("filtreler").style.display = mod==="maket" ? "" : "none";
+  document.getElementById("lejant").style.display = mod==="maket" ? "" : "none";
+  document.getElementById("ipucu").style.display = mod==="maket" ? "" : "none";
+  panelKapat();
+  if(seciliPoly){seciliPoly.classList.remove("secili"); seciliPoly=null;}
+}
+mCephe.onclick=()=>modAyarla("cephe");
+mMaket.onclick=()=>modAyarla("maket");
+mFoto.onclick=()=>modAyarla("foto");
+modAyarla("cephe");
 
 /* ── evi gez (tur) ── */
 const tur=document.getElementById("tur");
