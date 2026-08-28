@@ -76,3 +76,20 @@ Tek yetkili satış: Ocean Gayrimenkul
 
 Satış ofisimize bekleriz ☕
 ```
+
+## Sesli kampanya reeli
+
+**Video:** `../reel-kampanya-sesli.mp4` (1080×1920 · ~44 sn · Türkçe seslendirmeli)
+**Kapak:** `../reel-kampanya-kapak.jpg`
+
+**Açıklama metni:**
+> 🔊 Sesi açın! Kocaeli ev sahibi oluyor 🏠
+>
+> ❌ Banka yok ❌ Faiz yok ❌ Kredi yok ❌ Ara ödeme yok
+> ✅ 1+0 → 699.000 TL peşinat · ayda 29.900 TL
+> ✅ 1+1 → 999.000 TL peşinat · ayda 39.900 TL
+> 🔴 60 AY SABİT TAKSİT!
+>
+> 📍 İzmit MİA Bölgesi · sahile 2 dakika
+> ☎ 0540 028 00 41 · 🌐 miaparkocean.com
+> #miaparkocean #kocaeli #izmit #evsahibiol #60aytaksit #yeniev #kocaeliemlak
