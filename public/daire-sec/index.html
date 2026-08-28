@@ -28,6 +28,13 @@
     filter:drop-shadow(0 12px 22px rgba(0,0,0,0))}
   .parca img{position:absolute; inset:0; width:100%; height:100%; object-fit:fill}
   .parca.ucus{filter:drop-shadow(0 26px 44px rgba(0,0,0,.65))}
+  .rozet{position:absolute; z-index:7; transform:translate(-50%,0);
+    background:rgba(4,29,44,.92); border:1px solid rgba(72,171,197,.55);
+    color:var(--ice); font:700 14px 'Manrope'; padding:10px 16px;
+    border-radius:999px; white-space:nowrap; opacity:0; transition:opacity .4s .35s;
+    pointer-events:none; box-shadow:0 10px 26px rgba(2,16,24,.5)}
+  .rozet.gorunur{opacity:1}
+  .rozet b{color:#92D1DF}
   .ust{position:fixed; top:0; left:0; right:0; display:flex; align-items:flex-start;
     justify-content:space-between; padding:20px 26px 0; pointer-events:none; z-index:7}
   .marka{pointer-events:auto}
@@ -276,7 +283,7 @@ const DIS = [["Site Girişi (Gündüz)","gate-gunduz"],["Site Girişi","entrance
              ["Havadan Görünüm","aerial-pools"],["Merkezi Avlu","courtyard-pools"],
              ["Gece Aydınlatması","night-gate"]];
 
-let parca=null, parcaImg=null, delik=null, seciliTip="s";
+let parca=null, parcaImg=null, delik=null, rozet=null, seciliTip="s";
 const kutu=document.getElementById("kutu");
 const tGece=document.getElementById("t-gece"), tGun=document.getElementById("t-gunduz");
 tGece.src=grs("night-gate"); tGun.src=grs("gate-gunduz");
@@ -298,10 +305,10 @@ gunAyarla(true);
 
 /* 4 blok yüzü (1600x900) — uçlar 1+1; bahçe katında uçlar dubleks, bitişik loft */
 const YUZLER=[
-  {blok:"A", kolon:5, ust:[[8,286],[320,293]],  alt:[[8,652],[320,614]]},
-  {blok:"C", kolon:4, ust:[[344,293],[660,300]],alt:[[344,610],[660,590]]},
-  {blok:"D", kolon:4, ust:[[940,300],[1256,293]],alt:[[940,590],[1256,610]]},
-  {blok:"B", kolon:5, ust:[[1280,293],[1592,286]],alt:[[1280,614],[1592,652]]}
+  {blok:"A", kolon:5, ust:[[6,288],[336,296]],  alt:[[6,662],[336,622]]},
+  {blok:"C", kolon:4, ust:[[352,296],[668,302]],alt:[[352,616],[668,596]]},
+  {blok:"D", kolon:4, ust:[[932,302],[1248,296]],alt:[[932,596],[1248,616]]},
+  {blok:"B", kolon:5, ust:[[1264,296],[1598,288]],alt:[[1264,622],[1598,662]]}
 ];
 const KATSAYI=8;
 function lerp(a,b,t){return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];}
@@ -355,14 +362,24 @@ function hucreSec(v, pl){
   kutu.classList.add("secimde");
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     const r=kutu.getBoundingClientRect();
-    const panelPay = innerWidth>720 ? 410 : 0;
-    const hedefX=(innerWidth-panelPay)/2 - r.left, hedefY=r.height*.44;
+    const mobil = innerWidth<=720;
+    const panelPay = mobil ? 0 : 410;
+    const hedefX=(innerWidth-panelPay)/2 - r.left;
+    const hedefY=r.height*(mobil? .28 : .42);
     const simdiX=cx/1600*r.width, simdiY=cy/900*r.height;
     const hw=(v.pts[1][0]-v.pts[0][0])/1600*r.width;
+    const hh=Math.abs(v.pts[0][1]-v.pts[3][1])/900*r.height;
     const olcek=Math.min(3.4, Math.max(2, r.width*.30/hw));
     parca.classList.add("ucus");
     parca.style.transform="translate("+(hedefX-simdiX)+"px,"+(hedefY-simdiY)+
       "px) scale("+olcek.toFixed(2)+")";
+    rozet=document.createElement("div");
+    rozet.className="rozet";
+    rozet.innerHTML=t.ad+" · <b>"+t.m2+" m²</b> · "+v.blok+"-K"+v.kat;
+    rozet.style.left=hedefX+"px";
+    rozet.style.top=(hedefY + hh*olcek/2 + 16)+"px";
+    kutu.appendChild(rozet);
+    requestAnimationFrame(()=>rozet.classList.add("gorunur"));
   }));
   document.getElementById("p-tip").textContent=t.ad;
   document.getElementById("p-m2").textContent=t.m2;
@@ -378,6 +395,7 @@ function hucreSec(v, pl){
   document.body.classList.add("panelli");
 }
 function parcaKapat(gecis){
+  if(rozet){ rozet.remove(); rozet=null; }
   if(delik){ delik.remove(); delik=null; }
   if(parca){
     const p=parca; parca=null; parcaImg=null;
