@@ -8,7 +8,7 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
-  body{background:#041D2C; color:var(--ice); font-family:'Manrope',system-ui,sans-serif;
+  body{background:#EDF4F7; color:#0B3A50; font-family:'Manrope',system-ui,sans-serif;
     overflow:hidden; -webkit-tap-highlight-color:transparent}
   .sahne{position:fixed; inset:0; display:flex; align-items:center; justify-content:center}
   .kutu{position:relative; width:min(100vw, calc(100vh*16/9)); aspect-ratio:16/9}
@@ -29,64 +29,66 @@
   .parca img{position:absolute; inset:0; width:100%; height:100%; object-fit:fill}
   .parca.ucus{filter:drop-shadow(0 26px 44px rgba(0,0,0,.65))}
   .rozet{position:absolute; z-index:7; transform:translate(-50%,0);
-    background:rgba(4,29,44,.92); border:1px solid rgba(72,171,197,.55);
-    color:var(--ice); font:700 14px 'Manrope'; padding:10px 16px;
+    background:rgba(255,255,255,.96); border:1px solid #C9DEE8;
+    color:#0B3A50; font:700 14px 'Manrope'; padding:10px 16px;
     border-radius:999px; white-space:nowrap; opacity:0; transition:opacity .4s .35s;
     pointer-events:none; box-shadow:0 10px 26px rgba(2,16,24,.5)}
   .rozet.gorunur{opacity:1}
-  .rozet b{color:#92D1DF}
+  .rozet b{color:#128}
+  .rozet b{color:#17708A}
   .ust{position:fixed; top:0; left:0; right:0; display:flex; align-items:flex-start;
     justify-content:space-between; padding:20px 26px 0; pointer-events:none; z-index:7}
   .marka{pointer-events:auto}
-  .marka .eyebrow{font-size:11px; font-weight:700; letter-spacing:.28em; color:var(--pale);
-    text-transform:uppercase; margin-bottom:6px; text-shadow:0 1px 8px rgba(2,16,26,.8)}
-  .marka h1{font-family:'Fraunces',Georgia,serif; font-weight:600;
-    font-size:clamp(21px,3vw,32px); text-shadow:0 2px 12px rgba(2,16,26,.85)}
-  .marka h1 em{font-style:normal; color:var(--cyan)}
+  .marka .eyebrow{font-size:11px; font-weight:700; letter-spacing:.28em; color:#134;
+    color:#17516B; text-transform:uppercase; margin-bottom:6px;
+    text-shadow:0 1px 10px rgba(255,255,255,.85)}
+  .marka h1{font-family:'Fraunces',Georgia,serif; font-weight:600; color:#0B3A50;
+    font-size:clamp(21px,3vw,32px); text-shadow:0 2px 14px rgba(255,255,255,.9)}
+  .marka h1 em{font-style:normal; color:#1A7496}
   .sag-ust{pointer-events:auto; display:flex; flex-direction:column; align-items:flex-end;
     gap:10px; transition:opacity .2s}
   body.panelli .sag-ust{opacity:0; pointer-events:none}
-  .modlar{display:flex; border:1px solid var(--cizgi); border-radius:999px; overflow:hidden;
-    background:rgba(6,35,50,.75); backdrop-filter:blur(6px)}
-  .modlar button{border:0; background:transparent; color:var(--pale);
+  .modlar{display:flex; border:1px solid #C9DEE8; border-radius:999px; overflow:hidden;
+    background:rgba(255,255,255,.92); backdrop-filter:blur(6px)}
+  .modlar button{border:0; background:transparent; color:#41708A;
     font:700 12.5px 'Manrope'; padding:9px 14px; cursor:pointer}
-  .modlar button[aria-pressed="true"]{background:var(--cyan); color:#062B3E}
-  .tel{text-align:right; font-size:13px; font-weight:700; color:var(--ice);
-    letter-spacing:.06em; line-height:1.6; text-shadow:0 1px 8px rgba(2,16,26,.9)}
-  .tel a{color:var(--ice); text-decoration:none}
+  .modlar button[aria-pressed="true"]{background:#0B3A50; color:#fff}
+  .tel{text-align:right; font-size:13px; font-weight:700; color:#0B3A50;
+    letter-spacing:.06em; line-height:1.6; text-shadow:0 1px 10px rgba(255,255,255,.9)}
+  .tel a{color:#0B3A50; text-decoration:none}
   .filtreler{position:fixed; left:50%; transform:translateX(-50%); top:88px;
     display:flex; gap:8px; flex-wrap:wrap; justify-content:center; z-index:7; padding:0 12px}
-  .cip{border:1px solid var(--cizgi); background:rgba(6,35,50,.78); color:var(--pale);
+  .cip{border:1px solid #C9DEE8; background:rgba(255,255,255,.92); color:#33607A;
     font:600 12.5px/1 'Manrope'; padding:9px 13px; border-radius:999px; cursor:pointer;
     display:flex; align-items:center; gap:8px; backdrop-filter:blur(6px)}
   .cip .nokta{width:10px; height:10px; border-radius:3px}
-  .cip .adet{font-weight:800; font-size:11px; color:var(--sis)}
-  .cip:hover{border-color:var(--cyan); color:var(--ice)}
-  .cip[aria-pressed="true"]{background:var(--cyan); border-color:var(--cyan); color:#062B3E}
-  .cip[aria-pressed="true"] .adet{color:#0B3A50}
+  .cip .adet{font-weight:800; font-size:11px; color:#7FA3B5}
+  .cip:hover{border-color:#1A7496; color:#0B3A50}
+  .cip[aria-pressed="true"]{background:#0B3A50; border-color:#0B3A50; color:#fff}
+  .cip[aria-pressed="true"] .adet{color:#9CC4D8}
   .gunbtn{position:fixed; left:50%; transform:translateX(-50%); bottom:20px; z-index:7;
-    display:flex; border:1px solid var(--cizgi); border-radius:999px; overflow:hidden;
-    background:rgba(6,35,50,.78); backdrop-filter:blur(6px)}
-  .gunbtn button{border:0; background:transparent; color:var(--pale);
+    display:flex; border:1px solid #C9DEE8; border-radius:999px; overflow:hidden;
+    background:rgba(255,255,255,.92); backdrop-filter:blur(6px)}
+  .gunbtn button{border:0; background:transparent; color:#41708A;
     font:700 13px 'Manrope'; padding:10px 18px; cursor:pointer}
-  .gunbtn button[aria-pressed="true"]{background:var(--cyan); color:#062B3E}
-  .ipucu{position:fixed; left:26px; bottom:24px; z-index:6; font-size:12px; color:var(--pale);
-    max-width:250px; line-height:1.5; text-shadow:0 1px 8px rgba(2,16,26,.9)}
+  .gunbtn button[aria-pressed="true"]{background:#0B3A50; color:#fff}
+  .ipucu{position:fixed; left:26px; bottom:24px; z-index:6; font-size:12px; color:#33607A;
+    max-width:250px; line-height:1.5; text-shadow:0 1px 10px rgba(255,255,255,.9)}
   .panel{position:fixed; top:0; right:0; bottom:0; width:min(410px,94vw);
-    background:linear-gradient(180deg,#0B3A50 0%,#082C40 100%);
-    border-left:1px solid var(--cizgi); z-index:9; padding:24px 24px 28px;
+    background:linear-gradient(180deg,#FFFFFF 0%,#F2F8FA 100%); color:#0B3A50;
+    border-left:1px solid #D9E7EE; z-index:9; padding:24px 24px 28px;
     transform:translateX(105%); transition:transform .32s cubic-bezier(.2,.8,.2,1);
     display:flex; flex-direction:column; gap:14px; overflow-y:auto}
   .panel.acik{transform:none; box-shadow:-30px 0 60px rgba(2,16,24,.55)}
   .panel .kapat{position:absolute; top:14px; right:14px; width:36px; height:36px; z-index:2;
-    border-radius:50%; border:1px solid var(--cizgi); background:rgba(6,35,50,.6);
-    color:var(--pale); font-size:17px; cursor:pointer}
-  .panel .kapat:hover{color:var(--ice); border-color:var(--cyan)}
-  .panel .eyebrow{font-size:11px; font-weight:700; letter-spacing:.26em; color:var(--sis);
+    border-radius:50%; border:1px solid #D9E7EE; background:#fff;
+    color:#41708A; font-size:17px; cursor:pointer}
+  .panel .kapat:hover{color:#0B3A50; border-color:#1A7496}
+  .panel .eyebrow{font-size:11px; font-weight:700; letter-spacing:.26em; color:#7FA3B5;
     text-transform:uppercase}
   .panel h2{font-family:'Fraunces',Georgia,serif; font-weight:600; font-size:28px; margin-top:-4px}
-  .galeri{position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--cizgi);
-    aspect-ratio:16/10; background:#06293C}
+  .galeri{position:relative; border-radius:14px; overflow:hidden; border:1px solid #D9E7EE;
+    aspect-ratio:16/10; background:#EAF3F6}
   .galeri img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     opacity:0; transition:opacity .35s}
   .galeri img.gorunur{opacity:1}
@@ -96,27 +98,27 @@
   .galeri .ok:hover{background:rgba(72,171,197,.85); color:#062B3E}
   .galeri .ok.sol{left:10px}.galeri .ok.sag{right:10px}
   .metre{display:flex; align-items:baseline; gap:8px; padding:12px 16px;
-    background:rgba(72,171,197,.12); border:1px solid rgba(72,171,197,.4); border-radius:14px}
+    background:#EAF6F9; border:1px solid #BFE0EA; border-radius:14px}
   .metre b{font-size:36px; font-weight:800; font-variant-numeric:tabular-nums}
-  .metre span{font-size:14px; font-weight:600; color:var(--pale)}
-  .satirlar{display:grid; border:1px solid var(--cizgi); border-radius:14px; overflow:hidden}
+  .metre span{font-size:14px; font-weight:600; color:#41708A}
+  .satirlar{display:grid; border:1px solid #D9E7EE; border-radius:14px; overflow:hidden}
   .satirlar .s{display:flex; justify-content:space-between; gap:12px; padding:10px 14px;
-    font-size:13.5px; color:var(--pale); background:rgba(6,35,50,.4)}
-  .satirlar .s + .s{border-top:1px solid var(--cizgi)}
-  .satirlar .s b{color:var(--ice); font-weight:700; font-variant-numeric:tabular-nums}
-  .odeme{border:1px solid var(--cizgi); border-radius:14px; padding:12px 16px; font-size:13.5px;
-    line-height:1.6; color:var(--pale)}
-  .odeme .baslik{font-size:11px; font-weight:700; letter-spacing:.24em; color:var(--sis);
+    font-size:13.5px; color:#41708A; background:#FBFDFE}
+  .satirlar .s + .s{border-top:1px solid #E4EEF3}
+  .satirlar .s b{color:#0B3A50; font-weight:700; font-variant-numeric:tabular-nums}
+  .odeme{border:1px solid #D9E7EE; border-radius:14px; padding:12px 16px; font-size:13.5px;
+    line-height:1.6; color:#41708A; background:#FBFDFE}
+  .odeme .baslik{font-size:11px; font-weight:700; letter-spacing:.24em; color:#7FA3B5;
     text-transform:uppercase; margin-bottom:5px}
-  .odeme b{color:var(--ice)}
+  .odeme b{color:#0B3A50}
   .gez{display:flex; align-items:center; justify-content:center; gap:10px; border:0;
-    background:var(--cyan); color:#062B3E; font:800 15px 'Manrope';
+    background:#0B3A50; color:#fff; font:800 15px 'Manrope';
     padding:14px; border-radius:14px; cursor:pointer}
   .gez:hover{filter:brightness(1.08)}
   .wa{display:flex; align-items:center; justify-content:center; gap:10px;
     background:var(--wa); color:#04331B; font:800 15px 'Manrope'; text-decoration:none;
     padding:14px; border-radius:14px}
-  .panel .dipnot{font-size:11.5px; color:var(--sis); line-height:1.55}
+  .panel .dipnot{font-size:11.5px; color:#7FA3B5; line-height:1.55}
   .fotomod{position:fixed; inset:0; z-index:8; background:#041D2C; display:none}
   .fotomod.acik{display:block}
   .fotomod img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
@@ -168,7 +170,7 @@
     .filtreler{top:96px}
     .ipucu{display:none}
     .panel{top:auto; left:0; right:0; width:auto; max-height:74vh;
-      border-left:0; border-top:1px solid var(--cizgi); border-radius:20px 20px 0 0;
+      border-left:0; border-top:1px solid #D9E7EE; border-radius:20px 20px 0 0;
       transform:translateY(110%)}
     .panel.acik{transform:none}
   }
