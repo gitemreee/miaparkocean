@@ -73,19 +73,29 @@ def main():
     im = hero.convert("RGBA")
     dr = ImageDraw.Draw(im)
 
+    # ---- gökyüzüne hafif pus: üst yazılar pastel zeminde patlasın
+    pus = Image.new("L", (1, H), 0)
+    pd = ImageDraw.Draw(pus)
+    for yy in range(560):
+        pd.point((0, yy), fill=int(135 * (1 - yy / 560) ** 1.3))
+    puskat = Image.new("RGBA", (W, H), (255, 255, 255, 0))
+    puskat.putalpha(pus.resize((W, H)))
+    im.alpha_composite(puskat)
+
     # ---- üst blok: beyaz slogan + kırmızı manşet (story üst güvenli
     # alanının altından başlar)
     def manset(d):
-        f0 = barlow(66)
-        d.text((W / 2, 168), "KOCAELİ EV SAHİBİ OLUYOR!", font=f0,
-               fill=BEYAZ, anchor="ma")
-        f1 = barlow(112)
-        d.text((W / 2, 252), "FAİZ YOK, SIRA YOK", font=f1, fill=KIRMIZI,
-               anchor="ma")
+        f0 = barlow(68)
+        d.text((W / 2, 164), "KOCAELİ EV SAHİBİ OLUYOR!", font=f0,
+               fill=BEYAZ, anchor="ma", stroke_width=2,
+               stroke_fill=(14, 42, 66))
+        f1 = barlow(114)
+        d.text((W / 2, 250), "FAİZ YOK, SIRA YOK", font=f1, fill=KIRMIZI,
+               anchor="ma", stroke_width=3, stroke_fill=(158, 2, 12))
         d.text((W / 2, 368), "ARA ÖDEME YOK", font=f1, fill=KIRMIZI,
-               anchor="ma")
+               anchor="ma", stroke_width=3, stroke_fill=(158, 2, 12))
 
-    golge_yaz(im, manset, blur=14, op=110, dy=4)
+    golge_yaz(im, manset, blur=12, op=210, dy=5)
 
     # ---- eğik etiket: beyaz taban + kırmızı üst, iki satır
     et1 = "29.900 TL'DEN BAŞLAYAN"
