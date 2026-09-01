@@ -61,14 +61,14 @@ def golge_yaz(im, kat_ciz, blur=10, op=160, dx=0, dy=5):
 
 def main():
     hero = Image.open(GORSEL).convert("RGB")
-    s = max(W / hero.width, GOR_H / hero.height)
+    s = max(W / hero.width, H / hero.height)
     hero = hero.resize((round(hero.width * s), round(hero.height * s)),
                        Image.LANCZOS)
     x = (hero.width - W) // 2
     # dikeyde ne kadar yukarıdan kesileceği: aile ve anahtarlar kalsın,
     # üstte manşete yetecek kadar gök kalsın diye elle dengelendi
-    KIRP_Y = min(140, hero.height - GOR_H)
-    hero = hero.crop((x, KIRP_Y, x + W, KIRP_Y + GOR_H))
+    KIRP_Y = min(90, hero.height - H)
+    hero = hero.crop((x, KIRP_Y, x + W, KIRP_Y + H))
 
     im = Image.new("RGBA", (W, H), (*BEYAZ, 255))
     im.paste(hero, (0, 0))
@@ -77,10 +77,13 @@ def main():
 
     # ---- manşet: gökyüzünde iki satır kırmızı kondanse
     def manset(d):
-        f1 = barlow(108)
-        d.text((W / 2, 62), "FAİZ YOK, SIRA YOK", font=f1, fill=KIRMIZI,
+        f0 = barlow(62)
+        d.text((W / 2, 34), "KOCAELİ EV SAHİBİ OLUYOR!", font=f0, fill=NAVY,
                anchor="ma")
-        d.text((W / 2, 174), "ARA ÖDEME YOK", font=f1, fill=KIRMIZI,
+        f1 = barlow(106)
+        d.text((W / 2, 112), "FAİZ YOK, SIRA YOK", font=f1, fill=KIRMIZI,
+               anchor="ma")
+        d.text((W / 2, 222), "ARA ÖDEME YOK", font=f1, fill=KIRMIZI,
                anchor="ma")
 
     golge_yaz(im, manset, blur=14, op=70, dy=4)
@@ -93,38 +96,12 @@ def main():
     def altmetin(d):
         w1 = d.textlength(sat1a, font=f2) + d.textlength(sat1b, font=f2)
         x0 = (W - w1) / 2
-        d.text((x0, 306), sat1a, font=f2, fill=BEYAZ, anchor="la")
-        d.text((x0 + d.textlength(sat1a, font=f2), 306), sat1b, font=f2,
+        d.text((x0, 352), sat1a, font=f2, fill=BEYAZ, anchor="la")
+        d.text((x0 + d.textlength(sat1a, font=f2), 352), sat1b, font=f2,
                fill=(255, 96, 96), anchor="la")
-        d.text((W / 2, 348), sat2, font=f2, fill=BEYAZ, anchor="ma")
+        d.text((W / 2, 394), sat2, font=f2, fill=BEYAZ, anchor="ma")
 
     golge_yaz(im, altmetin, blur=9, op=255, dy=3)
-
-    # ---- sağ blok: eğik beyaz kampanya yazısı
-    def kampanya(d):
-        pass
-
-    kat = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    kd = ImageDraw.Draw(kat)
-    fk1 = barlow(54)
-    fk2 = barlow(88)
-    fk3 = barlow(62)
-    cx = 700
-    kd.text((cx, 742), "MİA PARK OCEAN'DA", font=fk1, fill=BEYAZ, anchor="ms")
-    kd.text((cx, 828), "KOCAELİ", font=fk2, fill=BEYAZ, anchor="ms")
-    kd.text((cx, 898), "EV SAHİBİ OLUYOR!", font=fk3, fill=BEYAZ, anchor="ms")
-    # hafif italik: yatay kaydırma (shear)
-    kat = kat.transform((W, H), Image.AFFINE, (1, -0.12, 0, 0, 1, 0),
-                        resample=Image.BICUBIC)
-
-    g = kat.filter(ImageFilter.GaussianBlur(10))
-    golge = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    golge.paste(g, (2, 6))
-    r, gg, b, a = golge.split()
-    golge = Image.merge("RGBA", (r.point(lambda v: 6), gg.point(lambda v: 10),
-                                 b.point(lambda v: 26), a))
-    im.alpha_composite(golge)
-    im.alpha_composite(kat)
 
     # ---- eğik etiket: beyaz taban + kırmızı üst, iki satır
     et1 = "29.900 TL'DEN BAŞLAYAN"
@@ -154,8 +131,13 @@ def main():
     im.alpha_composite(golge, (ex + 2, ey + 8))
     im.alpha_composite(etiket, (ex, ey))
 
-    # ---- beyaz marka bandı
-    dr.rectangle([0, GOR_H, W, H], fill=BEYAZ)
+    # ---- buzlu şeffaf marka bandı
+    bolge = im.crop((0, GOR_H, W, H)).filter(ImageFilter.GaussianBlur(16))
+    perde = Image.new("RGBA", (W, BAR_H), (255, 255, 255, 150))
+    bolge = Image.alpha_composite(bolge, perde)
+    dv = ImageDraw.Draw(bolge)
+    dv.rectangle([0, 0, W, 2], fill=(255, 255, 255, 180))
+    im.paste(bolge, (0, GOR_H))
 
     mia = Image.open(os.path.join(ROOT, "public", "brand",
                                   "logo-mia-2026.png")).convert("RGBA")
