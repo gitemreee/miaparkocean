@@ -133,16 +133,15 @@ def main():
     alt.alpha_composite(mia, (56, cy - mia.height // 2))
 
     oc = bf.partner_white(225)
-    alt.alpha_composite(oc, ((W - oc.width) // 2 - 70, cy - oc.height // 2))
+    alt.alpha_composite(oc, (W - 56 - oc.width, cy - oc.height // 2))
 
     ad = ImageDraw.Draw(alt)
     ft = manrope(46, "700")
-    tel = "0540 028 00 41"
-    tx = W - 52 - ad.textlength(tel, font=ft)
-    ad.text((tx, cy), tel, font=ft, fill=BEYAZ, anchor="lm")
-    fg = ImageFont.truetype(
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 52)
-    ad.text((tx - 18, cy + 2), "☎", font=fg, fill=BEYAZ, anchor="rm")
+    ad.text((W / 2, cy - 26), "0540 028 00 41", font=ft, fill=BEYAZ,
+            anchor="mm")
+    fw = manrope(33, "700")
+    ad.text((W / 2, cy + 32), "www.miaparkocean.com", font=fw, fill=BEYAZ,
+            anchor="mm")
 
     # koyu, yumuşak gölge — beyaz öğeler her zeminde okunsun
     g = alt.filter(ImageFilter.GaussianBlur(16))
