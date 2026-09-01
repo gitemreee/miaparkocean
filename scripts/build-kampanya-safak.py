@@ -14,7 +14,9 @@ Yapı:
     python3 scripts/build-kampanya-safak.py
 """
 
+import importlib.util as _il
 import os
+import sys
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -23,6 +25,12 @@ FONTS = os.path.join(ROOT, "brand-source", "fonts")
 GORSEL = os.path.join(ROOT, "sosyal-medya", "turkuaz-kampanya",
                       "kaynak-safak-hero-story.jpg")
 OUT = os.path.join(ROOT, "sosyal-medya", "turkuaz-kampanya")
+
+_spec = _il.spec_from_file_location(
+    "build_film", os.path.join(ROOT, "scripts", "build-film.py"))
+bf = _il.module_from_spec(_spec)
+sys.modules["build_film"] = bf
+_spec.loader.exec_module(bf)
 
 W, H = 1080, 1920
 
@@ -107,40 +115,32 @@ def main():
     im.alpha_composite(golge, (ex + 2, ey + 8))
     im.alpha_composite(etiket, (ex, ey))
 
-    # ---- alt satır: bantsız, fotoğraf üstünde logolar + telefon
+    # ---- alt satır: bantsız — BEYAZ logolar + BEYAZ numara, koyu gölge
     alt = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    cy = 1845
+    cy = 1826
 
-    mia = Image.open(os.path.join(ROOT, "public", "brand",
-                                  "logo-mia-2026.png")).convert("RGBA")
-    mh = 118
-    mia = mia.resize((round(mia.width * mh / mia.height), mh), Image.LANCZOS)
-    alt.alpha_composite(mia, (56, cy - mh // 2))
+    mia = bf.logo_white(270)
+    alt.alpha_composite(mia, (56, cy - mia.height // 2))
 
-    ocean = Image.open(os.path.join(ROOT, "sunum", "kaynak", "sekil",
-                                    "ocean-logo-renkli2.png")).convert("RGBA")
-    oh = 74
-    ocean = ocean.resize((round(ocean.width * oh / ocean.height), oh),
-                         Image.LANCZOS)
-    alt.alpha_composite(ocean, ((W - ocean.width) // 2 - 40, cy - oh // 2))
+    oc = bf.partner_white(225)
+    alt.alpha_composite(oc, ((W - oc.width) // 2 - 70, cy - oc.height // 2))
 
     ad = ImageDraw.Draw(alt)
-    ft = manrope(44, "700")
+    ft = manrope(46, "700")
     tel = "0540 028 00 41"
-    tx = W - 50 - ad.textlength(tel, font=ft)
-    ad.text((tx, cy), tel, font=ft, fill=NAVY, anchor="lm")
+    tx = W - 52 - ad.textlength(tel, font=ft)
+    ad.text((tx, cy), tel, font=ft, fill=BEYAZ, anchor="lm")
     fg = ImageFont.truetype(
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 54)
-    ad.text((tx - 20, cy + 2), "☎", font=fg, fill=NAVY, anchor="rm")
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 52)
+    ad.text((tx - 18, cy + 2), "☎", font=fg, fill=BEYAZ, anchor="rm")
 
-    # okunurluk: alt satırın arkasına çok hafif beyaz parlama (bant değil)
-    g = alt.filter(ImageFilter.GaussianBlur(26))
+    # koyu, yumuşak gölge — beyaz öğeler her zeminde okunsun
+    g = alt.filter(ImageFilter.GaussianBlur(16))
     r, gg, b, a = g.split()
-    parlama = Image.merge("RGBA", (r.point(lambda v: 255),
-                                   gg.point(lambda v: 255),
-                                   b.point(lambda v: 255),
-                                   a.point(lambda v: int(v * 0.7))))
-    im.alpha_composite(parlama)
+    golge = Image.merge("RGBA", (r.point(lambda v: 6), gg.point(lambda v: 12),
+                                 b.point(lambda v: 28),
+                                 a.point(lambda v: min(255, int(v * 2.0)))))
+    im.alpha_composite(golge, (0, 6))
     im.alpha_composite(alt)
 
     yol = os.path.join(OUT, "kampanya-safak-story.jpg")
