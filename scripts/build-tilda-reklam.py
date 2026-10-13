@@ -28,7 +28,9 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = os.path.join(ROOT, "brand-source", "fonts")
 OUT = os.path.join(ROOT, "sosyal-medya", "turkuaz-kampanya")
-RENDER = os.path.join(ROOT, "signage-source", "night-gate.jpg")
+RENDER = os.path.join(ROOT, "signage-source", "night-gate-temiz.jpg")
+if not os.path.exists(RENDER):
+    RENDER = os.path.join(ROOT, "signage-source", "night-gate.jpg")
 
 _spec = _il.spec_from_file_location(
     "build_film", os.path.join(ROOT, "scripts", "build-film.py"))
@@ -140,7 +142,7 @@ def basliklar(im, y0, o):
     return y0 + o(146) + o(76)
 
 
-def haplar(im, y0, o):
+def haplar(im, y0, o, tip, pesinat, taksit):
     W = im.width
     kat = Image.new("RGBA", im.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(kat)
@@ -150,11 +152,11 @@ def haplar(im, y0, o):
     hx = (W - hw) // 2
     hap(d, [hx, y0, hx + hw, y0 + hh], o(34))
     fk = mont(o(22), 500)
-    d.text((hx + o(184), y0 + o(30)), "1+0 DAİRENİN", font=fk, fill=BEYAZ,
+    d.text((hx + o(184), y0 + o(30)), f"{tip} DAİRENİN", font=fk, fill=BEYAZ,
            anchor="ra")
     d.text((hx + o(184), y0 + o(58)), "FİYATI", font=fk, fill=BEYAZ,
            anchor="ra")
-    d.text((hx + o(198), y0 + o(12)), "699.000₺", font=mont(o(66), 700),
+    d.text((hx + o(198), y0 + o(12)), pesinat, font=mont(o(66), 700),
            fill=BEYAZ, anchor="la")
     d.text((hx + o(210), y0 + o(88)), "'DEN BAŞLAYAN PEŞİNAT",
            font=mont(o(22), 500), fill=BEYAZ, anchor="la")
@@ -171,7 +173,7 @@ def haplar(im, y0, o):
     d.text((x1 + w1 / 2, y1 + o(84)), "VADE", font=mont(o(22), 500),
            fill=BEYAZ, anchor="ma")
     hap(d, [x2, y1, x2 + w2, y1 + hh2], o(34))
-    d.text((x2 + w2 / 2, y1 + o(16)), "29.900₺", font=mont(o(58), 700),
+    d.text((x2 + w2 / 2, y1 + o(16)), taksit, font=mont(o(58), 700),
            fill=BEYAZ, anchor="ma")
     d.text((x2 + w2 / 2, y1 + o(84)), "AYLIK TAKSİT", font=mont(o(22), 500),
            fill=BEYAZ, anchor="ma")
@@ -198,21 +200,28 @@ def logolar(im, cy, o, iletisim_y=None):
     golge_bas(im, kat, blur=8, op=0.8, dy=2)
 
 
-def uret(W, H, olcek, baslik_y, render_y, render_w, logo_y, iletisim_y, ad):
+def uret(W, H, olcek, baslik_y, render_y, render_w, logo_y, iletisim_y, ad,
+         tip, pesinat, taksit):
     def o(v):
         return round(v * olcek)
 
     im = zemin(W, H, render_y, render_w)
     son = basliklar(im, baslik_y, o)
-    haplar(im, son + o(36), o)
+    haplar(im, son + o(36), o, tip, pesinat, taksit)
     logolar(im, logo_y, o, iletisim_y)
     yol = os.path.join(OUT, ad)
     im.convert("RGB").save(yol, quality=94, optimize=True)
     print(f"  → {yol}")
 
 
+DAIRELER = [("1+0", "699.000₺", "29.900₺", "1plus0"),
+            ("1+1", "999.000₺", "39.900₺", "1plus1")]
+
 if __name__ == "__main__":
-    uret(1080, 1920, 1.0, baslik_y=230, render_y=600, render_w=1860,
-         logo_y=1700, iletisim_y=1812, ad="tilda-reklam-story.jpg")
-    uret(1080, 1080, 0.80, baslik_y=54, render_y=330, render_w=1420,
-         logo_y=930, iletisim_y=1010, ad="tilda-reklam-kare.jpg")
+    for tip, pesinat, taksit, ek in DAIRELER:
+        uret(1080, 1920, 1.0, baslik_y=230, render_y=600, render_w=1860,
+             logo_y=1700, iletisim_y=1812, ad=f"tilda-reklam-{ek}-story.jpg",
+             tip=tip, pesinat=pesinat, taksit=taksit)
+        uret(1080, 1080, 0.80, baslik_y=54, render_y=330, render_w=1420,
+             logo_y=930, iletisim_y=1010, ad=f"tilda-reklam-{ek}-kare.jpg",
+             tip=tip, pesinat=pesinat, taksit=taksit)
