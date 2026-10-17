@@ -323,6 +323,95 @@ R_BORDO = r_(ana="#7a1424", ikinci="#a51d33", vurgu="#ffd9a0", serit="#4a0b15")
 R_BEYAZ = r_(ana="#ffffff", ikinci="#0f2a4d", yazi="#0f2a4d", baslik_yazi="#ffffff", vurgu="#d9a95b",
              tilda_beyaz=False, serit="#0f2a4d")
 
+
+
+# ---------------------------------------------------------------- 4. tur: konsept
+# "Geceden sabaha, kiradan ev sahipliğine — 60 adım."
+# 180 m arabadan soldan sağa okunur: sol uçta yıldızlı gece, binanın
+# arkasında gün doğumu, sağ uçta gündüz. 60 altın basamak (her biri bir ay)
+# gece tarafından binaya tırmanır; 60. basamakta anahtar.
+import random as _rnd
+
+ANAHTAR = ('<svg viewBox="0 0 120 52" xmlns="http://www.w3.org/2000/svg">'
+           '<defs><linearGradient id="ak" x1="0" y1="0" x2="0" y2="1">'
+           '<stop offset="0" stop-color="#fff1c2"/><stop offset=".5" stop-color="#e7b75e"/>'
+           '<stop offset="1" stop-color="#a8712a"/></linearGradient></defs>'
+           '<circle cx="26" cy="26" r="21" fill="none" stroke="url(#ak)" stroke-width="9"/>'
+           '<rect x="44" y="21" width="72" height="10" rx="3" fill="url(#ak)"/>'
+           '<rect x="92" y="29" width="9" height="15" rx="2" fill="url(#ak)"/>'
+           '<rect x="106" y="29" width="9" height="11" rx="2" fill="url(#ak)"/></svg>')
+
+
+def yildizlar(x0, x1, y0, y1, n, tohum=7):
+    r = _rnd.Random(tohum)
+    noktalar = []
+    for _ in range(n):
+        x = r.uniform(x0, x1)
+        k = (x - x0) / (x1 - x0)                 # sağa doğru sönükleşir
+        if r.random() < k * 1.1:
+            continue
+        rr = r.choice([2.2, 2.6, 3.2, 4.2, 5.5])
+        a = round(r.uniform(.35, .95) * (1 - k * .8), 2)
+        noktalar.append(f'<circle cx="{x:.0f}" cy="{r.uniform(y0, y1):.0f}" r="{rr}" fill="#fff" opacity="{a}"/>')
+    return (f'<svg class="a" style="left:0;top:0" width="18000" height="{ICERIK}" '
+            f'viewBox="0 0 18000 {ICERIK}">' + "".join(noktalar) + '</svg>')
+
+
+def basamaklar(x0, x1, hmin, hmax):
+    n = 60
+    adim = (x1 - x0) / n
+    s = []
+    for i in range(n):
+        k = i / (n - 1)
+        h = round(hmin + (hmax - hmin) * k ** 1.15)
+        x = x0 + i * adim
+        s.append(f'<div class="a" style="left:{x:.1f}px;top:{ICERIK - h}px;width:{adim - 14:.1f}px;'
+                 f'height:{h}px;border-radius:10px 10px 0 0;'
+                 f'background:linear-gradient(180deg,#ffe7a8 0,#e2b45c 8px,#c99343 40%,#8f6127 100%);'
+                 f'box-shadow:0 0 {round(10 + 30 * k)}px rgba(255,196,96,{.15 + .35 * k:.2f})"></div>')
+        ay = i + 1
+        if ay in (1, 12, 24, 36, 48, 60):
+            et = "60. AY · ANAHTAR SİZDE" if ay == 60 else f"{ay}. AY"
+            s.append(f'<div class="a tek" style="left:{x + (adim - 14) / 2:.0f}px;top:{ICERIK - h - 82}px;'
+                     f'transform:translateX(-50%);font-size:52px;font-weight:800;color:#ffe2a6;'
+                     f'letter-spacing:.06em">{et}</div>')
+    return "".join(s)
+
+
+def L6():
+    zemin = ("linear-gradient(90deg,#040a20 0%,#08153a 16%,#1b2a64 28%,#4b3a78 36%,"
+             "#a8507a 42%,#f07a52 47%,#ffb768 51%,#ffd99a 55%,#bfe0f6 62%,#8cc4ee 75%,#6fb2e8 100%)")
+    r = dict(zemin=zemin, serit="#071433", serit_yazi="#ffffff", serit_logo="#ffffff", serit_su="#5fb3ff")
+    tw = round(330 * mb.TILDA_ORAN)
+    ic = f"""
+  <div class="a" style="left:6200px;top:0;width:5600px;height:{ICERIK}px;
+       background:radial-gradient(ellipse 50% 90% at 50% 100%,rgba(255,214,140,.85) 0%,rgba(255,170,100,.35) 45%,rgba(255,170,100,0) 75%)"></div>
+  {yildizlar(0, 7000, 20, 520, 900)}
+  {basamaklar(560, 6980, 54, 372)}
+  <div class="a" style="left:6700px;top:96px;width:340px;height:147px;
+       filter:drop-shadow(0 0 34px rgba(255,210,120,.85))">{ANAHTAR}</div>
+  {mb.tilda(520, 70, 330, True)}
+  {mb.yazi(520 + tw + 170, 66, "EVİNİZE GİDEN 60 ADIM!", 216, 800, "#ffffff", maxw=6400 - (520 + tw + 170))}
+  {mb.yazi(520 + tw + 178, 316, "BANKA YOK · FAİZ YOK · ARA ÖDEME YOK", 66, 700, "#ffe2a6", "kas",
+           maxw=2900)}
+  {mb.yazi(11280, 54, "MİA PARK OCEAN'DA", 236, 800, "#0b2545", maxw=3600)}
+  {mb.yazi(11280, 290, "YAŞAM BAŞLIYOR!", 236, 800, "#0b2545", maxw=3600)}
+  {mb.yazi(11290, 560, "60 AY SABİT TAKSİTLE EV SAHİBİ OLMANIN TAM ZAMANI!", 74, 800, "#0b2545", maxw=4500)}
+  <div class="a" style="left:15000px;top:70px;width:1500px;height:470px;border-radius:40px;
+       background:rgba(255,255,255,.92);box-shadow:0 20px 60px rgba(11,37,69,.18);
+       display:flex;flex-direction:column;justify-content:center;padding:0 60px;color:#0b2545">
+    <div class="tek" style="font-size:52px;font-weight:800;letter-spacing:.12em;color:#b07a2c">60 AY SABİT TAKSİT</div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:26px">
+      <span class="tek" style="font-size:76px;font-weight:800">1+1</span>
+      <span class="tek" style="font-size:118px;font-weight:800;letter-spacing:-.03em">39.900₺<span style="font-size:.36em;letter-spacing:.1em"> /AY</span></span></div>
+    <div style="height:4px;background:rgba(11,37,69,.15);margin:14px 0"></div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between">
+      <span class="tek" style="font-size:76px;font-weight:800">2+1</span>
+      <span class="tek" style="font-size:118px;font-weight:800;letter-spacing:-.03em">49.900₺<span style="font-size:.36em;letter-spacing:.1em"> /AY</span></span></div>
+  </div>
+  {mb.mia(16720, 90, 500, False)}"""
+    return pano(r, ic)
+
 TASARIMLAR = [
     (lambda: L1(LAC), "lacivert-galeri"),
     (lambda: L1(GOK), "gokyuzu-galeri"),
@@ -367,6 +456,9 @@ TASARIMLAR_BLOK = [
 
 def main():
     global TASARIMLAR, OUT
+    if "--konsept" in sys.argv:
+        TASARIMLAR = [(L6, "gece-sabah-60-adim")]
+        OUT = os.path.join(ROOT, "tabela", "mega-bilbord-180m-konsept")
     if "--blok" in sys.argv:
         TASARIMLAR = TASARIMLAR_BLOK
         OUT = os.path.join(ROOT, "tabela", "mega-bilbord-180m-v3")
