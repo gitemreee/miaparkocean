@@ -274,38 +274,16 @@ def sayfa(govde):
 
 # ---------------------------------------------------------------- sunum sayfası
 def sunum(tam, no, ad, yol):
-    """Üstte tam pano (gökyüzü + taşma), altta sol ve sağ yarı büyütülmüş."""
-    gok = (166, 203, 236)
-    W = 4500
-    k = W / tam.width
-    ust = tam.resize((W, round(tam.height * k)), Image.LANCZOS)
-    pay = 70
-    yar_h = tam.height
-    f_b = ImageFont.truetype(mb.FONT, 64)
-    f_b.set_variation_by_axes([800])
-    f_k = ImageFont.truetype(mb.FONT, 34)
-    f_k.set_variation_by_axes([600])
-    bas_h = 150
-    H = bas_h + ust.height + pay + 2 * (yar_h + 50) + 60
-    s = Image.new("RGB", (W, H), (245, 247, 250))
+    """Tek görsel: tam pano (taşan bina dahil) açık gökyüzü önünde."""
+    pay_x, pay_ust, pay_alt = 120, 60, 120
+    W, H = tam.width + 2 * pay_x, tam.height + pay_ust + pay_alt
+    s = Image.new("RGB", (W, H))
     d = ImageDraw.Draw(s)
-    d.text((70, 48), f"TASARIM {no:02d}", font=f_b, fill=(11, 37, 69))
-    d.text((520, 64), ad.upper().replace("-", " · "), font=f_k, fill=(90, 105, 125))
-    d.text((W - 70, 64), "180 m × 8,5 m · 80 m + 20 m + 80 m · bina 3,55 m taşar",
-           font=f_k, fill=(90, 105, 125), anchor="ra")
-    zem = Image.new("RGB", ust.size, gok)
-    zem.paste(ust, (0, 0), ust)
-    s.paste(zem, (0, bas_h))
-    y = bas_h + ust.height + pay
-    for i, (x0, x1, et) in enumerate(((0, tam.width // 2, "SOL YARI  ·  0–90 m"),
-                                      (tam.width // 2, tam.width, "SAĞ YARI  ·  90–180 m"))):
-        parca = tam.crop((x0, 0, x1, yar_h))
-        zem = Image.new("RGB", parca.size, gok)
-        zem.paste(parca, (0, 0), parca)
-        s.paste(zem, (0, y))
-        d.text((70, y + 20), et, font=f_k, fill=(11, 37, 69))
-        y += yar_h + 50
-    s.save(yol, quality=90)
+    for y in range(H):
+        k = y / H
+        d.line([(0, y), (W, y)], fill=(round(150 + 80 * k), round(190 + 50 * k), round(228 + 20 * k)))
+    s.paste(tam, (pay_x, pay_ust), tam)
+    s.save(yol, quality=92)
 
 
 def main():
