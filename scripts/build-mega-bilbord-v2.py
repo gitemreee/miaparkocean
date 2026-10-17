@@ -412,6 +412,103 @@ def L6():
   {mb.mia(16720, 90, 500, False)}"""
     return pano(r, ic)
 
+
+
+# ---------------------------------------------------------------- 5. tur: şok kampanya
+# 60 ay = ÖDEME VADESİ (teslim süresi değil). Mesajlar: faiz yok, banka yok,
+# kredi yok; ara ödeme olmadan 60 ay sabit taksit; son daireler.
+import math as _m
+
+
+def patlama(cx, cy, d, ic, renk1="#fff36b", renk2="#ffc400", kenar="#b30000", don=-8, uc=26):
+    r1, r2 = d / 2, d / 2 * .84
+    pts = []
+    for i in range(uc * 2):
+        a = _m.pi * i / uc
+        r = r1 if i % 2 == 0 else r2
+        pts.append(f"{d / 2 + r * _m.cos(a):.1f},{d / 2 + r * _m.sin(a):.1f}")
+    return (f'<div class="a" style="left:{cx - d / 2:.0f}px;top:{cy - d / 2:.0f}px;width:{d}px;height:{d}px;'
+            f'transform:rotate({don}deg);filter:drop-shadow(0 18px 40px rgba(0,0,0,.45))">'
+            f'<svg width="{d}" height="{d}" style="position:absolute;inset:0">'
+            f'<defs><radialGradient id="pg{cx}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="{renk1}"/>'
+            f'<stop offset="1" stop-color="{renk2}"/></radialGradient></defs>'
+            f'<polygon points="{" ".join(pts)}" fill="url(#pg{cx})" stroke="{kenar}" stroke-width="10"/></svg>'
+            f'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;'
+            f'justify-content:center;text-align:center;line-height:1">{ic}</div></div>')
+
+
+IK_YUZDE = '<path d="M7 17L17 7" stroke-width="2.4"/><circle cx="7.5" cy="7.5" r="2.3"/><circle cx="16.5" cy="16.5" r="2.3"/>'
+IK_BANKA = ('<path d="M3 9.5L12 4l9 5.5M5 10v7M9.5 10v7M14.5 10v7M19 10v7M3 19.5h18" stroke-width="1.9"/>')
+IK_KART = ('<rect x="3" y="6" width="18" height="12" rx="2" stroke-width="1.9"/><path d="M3 10h18" stroke-width="2.4"/>')
+
+
+def yok_muhur(x, y, w, h, metin, ikon, zemin, yazi):
+    ik = (f'<svg viewBox="0 0 24 24" width="{h - 30}" height="{h - 30}" fill="none" stroke="{yazi}" '
+          f'stroke-linecap="round" stroke-linejoin="round">{ikon}'
+          f'<circle cx="12" cy="12" r="10.6" stroke-width="1.6"/>'
+          f'<path d="M4.5 4.5l15 15" stroke-width="2.2"/></svg>')
+    return (f'<div class="a" style="left:{x}px;top:{y}px;width:{w}px;height:{h}px;border-radius:{h // 2}px;'
+            f'background:{zemin};color:{yazi};display:flex;align-items:center;gap:26px;padding:0 44px 0 24px;'
+            f'box-shadow:0 12px 30px rgba(0,0,0,.35)">{ik}'
+            f'<span class="tek" style="font-size:{round(h * .5)}px;font-weight:800;letter-spacing:.01em">{metin}</span></div>')
+
+
+def fiyat_patlama(cx, cy, d, tip, tutar, r):
+    ic = (f'<div class="tek" style="font-size:{round(d * .13)}px;font-weight:800;color:{r["patlama_yazi"]}">{tip}</div>'
+          f'<div class="tek" style="font-size:{round(d * .085)}px;font-weight:700;letter-spacing:.14em;'
+          f'color:{r["patlama_yazi"]};margin-top:6px">AYLIK</div>'
+          f'<div class="tek" style="font-size:{round(d * .2)}px;font-weight:800;letter-spacing:-.04em;'
+          f'color:{r["patlama_yazi"]};margin-top:4px">{tutar}<span style="font-size:.5em">₺</span></div>')
+    return patlama(cx, cy, d, ic, r["patlama1"], r["patlama2"], r["patlama_kenar"])
+
+
+def L7(r):
+    v = r["vurgu"]
+    vs = r.get("vurgu_sinif", "")
+    tw = round(340 * mb.TILDA_ORAN)
+    ic = f"""
+  <div class="a" style="left:0;top:0;width:18000px;height:{ICERIK}px;
+       background:repeating-conic-gradient(from -90deg at 50% 100%,{r['isin']} 0deg 3deg,transparent 3deg 9deg);
+       -webkit-mask-image:radial-gradient(ellipse 45% 160% at 50% 100%,#000 0%,rgba(0,0,0,.5) 50%,transparent 100%)"></div>
+  <div class="a" style="left:5800px;top:0;width:6400px;height:{ICERIK}px;
+       background:radial-gradient(ellipse 50% 100% at 50% 100%,{r['parilti']} 0%,transparent 70%)"></div>
+  {mb.tilda(380, (ICERIK - 340) // 2 - 10, 340, r['tilda_beyaz'])}
+  <div class="a" style="left:{380 + tw + 140}px;top:90px;width:5px;height:540px;background:{v};opacity:.6"></div>
+  {mb.yazi(2280, 2, "60 AY", 600, 800, v, vs, ls="-.045em")}
+  {mb.yazi(4085, 92, "SABİT", 236, 800, r['yazi'], maxw=1700)}
+  {mb.yazi(4085, 330, "TAKSİT!", 236, 800, r['yazi'], maxw=1700)}
+  {mb.yazi(2290, 590, "ARA ÖDEME OLMADAN 60 AY SABİT TAKSİTLE EV SAHİBİ OLUN!", 84, 800, r['yazi'], maxw=3650)}
+  {yok_muhur(6020, 60, 1080, 160, "FAİZ YOK", IK_YUZDE, r['muhur'], r['muhur_yazi'])}
+  {yok_muhur(6020, 260, 1080, 160, "BANKA YOK", IK_BANKA, r['muhur'], r['muhur_yazi'])}
+  {yok_muhur(6020, 460, 1080, 160, "KREDİ YOK", IK_KART, r['muhur'], r['muhur_yazi'])}
+  {fiyat_patlama(11650, 345, 640, "1+1", "39.900", r)}
+  {fiyat_patlama(12480, 345, 640, "2+1", "49.900", r).replace("rotate(-8deg)", "rotate(7deg)")}
+  {mb.yazi(13020, 70, "SON DAİRELER İÇİN", 196, 800, r['yazi'], maxw=3650)}
+  {mb.yazi(13020, 290, "FIRSATI KAÇIRMAYIN!", 196, 800, v, vs, maxw=3650)}
+  {mb.yazi(13030, 540, "MİA PARK OCEAN'DA YAŞAM BAŞLIYOR!", 84, 800, r['yazi'], maxw=3600)}
+  {mb.mia(16900, (ICERIK - 500) // 2, 500, r['mia_beyaz'])}"""
+    return pano(r, ic)
+
+
+def s_(**k):
+    taban = dict(yazi="#ffffff", tilda_beyaz=True, mia_beyaz=True, vurgu="#ffd21f",
+                 isin="rgba(255,255,255,.07)", parilti="rgba(255,205,120,.45)",
+                 muhur="#e30613", muhur_yazi="#ffffff",
+                 patlama1="#fff36b", patlama2="#ffc400", patlama_kenar="#c40010", patlama_yazi="#14110a",
+                 serit="#ffffff", serit_yazi="#0b1f3a", serit_logo="#0f4c9b", serit_su="#2f7fd6")
+    taban.update(k)
+    return taban
+
+
+S_LACIVERT = s_(zemin="linear-gradient(90deg,#050e26 0%,#0b2250 50%,#050e26 100%)")
+S_KIRMIZI = s_(zemin="linear-gradient(90deg,#8f0510 0%,#d9101c 50%,#8f0510 100%)",
+               muhur="#ffffff", muhur_yazi="#d9101c", parilti="rgba(255,230,150,.45)",
+               serit="#14110a", serit_yazi="#ffffff", serit_logo="#ffffff", serit_su="#5fb3ff")
+S_SIYAH = s_(zemin="linear-gradient(90deg,#070707 0%,#1b1b1d 50%,#070707 100%)", vurgu="", vurgu_sinif="altin",
+             patlama1="#fff1c2", patlama2="#e2b45c", patlama_kenar="#8a5a1c",
+             isin="rgba(226,180,92,.08)", parilti="rgba(226,180,92,.35)",
+             serit="#e2b45c", serit_yazi="#14110a", serit_logo="#14110a", serit_su="#ffffff")
+
 TASARIMLAR = [
     (lambda: L1(LAC), "lacivert-galeri"),
     (lambda: L1(GOK), "gokyuzu-galeri"),
@@ -456,6 +553,10 @@ TASARIMLAR_BLOK = [
 
 def main():
     global TASARIMLAR, OUT
+    if "--sok" in sys.argv:
+        TASARIMLAR = [(lambda: L7(S_LACIVERT), "sok-lacivert"), (lambda: L7(S_KIRMIZI), "sok-kirmizi"),
+                      (lambda: L7(S_SIYAH), "sok-siyah-altin")]
+        OUT = os.path.join(ROOT, "tabela", "mega-bilbord-180m-sok")
     if "--konsept" in sys.argv:
         TASARIMLAR = [(L6, "gece-sabah-60-adim")]
         OUT = os.path.join(ROOT, "tabela", "mega-bilbord-180m-konsept")
