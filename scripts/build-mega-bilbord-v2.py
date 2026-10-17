@@ -253,6 +253,76 @@ def L4(p, fotolar=("avlu", "deniz", "gece")):
   {mb.mia(16650, 80, 560, p['mia_beyaz'])}""")
 
 
+
+
+# ---------------------------------------------------------------- 3. tur: blok ritmi
+# Referans: Imtiaz / Westwood Grande pano dili — tam yükseklikte, yan yana
+# fotoğraf blokları ile düz renk marka blokları; bina gökyüzü bloğunda.
+def blok_foto(x0, x1, ad, pos="50% 50%"):
+    yol = os.path.join(ROOT, FOTO[ad])
+    return (f'<div class="a" style="left:{x0}px;top:0;width:{x1 - x0}px;height:{ICERIK}px;'
+            f'background:url(file://{yol}) {pos}/cover no-repeat"></div>')
+
+
+def blok_renk(x0, x1, renk, ic=""):
+    return (f'<div class="a" style="left:{x0}px;top:0;width:{x1 - x0}px;height:{ICERIK}px;'
+            f'background:{renk};display:flex;flex-direction:column;align-items:center;'
+            f'justify-content:center;text-align:center">{ic}</div>')
+
+
+def satir(metin, fs, w=800, renk="#fff", sinif="", ls="0", mt=0, maxw=None):
+    m = f' data-maxw="{maxw}"' if maxw else ""
+    rc = "" if sinif in ("altin", "turuncu") else f"color:{renk};"
+    return (f'<div class="tek {sinif}"{m} style="font-size:{fs}px;font-weight:{w};{rc}'
+            f'letter-spacing:{ls};margin-top:{mt}px">{metin}</div>')
+
+
+def L5(r, fotolar=("ic", "deniz", "gece"), konum=("50% 50%", "45% 50%", "50% 45%")):
+    """r: ana, ikinci, yazi, vurgu, vurgu_sinif, gok, tilda_beyaz, mia_beyaz, serit..."""
+    vs = r.get("vurgu_sinif", "")
+    tw = round(380 * mb.TILDA_ORAN)
+    by = r.get("baslik_yazi", r["yazi"])
+    baslik_ic = (satir("MİA PARK OCEAN'DA", 205, 800, by, maxw=2850)
+                 + satir("YAŞAM BAŞLIYOR!", 205, 800, by, mt=4, maxw=2850)
+                 + f'<div style="width:220px;height:6px;background:{r["vurgu"]};margin:26px 0 24px"></div>'
+                 + satir("60 AY SABİT TAKSİTLE EV SAHİBİ", 76, 800, r["vurgu"], vs, maxw=2850)
+                 + satir("OLMANIN TAM ZAMANI!", 76, 800, r["vurgu"], vs, mt=8, maxw=2850))
+    fiyat_ic = (satir("60 AY SABİT TAKSİT", 58, 700, r["vurgu"], vs, ls=".08em")
+                + f'<div style="width:1450px;height:4px;background:{r["yazi"]};opacity:.25;margin:22px 0 18px"></div>'
+                + satir("1+1", 66, 700, r["yazi"], ls=".04em")
+                + satir("39.900₺ <span style='font-size:.36em;letter-spacing:.14em'>/ AY</span>", 138, 800, r["yazi"], ls="-.03em", mt=4)
+                + f'<div style="width:1450px;height:4px;background:{r["yazi"]};opacity:.25;margin:20px 0 16px"></div>'
+                + satir("2+1", 66, 700, r["yazi"], ls=".04em")
+                + satir("49.900₺ <span style='font-size:.36em;letter-spacing:.14em'>/ AY</span>", 138, 800, r["yazi"], ls="-.03em", mt=4))
+    mia_h = 520
+    return pano(r, f"""
+  {blok_renk(0, 2300, r['ana'])}
+  {mb.tilda((2300 - tw) // 2, (ICERIK - 380) // 2, 380, r['tilda_beyaz'])}
+  {blok_foto(2300, 3700, fotolar[0], konum[0])}
+  {blok_renk(3700, 6800, r['ikinci'], baslik_ic)}
+  <div class="a" style="left:6800px;top:0;width:4400px;height:{ICERIK}px;background:{r['gok']}"></div>
+  {blok_renk(11200, 13200, r['ana'], fiyat_ic)}
+  {blok_foto(13200, 14800, fotolar[1], konum[1])}
+  {blok_renk(14800, 16600, r['ikinci'])}
+  {mb.mia(15700 - round(mia_h * mb.MIA_ORAN) // 2, (ICERIK - mia_h) // 2, mia_h, r['mia_beyaz'])}
+  {blok_foto(16600, 18000, fotolar[2], konum[2])}""")
+
+
+def r_(**k):
+    taban = dict(zemin="#000", yazi="#fff", tilda_beyaz=True, mia_beyaz=True,
+                 gok="linear-gradient(180deg,#7db8e8 0%,#b9dcf5 60%,#e8f3fb 100%)",
+                 serit="#0b1f3a", serit_yazi="#ffffff", serit_logo="#ffffff", serit_su="#5fb3ff")
+    taban.update(k)
+    return taban
+
+
+R_LACIVERT = r_(ana="#0f2a4d", ikinci="#13365f", vurgu="#e6bd6e")
+R_TILDA = r_(ana="#13212c", ikinci="#a87a55", vurgu="#f3dcb8", serit="#13212c")
+R_TURKUAZ = r_(ana="#05707d", ikinci="#079aa9", vurgu="#ffffff", serit="#044e57")
+R_BORDO = r_(ana="#7a1424", ikinci="#a51d33", vurgu="#ffd9a0", serit="#4a0b15")
+R_BEYAZ = r_(ana="#ffffff", ikinci="#0f2a4d", yazi="#0f2a4d", baslik_yazi="#ffffff", vurgu="#d9a95b",
+             tilda_beyaz=False, serit="#0f2a4d")
+
 TASARIMLAR = [
     (lambda: L1(LAC), "lacivert-galeri"),
     (lambda: L1(GOK), "gokyuzu-galeri"),
@@ -286,7 +356,20 @@ def sunum(tam, no, ad, yol):
     s.save(yol, quality=92)
 
 
+TASARIMLAR_BLOK = [
+    (lambda: L5(R_LACIVERT), "blok-lacivert"),
+    (lambda: L5(R_TILDA, ("teras", "ic", "aksam")), "blok-tilda-bronz"),
+    (lambda: L5(R_TURKUAZ, ("ic", "avlu", "deniz")), "blok-turkuaz"),
+    (lambda: L5(R_BORDO, ("teras", "deniz", "gece")), "blok-bordo"),
+    (lambda: L5(R_BEYAZ, ("aksam", "deniz", "ic")), "blok-beyaz-lacivert"),
+]
+
+
 def main():
+    global TASARIMLAR, OUT
+    if "--blok" in sys.argv:
+        TASARIMLAR = TASARIMLAR_BLOK
+        OUT = os.path.join(ROOT, "tabela", "mega-bilbord-180m-v3")
     sec = None
     if "--sadece" in sys.argv:
         sec = {int(v) for v in sys.argv[sys.argv.index("--sadece") + 1].split(",")}
