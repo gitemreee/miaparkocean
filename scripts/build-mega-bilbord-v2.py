@@ -509,6 +509,274 @@ S_SIYAH = s_(zemin="linear-gradient(90deg,#070707 0%,#1b1b1d 50%,#070707 100%)",
              isin="rgba(226,180,92,.08)", parilti="rgba(226,180,92,.35)",
              serit="#e2b45c", serit_yazi="#14110a", serit_logo="#14110a", serit_su="#ffffff")
 
+
+
+# ---------------------------------------------------------------- 6. tur: süslü şok kampanya
+# Şok iskeleti korunur; eklenenler: süslü arka plan, yuvarlak daire içi
+# fotoğrafları, konum (metro hattı / dakika halkaları / dakika listesi).
+KONUM = [("D100", "1"), ("İZMİT SAHİLİ", "2"), ("41 BURADA AVM", "3"),
+         ("ŞEHİR HASTANESİ", "5"), ("TEM OTOYOLU", "5"), ("KOCAELİ ÜNİV.", "10")]
+ICLER = {
+    "1+1 SALON": "public/images/unit-1plus1-a.webp",
+    "1+1 YATAK ODASI": "public/images/unit-1plus1-c.webp",
+    "2+1 SALON": "public/images/unit-2plus1-b.webp",
+    "2+1 YATAK ODASI": "public/images/unit-2plus1-d.webp",
+    "BALKON": "public/images/balcony-dusk.webp",
+    "MUTFAK": "public/images/unit-2plus1-a.webp",
+}
+IK_PIN = ('<svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M12 2a7.5 7.5 0 0 0-7.5 7.5'
+          'c0 5.6 7.5 12.5 7.5 12.5s7.5-6.9 7.5-12.5A7.5 7.5 0 0 0 12 2z" fill="currentColor"/>'
+          '<circle cx="12" cy="9.5" r="2.9" fill="#fff"/></svg>')
+
+
+def dekor(tur, r):
+    """Arka plan süsü — pano zemininin üstüne, içeriğin altına."""
+    if tur == "altin-cizgi":
+        return (f'<div class="a" style="inset:0;width:18000px;height:{ICERIK}px;opacity:.16;'
+                f'background:repeating-linear-gradient(115deg,transparent 0 140px,{r["cizgi"]} 140px 143px)"></div>'
+                + bokeh(r, 160, 11))
+    if tur == "bokeh":
+        return bokeh(r, 420, 3)
+    if tur == "dalga":
+        w = os.path.join(ROOT, "public", "brand", "wave.png")
+        return (f'<div class="a" style="left:0;bottom:0;width:18000px;height:{ICERIK}px;opacity:{r.get("dalga_op", .22)};'
+                f'background:url(file://{w}) 0 100%/2400px auto repeat-x;'
+                f'filter:{r.get("dalga_filtre", "none")}"></div>'
+                f'<div class="a" style="left:-600px;bottom:60px;width:18600px;height:{ICERIK}px;opacity:{r.get("dalga_op", .22) * .6};'
+                f'background:url(file://{w}) 0 100%/3200px auto repeat-x;filter:{r.get("dalga_filtre", "none")}"></div>')
+    if tur == "deco":
+        return (f'<div class="a" style="inset:0;width:18000px;height:{ICERIK}px;opacity:.13;'
+                f'background:radial-gradient(circle at 50% 100%,transparent 0 96px,{r["cizgi"]} 96px 99px,transparent 99px) 0 0/200px 110px,'
+                f'radial-gradient(circle at 50% 100%,transparent 0 56px,{r["cizgi"]} 56px 58px,transparent 58px) 0 0/200px 110px"></div>')
+    if tur == "sehir":
+        rnd = _rnd.Random(5)
+        bloklar, x = [], 0
+        while x < 18000:
+            w = rnd.randint(90, 260)
+            h = rnd.randint(80, 330)
+            bloklar.append(f'<rect x="{x}" y="{ICERIK - h}" width="{w - 14}" height="{h}" rx="4"/>')
+            x += w
+        return (f'<svg class="a" style="left:0;top:0;opacity:{r.get("sehir_op", .13)}" width="18000" height="{ICERIK}" '
+                f'fill="{r["cizgi"]}">{"".join(bloklar)}</svg>' + bokeh(r, 120, 9))
+    return ""
+
+
+def bokeh(r, n, tohum):
+    rnd = _rnd.Random(tohum)
+    d = []
+    for _ in range(n):
+        x, y = rnd.uniform(0, 18000), rnd.uniform(0, ICERIK)
+        if 7300 < x < 10900:
+            continue
+        rr = rnd.choice([6, 9, 14, 22, 34, 52])
+        d.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rr}" fill="{r["bokeh"]}" opacity="{rnd.uniform(.08, .35):.2f}"/>')
+    return (f'<svg class="a" style="left:0;top:0" width="18000" height="{ICERIK}">'
+            f'<defs><filter id="bk"><feGaussianBlur stdDeviation="3"/></filter></defs>'
+            f'<g filter="url(#bk)">{"".join(d)}</g></svg>')
+
+
+def ic_halka(cx, cy, d, etiket, r):
+    yol = os.path.join(ROOT, ICLER[etiket])
+    return (f'<div class="a" style="left:{cx - d // 2}px;top:{cy - d // 2}px;width:{d}px;height:{d}px;'
+            f'border-radius:50%;background:url(file://{yol}) 50% 50%/cover;'
+            f'box-shadow:0 0 0 10px {r["halka"]},0 0 0 22px {r["halka_dis"]},0 22px 50px rgba(0,0,0,.4)"></div>'
+            f'<div class="a tek" style="left:{cx}px;top:{cy + d // 2 - 30}px;transform:translateX(-50%);'
+            f'background:{r["halka"]};color:{r["halka_yazi"]};font-size:{round(d * .085)}px;font-weight:800;'
+            f'letter-spacing:.06em;padding:.32em .9em .36em;border-radius:999px">{etiket}</div>')
+
+
+def konum_hat(x0, x1, r, y=470):
+    """Metro hattı: MİA pini → dakikalı duraklar."""
+    n = len(KONUM)
+    pin_w = 300
+    ara = (x1 - x0 - pin_w) / n
+    s = [f'<div class="a" style="left:{x0 + 120}px;top:{y - 7}px;width:{x1 - x0 - 140}px;height:14px;'
+         f'border-radius:7px;background:{r["hat"]}"></div>',
+         f'<div class="a" style="left:{x0}px;top:{y - 190}px;width:240px;height:240px;color:{r["pin"]};'
+         f'filter:drop-shadow(0 10px 20px rgba(0,0,0,.35))">{IK_PIN}</div>',
+         mb.yazi(x0 + 4, y + 70, "MİA PARK<br>OCEAN", 52, 800, r["yazi"], ek="line-height:1.05;white-space:normal"),
+         mb.yazi(x0, 30, "KONUM AVANTAJI · HER YERE DAKİKALAR İÇİNDE", 64, 800, r["vurgu_k"], "kas",
+                 maxw=x1 - x0)]
+    for i, (yer, dk) in enumerate(KONUM):
+        cx = round(x0 + pin_w + ara * (i + .5))
+        s.append(f'<div class="a" style="left:{cx - 36}px;top:{y - 36}px;width:72px;height:72px;border-radius:50%;'
+                 f'background:#fff;border:14px solid {r["hat"]}"></div>')
+        s.append(f'<div class="a tek" style="left:{cx}px;top:{y - 250}px;transform:translateX(-50%);'
+                 f'font-size:150px;font-weight:800;color:{r["yazi"]};letter-spacing:-.03em">{dk}'
+                 f'<span style="font-size:.4em;letter-spacing:.06em"> DK</span></div>')
+        s.append(f'<div class="a tek" data-maxw="{round(ara) - 30}" style="left:{cx}px;top:{y + 72}px;transform:translateX(-50%);'
+                 f'font-size:50px;font-weight:700;color:{r["yazi"]};letter-spacing:.04em">{yer}</div>')
+    return "".join(s)
+
+
+def konum_liste(x0, y0, r, sutun_w=820):
+    s = [mb.yazi(x0, y0, "İZMİT · MİA BÖLGESİ", 66, 800, r["vurgu_k"], "kas")]
+    for i, (yer, dk) in enumerate(KONUM):
+        x = x0 + (i // 3) * sutun_w
+        y = y0 + 120 + (i % 3) * 170
+        s.append(f'<div class="a" style="left:{x}px;top:{y}px;display:flex;align-items:center;gap:26px">'
+                 f'<div style="width:150px;height:150px;border-radius:50%;background:{r["hat"]};color:{r["hat_yazi"]};'
+                 f'display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:.95">'
+                 f'<span style="font-size:70px;font-weight:800">{dk}</span>'
+                 f'<span style="font-size:30px;font-weight:700;letter-spacing:.1em">DK</span></div>'
+                 f'<span class="tek" style="font-size:54px;font-weight:700;color:{r["yazi"]}">{yer}</span></div>')
+    return "".join(s)
+
+
+def konum_halka(cx, cy, r):
+    """Dakika halkaları: merkezde MİA pini, halkalar 1/5/10 dk."""
+    s = []
+    for rad, et in ((330, "10 DK"), (225, "5 DK"), (120, "1-3 DK")):
+        s.append(f'<div class="a" style="left:{cx - rad}px;top:{cy - rad}px;width:{2 * rad}px;height:{2 * rad}px;'
+                 f'border-radius:50%;border:5px dashed {r["hat"]};opacity:.85"></div>')
+        s.append(f'<div class="a tek" style="left:{cx}px;top:{cy - rad - 26}px;transform:translateX(-50%);'
+                 f'background:{r["hat"]};color:{r["hat_yazi"]};font-size:46px;font-weight:800;padding:6px 22px;'
+                 f'border-radius:999px">{et}</div>')
+    s.append(f'<div class="a" style="left:{cx - 70}px;top:{cy - 120}px;width:140px;height:140px;color:{r["pin"]};'
+             f'filter:drop-shadow(0 8px 16px rgba(0,0,0,.4))">{IK_PIN}</div>')
+    yan = [(-1, KONUM[:3]), (1, KONUM[3:])]
+    for yon, liste in yan:
+        for i, (yer, dk) in enumerate(liste):
+            y = cy - 190 + i * 150
+            x = cx + yon * 380
+            hz = "right" if yon < 0 else "left"
+            tx = "translateX(-100%)" if yon < 0 else "none"
+            s.append(f'<div class="a tek" style="left:{x}px;top:{y}px;transform:{tx};text-align:{hz};line-height:1.05">'
+                     f'<div style="font-size:84px;font-weight:800;color:{r["yazi"]}">{dk} DK</div>'
+                     f'<div style="font-size:42px;font-weight:700;color:{r["vurgu_k"]};letter-spacing:.06em">{yer}</div></div>')
+    return "".join(s)
+
+
+def son_etiket(x, y, w, r, don=-4, fs=118):
+    return (f'<div class="a" style="left:{x}px;top:{y}px;width:{w}px;transform:rotate({don}deg);'
+            f'background:{r["etiket"]};color:{r["etiket_yazi"]};border-radius:28px;padding:34px 40px 38px;'
+            f'text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.4);border:6px solid {r["etiket_kenar"]};'
+            f'display:flex;flex-direction:column;align-items:center">'
+            f'<div class="tek" style="font-size:{round(fs * .5)}px;font-weight:800;letter-spacing:.14em">SON DAİRELER İÇİN</div>'
+            f'<div class="tek" data-maxw="{w - 80}" style="display:inline-block;font-size:{fs}px;font-weight:800;line-height:1.02;margin-top:8px">FIRSATI</div>'
+            f'<div class="tek" data-maxw="{w - 80}" style="display:inline-block;font-size:{fs}px;font-weight:800;line-height:1.02">KAÇIRMAYIN!</div></div>')
+
+
+def sol_sok(r, x60=2050):
+    """Tilda + 60 AY SABİT TAKSİT! + ara ödeme satırı + YOK mühürleri."""
+    v, vs = r["vurgu"], r.get("vurgu_sinif", "")
+    return f"""
+  {mb.tilda(360, (ICERIK - 300) // 2 - 20, 300, r['tilda_beyaz'])}
+  <div class="a" style="left:1880px;top:100px;width:5px;height:480px;background:{r['vurgu_k']};opacity:.6"></div>
+  {mb.yazi(x60, 6, "60 AY", 500, 800, v, vs, ls="-.045em")}
+  {mb.yazi(x60 + 1470, 70, "SABİT", 200, 800, r['yazi'], maxw=1100)}
+  {mb.yazi(x60 + 1470, 272, "TAKSİT!", 200, 800, r['yazi'], maxw=1100)}
+  {mb.yazi(x60 + 8, 548, "ARA ÖDEME OLMADAN 60 AY SABİT TAKSİTLE EV SAHİBİ OLUN!", 70, 800, r['yazi'], maxw=2600)}
+  {yok_muhur(4830, 60, 980, 150, "FAİZ YOK", IK_YUZDE, r['muhur'], r['muhur_yazi'])}
+  {yok_muhur(4830, 245, 980, 150, "BANKA YOK", IK_BANKA, r['muhur'], r['muhur_yazi'])}
+  {yok_muhur(4830, 430, 980, 150, "KREDİ YOK", IK_KART, r['muhur'], r['muhur_yazi'])}"""
+
+
+def isik(r):
+    return (f'<div class="a" style="left:0;top:0;width:18000px;height:{ICERIK}px;'
+            f'background:repeating-conic-gradient(from -90deg at 50% 100%,{r["isin"]} 0deg 3deg,transparent 3deg 9deg);'
+            f'-webkit-mask-image:radial-gradient(ellipse 22% 150% at 50% 100%,#000 0%,rgba(0,0,0,.4) 55%,transparent 100%)"></div>'
+            f'<div class="a" style="left:6400px;top:0;width:5200px;height:{ICERIK}px;'
+            f'background:radial-gradient(ellipse 50% 100% at 50% 100%,{r["parilti"]} 0%,transparent 70%)"></div>')
+
+
+def fiyatlar(r, cx1=11480, cx2=12230, cy=360, d=610):
+    return (fiyat_patlama(cx1, cy, d, "1+1", "39.900", r)
+            + fiyat_patlama(cx2, cy, d, "2+1", "49.900", r).replace("rotate(-8deg)", "rotate(7deg)"))
+
+
+# --- 5 kompozisyon
+def D1(r):   # altın çizgi + ışık, daire içi halkaları, dakika listesi
+    return pano(r, f"""
+  {dekor('altin-cizgi', r)}{isik(r)}
+  {sol_sok(r)}
+  {son_etiket(5980, 70, 1250, r)}
+  {fiyatlar(r)}
+  {ic_halka(12950, 300, 470, "1+1 SALON", r)}
+  {ic_halka(13540, 300, 470, "2+1 SALON", r)}
+  {ic_halka(14130, 300, 470, "2+1 YATAK ODASI", r)}
+  {konum_liste(14560, 30, r, sutun_w=900)}
+  {mb.mia(16900, 150, 400, r['mia_beyaz'])}""")
+
+
+def D2(r):   # bokeh + metro hattı konum
+    return pano(r, f"""
+  {dekor('bokeh', r)}{isik(r)}
+  {sol_sok(r)}
+  {son_etiket(5980, 70, 1250, r)}
+  {fiyatlar(r)}
+  {konum_hat(12760, 16500, r)}
+  {mb.mia(16850, 130, 440, r['mia_beyaz'])}""")
+
+
+def D3(r):   # şehir silueti + dakika halkaları + daire içleri
+    return pano(r, f"""
+  {dekor('sehir', r)}{isik(r)}
+  {sol_sok(r)}
+  {son_etiket(5980, 70, 1250, r)}
+  {fiyatlar(r)}
+  {konum_halka(13950, 380, r)}
+  {ic_halka(15650, 290, 470, "1+1 SALON", r)}
+  {mb.mia(16700, 150, 400, r['mia_beyaz'])}""")
+
+
+def D4(r):   # dalga + daire içleri sırası + metro hattı (açık zemin)
+    return pano(r, f"""
+  {dekor('dalga', r)}
+  {sol_sok(r)}
+  {son_etiket(5980, 70, 1250, r)}
+  {fiyatlar(r)}
+  {ic_halka(12980, 290, 470, "1+1 SALON", r)}
+  {ic_halka(13570, 290, 470, "1+1 YATAK ODASI", r)}
+  {ic_halka(14160, 290, 470, "2+1 SALON", r)}
+  {konum_liste(14600, 30, r, sutun_w=880)}
+  {mb.mia(16900, 150, 400, r['mia_beyaz'])}""")
+
+
+def D5(r):   # art deco + halkalar + dakika halkaları
+    return pano(r, f"""
+  {dekor('deco', r)}{isik(r)}
+  {sol_sok(r)}
+  {son_etiket(5980, 70, 1250, r)}
+  {fiyatlar(r)}
+  {ic_halka(12950, 300, 470, "2+1 SALON", r)}
+  {ic_halka(13540, 300, 470, "MUTFAK", r)}
+  {konum_halka(15050, 380, r)}
+  {mb.mia(16800, 150, 400, r['mia_beyaz'])}""")
+
+
+def t_(**k):
+    taban = dict(s_(), cizgi="#e2b45c", bokeh="#ffd98a", halka="#e2b45c", halka_dis="rgba(226,180,92,.35)",
+                 halka_yazi="#1a1206", hat="#e2b45c", hat_yazi="#1a1206", pin="#e30613", vurgu_k="#ffd98a",
+                 etiket="#ffd21f", etiket_yazi="#14110a", etiket_kenar="#ffffff")
+    taban.update(k)
+    return taban
+
+
+T_LACIVERT = t_(zemin="radial-gradient(ellipse 60% 140% at 50% 100%,#123a7a 0%,#0a1f48 45%,#040b22 100%)")
+T_KIRMIZI = t_(zemin="radial-gradient(ellipse 60% 140% at 50% 100%,#ff2a33 0%,#c40d18 45%,#6e030b 100%)",
+               muhur="#ffffff", muhur_yazi="#d9101c", bokeh="#ffffff", parilti="rgba(255,230,150,.45)",
+               halka="#ffffff", halka_dis="rgba(255,255,255,.35)", halka_yazi="#c40d18",
+               hat="#ffd21f", hat_yazi="#14110a", pin="#ffd21f", vurgu_k="#ffe58a",
+               etiket="#14110a", etiket_yazi="#ffd21f", etiket_kenar="#ffd21f",
+               serit="#14110a", serit_yazi="#ffffff", serit_logo="#ffffff", serit_su="#5fb3ff")
+T_GECE = t_(zemin="linear-gradient(180deg,#05112b 0%,#0b2350 60%,#1b4a8a 100%)", cizgi="#6fa8ff",
+            sehir_op=.18, halka="#ffffff", halka_dis="rgba(255,255,255,.3)", halka_yazi="#0b2350",
+            hat="#3fd0e0", hat_yazi="#04202a", vurgu_k="#9fe6f0")
+T_BEYAZ = t_(zemin="linear-gradient(180deg,#ffffff 0%,#eef5fb 100%)", yazi="#0b2545", vurgu="#e30613",
+             vurgu_k="#0f6ea8", tilda_beyaz=False, mia_beyaz=False, dalga_op=.35,
+             dalga_filtre="hue-rotate(0deg)", isin="rgba(0,0,0,0)", parilti="rgba(0,0,0,0)",
+             halka="#0b2545", halka_dis="rgba(11,37,69,.18)", halka_yazi="#ffffff",
+             hat="#0f6ea8", hat_yazi="#ffffff", pin="#e30613",
+             patlama1="#fff36b", patlama2="#ffc400", patlama_kenar="#e30613",
+             etiket="#e30613", etiket_yazi="#ffffff", etiket_kenar="#ffffff",
+             serit="#0b2545", serit_yazi="#ffffff", serit_logo="#ffffff", serit_su="#5fb3ff")
+T_SIYAH = t_(zemin="radial-gradient(ellipse 60% 140% at 50% 100%,#2a2416 0%,#121110 50%,#050505 100%)",
+             vurgu="", vurgu_sinif="altin", patlama1="#fff1c2", patlama2="#e2b45c", patlama_kenar="#8a5a1c",
+             isin="rgba(226,180,92,.08)", parilti="rgba(226,180,92,.35)",
+             etiket="linear-gradient(135deg,#f6dc9a,#c9963f)", etiket_yazi="#14110a", etiket_kenar="#14110a",
+             serit="#e2b45c", serit_yazi="#14110a", serit_logo="#14110a", serit_su="#ffffff")
+
 TASARIMLAR = [
     (lambda: L1(LAC), "lacivert-galeri"),
     (lambda: L1(GOK), "gokyuzu-galeri"),
@@ -553,6 +821,13 @@ TASARIMLAR_BLOK = [
 
 def main():
     global TASARIMLAR, OUT
+    if "--suslu" in sys.argv:
+        TASARIMLAR = [(lambda: D1(T_LACIVERT), "lacivert-altin-cizgi-halkalar"),
+                      (lambda: D2(T_KIRMIZI), "kirmizi-bokeh-metro-konum"),
+                      (lambda: D3(T_GECE), "gece-sehir-dakika-halkalari"),
+                      (lambda: D4(T_BEYAZ), "beyaz-dalga-halkalar"),
+                      (lambda: D5(T_SIYAH), "siyah-altin-deco")]
+        OUT = os.path.join(ROOT, "tabela", "mega-bilbord-180m-suslu")
     if "--sok" in sys.argv:
         TASARIMLAR = [(lambda: L7(S_LACIVERT), "sok-lacivert"), (lambda: L7(S_KIRMIZI), "sok-kirmizi"),
                       (lambda: L7(S_SIYAH), "sok-siyah-altin")]
