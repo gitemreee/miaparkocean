@@ -74,15 +74,15 @@ def panel_foto(x, w, ad, pos="50% 50%"):
 
 def M():
     r = dict(v4.SERIT_ACIK, serit=YESIL, serit_su="#5fd3e0")
-    zemin = "linear-gradient(90deg,#ffffff 0%,#ffffff 30%,#dff3f5 52%,#8fd3da 74%,#2fa9b6 90%,#0e8a98 100%)"
+    zemin = "linear-gradient(90deg,#ffffff 0%,#ffffff 30%,#e6f6f8 52%,#bfe8ec 74%,#93d6de 90%,#7fcfd8 100%)"
     tas, ic = bina_olcekli(8450, 0.78)
     rozet = lambda yy, t, bg, ek="": pill(11650, yy, t, bg, "#fff", 44, 108, "transform:translateX(-50%);letter-spacing:.06em" + ek)
     icerik = f"""
   {mb.tilda(250, 150, 290, False)}
   {telefon(960, 490, YESIL, 72, "center")}
-  {y(1750, 150, "KİRAYA DEĞİL,", 125, 800, ACIK, maxw=1900)}
-  {y(1750, 290, "KENDİ EVİNİZE", 125, 800, YESIL, maxw=1900)}
-  {y(1750, 430, "ÖDEYİN.", 125, 800, YESIL, maxw=1900)}
+  {y(2650, 150, "KİRAYA DEĞİL,", 125, 800, ACIK, ek="transform:translateX(-50%)")}
+  {y(2650, 290, "KENDİ EVİNİZE", 125, 800, YESIL, ek="transform:translateX(-50%)")}
+  {y(2650, 430, "ÖDEYİN.", 125, 800, YESIL, ek="transform:translateX(-50%)")}
   {yumusak(3600, 0, 1150, 718, "avlu2", "38% 60%", (.16, .16), (0, .1))}
   {pill(5950, 60, "60 AY SABİT TAKSİT", ACIK, "#fff", 56, 110, "letter-spacing:.08em;transform:translateX(-50%)")}
   {kutu(4700, 200, 2500, 240, v6.fiyat_satiri(YESIL, 136, ACIK, "rgba(18,61,42,.25)"), "display:flex;justify-content:center")}
@@ -94,13 +94,16 @@ def M():
   {rozet(364, "ARA ÖDEME YOK", "#111")}
   {rozet(496, "60 AY SABİT TAKSİT", KIR)}
   {yumusak(12300, 0, 1850, 718, "avlu3", "50% 50%", (.14, .14), (0, .1))}
-  {mb.mia(14250, 159, 400, True)}
+  {mb.mia(14250, 159, 400, False)}
   {v11.daire_foto(15330, 200, 380, "salon")}
   {v11.daire_foto(15740, 380, 380, "yatak")}
   {v11.daire_foto(15360, 525, 380, "mutfak")}
-  {mb.tilda(16480, 160, 280, True)}
-  {telefon(17165, 490, "#ffffff", 72, "center")}"""
-    return serit_buyut(pano(r, zemin, "", icerik, tas, ic))
+  {mb.tilda(16480, 160, 280, False)}
+  {telefon(17165, 490, YESIL, 72, "center")}"""
+    html = serit_buyut(pano(r, zemin, "", icerik, tas, ic))
+    eski = f'<div class="ayr"></div><div class="oge">{v2.IK_WEB}miapark.com</div>'
+    assert eski in html
+    return html.replace(eski, "")
 
 
 TASARIMLAR = [(M, "maket-kurgusu")]
