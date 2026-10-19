@@ -87,7 +87,7 @@ def beyaz(x0, x1, dL, dR, bg=None):
 
 
 YAN_FOTO = {   # çerçeve fotoğrafı, gök maskeli kesik, taşmada gösterilecek sütunlar (bina blokları)
-    "avlu2": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.26, 0.445), (0.455, 0.70)]),
+    "avlu2": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.26, 0.445), (0.455, 0.70)], 1450),
     "balkon_avlu": ("signage-source/balkondan-avlu.jpg", "signage-source/balkondan-avlu-kesik.png", [(0.0, 1.0)]),
     "avlu_aksam": ("signage-source/avlu-aksam.jpg", "signage-source/avlu-aksam-kesik.png", [(0.12, 0.33), (0.34, 0.42)]),
     "cocuk_parki": ("signage-source/cocuk-parki.jpg", "signage-source/cocuk-parki-kesik.png", [(0.50, 1.0)]),
@@ -198,7 +198,7 @@ def tasarim(ad):
             f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
     tint = None
     f1t, f1 = foto_panel(b2, b3, d[1], d[2], "gunbatimi")
-    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu3")
+    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu2")
     paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + f1
                 + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + f2
                 + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
