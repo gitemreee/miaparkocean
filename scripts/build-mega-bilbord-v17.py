@@ -251,10 +251,54 @@ TASARIMLAR = [(lambda: tasarim("lacivert"), "lacivert-altin"),
               (lambda: tasarim("yesil"), "yesil-altin"), (lambda: tasarim("siyah"), "siyah-altin"), (lambda: tasarim("bordo"), "bordo-altin")]
 
 
+def baski(sec):
+    """1:1 ölçek, 400 px/m: A-80m / B-20m / C-80m JPEG + taşma kesim şablonu (PNG, şeffaf)."""
+    dsf, dilim, olc = 4, 2000, 4
+    gecici = tempfile.mkdtemp(prefix="mega17b-")
+    isler = []
+    for i, (fn, ad) in enumerate(TASARIMLAR, 1):
+        if sec and i not in sec:
+            continue
+        hp = os.path.join(gecici, f"{i}.html")
+        open(hp, "w", encoding="utf-8").write(v7.sayfa(fn()))
+        isler.append(dict(html=hp, w=TW, h=mb.TH, dsf=dsf, dilim=dilim, cikti=os.path.join(gecici, f"{i}"), no=i, ad=ad))
+    jp = os.path.join(gecici, "isler.json")
+    json.dump(isler, open(jp, "w"))
+    npm = subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip()
+    subprocess.run(["node", os.path.join(ROOT, "scripts", "mega-bilbord", "render.cjs"), jp], check=True, env={**os.environ, "NODE_PATH": npm})
+    ey, dw = mb.EXT * olc, dilim * olc
+    for is_ in isler:
+        hedef = os.path.join(OUT, "baski", f"{is_['no']:02d}-{is_['ad']}")
+        os.makedirs(hedef, exist_ok=True)
+        dl = [Image.open(d) for d in json.load(open(is_["cikti"] + ".json"))]
+        for ad, x0, x1 in mb.PARCA:
+            parca = Image.new("RGB", ((x1 - x0) * olc, mb.PH * olc))
+            for k in range(x0 // dilim, x1 // dilim):
+                parca.paste(dl[k].convert("RGB").crop((0, ey, dw, dl[k].height)), ((k - x0 // dilim) * dw, 0))
+            yol = os.path.join(hedef, f"{ad}.jpg")
+            parca.save(yol, quality=95, dpi=(10.16, 10.16), subsampling=0)
+            print("  →", os.path.relpath(yol, ROOT), parca.size, f"{os.path.getsize(yol) / 1048576:.1f} MB")
+        tas = Image.new("RGBA", (TW * olc, ey), (0, 0, 0, 0))
+        for k, d in enumerate(dl):
+            tas.paste(d.crop((0, 0, dw, ey)), (k * dw, 0))
+        kutu_ = tas.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
+        tas = tas.crop(kutu_)
+        yol = os.path.join(hedef, "tasma-kesim.png")
+        tas.save(yol, dpi=(10.16, 10.16))
+        bas_m, yuk_m = kutu_[0] / olc / 100, (ey - kutu_[1]) / olc / 100
+        open(os.path.join(hedef, "tasma-olcu.txt"), "w").write(
+            f"Taşma kesimi panonun {bas_m:.2f}. metresinden başlar, {tas.width / olc / 100:.2f} m genişliğindedir;\n"
+            f"en yüksek noktası pano üst kenarından {yuk_m:.2f} m yukarıdadır. Alt kenarı pano üst kenarına oturur.\n"
+            f"Ölçek: 400 px = 1 m (4 px = 1 cm). Parçalar: A 0–80 m, B 80–100 m, C 100–180 m; yükseklik 8,5 m.\n")
+        print("  →", os.path.relpath(yol, ROOT), tas.size, f"{bas_m:.2f}. m'den, {yuk_m:.2f} m yüksek")
+
+
 def main():
     sec = None
     if "--sadece" in sys.argv:
         sec = {int(v) for v in sys.argv[sys.argv.index("--sadece") + 1].split(",")}
+    if "--baski" in sys.argv:
+        return baski(sec)
     gecici = tempfile.mkdtemp(prefix="mega17-")
     isler = []
     for i, (fn, ad) in enumerate(TASARIMLAR, 1):
