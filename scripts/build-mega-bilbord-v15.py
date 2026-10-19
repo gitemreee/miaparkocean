@@ -54,10 +54,11 @@ def Y():
     tas, ic = v4.bina(10050)
     icerik = f"""
   {mb.tilda(300, 209, 300, False)}
-  {y(1900, 55, "ÇOCUKLARINIZ İÇİN", 165, 800, acik, maxw=2900)}
-  {y(1900, 235, "GÜVENLİ BİR GELECEK.", 185, 800, yesil, maxw=2900)}
-  {y(1905, 505, "KİRAYA DEĞİL,", 100, 800, acik, maxw=2900)}
-  {y(1905, 615, "KENDİ EVİNİZE ÖDEYİN.", 80, 800, yesil, maxw=2900)}
+  {y(1900, 40, "KİRAYA DEĞİL,", 120, 800, acik, maxw=2600)}
+  {y(1900, 170, "KENDİ EVİNİZE ÖDEYİN.", 105, 800, yesil, maxw=2600)}
+  {pill(1900, 305, "60 AY SABİT TAKSİT", acik, "#fff", 42, 88, "letter-spacing:.08em")}
+  {kutu(1850, 405, 2650, 200, v6.fiyat_satiri(yesil, 108, acik, "rgba(18,61,42,.25)"))}
+  {"".join(f'<div class="a" style="left:{1900 + i * 660}px;top:625px;display:flex;align-items:center;gap:16px"><div style="width:60px;height:60px;border-radius:50%;background:{acik};display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 7"/></svg></div><div class="tek" style="font-size:36px;font-weight:800;color:{yesil}">{t}</div></div>' for i, t in enumerate(("FAİZ YOK", "BANKA YOK", "KREDİ YOK", "ARA ÖDEME YOK")))}
   {yumusak(4600, 0, 2500, 718, "park", "50% 55%", (.2, .25), (0, .12))}
   {pill(7750, 95, "VADE FARKI YOK", "#111", "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em")}
   {pill(7740, 230, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
@@ -68,9 +69,9 @@ def Y():
   {pill(13300, 60, "60 AY SABİT TAKSİT", acik, "#fff", 58, 116, "letter-spacing:.08em")}
   {kutu(13250, 215, 2700, 300, v6.fiyat_satiri(yesil, 140, acik, "rgba(18,61,42,.25)"))}
   {onay_liste(13300, 540, yesil, acik, "#fff", 42, 90, 1250)}
-  {v11.daire_foto(15800, 195, 330, "salon")}
-  {v11.daire_foto(16140, 365, 330, "yatak")}
-  {v11.daire_foto(15840, 545, 330, "mutfak")}
+  {v11.daire_foto(15770, 200, 380, "salon")}
+  {v11.daire_foto(16180, 380, 380, "yatak")}
+  {v11.daire_foto(15800, 525, 380, "mutfak")}
   {mb.mia(16560, 219, 280, False)}
   {mb.tilda(16980, 259, 200, False)}
   {damga(17800, 605, 180, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=acik, yazi="#fff")}"""
