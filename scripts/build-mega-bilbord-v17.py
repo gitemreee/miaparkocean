@@ -50,29 +50,37 @@ RENKLER = {
 }
 
 
-def kesik(x0, x1):
-    """x0–x1 arası paralelkenar (üst kenar sağa kaymış)."""
-    return f"polygon({x0 + SK}px 0,{x1 + SK}px 0,{x1 - SK}px 100%,{x0 - SK}px 100%)"
+D = (-1, 1, -1, 1, -1, 1)   # sınır eğimi: +1 → "/" (üst sağda), -1 → "\\" (üst solda) — beyazlar Λ, fotolar V
 
 
-def beyaz(x0, x1, bg="#ffffff"):
-    return f'<div class="a" style="left:0;top:0;width:18000px;height:850px;background:{bg};clip-path:{kesik(x0, x1)}"></div>'
+def kesik(x0, x1, dL, dR):
+    """x0–x1 arası yamuk: sol kenar dL, sağ kenar dR eğimli."""
+    return (f"polygon({x0 + dL * SK}px 0,{x1 + dR * SK}px 0,{x1 - dR * SK}px 100%,{x0 - dL * SK}px 100%)")
 
 
-def foto_panel(x0, x1, ad, pos="50% 50%"):
-    """Eğik kenarları zemine eriyen fotoğraf bandı (kenar eğimiyle aynı açıda gradyan maske)."""
-    pay = 260
+def beyaz(x0, x1, dL, dR, bg="#ffffff"):
+    return f'<div class="a" style="left:0;top:0;width:18000px;height:850px;background:{bg};clip-path:{kesik(x0, x1, dL, dR)}"></div>'
+
+
+def foto_panel(x0, x1, dL, dR, ad, pos="50% 50%"):
+    """V biçimli fotoğraf paneli; iki kenarı kendi eğim açısında zemine erir."""
+    pay = 240
     w = x1 - x0 + 2 * SK + 2 * pay
-    m = "linear-gradient(104.5deg,transparent 4%,#000 22%,#000 78%,transparent 96%)"
-    return (f'<div class="a" style="left:{x0 - SK - pay}px;top:0;width:{w}px;height:850px;'
-            f'-webkit-mask-image:{m};mask-image:{m};background:url({F[ad]}) {pos}/cover no-repeat"></div>')
+    acl = 90 - 14.5 * dL          # sol kenara paralel geçiş
+    acr = 90 - 14.5 * dR          # sağ kenara paralel geçiş
+    m1 = f"linear-gradient({acl}deg,transparent 4%,#000 20%,#000 100%)"
+    m2 = f"linear-gradient({acr}deg,#000 0,#000 80%,transparent 96%)"
+    return (f'<div class="a" style="left:{x0 - SK - pay}px;top:0;width:{w}px;height:850px;-webkit-mask-image:{m1};mask-image:{m1}">'
+            f'<div style="position:absolute;inset:0;-webkit-mask-image:{m2};mask-image:{m2};'
+            f'background:url({F[ad]}) {pos}/cover no-repeat"></div></div>')
 
 
-def cizgi(b, altin):
+def cizgi(b, d, altin):
     w = 16
+    ust, alt = (2 * SK, 0) if d > 0 else (0, 2 * SK)
     return (f'<div class="a" style="left:{b - SK - w // 2}px;top:0;width:{2 * SK + w}px;height:850px;'
             f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
-            f'clip-path:polygon({2 * SK}px 0,{2 * SK + w}px 0,{w}px 100%,0 100%)"></div>')
+            f'clip-path:polygon({ust}px 0,{ust + w}px 0,{alt + w}px 100%,{alt}px 100%)"></div>')
 
 
 def telefon(cx, top, renk, fs=64):
@@ -105,11 +113,11 @@ def tasarim(ad):
     p = RENKLER[ad]
     b1, b2, b3, b4, b5, b6 = B
     tas, ic = v4.bina((b3 + b4) / 2)
-    gok = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b3, b4)};'
+    gok = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b3, b4, D[2], D[3])};'
            f'background:linear-gradient(180deg,#cfe3f3 0%,#eef6fb 60%,#f6f9fc 100%)"></div>')
-    paneller = (beyaz(-SK - 10, b1) + foto_panel(b1, b2, "avlu2") + beyaz(b2, b3) + gok + beyaz(b4, b5)
-                + foto_panel(b5, b6, "avlu3") + beyaz(b6, 18000 + SK + 10))
-    cizgiler = "".join(cizgi(b, p["altin"]) for b in B)
+    paneller = (beyaz(-SK - 10, b1, 0, D[0]) + foto_panel(b1, b2, D[0], D[1], "avlu2") + beyaz(b2, b3, D[1], D[2]) + gok
+                + beyaz(b4, b5, D[3], D[4]) + foto_panel(b5, b6, D[4], D[5], "avlu3") + beyaz(b6, 18000 + SK + 10, D[5], 0))
+    cizgiler = "".join(cizgi(b, d, p["altin"]) for b, d in zip(B, D))
     icerik = f"""
   {mb.tilda(1215 - 585, 120, 255, False)}
   {telefon(1215, 440, p['metin'], 92)}
