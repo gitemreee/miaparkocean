@@ -9,7 +9,10 @@
 Ödeme: 60 ay sabit taksit (vade) · 1+1 aylık 39.900 ₺ · 2+1 aylık 49.900 ₺ ·
 faiz/banka/kredi/ara ödeme yok · son daireler.
 
-    python3.13 scripts/build-mega-bilbord-v7.py [--sadece 1,3]
+    python3.13 scripts/build-mega-bilbord-v7.py [--sadece 1,3] [--pdf]
+
+--pdf: önizleme yerine düzenlenebilir PDF üretir (Canva/Illustrator'a aktarmak için;
+metinler gerçek metin, şekiller vektör). Baskı dosyası değildir.
 """
 
 import importlib.util as _il
@@ -155,6 +158,17 @@ def main():
         open(hp, "w", encoding="utf-8").write(sayfa(fn()))
         isler.append(dict(html=hp, w=mb.TW, h=mb.TH, dsf=0.5, dilim=mb.TW,
                           cikti=os.path.join(gecici, f"{i}"), no=i, ad=ad))
+    if "--pdf" in sys.argv:
+        hedef = os.path.join(OUT, "duzenlenebilir-pdf")
+        os.makedirs(hedef, exist_ok=True)
+        for is_ in isler:
+            is_["pdf"] = os.path.join(hedef, f"{is_['no']:02d}-{is_['ad']}.pdf")
+        jp = os.path.join(gecici, "pdf.json")
+        json.dump(isler, open(jp, "w"))
+        npm = subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip()
+        subprocess.run(["node", os.path.join(ROOT, "scripts", "mega-bilbord", "pdf.cjs"), jp],
+                       check=True, env={**os.environ, "NODE_PATH": npm})
+        return
     jp = os.path.join(gecici, "isler.json")
     json.dump(isler, open(jp, "w"))
     npm = subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip()
