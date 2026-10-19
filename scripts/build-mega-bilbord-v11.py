@@ -156,8 +156,8 @@ def sok(cx, cy, d, ust, alt, bg="#e3262e", renk="#fff", don=-12):
     return (f'<div class="a" style="left:{cx - d // 2}px;top:{cy - d // 2}px;width:{d}px;height:{d}px;transform:rotate({don}deg);'
             f'filter:drop-shadow(0 16px 30px rgba(0,0,0,.3))"><svg width="{d}" height="{d}"><polygon points="{" ".join(pts)}" fill="{bg}"/></svg>'
             f'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:{renk};text-align:center;line-height:1">'
-            f'<div class="tek" style="font-size:{round(d * .30)}px;font-weight:800;letter-spacing:-.02em">{ust}</div>'
-            f'<div class="tek" style="font-size:{round(d * .13)}px;font-weight:700;letter-spacing:.08em;margin-top:.1em">{alt}</div></div></div>')
+            f'<div class="tek" style="font-size:{round(d * (.21 if len(ust) <= 5 else .115))}px;font-weight:800;letter-spacing:-.01em">{ust}</div>'
+            f'<div class="tek" style="font-size:{round(d * .15)}px;font-weight:800;letter-spacing:.06em;margin-top:.12em">{alt}</div></div></div>')
 
 
 def daire_foto(cx, cy, d, ad, kenar="#fff"):
@@ -170,21 +170,19 @@ def A3():
     r = dict(v4.SERIT_ACIK, serit=koyu, serit_su="#5fd3e0")
     zemin = "linear-gradient(90deg,#0b7f8d 0%,#15a0ae 20%,#6cc6d1 38%,#d9eff2 50%,#ffffff 60%,#ffffff 100%)"
     tas, ic = v4.bina(11200)
-    kart = ('<div class="a" style="left:4350px;top:60px;width:3750px;height:640px;border-radius:56px;background:#fff;'
+    kart = ('<div class="a" style="left:4350px;top:60px;width:4050px;height:640px;border-radius:56px;background:#fff;'
             'box-shadow:0 30px 70px rgba(6,52,63,.28)"></div>')
-    yoklar = kutu(4620, 590, 3300, 90, "".join(
-        pill(0, 0, t, kir, "#fff", 44, 86, "position:relative;margin-right:26px;display:inline-flex;padding:0 34px") for t in YOK4),
-        "display:flex;align-items:center")
+    yoklar = "".join(sok(cx, cy, 310, t.rsplit(" ", 1)[0], "YOK", don=d)
+                     for (cx, cy, d), t in zip(((7700, 215, -10), (8090, 215, 7), (7700, 540, 5), (8090, 540, -8)), YOK4))
     icerik = f"""
   {mb.tilda(300, 100, 300, True)}
   {y(1950, 55, "KİRAYA DEĞİL,", 190, 800, "#fff", maxw=2250)}
   {y(1950, 262, "KENDİ EVİNİZE", 190, 800, "#fff", maxw=2250)}
   {y(1950, 470, "ÖDEYİN.", 190, 800, "#dff8fb", maxw=2250)}
   {kart}
-  {pill(4650, 120, "60 AY SABİT TAKSİT", koyu, "#fff", 60, 120, "letter-spacing:.08em")}
-  {kutu(4600, 265, 4000, 300, v6.fiyat_satiri(kir, 170, koyu, "rgba(6,52,63,.25)"))}
+  {pill(4650, 130, "60 AY SABİT TAKSİT", koyu, "#fff", 64, 130, "letter-spacing:.08em")}
+  {kutu(4600, 300, 3000, 300, v6.fiyat_satiri(kir, 170, koyu, "rgba(6,52,63,.25)"))}
   {yoklar}
-  {sok(7900, 250, 420, "ŞOK", "FİYAT!")}
   {detay(13200, 60, 1550, 390, "signage-source/avlu-havuz-teras.jpg", "50% 62%", 40)}
   {daire_foto(13330, 600, 230, "salon")}
   {daire_foto(13975, 600, 230, "mutfak")}
