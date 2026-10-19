@@ -39,7 +39,7 @@ y, kutu, satir = v4.y, v4.kutu, v4.satir
 F = v14.F
 
 SK = 110                                   # panel kenarı eğimi (px, üstte sağa / altta sola)
-B = (2430, 3960, 7110, 11050, 14200, 15730)  # panel sınırları
+B = (1500, 3400, 4600, 7100, 10900, 13400, 14600, 16500)  # panel sınırları (9 panel)
 FIYAT = (("1+0", "699.000", "29.900"), ("1+1", "999.000", "39.900"))
 
 RENKLER = {
@@ -50,7 +50,7 @@ RENKLER = {
 }
 
 
-D = (-1, 1, -1, 1, -1, 1)   # sınır eğimi: +1 → "/" (üst sağda), -1 → "\\" (üst solda) — beyazlar Λ, fotolar V
+D = (-1, 1, -1, 1, -1, 1, -1, 1)   # sınır eğimi: +1 → "/" (üst sağda), -1 → "\\" (üst solda) — beyazlar Λ, fotolar V
 
 
 def kesik(x0, x1, dL, dR):
@@ -86,65 +86,68 @@ def telefon(cx, top, renk, fs=64):
 
 def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
     cx = (x0 + x1) / 2
+    ic_w = x1 - x0 - 2 * SK
     return f"""
-  <div class="a" style="left:{x0 + SK}px;top:85px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:90px">
-    <div style="width:560px;height:300px;border-radius:34px;border:8px solid {p['altin']};flex:none;
+  <div class="a" style="left:{x0 + SK}px;top:95px;width:{ic_w}px;display:flex;align-items:center;justify-content:center;gap:70px">
+    <div style="width:470px;height:260px;border-radius:30px;border:8px solid {p['altin']};flex:none;
          background:linear-gradient(180deg,{p['koyu2']},{p['koyu']});display:flex;align-items:center;justify-content:center;
-         box-shadow:0 18px 40px rgba(0,0,0,.25)"><div class="tek" style="font-size:190px;font-weight:800;color:#fff;letter-spacing:-.03em">{tip}</div></div>
-    <div><div class="tek kas" style="font-size:52px;font-weight:800;color:{p['metin']}">PEŞİNAT</div>
-      <div class="tek" style="font-size:190px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:22px">TL</span></div></div>
+         box-shadow:0 18px 40px rgba(0,0,0,.25)"><div class="tek" style="font-size:160px;font-weight:800;color:#fff;letter-spacing:-.03em">{tip}</div></div>
+    <div><div class="tek kas" style="font-size:46px;font-weight:800;color:{p['metin']}">PEŞİNAT</div>
+      <div class="tek" style="font-size:160px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:20px">TL</span></div></div>
   </div>
-  <div class="a" style="left:{x0 + SK}px;top:445px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:40px">
-    <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">AYDA SADECE
-      <span style="font-size:110px;letter-spacing:-.03em;margin-left:14px">{aylik}</span><span style="font-size:58px;font-weight:700;margin-left:16px">TL</span></div>
-    <div style="width:4px;height:120px;background:{p['altin']}"></div>
-    <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">60 AY VADE FARKSIZ</div>
+  <div class="a" style="left:{x0 + SK}px;top:415px;width:{ic_w}px;display:flex;align-items:center;justify-content:center;gap:34px">
+    <div class="tek" style="font-size:46px;font-weight:800;color:{p['metin']};letter-spacing:.03em">AYDA SADECE
+      <span style="font-size:96px;letter-spacing:-.03em;margin-left:12px">{aylik}</span><span style="font-size:50px;font-weight:700;margin-left:14px">TL</span></div>
+    <div style="width:4px;height:100px;background:{p['altin']}"></div>
+    <div class="tek" style="font-size:46px;font-weight:800;color:{p['metin']};letter-spacing:.03em">60 AY VADE FARKSIZ</div>
   </div>
-  <div class="a" style="left:{x0 + SK}px;top:600px;width:{x1 - x0 - 2 * SK}px;display:flex;justify-content:center;gap:26px">
-    {"".join(f'<div class="tek" style="height:86px;padding:0 36px;border-radius:43px;background:{bg};color:#fff;font-size:40px;font-weight:800;letter-spacing:.05em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e")))}
+  <div class="a" style="left:{x0 + SK}px;top:575px;width:{ic_w}px;display:flex;justify-content:center;gap:18px">
+    {"".join(f'<div class="tek" style="height:80px;padding:0 30px;border-radius:40px;background:{bg};color:#fff;font-size:36px;font-weight:800;letter-spacing:.04em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e")))}
   </div>
-  {telefon(cx, 715, p['metin'], 80)}"""
+  {telefon(cx, 690, p['metin'], 76)}"""
 
 
-def uc_panel(cx, p, ocean=False):
-    """Uç panel: Tilda · MİA PARK OCEAN (+ Ocean) · slogan · telefon · siteler."""
-    s_ = mb.tilda(cx - 460, 55, 200, False)
+def bilgi_paneli(cx, p, ocean=False):
+    """Bilgi paneli: MİA PARK OCEAN logosu · slogan · telefon · siteler (+ Ocean)."""
+    s_ = mb.mia(cx - 145, 60, 200, False)
+    s_ += y(cx, 300, "MİA PARK OCEAN'DA", 58, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
+    s_ += y(cx, 366, "YAŞAM BAŞLIYOR.", 70, 800, p["metin"], ek="transform:translateX(-50%);letter-spacing:.02em")
+    s_ += telefon(cx, 470, p["metin"], 80)
+    s_ += y(cx, 575, "tildainsaat.com &nbsp;·&nbsp; miaparkocean.com", 40, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.03em")
     if ocean:
-        s_ += mb.mia(cx - 420, 285, 170, False)
-        s_ += (f'<div class="a" style="left:{cx + 30}px;top:300px;display:flex;flex-direction:column;align-items:center;gap:10px">'
-               f'<div class="tek kas" style="font-size:28px;color:{p["metin"]}">TEK YETKİLİ SATIŞ</div>{mb.ocean(72, "#0f4c9b", "#2f7fd6")}</div>')
-    else:
-        s_ += mb.mia(cx - 123, 285, 170, False)
-    s_ += y(cx, 478, "MİA PARK OCEAN'DA", 56, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
-    s_ += y(cx, 542, "YAŞAM BAŞLIYOR.", 64, 800, p["metin"], ek="transform:translateX(-50%);letter-spacing:.02em")
-    s_ += telefon(cx, 628, p["metin"], 72)
-    s_ += y(cx, 722, "tildainsaat.com &nbsp;·&nbsp; miaparkocean.com", 40, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.03em")
+        s_ += (f'<div class="a" style="left:{cx}px;top:645px;transform:translateX(-50%);display:flex;align-items:center;gap:30px">'
+               f'<div class="tek kas" style="font-size:28px;color:{p["metin"]}">TEK YETKİLİ SATIŞ</div>{mb.ocean(74, "#0f4c9b", "#2f7fd6")}</div>')
     return s_
 
 
 def tasarim(ad):
     p = RENKLER[ad]
-    b1, b2, b3, b4, b5, b6 = B
-    tas, ic = v16.bina_olcekli((b3 + b4) / 2, 1.12)
-    HW, HH = round(v4.HW * 1.12), round(v4.HH * 1.12)
-    hx = round((b3 + b4) / 2 - HW / 2)
+    b1, b2, b3, b4, b5, b6, b7, b8 = B
+    d = D
+    cx_h = (b4 + b5) / 2
+    olcek = (b5 - b4 + 2 * SK) / v4.HW
+    tas, _ = v16.bina_olcekli(cx_h, olcek)
+    HW, HH = round(v4.HW * olcek), round(v4.HH * olcek)
+    hx = round(cx_h - HW / 2)
     orijinal = os.path.join(ROOT, "signage-source", "entrance-gate-genis.png")
-    gok = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b3, b4, D[2], D[3])}">'
-           f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
-    ic = ""
-    paneller = (beyaz(-SK - 10, b1, 0, D[0]) + foto_panel(b1, b2, D[0], D[1], "avlu2") + beyaz(b2, b3, D[1], D[2]) + gok
-                + beyaz(b4, b5, D[3], D[4]) + foto_panel(b5, b6, D[4], D[5], "avlu3") + beyaz(b6, 18000 + SK + 10, D[5], 0))
-    cizgiler = "".join(cizgi(b, d, p["altin"]) for b, d in zip(B, D))
+    hero = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b4, b5, d[3], d[4])}">'
+            f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
+    tint = "linear-gradient(180deg,#f4f7fb,#e9eef6)"
+    paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + foto_panel(b2, b3, d[1], d[2], "avlu2")
+                + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + foto_panel(b6, b7, d[5], d[6], "avlu3")
+                + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
+    cizgiler = "".join(cizgi(b_, d_, p["altin"]) for b_, d_ in zip(B, D))
     icerik = f"""
-  {uc_panel(1215, p)}
-  {fiyat_paneli(b2, b3, *FIYAT[0], p)}
-  {fiyat_paneli(b4, b5, *FIYAT[1], p)}
-  {uc_panel(16865, p, ocean=True)}"""
+  {mb.tilda(b1 / 2 - 460, 325, 200, False)}
+  {bilgi_paneli((b1 + b2) / 2, p)}
+  {fiyat_paneli(b3, b4, *FIYAT[0], p)}
+  {fiyat_paneli(b5, b6, *FIYAT[1], p)}
+  {bilgi_paneli((b7 + b8) / 2, p, ocean=True)}
+  {mb.tilda((b8 + 18000) / 2 - 460, 325, 200, False)}"""
     return f"""
 <div class="tasma">{tas}</div>
 <div class="pano" style="background:#f1f1f1">
   {paneller}
-  {ic}
   {cizgiler}
   {icerik}
 </div>"""
