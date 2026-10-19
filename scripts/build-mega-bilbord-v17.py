@@ -92,6 +92,8 @@ YAN_FOTO = {   # çerçeve fotoğrafı, gök maskeli kesik, taşmada gösterilec
     "avlu_aksam": ("signage-source/avlu-aksam.jpg", "signage-source/avlu-aksam-kesik.png", [(0.12, 0.33), (0.34, 0.42)]),
     "cocuk_parki": ("signage-source/cocuk-parki.jpg", "signage-source/cocuk-parki-kesik.png", [(0.50, 1.0)]),
     "avlu3": ("signage-source/avlu-havuz-ustten.jpg", None, []),      # gök yok → taşma yok
+    "avlu2_sigdir": ("signage-source/avlu-havuz-teras.jpg", "sigdir", []),
+    "giris_aksam_sigdir": ("signage-source/giris-havuz-aksam.jpg", "sigdir", []),
     "gunbatimi": ("signage-source/render-gunbatimi.jpg", "signage-source/render-gunbatimi-kesik.png", [(0.055, 0.465), (0.56, 1.0)]),
     "gunbatimi_dolgu": ("signage-source/render-gunbatimi.jpg", "signage-source/render-gunbatimi-kesik.png", [(0.055, 0.465)], ("dolgu", 0.31)),
     "avlu2_dolgu": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.26, 0.445), (0.455, 0.70)], ("dolgu", 0.07)),
@@ -107,6 +109,17 @@ def foto_panel(x0, x1, dL, dR, ad):
       ("dolgu", c)    → sütunların kapladığı genişlik çerçevenin üst genişliğini doldurur, çatı (c) tuvalde 150 px'te
     → (tasma katmanı, pano katmanı)"""
     tam, kesik_png, sutunlar, *ek = YAN_FOTO[ad]
+    if kesik_png == "sigdir":                  # fotoğraf kesilmeden sığar; yanlardaki boşluk bulanık geçişle dolar
+        w_ = x1 - x0 + 2 * SK
+        src = f"file://{os.path.join(ROOT, tam)}"
+        im_w, im_h = Image.open(os.path.join(ROOT, tam)).size
+        fw = round(850 * im_w / im_h)
+        fx = round((w_ - fw) / 2)
+        m = "linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)"
+        return "", (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w_}px;height:850px;overflow:hidden;'
+                    f'clip-path:polygon({SK + dL * SK}px 0,{w_ - SK + dR * SK}px 0,{w_ - SK - dR * SK}px 100%,{SK - dL * SK}px 100%)">'
+                    f'<div style="position:absolute;inset:-60px;background:url({src}) 50% 50%/cover no-repeat;filter:blur(45px) brightness(1.08) saturate(.9)"></div>'
+                    f'<img src="{src}" style="position:absolute;left:{fx}px;top:0;width:{fw}px;height:850px;-webkit-mask-image:{m};mask-image:{m}"></div>')
     if kesik_png is None:                      # taşmasız: fotoğraf çerçeveye tam oturur
         w_ = x1 - x0 + 2 * SK
         return "", (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w_}px;height:850px;'
@@ -198,7 +211,7 @@ def tilda_paneli(cx, p):
             + y(cx, 600, "tildainsaat.com", 52, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
 
 
-def tasarim(ad, sol="gunbatimi_dolgu", sag="avlu2_dolgu"):
+def tasarim(ad, sol="avlu2_sigdir", sag="giris_aksam_sigdir"):
     p = RENKLER[ad]
     b1, b2, b3, b4, b5, b6, b7, b8 = B
     d = D
@@ -235,7 +248,6 @@ def tasarim(ad, sol="gunbatimi_dolgu", sag="avlu2_dolgu"):
 
 
 TASARIMLAR = [(lambda: tasarim("lacivert"), "lacivert-altin"),
-              (lambda: tasarim("lacivert", "avlu2", "avlu3"), "lacivert-altin-B-tasmasiz"),
               (lambda: tasarim("yesil"), "yesil-altin"), (lambda: tasarim("siyah"), "siyah-altin"), (lambda: tasarim("bordo"), "bordo-altin")]
 
 
