@@ -55,7 +55,7 @@ def telefon(x, top, renk, fs=72, hizala="left"):
 def bina_olcekli(cx, s):
     """v4.bina ile aynı kahraman, s ölçeğinde (taşma üst kenara sığacak şekilde)."""
     HW, HH = round(v4.HW * s), round(v4.HH * s)
-    hx, hy = round(cx - HW / 2), EXT - round(mb.UST_FR * HH)
+    hx, hy = round(cx - HW / 2), max(0, min(EXT - round(mb.UST_FR * HH), 1350 - HH))
     src = f"file://{mb.HERO}"
     dur = []
     for a, b in mb.SUTUNLAR:
@@ -98,39 +98,47 @@ def site(x, top, renk, fs=48):
     return v4.y(x, top, "miaparkocean.com", fs, 700, renk, ek="transform:translateX(-50%);letter-spacing:.04em")
 
 
+def finans(cx, top=70, fs=136, mia=False):
+    """Ortalanmış finans bloğu: (MİA logosu) · 60 ay rozeti · 1+0 / 1+1 · onay listesi."""
+    s_ = ""
+    if mia:
+        s_ += mb.mia(cx - 160, top, 220, False)
+        top += 260
+    s_ += pill(cx, top, "60 AY SABİT TAKSİT", ACIK, "#fff", 54, 106, "letter-spacing:.08em;transform:translateX(-50%)")
+    s_ += fiyat_cift(cx, top + 140, YESIL, ACIK, fs)
+    s_ += onay_liste(cx - 1120, top + 140 + round(fs * 1.55), YESIL, ACIK, "#fff", 42, 100, 1180)
+    return s_
+
+
 def M():
     zemin = ("repeating-linear-gradient(135deg,rgba(20,34,90,.05) 0 2px,transparent 2px 30px),"
              "repeating-linear-gradient(45deg,rgba(20,34,90,.05) 0 2px,transparent 2px 30px),"
              "linear-gradient(90deg,#eef3f8 0%,#f7f9fc 50%,#e9eff5 100%)")
-    tas, ic = bina_olcekli(8450, 0.78)
-    rozet = lambda yy, t, bg, ek="": pill(11650, yy, t, bg, "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em" + ek)
+    tas, ic = bina_olcekli(8750, 0.85)
+    rozet = lambda yy, t, bg, ek="": pill(11950, yy, t, bg, "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em" + ek)
     icerik = f"""
-  {mb.tilda(250, 200, 290, False)}
+  {mb.tilda(230, 200, 290, False)}
   {telefon(960, 540, YESIL, 72, "center")}
   {site(960, 640, ACIK)}
-  {y(2650, 190, "KİRAYA DEĞİL,", 125, 800, ACIK, ek="transform:translateX(-50%)")}
-  {y(2650, 330, "KENDİ EVİNİZE", 125, 800, YESIL, ek="transform:translateX(-50%)")}
-  {y(2650, 470, "ÖDEYİN.", 125, 800, YESIL, ek="transform:translateX(-50%)")}
-  {yumusak(3600, 0, 1150, 850, "avlu2", "38% 60%", (.16, .16), (0, .08))}
-  {pill(5950, 90, "60 AY SABİT TAKSİT", ACIK, "#fff", 56, 110, "letter-spacing:.08em;transform:translateX(-50%)")}
-  {fiyat_cift(5950, 235, YESIL, ACIK, 136)}
-  {onay_liste(4760, 530, YESIL, ACIK, "#fff", 42, 108, 1220)}
-  {aile(9900, 980, AILE1, -10)}
+  {y(2520, 190, "KİRAYA DEĞİL,", 125, 800, ACIK, ek="transform:translateX(-50%)")}
+  {y(2520, 330, "KENDİ EVİNİZE", 125, 800, YESIL, ek="transform:translateX(-50%)")}
+  {y(2520, 470, "ÖDEYİN.", 125, 800, YESIL, ek="transform:translateX(-50%)")}
+  {yumusak(3350, 0, 1500, 850, "avlu2", "38% 60%", (.14, .14), (0, .08))}
+  {finans(6000, 110, 136)}
+  {aile(10400, 1000, AILE1, -20)}
   {rozet(120, "VADE FARKI YOK", "#111")}
-  {pill(11640, 256, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
-  {pill(11660, 256, "KREDİ YOK", KIR, "#fff", 46, 112, "letter-spacing:.06em")}
+  {pill(11940, 256, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
+  {pill(11960, 256, "KREDİ YOK", KIR, "#fff", 46, 112, "letter-spacing:.06em")}
   {rozet(392, "ARA ÖDEME YOK", "#111")}
   {rozet(528, "60 AY SABİT TAKSİT", KIR)}
-  {yumusak(12300, 0, 1850, 850, "avlu3", "50% 50%", (.14, .14), (0, .08))}
-  {mb.mia(14350, 150, 320, False)}
-  {y(14580, 520, "TEK YETKİLİ SATIŞ", 38, 600, YESIL, sinif="kas", ek="transform:translateX(-50%)")}
-  {kutu(14300, 575, 600, 150, mb.ocean(92, "#0f4c9b", "#2f7fd6"), "display:flex;justify-content:center")}
-  {telefon(14580, 720, YESIL, 50, "center").replace("444 1 058", "0540 028 00 41")}
-  {pill(15900, 90, "60 AY SABİT TAKSİT", ACIK, "#fff", 50, 100, "letter-spacing:.08em;transform:translateX(-50%)")}
-  {fiyat_dikey(15380, 235, YESIL, ACIK, 128)}
-  {mb.tilda(16480, 200, 280, False)}
-  {telefon(17165, 540, YESIL, 72, "center")}
-  {site(17165, 640, ACIK)}"""
+  {yumusak(12450, 0, 2000, 850, "avlu3", "50% 50%", (.13, .13), (0, .08))}
+  {finans(15450, 40, 118, mia=True)}
+  {mb.tilda(16700, 120, 230, False)}
+  {y(17230, 400, "TEK YETKİLİ SATIŞ", 34, 600, YESIL, sinif="kas", ek="transform:translateX(-50%)")}
+  {kutu(16930, 445, 600, 130, mb.ocean(88, "#0f4c9b", "#2f7fd6"), "display:flex;justify-content:center")}
+  {telefon(17230, 600, YESIL, 64, "center")}
+  {telefon(17230, 680, YESIL, 46, "center").replace("444 1 058", "0540 028 00 41")}
+  {site(17230, 750, ACIK, 44)}"""
     return f"""
 <div class="tasma">{tas}</div>
 <div class="pano" style="background:{zemin}">
