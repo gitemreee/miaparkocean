@@ -86,20 +86,38 @@ def beyaz(x0, x1, dL, dR, bg=None):
     return f'<div class="a" style="left:0;top:0;width:18000px;height:850px;background:{bg};clip-path:{kesik(x0, x1, dL, dR)}"></div>'
 
 
+UST_K = (850 + 2 * mb.EXT) / 850      # kenar eğiminin tuval tepesine (500 px yukarı) uzatılmış çarpanı ≈ 2.18
+
+
 def foto_panel(x0, x1, dL, dR, ad, pos="50% 50%"):
-    """V biçimli fotoğraf paneli; fotoğraf çerçeveye tam oturur (keskin kenar)."""
-    w = x1 - x0 + 2 * SK
-    return (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w}px;height:850px;'
-            f'clip-path:polygon({SK + dL * SK}px 0,{w - SK + dR * SK}px 0,{w - SK - dR * SK}px 100%,{SK - dL * SK}px 100%);'
-            f'background:url({F[ad]}) {pos}/cover no-repeat"></div>')
+    """V biçimli fotoğraf paneli, panonun 5 m üstüne kadar taşar (tasma + pano katmanı)."""
+    H = 850 + mb.EXT
+    sol_ust, sol_alt = x0 + dL * SK * UST_K, x0 - dL * SK
+    sag_ust, sag_alt = x1 + dR * SK * UST_K, x1 - dR * SK
+    L = min(sol_ust, sol_alt) - 10
+    w = max(sag_ust, sag_alt) + 10 - L
+    kes = f"polygon({sol_ust - L:.0f}px 0,{sag_ust - L:.0f}px 0,{sag_alt - L:.0f}px 100%,{sol_alt - L:.0f}px 100%)"
+    div = lambda top: (f'<div class="a" style="left:{L:.0f}px;top:{top}px;width:{w:.0f}px;height:{H}px;clip-path:{kes};'
+                       f'background:url({F[ad]}) {pos}/cover no-repeat"></div>')
+    return div(0), div(-mb.EXT)          # (tasma katmanı, pano katmanı)
 
 
-def cizgi(b, d, altin):
+def cizgi(b, d, altin, tam=False):
+    """Altın kenar çizgisi; tam=True ise tuval tepesine kadar uzar → (tasma, pano) çifti."""
     w = 16
-    ust, alt = (2 * SK, 0) if d > 0 else (0, 2 * SK)
-    return (f'<div class="a" style="left:{b - SK - w // 2}px;top:0;width:{2 * SK + w}px;height:850px;'
-            f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
-            f'clip-path:polygon({ust}px 0,{ust + w}px 0,{alt + w}px 100%,{alt}px 100%)"></div>')
+    if not tam:
+        ust, alt = (2 * SK, 0) if d > 0 else (0, 2 * SK)
+        return (f'<div class="a" style="left:{b - SK - w // 2}px;top:0;width:{2 * SK + w}px;height:850px;'
+                f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
+                f'clip-path:polygon({ust}px 0,{ust + w}px 0,{alt + w}px 100%,{alt}px 100%)"></div>')
+    H = 850 + mb.EXT
+    xu, xa = b + d * SK * UST_K, b - d * SK
+    L = min(xu, xa) - w // 2
+    W = abs(xu - xa) + w
+    div = lambda top: (f'<div class="a" style="left:{L:.0f}px;top:{top}px;width:{W:.0f}px;height:{H}px;'
+                       f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
+                       f'clip-path:polygon({xu - L:.0f}px 0,{xu - L + w:.0f}px 0,{xa - L + w:.0f}px 100%,{xa - L:.0f}px 100%)"></div>')
+    return div(0), div(-mb.EXT)
 
 
 def telefon(cx, top, renk, fs=64):
@@ -166,10 +184,22 @@ def tasarim(ad):
     hero = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b4, b5, d[3], d[4])}">'
             f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
     tint = None
-    paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + foto_panel(b2, b3, d[1], d[2], "avlu2")
-                + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + foto_panel(b6, b7, d[5], d[6], "avlu3")
+    f1t, f1 = foto_panel(b2, b3, d[1], d[2], "avlu2")
+    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu3")
+    paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + f1
+                + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + f2
                 + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
-    cizgiler = "".join(cizgi(b_, d_, p["altin"]) for b_, d_ in zip(B, D))
+    tam_sinir = {b2, b3, b6, b7}
+    ciz_t, ciz = "", ""
+    for b_, d_ in zip(B, D):
+        if b_ in tam_sinir:
+            t_, p_ = cizgi(b_, d_, p["altin"], tam=True)
+            ciz_t += t_
+            ciz += p_
+        else:
+            ciz += cizgi(b_, d_, p["altin"])
+    cizgiler = ciz
+    tas = f1t + f2t + tas + ciz_t
     icerik = f"""
   {tilda_paneli(b1 / 2, p)}
   {bilgi_paneli((b1 + b2) / 2, p)}
