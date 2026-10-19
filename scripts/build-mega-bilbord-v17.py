@@ -87,17 +87,20 @@ def beyaz(x0, x1, dL, dR, bg=None):
 
 
 YAN_FOTO = {   # çerçeve fotoğrafı, gök maskeli kesik, taşmada gösterilecek sütunlar (bina blokları)
-    "avlu2": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.27, 0.60)]),
+    "avlu2": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.26, 0.445), (0.455, 0.70)]),
     "balkon_avlu": ("signage-source/balkondan-avlu.jpg", "signage-source/balkondan-avlu-kesik.png", [(0.0, 1.0)]),
-    "avlu_aksam": ("signage-source/avlu-aksam.jpg", "signage-source/avlu-aksam-kesik.png", [(0.09, 0.50)]),
+    "avlu_aksam": ("signage-source/avlu-aksam.jpg", "signage-source/avlu-aksam-kesik.png", [(0.12, 0.33), (0.34, 0.42)]),
+    "cocuk_parki": ("signage-source/cocuk-parki.jpg", "signage-source/cocuk-parki-kesik.png", [(0.50, 1.0)]),
+    "gece": ("signage-source/hf-bilbord8/gece-genis-ham.png", "signage-source/hf-bilbord8/gece-maskeli.png", [(0.31, 0.45), (0.555, 0.70)], 1800),
 }
 
 
 def foto_panel(x0, x1, dL, dR, ad):
-    """V çerçeve panoda kalır; fotoğraf 5 m yukarıdan başlayacak şekilde büyütülür, çerçeve üstünde yalnızca
-    gök maskeli bina silüeti görünür → (tasma katmanı, pano katmanı)."""
-    tam, kesik_png, sutunlar = YAN_FOTO[ad]
-    H = 850 + mb.EXT
+    """V çerçeve panoda kalır; fotoğraf alt kenara dayalı büyütülür, çerçeve üstünde yalnızca
+    gök maskeli bina silüeti (seçili sütunlar) görünür → (tasma katmanı, pano katmanı)."""
+    tam, kesik_png, sutunlar, *ek = YAN_FOTO[ad]
+    H = ek[0] if ek else 850 + mb.EXT
+    ust = 850 + mb.EXT - H                     # tuval koordinatında üst kenar (≤ 0)
     im_w, im_h = Image.open(os.path.join(ROOT, tam)).size
     w = round(H * im_w / im_h)
     cx = (x0 + x1) / 2
@@ -106,10 +109,10 @@ def foto_panel(x0, x1, dL, dR, ad):
     for a_, b_ in sutunlar:
         dur += [f"transparent {a_ * 100:.1f}%", f"#000 {a_ * 100:.1f}%", f"#000 {b_ * 100:.1f}%", f"transparent {b_ * 100:.1f}%"]
     maske = "linear-gradient(90deg," + ",".join(dur) + ")"
-    tasma = (f'<img class="a" src="file://{os.path.join(ROOT, kesik_png)}" style="left:{left}px;top:0;width:{w}px;height:{H}px;'
+    tasma = (f'<img class="a" src="file://{os.path.join(ROOT, kesik_png)}" style="left:{left}px;top:{ust}px;width:{w}px;height:{H}px;'
              f'-webkit-mask-image:{maske}">')
     pano_ = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(x0, x1, dL, dR)}">'
-             f'<img class="a" src="file://{os.path.join(ROOT, tam)}" style="left:{left}px;top:{-mb.EXT}px;width:{w}px;height:{H}px"></div>')
+             f'<img class="a" src="file://{os.path.join(ROOT, tam)}" style="left:{left}px;top:{ust - mb.EXT}px;width:{w}px;height:{H}px"></div>')
     return tasma, pano_
 
 
@@ -130,13 +133,15 @@ def telefon(cx, top, renk, fs=64):
 def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
     cx = (x0 + x1) / 2
     ic_w = x1 - x0 - 2 * SK
+    dL, dR = D[B.index(x0)], D[B.index(x1)]
     return f"""
+  <div class="a" style="left:0;top:0;width:18000px;height:850px;background:rgba(255,255,255,.45);clip-path:{kesik(x0, x1, dL, dR)}"></div>
   <div class="a" style="left:{x0 + SK}px;top:95px;width:{ic_w}px;display:flex;align-items:center;justify-content:center;gap:70px">
-    <div style="width:470px;height:260px;border-radius:30px;border:8px solid {p['altin']};flex:none;
+    <div style="width:420px;height:234px;border-radius:28px;border:8px solid {p['altin']};flex:none;
          background:linear-gradient(180deg,{p['koyu2']},{p['koyu']});display:flex;align-items:center;justify-content:center;
-         box-shadow:0 18px 40px rgba(0,0,0,.25)"><div class="tek" style="font-size:160px;font-weight:800;color:#fff;letter-spacing:-.03em">{tip}</div></div>
+         box-shadow:0 18px 40px rgba(0,0,0,.25)"><div class="tek" style="font-size:144px;font-weight:800;color:#fff;letter-spacing:-.03em">{tip}</div></div>
     <div><div class="tek kas" style="font-size:46px;font-weight:800;color:{p['metin']}">PEŞİNAT</div>
-      <div class="tek" style="font-size:160px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:20px">TL</span></div></div>
+      <div class="tek" style="font-size:176px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:20px">TL</span></div></div>
   </div>
   <div class="a" style="left:{x0 + SK}px;top:415px;width:{ic_w}px;display:flex;align-items:center;justify-content:center;gap:34px">
     <div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">AYDA SADECE
@@ -186,7 +191,7 @@ def tasarim(ad):
             f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
     tint = None
     f1t, f1 = foto_panel(b2, b3, d[1], d[2], "avlu2")
-    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu_aksam")
+    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "gece")
     paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + f1
                 + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + f2
                 + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
