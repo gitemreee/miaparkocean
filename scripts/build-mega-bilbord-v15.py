@@ -35,6 +35,7 @@ y, kutu, damga, pill, pano = v4.y, v4.kutu, v4.damga, v11.pill, v11.pano
 yumusak, aile, AILE1, onay_liste = v14.yumusak, v14.aile, v14.AILE1, v11.onay_liste
 
 TEL = "0540 028 00 41"
+TEL2 = "444 10 58"
 KIR = "#e3262e"
 
 
@@ -42,7 +43,8 @@ def serit_buyut(html):
     """Alt şeritte telefonu büyüt (yazı 62 → 96 px, simge 70 → 100 px)."""
     eski = f'<div class="oge">{v2.IK_TEL}{TEL}</div>'
     simge = v2.IK_TEL.replace("<svg", '<svg style="width:100px;height:100px"', 1)
-    yeni = f'<div class="oge" style="font-size:96px;font-weight:800;letter-spacing:.02em">{simge}{TEL}</div>'
+    yeni = (f'<div class="oge" style="font-size:96px;font-weight:800;letter-spacing:.02em">{simge}{TEL}</div>'
+            f'<div class="ayr"></div><div class="oge" style="font-size:96px;font-weight:800;letter-spacing:.02em">{simge}{TEL2}</div>')
     assert eski in html, "şerit telefon öğesi bulunamadı"
     return html.replace(eski, yeni)
 
@@ -57,10 +59,10 @@ def Y():
   {y(1900, 150, "KİRAYA DEĞİL,", 112, 800, acik, maxw=1150)}
   {y(1900, 275, "KENDİ EVİNİZE", 112, 800, yesil, maxw=1150)}
   {y(1900, 400, "ÖDEYİN.", 112, 800, yesil, maxw=1150)}
-  {pill(3200, 55, "60 AY SABİT TAKSİT", acik, "#fff", 52, 104, "letter-spacing:.08em")}
-  {kutu(3150, 180, 2600, 240, v6.fiyat_satiri(yesil, 128, acik, "rgba(18,61,42,.25)"))}
-  {onay_liste(3200, 455, yesil, acik, "#fff", 44, 112, 1250)}
-  {yumusak(5650, 0, 2000, 718, "park", "50% 55%", (.22, .3), (0, .12))}
+  {pill(4500, 45, "60 AY SABİT TAKSİT", acik, "#fff", 60, 116, "letter-spacing:.08em;transform:translateX(-50%)")}
+  {kutu(3150, 185, 2700, 260, v6.fiyat_satiri(yesil, 150, acik, "rgba(18,61,42,.25)"), "display:flex;justify-content:center")}
+  {onay_liste(3250, 480, yesil, acik, "#fff", 44, 112, 1300)}
+  {yumusak(5750, 0, 2000, 718, "avlu2", "50% 60%", (.22, .3), (0, .12))}
   {pill(7750, 95, "VADE FARKI YOK", "#111", "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em")}
   {pill(7740, 230, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
   {pill(7760, 230, "KREDİ YOK", KIR, "#fff", 46, 112, "letter-spacing:.06em")}
