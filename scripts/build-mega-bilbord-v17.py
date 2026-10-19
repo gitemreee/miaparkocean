@@ -81,7 +81,7 @@ def cizgi(b, d, altin):
 def telefon(cx, top, renk, fs=64):
     simge = v2.IK_TEL.replace("<svg", f'<svg style="width:{round(fs * 1.05)}px;height:{round(fs * 1.05)}px;flex:none"', 1)
     return (f'<div class="a tek" style="left:{cx}px;top:{top}px;display:flex;align-items:center;gap:18px;color:{renk};'
-            f'font-size:{fs}px;font-weight:800;letter-spacing:.02em;transform:translateX(-50%)">{simge}444 1 058</div>')
+            f'font-size:{fs}px;font-weight:800;letter-spacing:.02em;transform:translateX(-50%)">{simge}444 10 58</div>')
 
 
 def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
@@ -92,11 +92,11 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
          background:linear-gradient(180deg,{p['koyu2']},{p['koyu']});display:flex;align-items:center;justify-content:center;
          box-shadow:0 18px 40px rgba(0,0,0,.25)"><div class="tek" style="font-size:190px;font-weight:800;color:#fff;letter-spacing:-.03em">{tip}</div></div>
     <div><div class="tek kas" style="font-size:52px;font-weight:800;color:{p['metin']}">PEŞİNAT</div>
-      <div class="tek" style="font-size:190px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700"> TL</span></div></div>
+      <div class="tek" style="font-size:190px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:22px">TL</span></div></div>
   </div>
   <div class="a" style="left:{x0 + SK}px;top:445px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:40px">
     <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">AYDA SADECE
-      <span style="font-size:110px;letter-spacing:-.03em;margin-left:14px">{aylik}</span><span style="font-size:58px;font-weight:700">TL</span></div>
+      <span style="font-size:110px;letter-spacing:-.03em;margin-left:14px">{aylik}</span><span style="font-size:58px;font-weight:700;margin-left:16px">TL</span></div>
     <div style="width:4px;height:120px;background:{p['altin']}"></div>
     <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">60 AY VADE FARKSIZ</div>
   </div>
@@ -104,6 +104,22 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
     {"".join(f'<div class="tek" style="height:86px;padding:0 36px;border-radius:43px;background:{bg};color:#fff;font-size:40px;font-weight:800;letter-spacing:.05em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e")))}
   </div>
   {telefon(cx, 715, p['metin'], 80)}"""
+
+
+def uc_panel(cx, p, ocean=False):
+    """Uç panel: Tilda · MİA PARK OCEAN (+ Ocean) · slogan · telefon · siteler."""
+    s_ = mb.tilda(cx - 460, 55, 200, False)
+    if ocean:
+        s_ += mb.mia(cx - 420, 285, 170, False)
+        s_ += (f'<div class="a" style="left:{cx + 30}px;top:300px;display:flex;flex-direction:column;align-items:center;gap:10px">'
+               f'<div class="tek kas" style="font-size:28px;color:{p["metin"]}">TEK YETKİLİ SATIŞ</div>{mb.ocean(72, "#0f4c9b", "#2f7fd6")}</div>')
+    else:
+        s_ += mb.mia(cx - 123, 285, 170, False)
+    s_ += y(cx, 478, "MİA PARK OCEAN'DA", 56, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
+    s_ += y(cx, 542, "YAŞAM BAŞLIYOR.", 64, 800, p["metin"], ek="transform:translateX(-50%);letter-spacing:.02em")
+    s_ += telefon(cx, 628, p["metin"], 72)
+    s_ += y(cx, 722, "tildainsaat.com &nbsp;·&nbsp; miaparkocean.com", 40, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.03em")
+    return s_
 
 
 def tasarim(ad):
@@ -120,18 +136,10 @@ def tasarim(ad):
                 + beyaz(b4, b5, D[3], D[4]) + foto_panel(b5, b6, D[4], D[5], "avlu3") + beyaz(b6, 18000 + SK + 10, D[5], 0))
     cizgiler = "".join(cizgi(b, d, p["altin"]) for b, d in zip(B, D))
     icerik = f"""
-  {mb.tilda(1215 - 585, 120, 255, False)}
-  {telefon(1215, 440, p['metin'], 92)}
-  {y(1215, 580, "tildainsaat.com", 56, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
-  {y(1215, 660, "miaparkocean.com", 56, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
+  {uc_panel(1215, p)}
   {fiyat_paneli(b2, b3, *FIYAT[0], p)}
   {fiyat_paneli(b4, b5, *FIYAT[1], p)}
-  {mb.tilda(16785 - 585, 80, 255, False)}
-  {telefon(16785, 395, p['metin'], 92)}
-  {y(16785, 530, "tildainsaat.com", 56, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
-  {mb.mia(16785 - 600, 615, 210, False)}
-  {y(16785 + 80, 625, "TEK YETKİLİ SATIŞ", 30, 600, p['metin'], sinif="kas")}
-  {kutu(16785 + 60, 668, 520, 120, mb.ocean(76, "#0f4c9b", "#2f7fd6"))}"""
+  {uc_panel(16865, p, ocean=True)}"""
     return f"""
 <div class="tasma">{tas}</div>
 <div class="pano" style="background:#f1f1f1">
