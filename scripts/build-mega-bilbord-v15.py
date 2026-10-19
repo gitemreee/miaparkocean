@@ -35,6 +35,7 @@ y, kutu, damga, pill, pano = v4.y, v4.kutu, v4.damga, v11.pill, v11.pano
 yumusak, aile, AILE1, onay_liste = v14.yumusak, v14.aile, v14.AILE1, v11.onay_liste
 
 TEL = "0540 028 00 41"
+KIR = "#e3262e"
 
 
 def serit_buyut(html):
@@ -58,7 +59,11 @@ def Y():
   {y(1905, 505, "KİRAYA DEĞİL,", 100, 800, acik, maxw=2900)}
   {y(1905, 615, "KENDİ EVİNİZE ÖDEYİN.", 80, 800, yesil, maxw=2900)}
   {yumusak(4600, 0, 2500, 718, "park", "50% 55%", (.2, .25), (0, .12))}
-  {"".join(pill(7750, 95 + i * 135, t, yesil if i % 2 == 0 else acik, "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em") for i, t in enumerate(("VADE FARKI YOK", "SABİT TAKSİT", "ARA ÖDEME YOK", "60 AY SABİT TAKSİT")))}
+  {pill(7750, 95, "VADE FARKI YOK", "#111", "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em")}
+  {pill(7740, 230, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
+  {pill(7760, 230, "KREDİ YOK", KIR, "#fff", 46, 112, "letter-spacing:.06em")}
+  {pill(7750, 365, "ARA ÖDEME YOK", "#111", "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em")}
+  {pill(7750, 500, "60 AY SABİT TAKSİT", KIR, "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em")}
   {aile(11900, 950, AILE1, -15)}
   {pill(13300, 60, "60 AY SABİT TAKSİT", acik, "#fff", 58, 116, "letter-spacing:.08em")}
   {kutu(13250, 215, 2700, 300, v6.fiyat_satiri(yesil, 140, acik, "rgba(18,61,42,.25)"))}
