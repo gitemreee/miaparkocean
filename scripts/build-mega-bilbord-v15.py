@@ -54,12 +54,13 @@ def Y():
     tas, ic = v4.bina(10050)
     icerik = f"""
   {mb.tilda(300, 209, 300, False)}
-  {y(1900, 40, "KİRAYA DEĞİL,", 120, 800, acik, maxw=2600)}
-  {y(1900, 170, "KENDİ EVİNİZE ÖDEYİN.", 105, 800, yesil, maxw=2600)}
-  {pill(1900, 305, "60 AY SABİT TAKSİT", acik, "#fff", 42, 88, "letter-spacing:.08em")}
-  {kutu(1850, 405, 2650, 200, v6.fiyat_satiri(yesil, 108, acik, "rgba(18,61,42,.25)"))}
-  {"".join(f'<div class="a" style="left:{1900 + i * 660}px;top:625px;display:flex;align-items:center;gap:16px"><div style="width:60px;height:60px;border-radius:50%;background:{acik};display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 7"/></svg></div><div class="tek" style="font-size:36px;font-weight:800;color:{yesil}">{t}</div></div>' for i, t in enumerate(("FAİZ YOK", "BANKA YOK", "KREDİ YOK", "ARA ÖDEME YOK")))}
-  {yumusak(4600, 0, 2500, 718, "park", "50% 55%", (.2, .25), (0, .12))}
+  {y(1900, 150, "KİRAYA DEĞİL,", 112, 800, acik, maxw=1150)}
+  {y(1900, 275, "KENDİ EVİNİZE", 112, 800, yesil, maxw=1150)}
+  {y(1900, 400, "ÖDEYİN.", 112, 800, yesil, maxw=1150)}
+  {pill(3200, 55, "60 AY SABİT TAKSİT", acik, "#fff", 52, 104, "letter-spacing:.08em")}
+  {kutu(3150, 180, 2600, 240, v6.fiyat_satiri(yesil, 128, acik, "rgba(18,61,42,.25)"))}
+  {onay_liste(3200, 455, yesil, acik, "#fff", 44, 112, 1250)}
+  {yumusak(5650, 0, 2000, 718, "park", "50% 55%", (.22, .3), (0, .12))}
   {pill(7750, 95, "VADE FARKI YOK", "#111", "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em")}
   {pill(7740, 230, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
   {pill(7760, 230, "KREDİ YOK", KIR, "#fff", 46, 112, "letter-spacing:.06em")}
