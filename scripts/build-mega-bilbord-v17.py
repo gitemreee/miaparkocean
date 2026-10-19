@@ -115,10 +115,10 @@ def foto_panel(x0, x1, dL, dR, ad):
         im_w, im_h = Image.open(os.path.join(ROOT, tam)).size
         fw = round(850 * im_w / im_h)
         fx = round((w_ - fw) / 2)
-        m = "linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)"
-        return "", (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w_}px;height:850px;overflow:hidden;'
+        m = "linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)"
+        return "", (beyaz(x0, x1, dL, dR)                      # arkada kırık desen zemin
+                    + f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w_}px;height:850px;overflow:hidden;'
                     f'clip-path:polygon({SK + dL * SK}px 0,{w_ - SK + dR * SK}px 0,{w_ - SK - dR * SK}px 100%,{SK - dL * SK}px 100%)">'
-                    f'<div style="position:absolute;inset:-60px;background:url({src}) 50% 50%/cover no-repeat;filter:blur(45px) brightness(1.08) saturate(.9)"></div>'
                     f'<img src="{src}" style="position:absolute;left:{fx}px;top:0;width:{fw}px;height:850px;-webkit-mask-image:{m};mask-image:{m}"></div>')
     if kesik_png is None:                      # taşmasız: fotoğraf çerçeveye tam oturur
         w_ = x1 - x0 + 2 * SK
