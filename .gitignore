@@ -42,3 +42,7 @@ signage-source/hf-mia2/
 # 180 m pano baskı dosyaları (çok büyük; scripts/build-mega-bilbord.py ile üretilir)
 tabela/mega-bilbord-180m/*/baski/
 tabela/mega-bilbord-180m-tur6/baski/
+
+# 8. tur türetilmiş dosyalar (build-mega-bilbord-v8.py yeniden üretir)
+signage-source/hf-bilbord8/gece-maskeli.png
+signage-source/hf-bilbord8/zemin-*.jpg
