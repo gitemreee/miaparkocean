@@ -60,12 +60,13 @@ def Y():
   {yumusak(4600, 0, 2500, 718, "park", "50% 55%", (.2, .25), (0, .12))}
   {"".join(pill(7750, 95 + i * 135, t, yesil if i % 2 == 0 else acik, "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em") for i, t in enumerate(("VADE FARKI YOK", "SABİT TAKSİT", "ARA ÖDEME YOK", "60 AY SABİT TAKSİT")))}
   {aile(11900, 950, AILE1, -15)}
-  {pill(13300, 60, "60 AY SABİT TAKSİT", acik, "#fff", 60, 120, "letter-spacing:.08em")}
-  {kutu(13250, 215, 3000, 300, v6.fiyat_satiri(yesil, 150, acik, "rgba(18,61,42,.25)"))}
-  {onay_liste(13300, 540, yesil, acik, "#fff", 44, 90, 1400)}
-  {mb.mia(16150, 199, 320, False)}
-  {mb.tilda(16700, 244, 230, False)}
-  {damga(17720, 600, 200, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=acik, yazi="#fff")}"""
+  {pill(13300, 60, "60 AY SABİT TAKSİT", acik, "#fff", 58, 116, "letter-spacing:.08em")}
+  {kutu(13250, 215, 2700, 300, v6.fiyat_satiri(yesil, 140, acik, "rgba(18,61,42,.25)"))}
+  {onay_liste(13300, 540, yesil, acik, "#fff", 42, 90, 1250)}
+  {yumusak(15550, 0, 1150, 718, "yatak", "50% 50%", (.22, .22), (0, .1))}
+  {mb.mia(16560, 219, 280, False)}
+  {mb.tilda(16980, 259, 200, False)}
+  {damga(17800, 605, 180, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=acik, yazi="#fff")}"""
     return serit_buyut(pano(r, zemin, "", icerik, tas, ic))
 
 
