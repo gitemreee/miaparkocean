@@ -39,7 +39,9 @@ y, kutu, satir = v4.y, v4.kutu, v4.satir
 F = v14.F
 
 SK = 110                                   # panel kenarı eğimi (px, üstte sağa / altta sola)
-B = (1500, 3400, 4600, 7100, 10900, 13400, 14600, 16500)  # panel sınırları (9 panel)
+B = (1200, 2900, 4700, 7100, 10900, 13300, 15100, 16800)  # panel sınırları (9 panel)
+MIA_PNG = os.path.join(ROOT, "public", "brand", "logo-mia-2026.png")   # orijinal logo (1024×712)
+MIA_RENK = "#1d7f9c"
 FIYAT = (("1+0", "699.000", "29.900"), ("1+1", "999.000", "39.900"))
 
 RENKLER = {
@@ -118,10 +120,10 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
       <div class="tek" style="font-size:160px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:20px">TL</span></div></div>
   </div>
   <div class="a" style="left:{x0 + SK}px;top:415px;width:{ic_w}px;display:flex;align-items:center;justify-content:center;gap:34px">
-    <div class="tek" style="font-size:46px;font-weight:800;color:{p['metin']};letter-spacing:.03em">AYDA SADECE
-      <span style="font-size:96px;letter-spacing:-.03em;margin-left:12px">{aylik}</span><span style="font-size:50px;font-weight:700;margin-left:14px">TL</span></div>
+    <div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">AYDA SADECE
+      <span style="font-size:92px;letter-spacing:-.03em;margin-left:10px">{aylik}</span><span style="font-size:46px;font-weight:700;margin-left:12px">TL</span></div>
     <div style="width:4px;height:100px;background:{p['altin']}"></div>
-    <div class="tek" style="font-size:46px;font-weight:800;color:{p['metin']};letter-spacing:.03em">60 AY VADE FARKSIZ</div>
+    <div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">60 AY VADE FARKSIZ</div>
   </div>
   <div class="a" style="left:{x0 + SK}px;top:575px;width:{ic_w}px;display:flex;justify-content:center;gap:18px">
     {"".join(f'<div class="tek" style="height:80px;padding:0 30px;border-radius:40px;background:{bg};color:#fff;font-size:36px;font-weight:800;letter-spacing:.04em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e")))}
@@ -129,22 +131,26 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
   {telefon(cx, 690, p['metin'], 76)}"""
 
 
+def mia_orj(cx, top, h):
+    w = round(h * 1024 / 712)
+    return f'<img class="a" src="file://{MIA_PNG}" style="left:{cx - w // 2}px;top:{top}px;width:{w}px;height:{h}px">'
+
+
 def bilgi_paneli(cx, p, ocean=False):
-    """Bilgi paneli: büyük MİA PARK OCEAN logosu · slogan · site (+ Ocean)."""
-    s_ = mb.mia(cx - 210, 50, 290, False)
-    s_ += y(cx, 385, "MİA PARK OCEAN'DA", 62, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
-    s_ += y(cx, 456, "YERİNİZİ ALIN!", 84, 800, p["metin"], ek="transform:translateX(-50%);letter-spacing:.02em")
-    s_ += y(cx, 575, "miaparkocean.com", 50, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
+    """Bilgi paneli: orijinal MİA PARK OCEAN logosu · slogan (logo renginde) · site (+ Ocean logosu)."""
+    s_ = mia_orj(cx, 40, 300)
+    s_ += y(cx, 375, "MİA PARK OCEAN'DA", 70, 800, MIA_RENK, ek="transform:translateX(-50%);letter-spacing:.04em")
+    s_ += y(cx, 455, "YERİNİZİ ALIN!", 104, 800, MIA_RENK, ek="transform:translateX(-50%);letter-spacing:.01em")
+    s_ += y(cx, 590, "miaparkocean.com", 50, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
     if ocean:
-        s_ += (f'<div class="a" style="left:{cx}px;top:655px;transform:translateX(-50%);display:flex;align-items:center;gap:30px">'
-               f'<div class="tek kas" style="font-size:28px;color:{p["metin"]}">TEK YETKİLİ SATIŞ</div>{mb.ocean(74, "#0f4c9b", "#2f7fd6")}</div>')
+        s_ += kutu(cx - 300, 665, 600, 130, mb.ocean(78, "#0f4c9b", "#2f7fd6"), "display:flex;justify-content:center")
     return s_
 
 
 def tilda_paneli(cx, p):
-    return (mb.tilda(cx - 500, 190, 218, False)
-            + telefon(cx, 470, p["metin"], 76)
-            + y(cx, 575, "tildainsaat.com", 48, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
+    return (mb.tilda(cx - 414, 200, 180, False)
+            + telefon(cx, 460, p["metin"], 68)
+            + y(cx, 560, "tildainsaat.com", 44, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
 
 
 def tasarim(ad):
