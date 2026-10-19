@@ -60,10 +60,12 @@ def beyaz(x0, x1, bg="#ffffff"):
 
 
 def foto_panel(x0, x1, ad, pos="50% 50%"):
-    w = x1 - x0 + 2 * SK
-    return (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w}px;height:850px;'
-            f'clip-path:polygon({2 * SK}px 0,100% 0,{w - 2 * SK}px 100%,0 100%);'
-            f'background:url({F[ad]}) {pos}/cover no-repeat"></div>')
+    """Eğik kenarları zemine eriyen fotoğraf bandı (kenar eğimiyle aynı açıda gradyan maske)."""
+    pay = 260
+    w = x1 - x0 + 2 * SK + 2 * pay
+    m = "linear-gradient(104.5deg,transparent 4%,#000 22%,#000 78%,transparent 96%)"
+    return (f'<div class="a" style="left:{x0 - SK - pay}px;top:0;width:{w}px;height:850px;'
+            f'-webkit-mask-image:{m};mask-image:{m};background:url({F[ad]}) {pos}/cover no-repeat"></div>')
 
 
 def cizgi(b, altin):
@@ -82,21 +84,21 @@ def telefon(cx, top, renk, fs=64):
 def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
     cx = (x0 + x1) / 2
     return f"""
-  <div class="a" style="left:{x0 + SK}px;top:105px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:90px">
+  <div class="a" style="left:{x0 + SK}px;top:85px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:90px">
     <div style="width:560px;height:300px;border-radius:34px;border:8px solid {p['altin']};flex:none;
          background:linear-gradient(180deg,{p['koyu2']},{p['koyu']});display:flex;align-items:center;justify-content:center;
          box-shadow:0 18px 40px rgba(0,0,0,.25)"><div class="tek" style="font-size:190px;font-weight:800;color:#fff;letter-spacing:-.03em">{tip}</div></div>
     <div><div class="tek kas" style="font-size:52px;font-weight:800;color:{p['metin']}">PEŞİNAT</div>
       <div class="tek" style="font-size:190px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700"> TL</span></div></div>
   </div>
-  <div class="a" style="left:{x0 + SK}px;top:465px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:40px">
+  <div class="a" style="left:{x0 + SK}px;top:445px;width:{x1 - x0 - 2 * SK}px;display:flex;align-items:center;justify-content:center;gap:40px">
     <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">AYDA SADECE
       <span style="font-size:110px;letter-spacing:-.03em;margin-left:14px">{aylik}</span><span style="font-size:58px;font-weight:700">TL</span></div>
     <div style="width:4px;height:120px;background:{p['altin']}"></div>
     <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">60 AY VADE FARKSIZ</div>
   </div>
-  {y(cx, 640, "FAİZ YOK · BANKA YOK · KREDİ YOK · ARA ÖDEME YOK", 36, 700, p['vurgu'], sinif="kas", ek="transform:translateX(-50%)")}
-  {telefon(cx, 715, p['metin'], 56)}"""
+  {y(cx, 618, "FAİZ YOK · BANKA YOK · KREDİ YOK · ARA ÖDEME YOK", 50, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.08em")}
+  {telefon(cx, 695, p['metin'], 84)}"""
 
 
 def tasarim(ad):
@@ -109,16 +111,18 @@ def tasarim(ad):
                 + foto_panel(b5, b6, "avlu3") + beyaz(b6, 18000 + SK + 10))
     cizgiler = "".join(cizgi(b, p["altin"]) for b in B)
     icerik = f"""
-  {mb.tilda(1215 - 585, 170, 255, False)}
-  {telefon(1215, 500, p['metin'], 66)}
-  {y(1215, 600, "miaparkocean.com", 46, 700, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
+  {mb.tilda(1215 - 585, 120, 255, False)}
+  {telefon(1215, 440, p['metin'], 92)}
+  {y(1215, 580, "tildainsaat.com", 56, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
+  {y(1215, 660, "miaparkocean.com", 56, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
   {fiyat_paneli(b2, b3, *FIYAT[0], p)}
   {fiyat_paneli(b4, b5, *FIYAT[1], p)}
-  {mb.tilda(16785 - 585, 110, 255, False)}
-  {telefon(16785, 430, p['metin'], 66)}
-  {mb.mia(16785 - 560, 560, 230, False)}
-  {y(16785 + 110, 585, "TEK YETKİLİ SATIŞ", 30, 600, p['metin'], sinif="kas")}
-  {kutu(16785 + 90, 630, 520, 120, mb.ocean(76, "#0f4c9b", "#2f7fd6"))}"""
+  {mb.tilda(16785 - 585, 80, 255, False)}
+  {telefon(16785, 395, p['metin'], 92)}
+  {y(16785, 530, "tildainsaat.com", 56, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.04em")}
+  {mb.mia(16785 - 600, 615, 210, False)}
+  {y(16785 + 80, 625, "TEK YETKİLİ SATIŞ", 30, 600, p['metin'], sinif="kas")}
+  {kutu(16785 + 60, 668, 520, 120, mb.ocean(76, "#0f4c9b", "#2f7fd6"))}"""
     return f"""
 <div class="tasma">{tas}</div>
 <div class="pano" style="background:#f1f1f1">
