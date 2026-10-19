@@ -41,7 +41,7 @@ aile, AILE1, onay_liste, F = v14.aile, v14.AILE1, v11.onay_liste, v14.F
 serit_buyut, KIR = v15.serit_buyut, v15.KIR
 v15.TEL2 = "444 1 058"          # şeritte de aynı yazım
 
-YESIL, ACIK = "#06343f", "#0e8a98"
+YESIL, ACIK = "#14225a", "#1f6fb2"
 F["avlu3"] = "file://" + os.path.join(ROOT, "signage-source", "avlu-havuz-ustten.jpg")
 yumusak = v14.yumusak
 
@@ -72,38 +72,71 @@ def panel_foto(x, w, ad, pos="50% 50%"):
             f'box-shadow:0 0 60px rgba(0,0,0,.18)"></div>')
 
 
+FIYATLAR = (("1+0", "29.900"), ("1+1", "39.900"))   # 1+0 tutarı [DOĞRULANACAK]
+
+
+def fiyat_cift(x, top, renk, et, fs=136, cizgi="rgba(20,34,90,.25)"):
+    """1+0 ve 1+1 yan yana."""
+    kol = [f'<div style="padding:0 46px">{v4.satir(t + " · AYLIK", round(fs * .36), 800, et, "letter-spacing:.14em")}'
+           f'{v4.satir(v + "<span style=font-size:.45em>₺</span>", fs, 800, renk, "letter-spacing:-.03em;margin-top:4px")}</div>'
+           for t, v in FIYATLAR]
+    return (f'<div class="a" style="left:{x}px;top:{top}px;display:flex;align-items:center;transform:translateX(-50%)">'
+            f'{kol[0]}<div style="width:4px;align-self:stretch;background:{cizgi}"></div>{kol[1]}</div>')
+
+
+def fiyat_dikey(x, top, renk, et, fs=130):
+    """1+0 ve 1+1 alt alta (sağ blok)."""
+    s_ = ""
+    for i, (t, v) in enumerate(FIYATLAR):
+        yy = top + i * round(fs * 1.75)
+        s_ += (v4.y(x, yy, t + " · AYLIK", round(fs * .34), 800, et, sinif="kas")
+               + v4.y(x, yy + round(fs * .5), v + "<span style=font-size:.45em>₺</span>", fs, 800, renk, ls="-.03em"))
+    return s_
+
+
+def site(x, top, renk, fs=48):
+    return v4.y(x, top, "miaparkocean.com", fs, 700, renk, ek="transform:translateX(-50%);letter-spacing:.04em")
+
+
 def M():
-    r = dict(v4.SERIT_ACIK, serit=YESIL, serit_su="#5fd3e0")
-    zemin = "linear-gradient(90deg,#ffffff 0%,#ffffff 30%,#e6f6f8 52%,#bfe8ec 74%,#93d6de 90%,#7fcfd8 100%)"
+    zemin = ("repeating-linear-gradient(135deg,rgba(20,34,90,.05) 0 2px,transparent 2px 30px),"
+             "repeating-linear-gradient(45deg,rgba(20,34,90,.05) 0 2px,transparent 2px 30px),"
+             "linear-gradient(90deg,#eef3f8 0%,#f7f9fc 50%,#e9eff5 100%)")
     tas, ic = bina_olcekli(8450, 0.78)
-    rozet = lambda yy, t, bg, ek="": pill(11650, yy, t, bg, "#fff", 44, 108, "transform:translateX(-50%);letter-spacing:.06em" + ek)
+    rozet = lambda yy, t, bg, ek="": pill(11650, yy, t, bg, "#fff", 46, 112, "transform:translateX(-50%);letter-spacing:.06em" + ek)
     icerik = f"""
-  {mb.tilda(250, 150, 290, False)}
-  {telefon(960, 490, YESIL, 72, "center")}
-  {y(2650, 150, "KİRAYA DEĞİL,", 125, 800, ACIK, ek="transform:translateX(-50%)")}
-  {y(2650, 290, "KENDİ EVİNİZE", 125, 800, YESIL, ek="transform:translateX(-50%)")}
-  {y(2650, 430, "ÖDEYİN.", 125, 800, YESIL, ek="transform:translateX(-50%)")}
-  {yumusak(3600, 0, 1150, 718, "avlu2", "38% 60%", (.16, .16), (0, .1))}
-  {pill(5950, 60, "60 AY SABİT TAKSİT", ACIK, "#fff", 56, 110, "letter-spacing:.08em;transform:translateX(-50%)")}
-  {kutu(4700, 200, 2500, 240, v6.fiyat_satiri(YESIL, 136, ACIK, "rgba(18,61,42,.25)"), "display:flex;justify-content:center")}
-  {onay_liste(4760, 470, YESIL, ACIK, "#fff", 42, 108, 1220)}
-  {aile(9900, 950, AILE1, -15)}
-  {rozet(100, "VADE FARKI YOK", "#111")}
-  {pill(11640, 232, "BANKA YOK", KIR, "#fff", 44, 108, "transform:translateX(-100%);letter-spacing:.06em")}
-  {pill(11660, 232, "KREDİ YOK", KIR, "#fff", 44, 108, "letter-spacing:.06em")}
-  {rozet(364, "ARA ÖDEME YOK", "#111")}
-  {rozet(496, "60 AY SABİT TAKSİT", KIR)}
-  {yumusak(12300, 0, 1850, 718, "avlu3", "50% 50%", (.14, .14), (0, .1))}
-  {mb.mia(14250, 159, 400, False)}
-  {v11.daire_foto(15330, 200, 380, "salon")}
-  {v11.daire_foto(15740, 380, 380, "yatak")}
-  {v11.daire_foto(15360, 525, 380, "mutfak")}
-  {mb.tilda(16480, 160, 280, False)}
-  {telefon(17165, 490, YESIL, 72, "center")}"""
-    html = serit_buyut(pano(r, zemin, "", icerik, tas, ic))
-    eski = f'<div class="ayr"></div><div class="oge">{v2.IK_WEB}miapark.com</div>'
-    assert eski in html
-    return html.replace(eski, "")
+  {mb.tilda(250, 200, 290, False)}
+  {telefon(960, 540, YESIL, 72, "center")}
+  {site(960, 640, ACIK)}
+  {y(2650, 190, "KİRAYA DEĞİL,", 125, 800, ACIK, ek="transform:translateX(-50%)")}
+  {y(2650, 330, "KENDİ EVİNİZE", 125, 800, YESIL, ek="transform:translateX(-50%)")}
+  {y(2650, 470, "ÖDEYİN.", 125, 800, YESIL, ek="transform:translateX(-50%)")}
+  {yumusak(3600, 0, 1150, 850, "avlu2", "38% 60%", (.16, .16), (0, .08))}
+  {pill(5950, 90, "60 AY SABİT TAKSİT", ACIK, "#fff", 56, 110, "letter-spacing:.08em;transform:translateX(-50%)")}
+  {fiyat_cift(5950, 235, YESIL, ACIK, 136)}
+  {onay_liste(4760, 530, YESIL, ACIK, "#fff", 42, 108, 1220)}
+  {aile(9900, 980, AILE1, -10)}
+  {rozet(120, "VADE FARKI YOK", "#111")}
+  {pill(11640, 256, "BANKA YOK", KIR, "#fff", 46, 112, "transform:translateX(-100%);letter-spacing:.06em")}
+  {pill(11660, 256, "KREDİ YOK", KIR, "#fff", 46, 112, "letter-spacing:.06em")}
+  {rozet(392, "ARA ÖDEME YOK", "#111")}
+  {rozet(528, "60 AY SABİT TAKSİT", KIR)}
+  {yumusak(12300, 0, 1850, 850, "avlu3", "50% 50%", (.14, .14), (0, .08))}
+  {mb.mia(14350, 150, 320, False)}
+  {y(14580, 520, "TEK YETKİLİ SATIŞ", 38, 600, YESIL, sinif="kas", ek="transform:translateX(-50%)")}
+  {kutu(14300, 575, 600, 150, mb.ocean(92, "#0f4c9b", "#2f7fd6"), "display:flex;justify-content:center")}
+  {telefon(14580, 720, YESIL, 50, "center").replace("444 1 058", "0540 028 00 41")}
+  {pill(15900, 90, "60 AY SABİT TAKSİT", ACIK, "#fff", 50, 100, "letter-spacing:.08em;transform:translateX(-50%)")}
+  {fiyat_dikey(15380, 235, YESIL, ACIK, 128)}
+  {mb.tilda(16480, 200, 280, False)}
+  {telefon(17165, 540, YESIL, 72, "center")}
+  {site(17165, 640, ACIK)}"""
+    return f"""
+<div class="tasma">{tas}</div>
+<div class="pano" style="background:{zemin}">
+  {ic}
+  {icerik}
+</div>"""
 
 
 TASARIMLAR = [(M, "maket-kurgusu")]
