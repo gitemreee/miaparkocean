@@ -39,7 +39,7 @@ y, kutu, satir = v4.y, v4.kutu, v4.satir
 F = v14.F
 
 SK = 110                                   # panel kenarı eğimi (px, üstte sağa / altta sola)
-B = (2430, 3960, 7080, 11080, 14040, 15570)  # panel sınırları
+B = (2430, 3960, 7110, 11050, 14200, 15730)  # panel sınırları
 FIYAT = (("1+0", "699.000", "29.900"), ("1+1", "999.000", "39.900"))
 
 RENKLER = {
@@ -63,16 +63,11 @@ def beyaz(x0, x1, dL, dR, bg="#ffffff"):
 
 
 def foto_panel(x0, x1, dL, dR, ad, pos="50% 50%"):
-    """V biçimli fotoğraf paneli; iki kenarı kendi eğim açısında zemine erir."""
-    pay = 240
-    w = x1 - x0 + 2 * SK + 2 * pay
-    acl = 90 - 14.5 * dL          # sol kenara paralel geçiş
-    acr = 90 - 14.5 * dR          # sağ kenara paralel geçiş
-    m1 = f"linear-gradient({acl}deg,transparent 4%,#000 20%,#000 100%)"
-    m2 = f"linear-gradient({acr}deg,#000 0,#000 80%,transparent 96%)"
-    return (f'<div class="a" style="left:{x0 - SK - pay}px;top:0;width:{w}px;height:850px;-webkit-mask-image:{m1};mask-image:{m1}">'
-            f'<div style="position:absolute;inset:0;-webkit-mask-image:{m2};mask-image:{m2};'
-            f'background:url({F[ad]}) {pos}/cover no-repeat"></div></div>')
+    """V biçimli fotoğraf paneli; fotoğraf çerçeveye tam oturur (keskin kenar)."""
+    w = x1 - x0 + 2 * SK
+    return (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w}px;height:850px;'
+            f'clip-path:polygon({SK + dL * SK}px 0,{w - SK + dR * SK}px 0,{w - SK - dR * SK}px 100%,{SK - dL * SK}px 100%);'
+            f'background:url({F[ad]}) {pos}/cover no-repeat"></div>')
 
 
 def cizgi(b, d, altin):
@@ -105,16 +100,22 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
     <div style="width:4px;height:120px;background:{p['altin']}"></div>
     <div class="tek" style="font-size:54px;font-weight:800;color:{p['metin']};letter-spacing:.04em">60 AY VADE FARKSIZ</div>
   </div>
-  {y(cx, 618, "FAİZ YOK · BANKA YOK · KREDİ YOK · ARA ÖDEME YOK", 50, 800, p['vurgu'], ek="transform:translateX(-50%);letter-spacing:.08em")}
-  {telefon(cx, 695, p['metin'], 84)}"""
+  <div class="a" style="left:{x0 + SK}px;top:600px;width:{x1 - x0 - 2 * SK}px;display:flex;justify-content:center;gap:26px">
+    {"".join(f'<div class="tek" style="height:86px;padding:0 36px;border-radius:43px;background:{bg};color:#fff;font-size:40px;font-weight:800;letter-spacing:.05em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e")))}
+  </div>
+  {telefon(cx, 715, p['metin'], 80)}"""
 
 
 def tasarim(ad):
     p = RENKLER[ad]
     b1, b2, b3, b4, b5, b6 = B
-    tas, ic = v4.bina((b3 + b4) / 2)
-    gok = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b3, b4, D[2], D[3])};'
-           f'background:linear-gradient(180deg,#cfe3f3 0%,#eef6fb 60%,#f6f9fc 100%)"></div>')
+    tas, ic = v16.bina_olcekli((b3 + b4) / 2, 1.12)
+    HW, HH = round(v4.HW * 1.12), round(v4.HH * 1.12)
+    hx = round((b3 + b4) / 2 - HW / 2)
+    orijinal = os.path.join(ROOT, "signage-source", "entrance-gate-genis.png")
+    gok = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b3, b4, D[2], D[3])}">'
+           f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
+    ic = ""
     paneller = (beyaz(-SK - 10, b1, 0, D[0]) + foto_panel(b1, b2, D[0], D[1], "avlu2") + beyaz(b2, b3, D[1], D[2]) + gok
                 + beyaz(b4, b5, D[3], D[4]) + foto_panel(b5, b6, D[4], D[5], "avlu3") + beyaz(b6, 18000 + SK + 10, D[5], 0))
     cizgiler = "".join(cizgi(b, d, p["altin"]) for b, d in zip(B, D))
