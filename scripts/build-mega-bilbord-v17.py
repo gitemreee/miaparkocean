@@ -39,7 +39,7 @@ y, kutu, satir = v4.y, v4.kutu, v4.satir
 F = v14.F
 
 SK = 110                                   # panel kenarı eğimi (px, üstte sağa / altta sola)
-B = (1200, 2900, 4700, 7100, 10900, 13300, 15100, 16800)  # panel sınırları (9 panel)
+B = (1500, 3050, 4850, 7200, 10800, 13150, 14950, 16500)  # panel sınırları (9 panel)
 MIA_PNG = os.path.join(ROOT, "public", "brand", "logo-mia-2026.png")   # orijinal logo (1024×712)
 MIA_RENK = "#1d7f9c"
 FIYAT = (("1+0", "699.000", "29.900"), ("1+1", "999.000", "39.900"))
@@ -86,38 +86,39 @@ def beyaz(x0, x1, dL, dR, bg=None):
     return f'<div class="a" style="left:0;top:0;width:18000px;height:850px;background:{bg};clip-path:{kesik(x0, x1, dL, dR)}"></div>'
 
 
-UST_K = (850 + 2 * mb.EXT) / 850      # kenar eğiminin tuval tepesine (500 px yukarı) uzatılmış çarpanı ≈ 2.18
+YAN_FOTO = {   # çerçeve fotoğrafı, gök maskeli kesik, taşmada gösterilecek sütunlar (bina blokları)
+    "avlu2": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.27, 0.60)]),
+    "balkon_avlu": ("signage-source/balkondan-avlu.jpg", "signage-source/balkondan-avlu-kesik.png", [(0.0, 1.0)]),
+    "avlu_aksam": ("signage-source/avlu-aksam.jpg", "signage-source/avlu-aksam-kesik.png", [(0.09, 0.50)]),
+}
 
 
-def foto_panel(x0, x1, dL, dR, ad, pos="50% 50%"):
-    """V biçimli fotoğraf paneli, panonun 5 m üstüne kadar taşar (tasma + pano katmanı)."""
+def foto_panel(x0, x1, dL, dR, ad):
+    """V çerçeve panoda kalır; fotoğraf 5 m yukarıdan başlayacak şekilde büyütülür, çerçeve üstünde yalnızca
+    gök maskeli bina silüeti görünür → (tasma katmanı, pano katmanı)."""
+    tam, kesik_png, sutunlar = YAN_FOTO[ad]
     H = 850 + mb.EXT
-    sol_ust, sol_alt = x0 + dL * SK * UST_K, x0 - dL * SK
-    sag_ust, sag_alt = x1 + dR * SK * UST_K, x1 - dR * SK
-    L = min(sol_ust, sol_alt) - 10
-    w = max(sag_ust, sag_alt) + 10 - L
-    kes = f"polygon({sol_ust - L:.0f}px 0,{sag_ust - L:.0f}px 0,{sag_alt - L:.0f}px 100%,{sol_alt - L:.0f}px 100%)"
-    div = lambda top: (f'<div class="a" style="left:{L:.0f}px;top:{top}px;width:{w:.0f}px;height:{H}px;clip-path:{kes};'
-                       f'background:url({F[ad]}) {pos}/cover no-repeat"></div>')
-    return div(0), div(-mb.EXT)          # (tasma katmanı, pano katmanı)
+    im_w, im_h = Image.open(os.path.join(ROOT, tam)).size
+    w = round(H * im_w / im_h)
+    cx = (x0 + x1) / 2
+    left = round(cx - w / 2)
+    dur = []
+    for a_, b_ in sutunlar:
+        dur += [f"transparent {a_ * 100:.1f}%", f"#000 {a_ * 100:.1f}%", f"#000 {b_ * 100:.1f}%", f"transparent {b_ * 100:.1f}%"]
+    maske = "linear-gradient(90deg," + ",".join(dur) + ")"
+    tasma = (f'<img class="a" src="file://{os.path.join(ROOT, kesik_png)}" style="left:{left}px;top:0;width:{w}px;height:{H}px;'
+             f'-webkit-mask-image:{maske}">')
+    pano_ = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(x0, x1, dL, dR)}">'
+             f'<img class="a" src="file://{os.path.join(ROOT, tam)}" style="left:{left}px;top:{-mb.EXT}px;width:{w}px;height:{H}px"></div>')
+    return tasma, pano_
 
 
-def cizgi(b, d, altin, tam=False):
-    """Altın kenar çizgisi; tam=True ise tuval tepesine kadar uzar → (tasma, pano) çifti."""
+def cizgi(b, d, altin):
     w = 16
-    if not tam:
-        ust, alt = (2 * SK, 0) if d > 0 else (0, 2 * SK)
-        return (f'<div class="a" style="left:{b - SK - w // 2}px;top:0;width:{2 * SK + w}px;height:850px;'
-                f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
-                f'clip-path:polygon({ust}px 0,{ust + w}px 0,{alt + w}px 100%,{alt}px 100%)"></div>')
-    H = 850 + mb.EXT
-    xu, xa = b + d * SK * UST_K, b - d * SK
-    L = min(xu, xa) - w // 2
-    W = abs(xu - xa) + w
-    div = lambda top: (f'<div class="a" style="left:{L:.0f}px;top:{top}px;width:{W:.0f}px;height:{H}px;'
-                       f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
-                       f'clip-path:polygon({xu - L:.0f}px 0,{xu - L + w:.0f}px 0,{xa - L + w:.0f}px 100%,{xa - L:.0f}px 100%)"></div>')
-    return div(0), div(-mb.EXT)
+    ust, alt = (2 * SK, 0) if d > 0 else (0, 2 * SK)
+    return (f'<div class="a" style="left:{b - SK - w // 2}px;top:0;width:{2 * SK + w}px;height:850px;'
+            f'background:linear-gradient(180deg,{altin},#fff5d6 50%,{altin});'
+            f'clip-path:polygon({ust}px 0,{ust + w}px 0,{alt + w}px 100%,{alt}px 100%)"></div>')
 
 
 def telefon(cx, top, renk, fs=64):
@@ -166,9 +167,9 @@ def bilgi_paneli(cx, p, ocean=False):
 
 
 def tilda_paneli(cx, p):
-    return (mb.tilda(cx - 414, 200, 180, False)
-            + telefon(cx, 460, p["metin"], 68)
-            + y(cx, 560, "tildainsaat.com", 44, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
+    return (mb.tilda(cx - 540, 170, 235, False)
+            + telefon(cx, 490, p["metin"], 80)
+            + y(cx, 600, "tildainsaat.com", 52, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
 
 
 def tasarim(ad):
@@ -185,21 +186,12 @@ def tasarim(ad):
             f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
     tint = None
     f1t, f1 = foto_panel(b2, b3, d[1], d[2], "avlu2")
-    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu3")
+    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu_aksam")
     paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + f1
                 + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + f2
                 + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
-    tam_sinir = {b2, b3, b6, b7}
-    ciz_t, ciz = "", ""
-    for b_, d_ in zip(B, D):
-        if b_ in tam_sinir:
-            t_, p_ = cizgi(b_, d_, p["altin"], tam=True)
-            ciz_t += t_
-            ciz += p_
-        else:
-            ciz += cizgi(b_, d_, p["altin"])
-    cizgiler = ciz
-    tas = f1t + f2t + tas + ciz_t
+    cizgiler = "".join(cizgi(b_, d_, p["altin"]) for b_, d_ in zip(B, D))
+    tas = f1t + f2t + tas
     icerik = f"""
   {tilda_paneli(b1 / 2, p)}
   {bilgi_paneli((b1 + b2) / 2, p)}
