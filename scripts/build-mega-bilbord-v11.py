@@ -59,6 +59,13 @@ def panel(x, w, bg, sol=True, nokta="rgba(255,255,255,.22)"):
             f'mask-image:{mask};-webkit-mask-image:{mask}"></div>')
 
 
+def detay(x, top, w, h, yol, pos="50% 50%", r=44):
+    """Köşeleri yuvarlatılmış detay fotoğrafı (proje render'ı)."""
+    return (f'<div class="a" style="left:{x}px;top:{top}px;width:{w}px;height:{h}px;border-radius:{r}px;'
+            f'background:url(file://{os.path.join(ROOT, yol)}) {pos}/cover no-repeat;'
+            f'box-shadow:0 24px 50px rgba(0,0,0,.25)"></div>')
+
+
 def aile(x, ah=900, top=None):
     top = 910 - ah if top is None else top
     return (f'<img class="a" src="{AILE}" style="left:{x}px;top:{top}px;height:{ah}px;width:{round(ah * AILE_ORAN)}px;'
@@ -150,11 +157,12 @@ def A3():
   {y(1600, 265, "KENDİ EVİNİZE", 200, 800, "#fff", maxw=3900)}
   {y(1600, 480, "ÖDEYİN.", 200, 800, "#dff8fb", maxw=3900)}
   {pill(10650, 60, "60 AY SABİT TAKSİT", turk, "#fff", 60, 130, "letter-spacing:.08em")}
-  {kutu(10600, 220, 3800, 300, v6.fiyat_satiri(koyu, 160, turk, "rgba(6,52,63,.25)"))}
-  {yok_piller(10650, 580, "transparent", koyu, koyu, 46, 100)}
-  {aile(14550, 880)}
-  {mb.mia(16200, 60, 330, False)}
-  {damga(17450, 450, 340, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=turk, yazi="#fff")}"""
+  {kutu(10600, 220, 3400, 300, v6.fiyat_satiri(koyu, 150, turk, "rgba(6,52,63,.25)"))}
+  {yok_piller(10650, 580, "transparent", koyu, koyu, 44, 100, 24)}
+  {detay(14250, 60, 1950, 640, "signage-source/avlu-havuz-teras.jpg", "50% 62%")}
+  {aile(16150, 860)}
+  {mb.mia(17280, 60, 300, False)}
+  {damga(17500, 530, 300, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=turk, yazi="#fff")}"""
     return pano(r, zemin, arka, icerik, tas, ic)
 
 
