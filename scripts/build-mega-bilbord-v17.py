@@ -50,7 +50,28 @@ RENKLER = {
 }
 
 
-D = (-1, 1, -1, 1, -1, 1, -1, 1)   # sınır eğimi: +1 → "/" (üst sağda), -1 → "\\" (üst solda) — beyazlar Λ, fotolar V
+D = (1, -1, 1, -1, 1, -1, 1, -1)   # fotoğraflar ve bina V (üstü geniş), beyazlar Λ — sınır eğimi: +1 → "/" (üst sağda), -1 → "\\" (üst solda) — beyazlar Λ, fotolar V
+
+
+def kirik_desen():
+    """Açık tonlu kırık (düşük poligon) desen — panel zemini. Bir kez üretilir."""
+    yol = os.path.join(ROOT, "signage-source", "desen-kirik.svg")
+    if os.path.exists(yol):
+        return "file://" + yol
+    import random
+    from scipy.spatial import Delaunay
+    random.seed(7)
+    W, H = 18000, 850
+    pts = [(random.uniform(-200, W + 200), random.uniform(-200, H + 200)) for _ in range(520)]
+    pts += [(-300, -300), (W + 300, -300), (-300, H + 300), (W + 300, H + 300)]
+    tri = Delaunay(pts)
+    tonlar = ["#ffffff", "#f8fafc", "#f1f5f9", "#eaf0f6", "#e3eaf2", "#f5f7fa", "#edf2f7"]
+    poly = []
+    for a, b, c in tri.simplices:
+        renk = random.choice(tonlar)
+        poly.append(f'<polygon points="{pts[a][0]:.0f},{pts[a][1]:.0f} {pts[b][0]:.0f},{pts[b][1]:.0f} {pts[c][0]:.0f},{pts[c][1]:.0f}" fill="{renk}" stroke="#ffffff" stroke-width="3"/>')
+    open(yol, "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}">{"".join(poly)}</svg>')
+    return "file://" + yol
 
 
 def kesik(x0, x1, dL, dR):
@@ -58,7 +79,8 @@ def kesik(x0, x1, dL, dR):
     return (f"polygon({x0 + dL * SK}px 0,{x1 + dR * SK}px 0,{x1 - dR * SK}px 100%,{x0 - dL * SK}px 100%)")
 
 
-def beyaz(x0, x1, dL, dR, bg="#ffffff"):
+def beyaz(x0, x1, dL, dR, bg=None):
+    bg = bg or f"url({kirik_desen()}) 0 0/18000px 850px no-repeat"
     return f'<div class="a" style="left:0;top:0;width:18000px;height:850px;background:{bg};clip-path:{kesik(x0, x1, dL, dR)}"></div>'
 
 
@@ -108,16 +130,21 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
 
 
 def bilgi_paneli(cx, p, ocean=False):
-    """Bilgi paneli: MİA PARK OCEAN logosu · slogan · telefon · siteler (+ Ocean)."""
-    s_ = mb.mia(cx - 145, 60, 200, False)
-    s_ += y(cx, 300, "MİA PARK OCEAN'DA", 58, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
-    s_ += y(cx, 366, "YAŞAM BAŞLIYOR.", 70, 800, p["metin"], ek="transform:translateX(-50%);letter-spacing:.02em")
-    s_ += telefon(cx, 470, p["metin"], 80)
-    s_ += y(cx, 575, "tildainsaat.com &nbsp;·&nbsp; miaparkocean.com", 40, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.03em")
+    """Bilgi paneli: büyük MİA PARK OCEAN logosu · slogan · site (+ Ocean)."""
+    s_ = mb.mia(cx - 210, 50, 290, False)
+    s_ += y(cx, 385, "MİA PARK OCEAN'DA", 62, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
+    s_ += y(cx, 456, "YERİNİZİ ALIN!", 84, 800, p["metin"], ek="transform:translateX(-50%);letter-spacing:.02em")
+    s_ += y(cx, 575, "miaparkocean.com", 50, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em")
     if ocean:
-        s_ += (f'<div class="a" style="left:{cx}px;top:645px;transform:translateX(-50%);display:flex;align-items:center;gap:30px">'
+        s_ += (f'<div class="a" style="left:{cx}px;top:655px;transform:translateX(-50%);display:flex;align-items:center;gap:30px">'
                f'<div class="tek kas" style="font-size:28px;color:{p["metin"]}">TEK YETKİLİ SATIŞ</div>{mb.ocean(74, "#0f4c9b", "#2f7fd6")}</div>')
     return s_
+
+
+def tilda_paneli(cx, p):
+    return (mb.tilda(cx - 500, 190, 218, False)
+            + telefon(cx, 470, p["metin"], 76)
+            + y(cx, 575, "tildainsaat.com", 48, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
 
 
 def tasarim(ad):
@@ -132,18 +159,18 @@ def tasarim(ad):
     orijinal = os.path.join(ROOT, "signage-source", "entrance-gate-genis.png")
     hero = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b4, b5, d[3], d[4])}">'
             f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
-    tint = "linear-gradient(180deg,#f4f7fb,#e9eef6)"
+    tint = None
     paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + foto_panel(b2, b3, d[1], d[2], "avlu2")
                 + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + foto_panel(b6, b7, d[5], d[6], "avlu3")
                 + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
     cizgiler = "".join(cizgi(b_, d_, p["altin"]) for b_, d_ in zip(B, D))
     icerik = f"""
-  {mb.tilda(b1 / 2 - 460, 325, 200, False)}
+  {tilda_paneli(b1 / 2, p)}
   {bilgi_paneli((b1 + b2) / 2, p)}
   {fiyat_paneli(b3, b4, *FIYAT[0], p)}
   {fiyat_paneli(b5, b6, *FIYAT[1], p)}
   {bilgi_paneli((b7 + b8) / 2, p, ocean=True)}
-  {mb.tilda((b8 + 18000) / 2 - 460, 325, 200, False)}"""
+  {tilda_paneli((b8 + 18000) / 2, p)}"""
     return f"""
 <div class="tasma">{tas}</div>
 <div class="pano" style="background:#f1f1f1">
