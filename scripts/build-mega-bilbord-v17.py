@@ -87,31 +87,45 @@ def beyaz(x0, x1, dL, dR, bg=None):
 
 
 YAN_FOTO = {   # çerçeve fotoğrafı, gök maskeli kesik, taşmada gösterilecek sütunlar (bina blokları)
-    "avlu2": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.26, 0.445), (0.455, 0.70)], 1450),
+    "avlu2": ("signage-source/avlu-havuz-teras.jpg", None, []),
     "balkon_avlu": ("signage-source/balkondan-avlu.jpg", "signage-source/balkondan-avlu-kesik.png", [(0.0, 1.0)]),
     "avlu_aksam": ("signage-source/avlu-aksam.jpg", "signage-source/avlu-aksam-kesik.png", [(0.12, 0.33), (0.34, 0.42)]),
     "cocuk_parki": ("signage-source/cocuk-parki.jpg", "signage-source/cocuk-parki-kesik.png", [(0.50, 1.0)]),
     "avlu3": ("signage-source/avlu-havuz-ustten.jpg", None, []),      # gök yok → taşma yok
     "gunbatimi": ("signage-source/render-gunbatimi.jpg", "signage-source/render-gunbatimi-kesik.png", [(0.055, 0.465), (0.56, 1.0)]),
+    "gunbatimi_dolgu": ("signage-source/render-gunbatimi.jpg", "signage-source/render-gunbatimi-kesik.png", [(0.055, 0.465)], ("dolgu", 0.31)),
+    "avlu2_dolgu": ("signage-source/avlu-havuz-teras.jpg", "signage-source/avlu-havuz-teras-kesik.png", [(0.26, 0.445), (0.455, 0.70)], ("dolgu", 0.07)),
     "gece": ("signage-source/hf-bilbord8/gece-genis-ham.png", "signage-source/hf-bilbord8/gece-maskeli.png", [(0.31, 0.45), (0.555, 0.70)], 1800),
 }
 
 
 def foto_panel(x0, x1, dL, dR, ad):
-    """V çerçeve panoda kalır; fotoğraf alt kenara dayalı büyütülür, çerçeve üstünde yalnızca
-    gök maskeli bina silüeti (seçili sütunlar) görünür → (tasma katmanı, pano katmanı)."""
+    """V çerçeve panoda kalır; çerçeve üstünde yalnızca gök maskeli bina silüeti görünür.
+
+    YAN_FOTO girdisi: (foto, kesik, sütunlar[, H | ("dolgu", cati_orani)])
+      H               → fotoğraf H px yüksekliğinde, alt kenar panonun altında
+      ("dolgu", c)    → sütunların kapladığı genişlik çerçevenin üst genişliğini doldurur, çatı (c) tuvalde 150 px'te
+    → (tasma katmanı, pano katmanı)"""
     tam, kesik_png, sutunlar, *ek = YAN_FOTO[ad]
     if kesik_png is None:                      # taşmasız: fotoğraf çerçeveye tam oturur
         w_ = x1 - x0 + 2 * SK
         return "", (f'<div class="a" style="left:{x0 - SK}px;top:0;width:{w_}px;height:850px;'
                     f'clip-path:polygon({SK + dL * SK}px 0,{w_ - SK + dR * SK}px 0,{w_ - SK - dR * SK}px 100%,{SK - dL * SK}px 100%);'
                     f'background:url(file://{os.path.join(ROOT, tam)}) 50% 55%/cover no-repeat"></div>')
-    H = ek[0] if ek else 850 + mb.EXT
-    ust = 850 + mb.EXT - H                     # tuval koordinatında üst kenar (≤ 0)
     im_w, im_h = Image.open(os.path.join(ROOT, tam)).size
-    w = round(H * im_w / im_h)
     cx = (x0 + x1) / 2
-    left = round(cx - w / 2)
+    if ek and isinstance(ek[0], tuple):
+        _, cati = ek[0]
+        s0, s1 = sutunlar[0][0], sutunlar[-1][1]
+        w = round((x1 - x0 + 2 * SK) / (s1 - s0))
+        H = round(w * im_h / im_w)
+        left = round(x0 - SK - s0 * w)
+        ust = 150 - round(cati * H)
+    else:
+        H = ek[0] if ek else 850 + mb.EXT
+        w = round(H * im_w / im_h)
+        left = round(cx - w / 2)
+        ust = 850 + mb.EXT - H
     dur = []
     for a_, b_ in sutunlar:
         dur += [f"transparent {a_ * 100:.1f}%", f"#000 {a_ * 100:.1f}%", f"#000 {b_ * 100:.1f}%", f"transparent {b_ * 100:.1f}%"]
@@ -184,7 +198,7 @@ def tilda_paneli(cx, p):
             + y(cx, 600, "tildainsaat.com", 52, 800, p["vurgu"], ek="transform:translateX(-50%);letter-spacing:.04em"))
 
 
-def tasarim(ad):
+def tasarim(ad, sol="gunbatimi_dolgu", sag="avlu2_dolgu"):
     p = RENKLER[ad]
     b1, b2, b3, b4, b5, b6, b7, b8 = B
     d = D
@@ -197,8 +211,8 @@ def tasarim(ad):
     hero = (f'<div class="a" style="left:0;top:0;width:18000px;height:850px;clip-path:{kesik(b4, b5, d[3], d[4])}">'
             f'<img class="a" src="file://{orijinal}" style="left:{hx}px;top:{-mb.EXT}px;width:{HW}px;height:{HH}px"></div>')
     tint = None
-    f1t, f1 = foto_panel(b2, b3, d[1], d[2], "gunbatimi")
-    f2t, f2 = foto_panel(b6, b7, d[5], d[6], "avlu2")
+    f1t, f1 = foto_panel(b2, b3, d[1], d[2], sol)
+    f2t, f2 = foto_panel(b6, b7, d[5], d[6], sag)
     paneller = (beyaz(-SK - 10, b1, 0, d[0]) + beyaz(b1, b2, d[0], d[1], tint) + f1
                 + beyaz(b3, b4, d[2], d[3]) + hero + beyaz(b5, b6, d[4], d[5]) + f2
                 + beyaz(b7, b8, d[6], d[7], tint) + beyaz(b8, 18000 + SK + 10, d[7], 0))
@@ -220,8 +234,9 @@ def tasarim(ad):
 </div>"""
 
 
-TASARIMLAR = [(lambda: tasarim("lacivert"), "lacivert-altin"), (lambda: tasarim("yesil"), "yesil-altin"),
-              (lambda: tasarim("siyah"), "siyah-altin"), (lambda: tasarim("bordo"), "bordo-altin")]
+TASARIMLAR = [(lambda: tasarim("lacivert"), "lacivert-altin"),
+              (lambda: tasarim("lacivert", "avlu2", "avlu3"), "lacivert-altin-B-tasmasiz"),
+              (lambda: tasarim("yesil"), "yesil-altin"), (lambda: tasarim("siyah"), "siyah-altin"), (lambda: tasarim("bordo"), "bordo-altin")]
 
 
 def main():
