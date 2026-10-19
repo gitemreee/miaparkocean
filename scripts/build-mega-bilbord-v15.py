@@ -63,7 +63,9 @@ def Y():
   {pill(13300, 60, "60 AY SABİT TAKSİT", acik, "#fff", 58, 116, "letter-spacing:.08em")}
   {kutu(13250, 215, 2700, 300, v6.fiyat_satiri(yesil, 140, acik, "rgba(18,61,42,.25)"))}
   {onay_liste(13300, 540, yesil, acik, "#fff", 42, 90, 1250)}
-  {yumusak(15550, 0, 1150, 718, "yatak", "50% 50%", (.22, .22), (0, .1))}
+  {v11.daire_foto(15800, 195, 330, "salon")}
+  {v11.daire_foto(16140, 365, 330, "yatak")}
+  {v11.daire_foto(15840, 545, 330, "mutfak")}
   {mb.mia(16560, 219, 280, False)}
   {mb.tilda(16980, 259, 200, False)}
   {damga(17800, 605, 180, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=acik, yazi="#fff")}"""
