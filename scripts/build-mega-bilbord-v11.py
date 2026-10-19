@@ -144,26 +144,55 @@ def A2():
     return pano(r, zemin, arka, icerik, tas, ic)
 
 
-# ================================================================ 3 — turkuaz, aile sağ uçta
+# ================================================================ 3 — turkuaz → beyaz geçişli, şok finans kartı
+def sok(cx, cy, d, ust, alt, bg="#e3262e", renk="#fff", don=-12):
+    """Kırmızı yıldız patlaması rozeti."""
+    import math
+    n, pts = 16, []
+    for i in range(2 * n):
+        rr = d / 2 if i % 2 == 0 else d / 2 * .78
+        a_ = math.pi * i / n
+        pts.append(f"{d / 2 + rr * math.cos(a_):.1f},{d / 2 + rr * math.sin(a_):.1f}")
+    return (f'<div class="a" style="left:{cx - d // 2}px;top:{cy - d // 2}px;width:{d}px;height:{d}px;transform:rotate({don}deg);'
+            f'filter:drop-shadow(0 16px 30px rgba(0,0,0,.3))"><svg width="{d}" height="{d}"><polygon points="{" ".join(pts)}" fill="{bg}"/></svg>'
+            f'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:{renk};text-align:center;line-height:1">'
+            f'<div class="tek" style="font-size:{round(d * .30)}px;font-weight:800;letter-spacing:-.02em">{ust}</div>'
+            f'<div class="tek" style="font-size:{round(d * .13)}px;font-weight:700;letter-spacing:.08em;margin-top:.1em">{alt}</div></div></div>')
+
+
+def daire_foto(cx, cy, d, ad, kenar="#fff"):
+    return (f'<div class="a" style="left:{cx - d // 2}px;top:{cy - d // 2}px;width:{d}px;height:{d}px;border-radius:50%;'
+            f'background:url({v10.F[ad]}) 50% 50%/cover no-repeat;border:12px solid {kenar};box-shadow:0 20px 40px rgba(0,0,0,.25)"></div>')
+
+
 def A3():
-    koyu, turk = "#06343f", "#0e8a98"
+    koyu, turk, kir = "#06343f", "#0e8a98", "#e3262e"
     r = dict(v4.SERIT_ACIK, serit=koyu, serit_su="#5fd3e0")
-    zemin = "linear-gradient(90deg,#e4f1f3 0%,#f3f8f9 50%,#e6f0f2 100%)"
-    tas, ic = v4.bina(8300)
-    arka = panel(0, 6300, "linear-gradient(135deg,#17a7b6 0%,#0e8a98 55%,#076b78 100%)")
+    zemin = "linear-gradient(90deg,#0b7f8d 0%,#15a0ae 20%,#6cc6d1 38%,#d9eff2 50%,#ffffff 60%,#ffffff 100%)"
+    tas, ic = v4.bina(11200)
+    kart = ('<div class="a" style="left:4350px;top:60px;width:3750px;height:640px;border-radius:56px;background:#fff;'
+            'box-shadow:0 30px 70px rgba(6,52,63,.28)"></div>')
+    yoklar = kutu(4620, 590, 3300, 90, "".join(
+        pill(0, 0, t, kir, "#fff", 44, 86, "position:relative;margin-right:26px;display:inline-flex;padding:0 34px") for t in YOK4),
+        "display:flex;align-items:center")
     icerik = f"""
-  {mb.tilda(300, 70, 230, True)}
-  {y(1600, 50, "KİRAYA DEĞİL,", 200, 800, "#fff", maxw=3900)}
-  {y(1600, 265, "KENDİ EVİNİZE", 200, 800, "#fff", maxw=3900)}
-  {y(1600, 480, "ÖDEYİN.", 200, 800, "#dff8fb", maxw=3900)}
-  {pill(10650, 60, "60 AY SABİT TAKSİT", turk, "#fff", 60, 130, "letter-spacing:.08em")}
-  {kutu(10600, 220, 3400, 300, v6.fiyat_satiri(koyu, 150, turk, "rgba(6,52,63,.25)"))}
-  {yok_piller(10650, 580, "transparent", koyu, koyu, 44, 100, 24)}
-  {detay(14250, 60, 1950, 640, "signage-source/avlu-havuz-teras.jpg", "50% 62%")}
-  {aile(16150, 860)}
-  {mb.mia(17280, 60, 300, False)}
-  {damga(17500, 530, 300, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=turk, yazi="#fff")}"""
-    return pano(r, zemin, arka, icerik, tas, ic)
+  {mb.tilda(300, 100, 300, True)}
+  {y(1950, 55, "KİRAYA DEĞİL,", 190, 800, "#fff", maxw=2250)}
+  {y(1950, 262, "KENDİ EVİNİZE", 190, 800, "#fff", maxw=2250)}
+  {y(1950, 470, "ÖDEYİN.", 190, 800, "#dff8fb", maxw=2250)}
+  {kart}
+  {pill(4650, 120, "60 AY SABİT TAKSİT", koyu, "#fff", 60, 120, "letter-spacing:.08em")}
+  {kutu(4600, 265, 4000, 300, v6.fiyat_satiri(kir, 170, koyu, "rgba(6,52,63,.25)"))}
+  {yoklar}
+  {sok(7900, 250, 420, "ŞOK", "FİYAT!")}
+  {detay(13200, 60, 1550, 390, "signage-source/avlu-havuz-teras.jpg", "50% 62%", 40)}
+  {daire_foto(13330, 600, 230, "salon")}
+  {daire_foto(13975, 600, 230, "mutfak")}
+  {daire_foto(14620, 600, 230, "park")}
+  {aile(14850, 950, -15)}
+  {mb.mia(16300, 60, 400, False)}
+  {damga(17480, 530, 330, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=kir, yazi="#fff")}"""
+    return pano(r, zemin, "", icerik, tas, ic)
 
 
 # ================================================================ 4 — kırmızı, son daireler
