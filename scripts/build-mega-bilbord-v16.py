@@ -39,8 +39,17 @@ TW, EXT = mb.TW, mb.EXT
 y, kutu, damga, pill, pano = v4.y, v4.kutu, v4.damga, v11.pill, v11.pano
 aile, AILE1, onay_liste, F = v14.aile, v14.AILE1, v11.onay_liste, v14.F
 serit_buyut, KIR = v15.serit_buyut, v15.KIR
+v15.TEL2 = "444 1 058"          # şeritte de aynı yazım
 
-YESIL, ACIK = "#123d2a", "#2f8a4e"
+YESIL, ACIK = "#06343f", "#0e8a98"
+F["avlu3"] = "file://" + os.path.join(ROOT, "signage-source", "avlu-havuz-ustten.jpg")
+yumusak = v14.yumusak
+
+
+def telefon(x, top, renk, fs=72, hizala="left"):
+    simge = v2.IK_TEL.replace("<svg", f'<svg style="width:{round(fs * 1.1)}px;height:{round(fs * 1.1)}px;flex:none"', 1)
+    return (f'<div class="a tek" style="left:{x}px;top:{top}px;display:flex;align-items:center;gap:22px;color:{renk};'
+            f'font-size:{fs}px;font-weight:800;letter-spacing:.02em{";transform:translateX(-50%)" if hizala == "center" else ""}">{simge}444 1 058</div>')
 
 
 def bina_olcekli(cx, s):
@@ -64,16 +73,17 @@ def panel_foto(x, w, ad, pos="50% 50%"):
 
 
 def M():
-    r = dict(v4.SERIT_ACIK, serit=YESIL, serit_su="#8fd1a6")
-    zemin = "linear-gradient(90deg,#f1f6f2 0%,#ffffff 20%,#ffffff 80%,#f1f6f2 100%)"
+    r = dict(v4.SERIT_ACIK, serit=YESIL, serit_su="#5fd3e0")
+    zemin = "linear-gradient(90deg,#ffffff 0%,#ffffff 30%,#dff3f5 52%,#8fd3da 74%,#2fa9b6 90%,#0e8a98 100%)"
     tas, ic = bina_olcekli(8450, 0.78)
     rozet = lambda yy, t, bg, ek="": pill(11650, yy, t, bg, "#fff", 44, 108, "transform:translateX(-50%);letter-spacing:.06em" + ek)
     icerik = f"""
-  {mb.tilda(250, 214, 290, False)}
+  {mb.tilda(250, 150, 290, False)}
+  {telefon(960, 490, YESIL, 72, "center")}
   {y(1750, 150, "KİRAYA DEĞİL,", 125, 800, ACIK, maxw=1900)}
   {y(1750, 290, "KENDİ EVİNİZE", 125, 800, YESIL, maxw=1900)}
   {y(1750, 430, "ÖDEYİN.", 125, 800, YESIL, maxw=1900)}
-  {panel_foto(3730, 880, "avlu2", "38% 60%")}
+  {yumusak(3600, 0, 1150, 718, "avlu2", "38% 60%", (.16, .16), (0, .1))}
   {pill(5950, 60, "60 AY SABİT TAKSİT", ACIK, "#fff", 56, 110, "letter-spacing:.08em;transform:translateX(-50%)")}
   {kutu(4700, 200, 2500, 240, v6.fiyat_satiri(YESIL, 136, ACIK, "rgba(18,61,42,.25)"), "display:flex;justify-content:center")}
   {onay_liste(4760, 470, YESIL, ACIK, "#fff", 42, 108, 1220)}
@@ -83,13 +93,13 @@ def M():
   {pill(11660, 232, "KREDİ YOK", KIR, "#fff", 44, 108, "letter-spacing:.06em")}
   {rozet(364, "ARA ÖDEME YOK", "#111")}
   {rozet(496, "60 AY SABİT TAKSİT", KIR)}
-  {panel_foto(12460, 1530, "teras", "50% 55%")}
-  {mb.mia(14250, 159, 400, False)}
+  {yumusak(12300, 0, 1850, 718, "avlu3", "50% 50%", (.14, .14), (0, .1))}
+  {mb.mia(14250, 159, 400, True)}
   {v11.daire_foto(15330, 200, 380, "salon")}
   {v11.daire_foto(15740, 380, 380, "yatak")}
   {v11.daire_foto(15360, 525, 380, "mutfak")}
-  {mb.tilda(16480, 219, 280, False)}
-  {damga(17720, 610, 180, "SON", "DAİRELER", "KAÇIRMAYIN!", zemin=ACIK, yazi="#fff")}"""
+  {mb.tilda(16480, 160, 280, True)}
+  {telefon(17165, 490, "#ffffff", 72, "center")}"""
     return serit_buyut(pano(r, zemin, "", icerik, tas, ic))
 
 
