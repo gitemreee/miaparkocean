@@ -34,10 +34,9 @@ W, H = 1080, 1920
 F = lambda *p: "file://" + os.path.join(ROOT, *p)
 
 SUNUCU = os.path.join(ROOT, "signage-source", "aile", "sunucu2-kesik.png")
-HERO = os.path.join(ROOT, "signage-source", "4k", "sag-giris-havuz-aksam-8k.png")
+HERO = os.path.join(ROOT, "signage-source", "4k", "sol-avlu-havuz-teras-8k.png")
 
-MOR, MOR2, MAVI, SARI, YESIL = "#5b2d8e", "#7b3fb8", "#2d7fd8", "#f7c948", "#3cb552"
-LAC = "#1c2650"
+LAC, LAC2, ALTIN, KIR = "#0f2a5a", "#17407f", "#c9a24a", "#e3262e"
 
 
 def sayfa():
@@ -57,26 +56,27 @@ body {{ margin:0; width:{W}px; height:{H}px; overflow:hidden; position:relative;
           padding:22px 40px; box-shadow:0 16px 34px rgba(0,0,0,.22); }}
 </style></head><body>
   <div class="a" style="left:0;top:0;width:{W}px;height:{H}px;
-       background:linear-gradient(180deg,{MOR} 0%,{MOR2} 22%,#4e5fd0 42%,{MAVI} 52%,#6fb6ec 60%,#bfe3f7 66%)"></div>
+       background:linear-gradient(180deg,#ffffff 0%,#f4f7fb 30%,#e6eef8 50%,#d7e7f6 62%,#cfe3f4 66%)"></div>
 
   <div class="a" style="left:0;top:{H - r_h}px;width:{W}px;height:{r_h}px;overflow:hidden">
-    <img src="{F('signage-source','4k','sag-giris-havuz-aksam-8k.png')}" style="position:absolute;left:{-round((r_w - W) / 2)}px;top:0;width:{r_w}px;height:{r_h}px">
-    <div class="a" style="left:0;top:0;width:{W}px;height:220px;background:linear-gradient(180deg,#bfe3f7,rgba(191,227,247,0))"></div>
-    <div class="a" style="left:0;bottom:0;width:{W}px;height:240px;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.35) 60%,rgba(0,0,0,0) 100%)"></div>
+    <img src="{F('signage-source','4k','sol-avlu-havuz-teras-8k.png')}" style="position:absolute;left:{-round((r_w - W) / 2)}px;top:0;width:{r_w}px;height:{r_h}px">
+    <div class="a" style="left:0;top:0;width:{W}px;height:220px;background:linear-gradient(180deg,#cfe3f4,rgba(207,227,244,0))"></div>
+    <div class="a" style="left:0;bottom:0;width:{W}px;height:240px;background:linear-gradient(0deg,rgba(15,42,90,.92) 0%,rgba(15,42,90,.55) 55%,rgba(15,42,90,0) 100%)"></div>
   </div>
 
-  <div class="a tek orta" style="top:150px;font-size:96px;font-weight:800;color:#fff;letter-spacing:-.01em;text-shadow:0 6px 24px rgba(0,0,0,.25)">İlk Evine</div>
-  <div class="a tek orta" style="top:262px;font-size:112px;font-weight:800;color:#fff;letter-spacing:-.02em;text-shadow:0 6px 24px rgba(0,0,0,.25)">699.000 TL</div>
-  <div class="a tek orta" style="top:392px;font-size:96px;font-weight:800;color:#fff;letter-spacing:-.01em;text-shadow:0 6px 24px rgba(0,0,0,.25)">Peşinat ile Sahip Ol</div>
+  <div class="a tek orta" style="top:170px;font-size:70px;font-weight:800;color:{LAC};letter-spacing:-.01em">İlk Evine</div>
+  <div class="a tek orta" style="top:258px;font-size:112px;font-weight:800;color:{ALTIN};letter-spacing:-.02em">699.000 TL</div>
+  <div class="a tek orta" style="top:388px;font-size:70px;font-weight:800;color:{LAC};letter-spacing:-.01em">Peşinat ile Sahip Ol</div>
+  <div class="a tek orta" style="top:478px;font-size:30px;font-weight:600;color:#5a6b85;letter-spacing:.2em">MİA PARK OCEAN · İZMİT</div>
 
-  <div class="a rozet" style="top:600px;width:430px;background:{SARI};color:{LAC};border-radius:34px 34px 0 0">
+  <div class="a rozet" style="top:600px;width:430px;background:linear-gradient(180deg,{LAC2},{LAC});border-radius:34px 34px 0 0">
     <div class="tek" style="font-size:78px;letter-spacing:-.02em">699.000<span style="font-size:.34em;margin-left:6px">TL'DEN</span></div>
     <div class="tek" style="font-size:34px;margin-top:8px;letter-spacing:.04em">BAŞLAYAN PEŞİNAT</div>
   </div>
-  <div class="a rozet" style="top:762px;width:430px;background:{YESIL};border-radius:0 0 34px 34px">
+  <div class="a rozet" style="top:762px;width:430px;background:{ALTIN};color:{LAC};border-radius:0 0 34px 34px">
     <div class="tek" style="font-size:72px;letter-spacing:-.01em">60 AY VADE</div>
   </div>
-  <div class="a rozet" style="top:892px;width:340px;background:{MOR};border-radius:30px;padding:20px 30px">
+  <div class="a rozet" style="top:892px;width:340px;background:{KIR};border-radius:30px;padding:20px 30px">
     <div class="tek" style="font-size:34px;letter-spacing:.04em">BANKA YOK</div>
     <div class="tek" style="font-size:34px;margin-top:6px;letter-spacing:.04em">ARA ÖDEME YOK</div>
   </div>
