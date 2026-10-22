@@ -53,7 +53,7 @@ body {{ margin:0; width:{W}px; height:{H}px; overflow:hidden; position:relative;
 .tek {{ white-space:nowrap; line-height:1; }}
 .orta {{ left:0; width:{W}px; text-align:center; }}
 .rozet {{ left:61%; transform:translateX(-50%); text-align:center; font-weight:800; color:#fff;
-          padding:22px 40px; box-shadow:0 16px 34px rgba(0,0,0,.22); }}
+          box-shadow:0 16px 34px rgba(0,0,0,.22); }}
 </style></head><body>
   <div class="a" style="left:0;top:0;width:{W}px;height:{H}px;
        background:linear-gradient(180deg,#ffffff 0%,#f4f7fb 30%,#e6eef8 50%,#d7e7f6 62%,#cfe3f4 66%)"></div>
@@ -69,17 +69,18 @@ body {{ margin:0; width:{W}px; height:{H}px; overflow:hidden; position:relative;
   <div class="a tek orta" style="top:388px;font-size:70px;font-weight:800;color:{LAC};letter-spacing:-.01em">Peşinat ile Sahip Ol</div>
   <div class="a tek orta" style="top:478px;font-size:30px;font-weight:600;color:#5a6b85;letter-spacing:.2em">MİA PARK OCEAN · İZMİT</div>
 
-  <div class="a rozet" style="top:600px;width:430px;background:linear-gradient(180deg,{LAC2},{LAC});border-radius:34px 34px 0 0">
-    <div class="tek" style="font-size:78px;letter-spacing:-.02em">699.000<span style="font-size:.34em;margin-left:6px">TL'DEN</span></div>
-    <div class="tek" style="font-size:34px;margin-top:8px;letter-spacing:.04em">BAŞLAYAN PEŞİNAT</div>
+  <div class="a rozet" style="top:600px;width:540px;background:linear-gradient(180deg,{LAC2},{LAC});border-radius:34px 34px 0 0;padding:26px 0 22px">
+    <div class="tek" style="font-size:72px;letter-spacing:-.02em">699.000<span style="font-size:.36em;margin-left:8px">TL'DEN</span></div>
+    <div class="tek" style="font-size:30px;margin-top:10px;letter-spacing:.06em">BAŞLAYAN PEŞİNAT</div>
   </div>
-  <div class="a rozet" style="top:762px;width:430px;background:{ALTIN};color:{LAC};border-radius:0 0 34px 34px">
-    <div class="tek" style="font-size:72px;letter-spacing:-.01em">60 AY VADE</div>
+  <div class="a rozet" style="top:766px;width:540px;background:{ALTIN};color:{LAC};border-radius:0 0 34px 34px;padding:22px 0 24px">
+    <div class="tek" style="font-size:62px;letter-spacing:.01em">60 AY VADE</div>
   </div>
-  <div class="a rozet" style="top:892px;width:340px;background:{KIR};border-radius:30px;padding:20px 30px">
-    <div class="tek" style="font-size:34px;letter-spacing:.04em">BANKA YOK</div>
-    <div class="tek" style="font-size:34px;margin-top:6px;letter-spacing:.04em">ARA ÖDEME YOK</div>
+  <div class="a rozet" style="top:900px;width:420px;background:{KIR};border-radius:30px;padding:20px 0">
+    <div class="tek" style="font-size:30px;letter-spacing:.06em">BANKA YOK</div>
+    <div class="tek" style="font-size:30px;margin-top:8px;letter-spacing:.06em">ARA ÖDEME YOK</div>
   </div>
+  <div class="a tek" style="left:61%;transform:translateX(-50%);top:1035px;font-size:30px;font-weight:700;color:{LAC};letter-spacing:.06em">AYDA SADECE 29.900 TL</div>
 
   <img class="a" src="{F('signage-source','aile','sunucu2-kesik.png')}" style="left:-70px;top:620px;width:{s_w}px;height:{s_h}px;filter:drop-shadow(0 24px 34px rgba(0,0,0,.35));-webkit-mask-image:linear-gradient(180deg,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,#000 82%,transparent 100%)">
 
