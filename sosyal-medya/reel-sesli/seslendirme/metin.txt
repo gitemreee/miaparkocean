@@ -1,0 +1,10 @@
+Seslendirme metni (Piper, tr_TR-dfki-medium, açık kaynak):
+1. İzmit'te yeni bir yaşam başlıyor.
+2. MİA PARK OCEAN.
+3. Bir milyon lira peşinatla, yeni evinize taşının.
+4. Altmış ay, sabit taksit.
+5. Ara ödeme yok. Faiz yok. Banka yok. Kredi yok. Kefil yok.
+6. Ev ve araç takasına açığız.
+7. Hemen arayın. Dört yüz kırk dört, on, elli sekiz.
+Profesyonel ses (seslendirme sanatçısı veya ElevenLabs) gelirse c0..c6.wav dosyaları değiştirilip
+scripts/build-reel-sesli.py yeniden çalıştırılır; zamanlama sese göre kendiliğinden ayarlanır.
