@@ -1,0 +1,8 @@
+MİA PARK OCEAN logosu - CNC / lazer kesim vektörleri ("İzmit MİA Bölgesi" satırı kaldırıldı)
+
+mia-park-ocean-logo-cnc.dxf  AutoCAD DXF (R12, her CAD/CAM yazılımı açar). Birim: milimetre ($INSUNITS=4).
+                             Logo ölçüsü 1000 x 588 mm (orijin 0,0); oranı koruyarak istenen ölçüye ölçeklenir. Kapalı POLYLINE kontürleri.
+mia-park-ocean-logo-cnc.svg / .eps / .pdf  aynı vektör; Illustrator, CorelDRAW, Inkscape için.
+
+Kontürler dolu siluet: M işareti, kuleler ve dalgalar tek parça; harflerin (A, P, R, O) iç boşlukları ayrı kontür.
+Kaynak: çizgisel logo çizimi -> dolu alan türetildi -> 4x büyütülüp vektörize edildi.
