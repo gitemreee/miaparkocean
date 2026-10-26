@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-"İlk evine 699.000 TL peşinat" story'sinin sürümleri (1080x1920 → 2160x3840).
+"İlk evine 1 milyon TL peşinat" story'sinin sürümleri (1080x1920 → 2160x3840).
 Arka plan fotoğrafı: bitmiş proje, yol tarafından (sosyal-medya/bitmis-fotograflar/21-yoldan-gunesli.jpg).
 
   1-klasik      : beyaz-mavi üst alan, altta fotoğraf (orijinal düzen)
@@ -53,8 +53,8 @@ def rozetler(ust=600, ust_renk=(LAC2, LAC), ust_yazi="#fff", alt_yazi=None):
     alt_yazi = alt_yazi or LAC
     return f"""
   <div class="a rozet" style="top:{ust}px;width:540px;background:linear-gradient(180deg,{ust_renk[0]},{ust_renk[1]});color:{ust_yazi};border-radius:34px 34px 0 0;padding:26px 0 22px">
-    <div class="tek" style="font-size:72px;letter-spacing:-.02em">699.000<span style="font-size:.36em;margin-left:8px">TL'DEN</span></div>
-    <div class="tek" style="font-size:30px;margin-top:10px;letter-spacing:.06em">BAŞLAYAN PEŞİNAT</div>
+    <div class="tek" style="font-size:72px;letter-spacing:-.02em">1 MİLYON<span style="font-size:.5em;margin-left:10px">TL</span></div>
+    <div class="tek" style="font-size:30px;margin-top:10px;letter-spacing:.06em">PEŞİNATLA</div>
   </div>
   <div class="a rozet" style="top:{ust + 166}px;width:540px;background:{ALTIN};color:{LAC};border-radius:0 0 34px 34px;padding:22px 0 24px">
     <div class="tek" style="font-size:62px;letter-spacing:.01em">60 AY VADE</div>
@@ -63,13 +63,13 @@ def rozetler(ust=600, ust_renk=(LAC2, LAC), ust_yazi="#fff", alt_yazi=None):
     <div class="tek" style="font-size:30px;letter-spacing:.06em">BANKA YOK</div>
     <div class="tek" style="font-size:30px;margin-top:8px;letter-spacing:.06em">ARA ÖDEME YOK</div>
   </div>
-  <div class="a tek" style="left:61%;transform:translateX(-50%);top:{ust + 435}px;font-size:30px;font-weight:700;color:{alt_yazi};letter-spacing:.06em">AYDA SADECE 29.900 TL</div>"""
+  <div class="a tek" style="left:61%;transform:translateX(-50%);top:{ust + 435}px;font-size:30px;font-weight:700;color:{alt_yazi};letter-spacing:.06em">EV &amp; ARAÇ TAKASINA AÇIK</div>"""
 
 
 def baslik(top=170, ana=LAC, vurgu=ALTIN, alt="#5a6b85", golge=""):
     return f"""
   <div class="a tek orta" style="top:{top}px;font-size:70px;font-weight:800;color:{ana};letter-spacing:-.01em;{golge}">İlk Evine</div>
-  <div class="a tek orta" style="top:{top + 88}px;font-size:112px;font-weight:800;color:{vurgu};letter-spacing:-.02em;{golge}">699.000 TL</div>
+  <div class="a tek orta" style="top:{top + 88}px;font-size:112px;font-weight:800;color:{vurgu};letter-spacing:-.02em;{golge}">1 MİLYON TL</div>
   <div class="a tek orta" style="top:{top + 218}px;font-size:70px;font-weight:800;color:{ana};letter-spacing:-.01em;{golge}">Peşinat ile Sahip Ol</div>
   <div class="a tek orta" style="top:{top + 308}px;font-size:30px;font-weight:600;color:{alt};letter-spacing:.2em;{golge}">MİA PARK OCEAN · İZMİT</div>"""
 
@@ -148,18 +148,18 @@ def v4():
   <div class="a cam" style="left:96px;top:110px;width:888px;padding:34px 40px 36px;text-align:center;color:#fff">
     <div class="tek" style="font-size:22px;font-weight:600;letter-spacing:.32em;color:{ALTIN2}">MİA PARK OCEAN · İZMİT</div>
     <div class="tek" style="margin-top:22px;font-size:48px;font-weight:300">İlk evinize</div>
-    <div class="tek" style="margin-top:10px;font-size:92px;font-weight:800;color:{ALTIN2};letter-spacing:-.01em">699.000 TL</div>
+    <div class="tek" style="margin-top:10px;font-size:92px;font-weight:800;color:{ALTIN2};letter-spacing:-.01em">1 MİLYON TL</div>
     <div class="tek" style="margin-top:12px;font-size:48px;font-weight:700">peşinat ile sahip olun.</div>
   </div>
   <img class="a" src="{SUNUCU}" style="left:-60px;top:640px;width:{round(1000 * 1051 / 2205)}px;height:1000px;filter:drop-shadow(0 24px 34px rgba(0,0,0,.4));-webkit-mask-image:linear-gradient(180deg,#000 80%,transparent 100%)">
   <div class="a cam" style="left:480px;top:700px;width:504px;padding:30px 34px 28px;color:#fff">
     <div class="tek" style="font-size:20px;font-weight:600;letter-spacing:.3em;color:{ALTIN2}">ÖDEME KOŞULLARI</div>
     <div style="margin-top:22px;display:flex;flex-direction:column;gap:18px;font-size:30px;font-weight:500;line-height:1">
-      {madde("60 ay vade")}{madde("Banka yok")}{madde("Ara ödeme yok")}
+      {madde("60 ay vade")}{madde("Banka yok")}{madde("Kefil yok")}{madde("Ara ödeme yok")}
     </div>
     <div style="margin:24px 0 0;width:90px;height:1px;background:{ALTIN2}"></div>
-    <div class="tek" style="margin-top:20px;font-size:22px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.85)">AYLIK</div>
-    <div class="tek" style="margin-top:8px;font-size:54px;font-weight:800;color:{ALTIN2}">29.900 TL</div>
+    <div class="tek" style="margin-top:20px;font-size:22px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.85)">TAKAS İMKÂNI</div>
+    <div class="tek" style="margin-top:10px;font-size:34px;font-weight:700;color:{ALTIN2};line-height:1.15">Ev &amp; araç<br>takasına açıktır.</div>
   </div>
   {alt_bant(siteler=True)}"""
 

@@ -31,7 +31,7 @@ SAHNELER = [
     ("2-giris.mp4",  "MİA PARK OCEAN",       "İzmit'in yeni yaşam alanı",     4.8),
     ("4-havuz.mp4",  "60 AY VADE",           "vade farksız",                  4.8),
     ("5-aile.mp4",   "BANKA YOK · KREDİ YOK", "faiz yok, ara ödeme yok",       4.8),
-    ("3-gece.mp4",   "699.000 TL PEŞİNAT",   "ayda sadece 29.900 TL",         4.8),
+    ("3-gece.mp4",   "1 MİLYON TL PEŞİNAT",  "ev & araç takasına açıktır",    4.8),
 ]
 
 
@@ -70,8 +70,8 @@ body{{margin:0;width:{W}px;height:{H}px;font-family:M,sans-serif;color:#fff;posi
  <img src="file://{ROOT}/public/brand/logo-mia-2026.png" style="position:absolute;left:240px;top:430px;width:600px;filter:brightness(0) invert(1)">
  <div class="cizgi" style="top:900px"></div>
  <div class="a" style="top:960px;font-size:44px;font-weight:600;letter-spacing:.18em;color:{ALTIN}">PEŞİNAT</div>
- <div class="a" style="top:1020px;font-size:130px;font-weight:800;letter-spacing:-.02em">699.000 TL</div>
- <div class="a" style="top:1190px;font-size:52px;font-weight:600">AYDA SADECE <b style="color:{ALTIN}">29.900 TL</b></div>
+ <div class="a" style="top:1020px;font-size:120px;font-weight:800;letter-spacing:-.02em">1 MİLYON TL</div>
+ <div class="a" style="top:1190px;font-size:52px;font-weight:600"><b style="color:{ALTIN}">EV &amp; ARAÇ</b> TAKASINA AÇIKTIR</div>
  <div class="a" style="top:1290px;font-size:34px;font-weight:600;letter-spacing:.06em;opacity:.9;white-space:nowrap">60 AY VADE FARKSIZ · BANKA YOK · KREDİ YOK</div>
  <div class="cizgi" style="top:1400px"></div>
  <div class="a" style="top:1470px;font-size:96px;font-weight:800;letter-spacing:.04em">444 10 58</div>

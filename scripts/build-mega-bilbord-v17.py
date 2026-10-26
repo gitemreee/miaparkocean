@@ -6,7 +6,7 @@ Soldan sağa: Tilda · dikey foto · 1+0 fiyat paneli · ana görsel (gündüz r
 1+1 fiyat paneli · dikey foto · Tilda. Paneller paralelkenar, aralarında ince altın çizgi.
 444 1 058 Tilda logolarının ve fiyatların altında. Dört renk seçeneği.
 
-Peşinat tutarları (699.000 / 999.000 TL) referans görselden alındı [DOĞRULANACAK].
+Peşinat: 1 milyon TL (müşteri onaylı, 26.10). Aylık tutar verilmediği için panoda yer almıyor.
 
     python3.13 scripts/build-mega-bilbord-v17.py [--sadece 1,3] [--pdf]
 """
@@ -42,7 +42,7 @@ SK = 110                                   # panel kenarı eğimi (px, üstte sa
 B = (1500, 3050, 4850, 7200, 10800, 13150, 14950, 16500)  # panel sınırları (9 panel)
 MIA_PNG = os.path.join(ROOT, "public", "brand", "logo-mia-2026.png")   # orijinal logo (1024×712)
 MIA_RENK = "#1d7f9c"
-FIYAT = (("1+0", "699.000", "29.900"), ("1+1", "999.000", "39.900"))
+FIYAT = (("1+0", "1.000.000", None), ("1+1", "1.000.000", None))
 
 RENKLER = {
     "lacivert": dict(koyu="#0f2a5a", koyu2="#17407f", altin="#c9a24a", metin="#0f2a5a", vurgu="#c9a24a"),
@@ -178,13 +178,16 @@ def fiyat_paneli(x0, x1, tip, pesinat, aylik, p):
       <div class="tek" style="font-size:176px;font-weight:800;color:{p['metin']};letter-spacing:-.03em;margin-top:6px">{pesinat}<span style="font-size:.5em;font-weight:700;margin-left:20px">TL</span></div></div>
   </div>
   <div class="a" style="left:{x0 + SK}px;top:415px;width:{ic_w}px;display:flex;align-items:center;justify-content:center;gap:34px">
-    <div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">AYDA SADECE
-      <span style="font-size:92px;letter-spacing:-.03em;margin-left:10px">{aylik}</span><span style="font-size:46px;font-weight:700;margin-left:12px">TL</span></div>
+    {(f'''<div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">AYDA SADECE
+      <span style="font-size:92px;letter-spacing:-.03em;margin-left:10px">{aylik}</span><span style="font-size:46px;font-weight:700;margin-left:12px">TL</span></div>'''
+      if aylik else f'''<div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">60 AY
+      <span style="font-size:92px;letter-spacing:-.02em;margin-left:6px">SABİT TAKSİT</span></div>''')}
     <div style="width:4px;height:100px;background:{p['altin']}"></div>
-    <div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em">60 AY VADE FARKSIZ</div>
+    <div class="tek" style="font-size:42px;font-weight:800;color:{p['metin']};letter-spacing:.02em;line-height:1.15">
+      {"60 AY VADE FARKSIZ" if aylik else "EV &amp; ARAÇ<br>TAKASINA AÇIKTIR"}</div>
   </div>
   <div class="a" style="left:{x0 + SK}px;top:575px;width:{ic_w}px;display:flex;justify-content:center;gap:18px">
-    {"".join(f'<div class="tek" style="height:80px;padding:0 30px;border-radius:40px;background:{bg};color:#fff;font-size:36px;font-weight:800;letter-spacing:.04em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e")))}
+    {"".join(f'<div class="tek" style="height:80px;padding:0 30px;border-radius:40px;background:{bg};color:#fff;font-size:36px;font-weight:800;letter-spacing:.04em;display:flex;align-items:center">{t}</div>' for t, bg in zip(("FAİZ YOK!", "BANKA YOK!", "KREDİ YOK!", "KEFİL YOK!", "ARA ÖDEME YOK!"), ("#111111", "#e3262e", "#111111", "#e3262e", "#111111")))}
   </div>
   {telefon(cx, 690, p['metin'], 76)}"""
 

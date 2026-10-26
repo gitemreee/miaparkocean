@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Instagram story / reel kapak görseli (1080x1920): "İlk evine 699.000 TL peşinat ile sahip ol".
+Instagram story / reel kapak görseli (1080x1920): "İlk evine 1 milyon TL peşinat ile sahip ol".
 
 Referans (Egeyapı): mor → mavi geçişli üst alan, ortada üç kademeli rozet (sarı peşinat / yeşil
 60 ay vade / mor banka-kefil yok), solda işaret eden sunucu kadın, altta tam genişlik proje render'ı.
@@ -65,13 +65,13 @@ body {{ margin:0; width:{W}px; height:{H}px; overflow:hidden; position:relative;
   </div>
 
   <div class="a tek orta" style="top:170px;font-size:70px;font-weight:800;color:{LAC};letter-spacing:-.01em">İlk Evine</div>
-  <div class="a tek orta" style="top:258px;font-size:112px;font-weight:800;color:{ALTIN};letter-spacing:-.02em">699.000 TL</div>
+  <div class="a tek orta" style="top:258px;font-size:112px;font-weight:800;color:{ALTIN};letter-spacing:-.02em">1 MİLYON TL</div>
   <div class="a tek orta" style="top:388px;font-size:70px;font-weight:800;color:{LAC};letter-spacing:-.01em">Peşinat ile Sahip Ol</div>
   <div class="a tek orta" style="top:478px;font-size:30px;font-weight:600;color:#5a6b85;letter-spacing:.2em">MİA PARK OCEAN · İZMİT</div>
 
   <div class="a rozet" style="top:600px;width:540px;background:linear-gradient(180deg,{LAC2},{LAC});border-radius:34px 34px 0 0;padding:26px 0 22px">
-    <div class="tek" style="font-size:72px;letter-spacing:-.02em">699.000<span style="font-size:.36em;margin-left:8px">TL'DEN</span></div>
-    <div class="tek" style="font-size:30px;margin-top:10px;letter-spacing:.06em">BAŞLAYAN PEŞİNAT</div>
+    <div class="tek" style="font-size:72px;letter-spacing:-.02em">1 MİLYON<span style="font-size:.5em;margin-left:10px">TL</span></div>
+    <div class="tek" style="font-size:30px;margin-top:10px;letter-spacing:.06em">PEŞİNATLA</div>
   </div>
   <div class="a rozet" style="top:766px;width:540px;background:{ALTIN};color:{LAC};border-radius:0 0 34px 34px;padding:22px 0 24px">
     <div class="tek" style="font-size:62px;letter-spacing:.01em">60 AY VADE</div>
@@ -80,7 +80,7 @@ body {{ margin:0; width:{W}px; height:{H}px; overflow:hidden; position:relative;
     <div class="tek" style="font-size:30px;letter-spacing:.06em">BANKA YOK</div>
     <div class="tek" style="font-size:30px;margin-top:8px;letter-spacing:.06em">ARA ÖDEME YOK</div>
   </div>
-  <div class="a tek" style="left:61%;transform:translateX(-50%);top:1035px;font-size:30px;font-weight:700;color:{LAC};letter-spacing:.06em">AYDA SADECE 29.900 TL</div>
+  <div class="a tek" style="left:61%;transform:translateX(-50%);top:1035px;font-size:30px;font-weight:700;color:{LAC};letter-spacing:.06em">EV &amp; ARAÇ TAKASINA AÇIK</div>
 
   <img class="a" src="{F('signage-source','aile','sunucu2-kesik.png')}" style="left:-70px;top:620px;width:{s_w}px;height:{s_h}px;filter:drop-shadow(0 24px 34px rgba(0,0,0,.35));-webkit-mask-image:linear-gradient(180deg,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,#000 82%,transparent 100%)">
 
