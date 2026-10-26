@@ -1,8 +1,14 @@
-MİA PARK OCEAN logosu - CNC / lazer kesim vektörleri ("İzmit MİA Bölgesi" satırı kaldırıldı)
+MİA PARK OCEAN logosu - CNC / lazer kesim vektörleri ("İzmit MİA Bölgesi" satırı yok)
 
-mia-park-ocean-logo-cnc.dxf  AutoCAD DXF (R12, her CAD/CAM yazılımı açar). Birim: milimetre ($INSUNITS=4).
-                             Logo ölçüsü 1000 x 588 mm (orijin 0,0); oranı koruyarak istenen ölçüye ölçeklenir. Kapalı POLYLINE kontürleri.
-mia-park-ocean-logo-cnc.svg / .eps / .pdf  aynı vektör; Illustrator, CorelDRAW, Inkscape için.
+Logo ölçüsü: 1000 x 588,3 mm (orijin 0,0; oranı koruyarak istenen ölçüye ölçeklenir).
+28 kapalı kontür, hepsi düz çizgi parçalı polyline (yay/spline yok), katman: KESIM.
+Harflerin iç boşlukları (A, P, R, O) ayrı kapalı kontür; CNC yazılımı dış/iç kontürü otomatik ayırır.
 
-Kontürler dolu siluet: M işareti, kuleler ve dalgalar tek parça; harflerin (A, P, R, O) iç boşlukları ayrı kontür.
-Kaynak: çizgisel logo çizimi -> dolu alan türetildi -> 4x büyütülüp vektörize edildi.
+mia-park-ocean-logo-2000.dxf   AutoCAD 2000 DXF, LWPOLYLINE, birim mm ($INSUNITS=4)  <- önce bunu deneyin
+mia-park-ocean-logo-r12.dxf    AutoCAD R12 DXF, POLYLINE; eski CNC/CAM programları için
+mia-park-ocean-logo.plt        HPGL (40 plu = 1 mm), lazer/plotter/CNC için
+mia-park-ocean-logo.svg        mm birimli SVG, evenodd dolgu (Illustrator, CorelDRAW, Inkscape, LightBurn)
+mia-park-ocean-logo.pdf/.eps   vektör PDF ve EPS (Illustrator/Corel)
+mia-park-ocean-logo-onizleme.png  kontrol görseli
+
+Dosyalar ezdxf ile denetlendi (0 hata). Sorun yaşanırsa kullanılan programın adını ve hata mesajını iletin.
