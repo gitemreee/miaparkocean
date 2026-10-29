@@ -75,7 +75,6 @@ export const secondaryNav = [
   { label: "Değerleme", href: "/bolge#degerleme" },
   { label: "Bölge Demografisi", href: "/bolge#demografi" },
   { label: "Online Katalog", href: "/#katalog" },
-  { label: "Belgeler", href: "/belgeler" },
   { label: "Güven ve Denetim", href: "/kooperatif#guvence-sistemi" },
   { label: "KVKK", href: "/kvkk" },
   { label: "Çerez Politikası", href: "/cerez-politikasi" },
