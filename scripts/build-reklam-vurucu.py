@@ -2,11 +2,10 @@
 """
 Vurucu satış reklamları — dev rakam, rozet, net çağrı (1080x1920 story, 2x çizim).
 
-Dört konsept:
+Üç konsept (sade: tek mesaj, tek çağrı):
   1-dev-rakam   "1 MİLYON TL peşinatla ev sahibi olun"       (20-giris-gunesli)
   2-yok-yok     "BANKA YOK. FAİZ YOK. KEFİL YOK."             (22-uzaktan-teleobjektif)
   3-kira        "Kiraya değil, kendi evinize ödeyin."         (19-balkon-cay-gunduz)
-  4-takas       "Arabanız peşinatınız olsun."                 (21-yoldan-gunesli)
 
 Hepsinde: MİA PARK OCEAN + Tilda İnşaat (müteahhit) logoları, 444 10 58 ve
 WhatsApp 0540 028 00 41.
@@ -83,12 +82,6 @@ def iletisim(top, alt_renk="rgba(255,255,255,.92)"):
     {WA.format(s=44, c="#25d366")}
     <span class="tek" style="font-size:38px;font-weight:700;letter-spacing:.04em">0540 028 00 41</span>
     <span class="tek" style="font-size:22px;font-weight:500;opacity:.75;margin-left:6px">WhatsApp</span>
-  </div>
-  <div class="a" style="left:0;top:{top + 220}px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:18px;color:rgba(255,255,255,.7)">
-    <span class="tek" style="font-size:19px;font-weight:600;letter-spacing:.2em">MIAPARKOCEAN.COM</span>
-    <span style="width:1px;height:26px;background:rgba(255,255,255,.4)"></span>
-    <span class="tek" style="font-size:15px;font-weight:600;letter-spacing:.2em">TEK YETKİLİ SATICI</span>
-    <img src="{F('public','brand','vektor','ocean-beyaz.svg')}" style="height:30px">
   </div>"""
 
 
@@ -115,20 +108,15 @@ def k1_dev_rakam():
   <img class="foto" src="{FOTO('20-giris-gunesli.jpg')}" style="top:-120px">
   <div class="a" style="left:0;top:0;width:{W}px;height:420px;background:linear-gradient(180deg,rgba(4,14,30,.7),rgba(4,14,30,0))"></div>
   {ust_logolar()}
-  <div class="a" style="left:54px;top:300px">{rozet(250, f'<div class="bar tek" style="font-size:30px;font-weight:500;letter-spacing:.08em">YÜZDE</div><div class="bar tek" style="font-size:96px;line-height:.85">0</div><div class="bar tek" style="font-size:44px">FAİZ</div>')}</div>
 
-  <div class="a" style="left:0;top:1010px;width:{W}px;height:{H - 1010}px;background:linear-gradient(180deg,{LACI2},{LACI});clip-path:polygon(0 70px,100% 0,100% 100%,0 100%)"></div>
-  <div class="a" style="left:0;top:1010px;width:{W}px;height:12px;background:{SARI};clip-path:polygon(0 70px,100% 0,100% 6px,0 76px)"></div>
+  <div class="a" style="left:0;top:1080px;width:{W}px;height:{H - 1080}px;background:linear-gradient(180deg,{LACI2},{LACI});clip-path:polygon(0 70px,100% 0,100% 100%,0 100%)"></div>
+  <div class="a" style="left:0;top:1080px;width:{W}px;height:12px;background:{SARI};clip-path:polygon(0 70px,100% 0,100% 6px,0 76px)"></div>
 
-  <div class="a tek" style="left:70px;top:1112px;font-size:22px;font-weight:700;letter-spacing:.3em;color:{TURK}">İZMİT · MİA BÖLGESİ</div>
-  <div class="a bar tek" style="left:64px;top:1150px;font-size:236px;color:{SARI};letter-spacing:-.01em">1 MİLYON TL</div>
-  <div class="a bar tek" style="left:68px;top:1362px;font-size:72px">PEŞİNATLA EV SAHİBİ OLUN!</div>
-  <div class="a" style="left:70px;top:1446px;width:{W - 140}px;display:flex;justify-content:space-between">
-    {kosul_chip('60 AY', 'SABİT TAKSİT', 300)}{kosul_chip('BANKASIZ', 'KREDİSİZ', 300)}{kosul_chip('KEFİLSİZ', 'ARA ÖDEMESİZ', 300)}
-  </div>
-  <div class="a" style="left:0;top:1588px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:14px">
-    {TAKAS.format(s=34, c=TURK)}<span class="bar tek" style="font-size:38px;color:#fff;letter-spacing:.04em">EV &amp; ARAÇ TAKASI KABUL EDİLİR</span>
-  </div>
+  <div class="a tek" style="left:70px;top:1182px;font-size:22px;font-weight:700;letter-spacing:.3em;color:{TURK}">İZMİT · MİA BÖLGESİ</div>
+  <div class="a bar tek" style="left:64px;top:1220px;font-size:236px;color:{SARI};letter-spacing:-.01em">1 MİLYON TL</div>
+  <div class="a bar tek" style="left:68px;top:1432px;font-size:72px">PEŞİNATLA EV SAHİBİ OLUN!</div>
+  <div class="a bar tek" style="left:70px;top:1528px;font-size:42px;font-weight:500;letter-spacing:.05em;color:{TURK}">60 AY SABİT TAKSİT · FAİZSİZ · KEFİLSİZ</div>
+
   {iletisim(1650)}
 """
 
@@ -146,9 +134,6 @@ def k2_yok_yok():
     <div class="tek" style="margin-top:26px;font-size:40px;font-weight:600;line-height:1.25">Ara ödeme de yok.<br><span style="font-weight:300">Sadece <b style="font-weight:800;color:{SARI}">60 ay sabit taksit.</b></span></div>
   </div>
   <div class="a" style="right:52px;top:740px">{rozet(380, f'<div class="bar tek" style="font-size:40px;font-weight:500;letter-spacing:.06em">SADECE</div><div class="bar tek" style="font-size:110px;line-height:.86">1 MİLYON</div><div class="bar tek" style="font-size:64px">TL PEŞİNAT</div>', renk=TURK, aci=8)}</div>
-  <div class="a" style="left:70px;top:1540px;display:flex;align-items:center;gap:14px;background:rgba(23,167,185,.18);border:2px solid {TURK};border-radius:999px;padding:12px 26px">
-    {TAKAS.format(s=32, c="#fff")}<span class="bar tek" style="font-size:34px;letter-spacing:.04em">EVİNİZİ / ARACINIZI TAKASA VERİN</span>
-  </div>
   {iletisim(1650)}
 """
 
@@ -166,44 +151,17 @@ def k3_kira():
   </div>
 
   <div class="a" style="left:0;top:1360px;width:{W}px;height:{H - 1360}px;background:linear-gradient(180deg,rgba(6,26,51,0),rgba(6,26,51,.9) 22%,{LACI})"></div>
-  <div class="a" style="left:70px;top:1392px;width:{W - 140}px;display:flex;align-items:flex-end;justify-content:space-between">
+  <div class="a" style="left:70px;top:1440px;width:{W - 140}px;display:flex;align-items:flex-end;justify-content:space-between">
     <div>
       <div class="bar tek" style="font-size:118px;color:{SARI};line-height:.85">1 MİLYON TL</div>
       <div class="bar tek" style="margin-top:6px;font-size:46px">PEŞİNAT + 60 AY SABİT TAKSİT</div>
     </div>
   </div>
-  <div class="a" style="left:70px;top:1590px;width:{W - 140}px;display:flex;justify-content:space-between;font-size:27px;font-weight:700">
-    {''.join(f'<span class="tek" style="display:flex;align-items:center;gap:9px">{TIK.format(s=30, c=TURK, k="#fff")}{m}</span>' for m in ["Faizsiz", "Bankasız", "Kefilsiz", "Ev & araç takası"])}
-  </div>
   {iletisim(1650)}
 """
 
 
-def k4_takas():
-    return f"""
-  <img class="foto" src="{FOTO('21-yoldan-gunesli.jpg')}" style="top:0">
-  <div class="a" style="left:0;top:0;width:{W}px;height:900px;background:linear-gradient(180deg,rgba(6,26,51,.9) 0%,rgba(6,26,51,.7) 60%,rgba(6,26,51,0))"></div>
-  {ust_logolar()}
-  <div class="a" style="left:70px;top:262px">
-    <div class="bar tek" style="font-size:140px">ARABANIZ</div>
-    <div class="bar tek" style="font-size:140px;color:{SARI}">PEŞİNATINIZ</div>
-    <div class="bar tek" style="font-size:140px">OLSUN!</div>
-    <div class="tek" style="margin-top:28px;font-size:36px;font-weight:500;line-height:1.3">Ev ve araç takasıyla<br><b style="font-weight:800">MİA PARK OCEAN'da ev sahibi olun.</b></div>
-  </div>
-  <div class="a" style="right:56px;top:700px">{rozet(300, f'<div class="bar tek" style="font-size:72px;line-height:.85">TAKAS</div><div class="bar tek" style="font-size:40px;font-weight:500;letter-spacing:.04em">KABUL</div><div class="bar tek" style="font-size:40px;font-weight:500;letter-spacing:.04em">EDİLİR</div>', renk=TURK, aci=-8)}</div>
-
-  <div class="a" style="left:0;top:1380px;width:{W}px;height:{H - 1380}px;background:linear-gradient(180deg,rgba(6,26,51,0),rgba(6,26,51,.92) 20%,{LACI})"></div>
-  <div class="a" style="left:70px;top:1470px;width:{W - 140}px;display:flex;align-items:center;justify-content:space-between">
-    <div class="bar tek" style="font-size:96px;color:{SARI};line-height:.85">1 MİLYON TL<span style="font-size:52px;color:#fff;font-weight:500"> PEŞİNAT</span></div>
-  </div>
-  <div class="a" style="left:70px;top:1574px;width:{W - 140}px;display:flex;justify-content:space-between;font-size:27px;font-weight:700">
-    {''.join(f'<span class="tek" style="display:flex;align-items:center;gap:9px">{TIK.format(s=30, c=TURK, k="#fff")}{m}</span>' for m in ["60 ay sabit taksit", "Faizsiz", "Bankasız", "Kefilsiz"])}
-  </div>
-  {iletisim(1650)}
-"""
-
-
-KONSEPTLER = [("1-dev-rakam", k1_dev_rakam), ("2-yok-yok", k2_yok_yok), ("3-kira", k3_kira), ("4-takas", k4_takas)]
+KONSEPTLER = [("1-dev-rakam", k1_dev_rakam), ("2-yok-yok", k2_yok_yok), ("3-kira", k3_kira)]
 
 
 def main():
