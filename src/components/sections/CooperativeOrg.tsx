@@ -12,8 +12,8 @@ export function CooperativeOrg() {
             <YkbLogo className="mx-auto h-24 w-auto text-ink md:h-32" />
             <div className="gold-rule mt-5 md:mt-7" />
             <dl className="mt-5 grid grid-cols-2 gap-x-5 gap-y-4 md:mt-7 md:gap-6">
-              {cooperativeOrg.facts.map((f) => (
-                <div key={f.label}>
+              {cooperativeOrg.facts.map((f, i, all) => (
+                <div key={f.label} className={i === all.length - 1 && all.length % 2 ? "col-span-2" : undefined}>
                   <dt className="eyebrow text-[0.54rem] text-ink/45">{f.label}</dt>
                   <dd className="mt-0.5 font-display text-[0.98rem] tabular-nums text-ink md:text-lg">{f.value}</dd>
                 </div>

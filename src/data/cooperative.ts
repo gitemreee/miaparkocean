@@ -105,7 +105,6 @@ export const cooperativeOrg = {
   facts: [
     { label: "Kuruluş Yılı", value: "2021" },
     { label: "Merkez", value: "İzmit / Kocaeli" },
-    { label: "Telefon", value: "0546 640 2219" },
     { label: "MERSİS No", value: "0928116116500001" },
   ],
   address: "Ömerağa Mah. Abdurrahman Yüksel Cd. No:15/4 İzmit / Kocaeli",
