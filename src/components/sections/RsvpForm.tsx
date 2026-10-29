@@ -140,7 +140,7 @@ export function RsvpForm() {
 
       <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-ink/50">
         <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
-        Bilgileriniz yalnızca etkinlik katılım kaydı için kullanılır, üçüncü kişilerle paylaşılmaz.
+        Bilgileriniz yalnızca etkinlik katılım kaydı için WhatsApp üzerinden etkinlik sorumlusuna iletilir. Ayrıntılar: <a href="/kvkk" className="underline">KVKK Aydınlatma Metni</a>.
       </p>
     </form>
   );

@@ -85,8 +85,8 @@ export default function BolgelerPage() {
                       </div>
 
                       <h3 className="mt-5 font-display text-xl text-ink">{l.fullName}</h3>
-                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">{l.parent}</p>
-                      <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/60">{l.intro[0].slice(0, 132)}…</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink/40">{l.type === "il" ? "Komşu İl" : l.parent}</p>
+                      <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-ink/60">{l.intro[0]}</p>
 
                       <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
                         Bölge sayfası

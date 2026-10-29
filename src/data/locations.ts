@@ -57,17 +57,17 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'dan",
     loc: "'da",
-    title: "Yahya Kaptan Mahallesi Satılık Daire ve Yeni Konut Projeleri",
+    title: "Yahya Kaptan Mahallesi Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Yahya Kaptan Mahallesi'nde konut arayanlar için İzmit MİA Bölgesi'ndeki MİA PARK OCEAN: faizsiz kooperatif modeli, 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks seçenekleri.",
     drive: "2-4 dakika",
     intro: [
       "Yahya Kaptan, İzmit'in planlı toplu konut dokusuyla öne çıkan, geniş bulvarları ve olgunlaşmış yeşil alanlarıyla bilinen mahallelerinden biri. Uzun yıllardır aileler tarafından tercih edilmesi, mahalleyi İzmit'in en oturmuş yaşam alanlarından biri hâline getirdi.",
-      "Mahalle, adını taşıyan S.S. Yahya Kaptan Birlik Yapı Kooperatifi'nin de merkezi. MİA PARK OCEAN, bu kooperatifin İzmit MİA Bölgesi'nde yükselen projesi; Yahya Kaptan'dan araçla birkaç dakika uzaklıkta.",
+      "S.S. Yahya Kaptan Birlik Yapı Kooperatifi, adını bu mahalleden alır. MİA PARK OCEAN, bu kooperatifin İzmit MİA Bölgesi'nde yükselen projesi; Yahya Kaptan'dan araçla birkaç dakika uzaklıkta.",
       "Yahya Kaptan'da oturup daha büyük bir daireye ya da sosyal donatısı geniş bir siteye geçmek isteyenler için MİA PARK OCEAN, mahalleyi ve alışkanlıkları değiştirmeden konfor yükseltmeye imkân veriyor.",
     ],
     highlights: [
-      { title: "Kooperatifin merkezi", text: "S.S. Yahya Kaptan Birlik Yapı Kooperatifi'nin adını aldığı mahalle." },
+      { title: "Kooperatifin adı", text: "S.S. Yahya Kaptan Birlik Yapı Kooperatifi'nin adını aldığı mahalle." },
       { title: "Oturmuş doku", text: "Planlı toplu konut yapısı, geniş bulvarlar ve olgun yeşil alanlar." },
       { title: "Projeye çok yakın", text: "MİA PARK OCEAN'a araçla yaklaşık 2-4 dakika." },
       { title: "Aile profili", text: "Uzun süredir aile yoğunluklu, komşuluk ilişkisi güçlü bir mahalle." },
@@ -83,7 +83,7 @@ export const locations: Location[] = [
       },
       {
         q: "Yahya Kaptan'daki dairemi satmadan MİA PARK OCEAN'dan daire alabilir miyim?",
-        a: "Evet. Kooperatif modeli tasarrufa dayalı ve 60 aya varan vadeli olduğu için peşin büyük bir sermaye gerektirmez; mevcut konutunuzu elde tutarak taksitli ödeme yapabilirsiniz. Ödeme planı Ocean Gayrimenkul ile birlikte belirlenir.",
+        a: "Evet. 1 milyon TL peşinatın ardından kalan tutar 60 ay sabit taksitle ödenir; mevcut konutunuzu elde tutabilir ya da ev ve araç takası seçeneğini değerlendirebilirsiniz. Ödeme planı Ocean Gayrimenkul ile birlikte belirlenir.",
       },
     ],
     nearby: ["izmit-yenisehir", "izmit-omeraga", "izmit-alikahya", "kocaeli-basiskele"],
@@ -102,7 +102,7 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'den",
     loc: "'de",
-    title: "Yenişehir Mahallesi Satılık Daire ve Yeni Konut Projeleri",
+    title: "Yenişehir Mahallesi Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "İzmit Yenişehir'de yeni konut arayanlara MİA PARK OCEAN: MİA Bölgesi'nde 600 daire, faizsiz kooperatif finansmanı, 60 ay vade.",
     drive: "3-5 dakika",
@@ -124,7 +124,7 @@ export const locations: Location[] = [
       },
       {
         q: "Yenişehir'deki yeni projelerle MİA PARK OCEAN arasındaki fark nedir?",
-        a: "MİA PARK OCEAN bir yapı kooperatifi projesidir: banka kredisi, faiz ve kefil gerektirmez. Ödemeler tasarrufa dayalı sistemle 60 aya kadar vadelendirilir ve %0 faiz uygulanır. Kooperatif, T.C. Ticaret Bakanlığı'nın KOOPBİS sistemine kayıtlıdır.",
+        a: "MİA PARK OCEAN bir yapı kooperatifi projesidir: banka kredisi, faiz ve kefil gerektirmez. 1 milyon TL peşinatın ardından ödemeler 60 ay sabit taksitle yapılır ve %0 faiz uygulanır. Kooperatif, T.C. Ticaret Bakanlığı'nın KOOPBİS sistemine kayıtlıdır.",
       },
       {
         q: "Yenişehir'de yatırım için mi oturmak için mi daire almalıyım?",
@@ -146,7 +146,7 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'dan",
     loc: "'da",
-    title: "Ömerağa Mahallesi Satılık Daire ve Yeni Konut Projeleri",
+    title: "Ömerağa Mahallesi Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "İzmit'in merkez mahallesi Ömerağa'dan MİA PARK OCEAN'a: satış ofisimiz Ömerağa'da, proje MİA Bölgesi'nde. Faizsiz kooperatif modeli.",
     drive: "5-7 dakika",
@@ -186,7 +186,7 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'dan",
     loc: "'da",
-    title: "Alikahya Satılık Daire ve Yeni Konut Projeleri",
+    title: "Alikahya Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Alikahya'da konut arayanlara MİA PARK OCEAN alternatifi: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 60 ay vade, 600 daire.",
     drive: "8-12 dakika",
@@ -208,7 +208,7 @@ export const locations: Location[] = [
       },
       {
         q: "Alikahya mı MİA Bölgesi mi daha iyi bir yatırım?",
-        a: "Alikahya yeni konut arzının yoğun olduğu bir bölge; MİA Bölgesi ise şehir merkezine ve ana ulaşım akslarına daha yakın, arz sınırlı bir aks. Merkeze yakınlık ve donatı zenginliği önceliğiniz ise MİA Bölgesi öne çıkar. Kesin karar için her iki bölgede güncel m² fiyatlarını karşılaştırmanızı öneririz.",
+        a: "Alikahya yeni konut arzının yoğun olduğu bir bölge; MİA Bölgesi ise şehir merkezine ve ana ulaşım akslarına daha yakın, yeni projelerle gelişen bir aks. Merkeze yakınlık ve donatı zenginliği önceliğiniz ise MİA Bölgesi öne çıkar. Kesin karar için her iki bölgede güncel m² fiyatlarını karşılaştırmanızı öneririz.",
       },
       {
         q: "Alikahya'da kooperatif projesi var mı?",
@@ -226,19 +226,19 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'tan",
     loc: "'ta",
-    title: "Karabaş Mahallesi Satılık Daire ve Yeni Konut Projeleri",
+    title: "Karabaş Mahallesi Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "İzmit Karabaş'ta konut arayanlara MİA PARK OCEAN: sahil ve merkeze yakın MİA Bölgesi'nde faizsiz kooperatif projesi.",
     drive: "5-8 dakika",
     intro: [
       "Karabaş, İzmit sahil şeridine ve merkeze yakınlığıyla bilinen, şehrin köklü mahallelerinden. Sahil bandındaki yürüyüş ve rekreasyon alanları mahallenin en güçlü yanı.",
-      "Mahalledeki yapı stoğunun önemli bölümü daha eski dönemlere ait. Deprem yönetmeliğine uygun, fore kazık temelli yeni yapı arayanlar için MİA PARK OCEAN, merkeze yakınlığı korurken güncel yapı standartları sunuyor.",
+      "Mahalledeki yapı stokunun önemli bölümü daha eski dönemlere ait. Deprem yönetmeliğine uygun, fore kazık temelli yeni yapı arayanlar için MİA PARK OCEAN, merkeze yakınlığı korurken güncel yapı standartları sunuyor.",
       "Sahil hattına ve şehir merkezine ulaşımın kolay kalması, MİA Bölgesi'ni Karabaş sakinleri için makul bir alternatif hâline getiriyor.",
     ],
     highlights: [
       { title: "Sahile yakın", text: "İzmit sahil bandı ve yürüyüş yollarına kısa mesafe." },
       { title: "Köklü mahalle", text: "Merkeze bitişik, oturmuş sosyal doku." },
-      { title: "Yapı yenileme ihtiyacı", text: "Eski yapı stoğuna karşı güncel deprem standartlarında alternatif." },
+      { title: "Yapı yenileme ihtiyacı", text: "Eski yapı stokuna karşı güncel deprem standartlarında alternatif." },
       { title: "Fore kazık temel", text: "MİA PARK OCEAN'da temeller tamamen fore kazık sistemiyle inşa ediliyor." },
     ],
     faq: [
@@ -252,7 +252,7 @@ export const locations: Location[] = [
       },
       {
         q: "Karabaş'ta eski dairemi yenilemek yerine ne yapabilirim?",
-        a: "Kentsel dönüşüm sürecine girmeden, tasarrufa dayalı kooperatif modeliyle yeni bir daireye geçmek mümkündür. Ödemeler 60 aya kadar vadelendirilir ve faiz uygulanmaz.",
+        a: "Kentsel dönüşüm sürecine girmeden, tasarrufa dayalı kooperatif modeliyle yeni bir daireye geçmek mümkündür: 1 milyon TL peşinat, kalanı 60 ay sabit taksit; faiz uygulanmaz, ev ve araç takası kabul edilir.",
       },
     ],
     nearby: ["izmit-omeraga", "izmit-cedit", "izmit-kozluk", "kocaeli-derince"],
@@ -266,7 +266,7 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'ten",
     loc: "'te",
-    title: "Cedit Mahallesi Satılık Daire ve Yeni Konut Projeleri",
+    title: "Cedit Mahallesi Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "İzmit Cedit'te yeni konut arayanlara MİA PARK OCEAN: MİA Bölgesi'nde bankasız, faizsiz, kefilsiz kooperatif modeli.",
     drive: "5-8 dakika",
@@ -292,7 +292,7 @@ export const locations: Location[] = [
       },
       {
         q: "Kefil veya banka kredisi gerekiyor mu?",
-        a: "Hayır. MİA PARK OCEAN tasarrufa dayalı kooperatif modeliyle satılır: banka kredisi, faiz ve kefil gerekmez. Ödemeler 60 aya kadar vade ile yapılır.",
+        a: "Hayır. MİA PARK OCEAN tasarrufa dayalı kooperatif modeliyle satılır: banka kredisi, faiz ve kefil gerekmez. 1 milyon TL peşinatın ardından ödemeler 60 ay sabit taksitle yapılır.",
       },
     ],
     nearby: ["izmit-omeraga", "izmit-karabas", "izmit-kozluk", "izmit-yahya-kaptan"],
@@ -306,7 +306,7 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'tan",
     loc: "'ta",
-    title: "Kozluk Mahallesi Satılık Daire ve Yeni Konut Projeleri",
+    title: "Kozluk Mahallesi Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "İzmit Kozluk'ta konut arayanlar için MİA PARK OCEAN: merkeze yakın MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi.",
     drive: "5-8 dakika",
@@ -317,7 +317,7 @@ export const locations: Location[] = [
     ],
     highlights: [
       { title: "Merkeze yürüme mesafesi", text: "İzmit çarşısı ve sahil bandına yakın konum." },
-      { title: "Sınırlı yeni arz", text: "Mahallede yeni proje stoğunun az olması, çevre akslara yöneltiyor." },
+      { title: "Sınırlı yeni arz", text: "Mahallede yeni proje stokunun az olması, çevre akslara yöneltiyor." },
       { title: "Daire çeşitliliği", text: "Projede 1+0, 1+1, bahçeli 1+1 loft ve bahçeli 2+1 dubleks seçenekleri." },
       { title: "Kısa mesafe", text: "MİA Bölgesi'ne araçla yaklaşık 5-8 dakika." },
     ],
@@ -332,7 +332,7 @@ export const locations: Location[] = [
       },
       {
         q: "Bahçeli daire seçeneği var mı?",
-        a: "Evet. Zemin katlarda konumlanan 2+1 dubleks dairelerin her birinin kendine ait özel bahçesi vardır; müstakil ev konforunu site ayrıcalığıyla birleştirir.",
+        a: "Evet. Zemin katlardaki 1+1 Bahçe Loft ve 2+1 Bahçe Dubleks dairelerin her birinin kendine ait özel bahçesi vardır; müstakil ev konforunu site ayrıcalığıyla birleştirir.",
       },
     ],
     nearby: ["izmit-karabas", "izmit-omeraga", "izmit-cedit", "kocaeli-derince"],
@@ -346,13 +346,13 @@ export const locations: Location[] = [
     parent: "İzmit",
     abl: "'dan",
     loc: "'da",
-    title: "Bekirpaşa Satılık Daire ve Yeni Konut Projeleri",
+    title: "Bekirpaşa Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Bekirpaşa'da konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz, kefilsiz kooperatif projesi, 60 ay vade.",
     drive: "6-10 dakika",
     intro: [
       "Bekirpaşa, İzmit'in yoğun nüfuslu yerleşim bölgelerinden biri; geniş bir alana yayılan mahalle grubuyla şehrin doğu-güney aksını oluşturuyor.",
-      "Bölgede konut stoğu çeşitli, ancak site tipi yaşam ve kapalı sosyal donatı arayanların seçenekleri sınırlı. MİA PARK OCEAN bu ihtiyaca yönelik bir alternatif sunuyor.",
+      "Bölgede konut stoku çeşitli, ancak site tipi yaşam ve kapalı sosyal donatı arayanların seçenekleri sınırlı. MİA PARK OCEAN bu ihtiyaca yönelik bir alternatif sunuyor.",
       "D-100'e ve şehir merkezine yakın bir konumda, ailelerin sosyal donatı beklentisini karşılayan bir proje arayanlar için MİA Bölgesi kısa mesafede.",
     ],
     highlights: [
@@ -390,7 +390,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'den",
     loc: "'de",
-    title: "Başiskele Satılık Daire ve Yeni Konut Projeleri",
+    title: "Başiskele Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Başiskele'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi, 60 ay vade.",
     drive: "12-18 dakika",
@@ -430,7 +430,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'den",
     loc: "'de",
-    title: "Kartepe Satılık Daire ve Yeni Konut Projeleri",
+    title: "Kartepe Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Kartepe'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif modeli, 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks.",
     drive: "12-20 dakika",
@@ -456,7 +456,7 @@ export const locations: Location[] = [
       },
       {
         q: "Teslim süresi ne kadar?",
-        a: "Kooperatif, projeyi 2 yıl içinde tamamlayıp teslim etmeyi taahhüt etmektedir. Güncel inşaat durumu ve teslim takvimi için Ocean Gayrimenkul ile görüşebilirsiniz.",
+        a: "Teslim takvimi iş programına bağlıdır; güncel inşaat durumu ve teslim tahmini düzenli olarak raporlanır. Ayrıntı için Ocean Gayrimenkul ile görüşebilirsiniz.",
       },
     ],
     nearby: ["kocaeli-basiskele", "izmit-alikahya", "sakarya", "izmit-yenisehir"],
@@ -470,7 +470,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'den",
     loc: "'de",
-    title: "Derince Satılık Daire ve Yeni Konut Projeleri",
+    title: "Derince Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Derince'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde bankasız, faizsiz kooperatif projesi.",
     drive: "10-15 dakika",
@@ -510,7 +510,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'den",
     loc: "'de",
-    title: "Körfez Satılık Daire ve Yeni Konut Projeleri",
+    title: "Körfez Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Körfez ilçesinde konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi.",
     drive: "18-25 dakika",
@@ -532,7 +532,7 @@ export const locations: Location[] = [
       },
       {
         q: "Ara ödeme veya balon ödeme var mı?",
-        a: "Kooperatif modeli faizsiz ve ara ödemesiz olarak sunulmaktadır; ödemeler 60 aya kadar vadelendirilir. Güncel ödeme planı için Ocean Gayrimenkul ile görüşebilirsiniz.",
+        a: "Kooperatif modeli faizsiz ve ara ödemesiz olarak sunulmaktadır: 1 milyon TL peşinat, kalanı 60 ay sabit taksit. Güncel ödeme planı için Ocean Gayrimenkul ile görüşebilirsiniz.",
       },
       {
         q: "Uzaktan üyelik işlemi yapabilir miyim?",
@@ -550,7 +550,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'ten",
     loc: "'te",
-    title: "Gölcük Satılık Daire ve Yeni Konut Projeleri",
+    title: "Gölcük Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Gölcük'te konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde fore kazık temelli, faizsiz kooperatif projesi.",
     drive: "20-28 dakika",
@@ -590,19 +590,19 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'den",
     loc: "'de",
-    title: "Gebze Satılık Daire ve Yeni Konut Projeleri",
+    title: "Gebze Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
-      "Gebze'de konut ve yatırım arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, uygun giriş maliyeti.",
+      "Gebze'de konut ve yatırım arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 1 milyon TL peşinat ve 60 ay sabit taksit.",
     drive: "45-55 dakika",
     intro: [
-      "Gebze, Kocaeli'nin İstanbul'a en yakın ilçesi ve sanayi-lojistik merkezi. Marmaray, Gebze-Halkalı hattı ve otoyol bağlantılarıyla İstanbul ile bütünleşmiş durumda.",
+      "Gebze, Kocaeli'nin İstanbul'a en yakın ilçesi ve sanayi-lojistik merkezi. Marmaray (Gebze-Halkalı) ve otoyol bağlantılarıyla İstanbul ile bütünleşmiş durumda.",
       "İstanbul'a yakınlık Gebze'de m² fiyatlarını Kocaeli ortalamasının üzerine taşıyor. Aynı bütçeyle daha geniş bir daireye ve daha zengin sosyal donatıya ulaşmak isteyen yatırımcılar için İzmit MİA Bölgesi bir alternatif oluşturuyor.",
-      "Gebze'de çalışıp Kocaeli'de yatırım yapmayı planlayanlar, faizsiz kooperatif modelinin giriş maliyetini düşürmesi nedeniyle MİA PARK OCEAN'ı değerlendiriyor.",
+      "Gebze'de çalışıp Kocaeli'de yatırım yapmayı planlayanlar, faizsiz kooperatif modeli ve 60 ay sabit taksit imkânı nedeniyle MİA PARK OCEAN'ı değerlendiriyor.",
     ],
     highlights: [
       { title: "İstanbul bağlantısı", text: "Marmaray ve otoyollarla İstanbul'a entegre ilçe." },
       { title: "Fiyat karşılaştırması", text: "Aynı bütçeyle İzmit MİA'da daha geniş daire ve donatı imkânı." },
-      { title: "Yatırım kurgusu", text: "Faizsiz, 60 ay vadeli model peşin sermaye ihtiyacını azaltır." },
+      { title: "Yatırım kurgusu", text: "1 milyon TL peşinat, kalanı faizsiz 60 ay sabit taksit; ev ve araç takası kabul edilir." },
       { title: "Otoyol erişimi", text: "Projeden TEM Otoyolu'na yaklaşık 5 dakika." },
     ],
     faq: [
@@ -630,14 +630,14 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'dan",
     loc: "'da",
-    title: "Darıca Satılık Daire ve Yeni Konut Projeleri",
+    title: "Darıca Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Darıca'da konut arayanlara MİA PARK OCEAN alternatifi: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, 60 ay vade.",
     drive: "50-60 dakika",
     intro: [
-      "Darıca, Marmara kıyısındaki konumu ve İstanbul'a yakınlığıyla Kocaeli'nin en hızlı kentleşen ilçelerinden biri. Metro bağlantısı ilçedeki konut talebini daha da artırdı.",
+      "Darıca, Marmara kıyısındaki konumu ve İstanbul'a yakınlığıyla Kocaeli'nin en hızlı kentleşen ilçelerinden biri. Gebze-Darıca metro projesi ilçedeki konut talebini artırıyor.",
       "İlçede yeni konut arzı yüksek olsa da fiyatlar İstanbul etkisiyle yukarıda seyrediyor. Bütçesini koruyup daha geniş bir daireye geçmek isteyenler Kocaeli'nin merkez aksına yöneliyor.",
-      "MİA PARK OCEAN, faizsiz ve kefilsiz kooperatif modeliyle giriş maliyetini düşürerek bu geçişi mümkün kılıyor.",
+      "MİA PARK OCEAN, faizsiz ve kefilsiz kooperatif modeli, 60 ay sabit taksit ve ev-araç takası imkânıyla bu geçişi kolaylaştırıyor.",
     ],
     highlights: [
       { title: "Kıyı ilçesi", text: "Marmara kıyısında hızlı kentleşen bir yerleşim." },
@@ -670,7 +670,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'dan",
     loc: "'da",
-    title: "Çayırova Satılık Daire ve Yeni Konut Projeleri",
+    title: "Çayırova Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Çayırova'da konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde bankasız, faizsiz, kefilsiz kooperatif projesi.",
     drive: "45-55 dakika",
@@ -682,7 +682,7 @@ export const locations: Location[] = [
     highlights: [
       { title: "Sanayi ve lojistik", text: "Yoğun istihdam, sürekli büyüyen nüfus." },
       { title: "Donatı/bütçe dengesi", text: "İzmit MİA'da geniş donatı daha erişilebilir bütçeyle." },
-      { title: "Faizsiz finansman", text: "%0 faiz, vade farkı yok, 60 aya kadar taksit." },
+      { title: "Faizsiz finansman", text: "1 milyon TL peşinat, %0 faiz, 60 ay sabit taksit." },
       { title: "Ulaşım", text: "TEM üzerinden yaklaşık 45-55 dakika." },
     ],
     faq: [
@@ -692,7 +692,7 @@ export const locations: Location[] = [
       },
       {
         q: "Peşinat ne kadar?",
-        a: "Peşinat ve taksit tutarları daire tipine ve seçilen ödeme planına göre değişir. Güncel rakamlar için Ocean Gayrimenkul ile görüşebilir veya WhatsApp üzerinden bilgi alabilirsiniz.",
+        a: "Güncel kampanyada peşinat 1 milyon TL'dir; kalan tutar 60 ay sabit taksitle ödenir. Faiz, banka, kefil ve ara ödeme yoktur; ev ve araç takası kabul edilir. Daireye özel plan için 444 10 58'den bilgi alabilirsiniz.",
       },
       {
         q: "Faizsiz sistem nasıl işliyor?",
@@ -710,7 +710,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'den",
     loc: "'de",
-    title: "Karamürsel Satılık Daire ve Yeni Konut Projeleri",
+    title: "Karamürsel Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Karamürsel'de konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde 600 daireli faizsiz kooperatif projesi.",
     drive: "35-45 dakika",
@@ -750,7 +750,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'dan",
     loc: "'da",
-    title: "Kandıra Satılık Daire ve Yeni Konut Projeleri",
+    title: "Kandıra Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Kandıra'da konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz, kefilsiz kooperatif projesi.",
     drive: "40-50 dakika",
@@ -790,7 +790,7 @@ export const locations: Location[] = [
     parent: "Kocaeli",
     abl: "'ndan",
     loc: "'nda",
-    title: "Dilovası Satılık Daire ve Yeni Konut Projeleri",
+    title: "Dilovası Satılık Daire Alternatifi: İzmit\'te MİA PARK OCEAN",
     description:
       "Dilovası'nda konut arayanlara MİA PARK OCEAN: İzmit MİA Bölgesi'nde faizsiz kooperatif projesi, geniş yeşil alanlar.",
     drive: "40-50 dakika",
@@ -841,13 +841,13 @@ export const locations: Location[] = [
     intro: [
       "Sakarya, TEM Otoyolu üzerinden Kocaeli'ye komşu; Adapazarı merkezden İzmit'e günlük gidiş-geliş yapan çalışan ve öğrenci sayısı hayli yüksek.",
       "İki şehir arasındaki bu yoğun hareketlilik, Sakaryalı alıcıların Kocaeli'yi doğal bir yatırım alanı olarak görmesini sağlıyor. İzmit'in merkezî konumu ve kurumsal donatıları kira talebini canlı tutuyor.",
-      "MİA PARK OCEAN, faizsiz ve kefilsiz kooperatif modeliyle Sakarya'dan yatırım yapmak isteyenlere düşük giriş maliyetli bir seçenek sunuyor. Proje TEM Otoyolu'na yaklaşık 5 dakika mesafede.",
+      "MİA PARK OCEAN, faizsiz ve kefilsiz kooperatif modeliyle Sakarya'dan yatırım yapmak isteyenlere 1 milyon TL peşinat ve 60 ay sabit taksitle bir seçenek sunuyor. Proje TEM Otoyolu'na yaklaşık 5 dakika mesafede.",
     ],
     highlights: [
       { title: "TEM'e 5 dakika", text: "Projeden TEM Otoyolu'na yaklaşık 5 dakika; Sakarya bağlantısı doğrudan." },
       { title: "Günlük hareketlilik", text: "İzmit-Adapazarı arasında yoğun çalışan ve öğrenci sirkülasyonu." },
       { title: "Kira talebi", text: "Üniversite ve şehir hastanesi yakınlığı kiralama talebini destekliyor." },
-      { title: "Düşük giriş maliyeti", text: "Faizsiz, kefilsiz, 60 ay vadeli ödeme planı." },
+      { title: "Kolay ödeme", text: "1 milyon TL peşinat, faizsiz ve kefilsiz 60 ay sabit taksit." },
     ],
     faq: [
       {
@@ -881,7 +881,7 @@ export const locations: Location[] = [
     title: "İstanbul'dan İzmit'e Konut Yatırımı — MİA PARK OCEAN",
     description:
       "İstanbul'dan Kocaeli'ye yatırım: MİA PARK OCEAN'da faizsiz kooperatif modeli, İstanbul'a göre erişilebilir m² maliyeti, 60 ay vade.",
-    drive: "1.5-2 saat",
+    drive: "1-1,5 saat",
     intro: [
       "İstanbul'da konut m² maliyetleri, aynı bütçeyle ulaşılabilecek daire büyüklüğünü belirgin şekilde sınırlıyor. Bu nedenle Marmara'nın gelişen ikinci halkası — Kocaeli ve çevresi — yatırımcılar için giderek daha çok değerlendiriliyor.",
       "Kocaeli, güçlü sanayi istihdamı, üniversitesi ve şehir hastanesiyle nitelikli konut talebini yıl boyu canlı tutan bir şehir. İzmit MİA Bölgesi de bu talebin yoğunlaştığı yeni gelişim aksı.",
@@ -891,12 +891,12 @@ export const locations: Location[] = [
       { title: "m² maliyeti farkı", text: "Aynı bütçeyle İzmit MİA'da belirgin şekilde daha geniş daire." },
       { title: "Otoyol erişimi", text: "TEM Otoyolu'na yaklaşık 5 dakika; İstanbul'a doğrudan bağlantı." },
       { title: "Canlı kira talebi", text: "Sanayi istihdamı, üniversite ve şehir hastanesi." },
-      { title: "Kredisiz giriş", text: "Faizsiz, kefilsiz, 60 aya kadar vadeli ödeme." },
+      { title: "Kredisiz giriş", text: "1 milyon TL peşinat, faizsiz ve kefilsiz 60 ay sabit taksit." },
     ],
     faq: [
       {
         q: "İstanbul'dan MİA PARK OCEAN'a ulaşım ne kadar sürer?",
-        a: "İstanbul Anadolu Yakası'ndan MİA PARK OCEAN'a TEM Otoyolu üzerinden araçla yaklaşık 1,5-2 saatte ulaşılır. Süre çıkış noktasına ve trafiğe göre değişir.",
+        a: "İstanbul Anadolu Yakası'ndan MİA PARK OCEAN'a TEM Otoyolu üzerinden araçla yaklaşık 1-1,5 saatte ulaşılır. Süre çıkış noktasına ve trafiğe göre değişir.",
       },
       {
         q: "İstanbul'da projeniz var mı?",

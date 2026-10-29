@@ -1,4 +1,4 @@
-// Belge Merkezi — üye portalında yayımlanması öngörülen belgeler.
+// Belge Merkezi — /belgeler sayfasında listelenen belgeler.
 // Gerçek belgeler kesinleştikçe status "yayimlandi" yapılır ve href eklenir.
 // [DOĞRULANACAK: belgelerin nihai sürüm, tarih ve erişim seviyeleri]
 
@@ -28,10 +28,16 @@ export const docAccessLabels: Record<DocAccess, string> = {
 
 export const documentGroups: { title: string; items: DocItem[] }[] = [
   {
+    title: "Proje Tanıtım",
+    items: [
+      { title: "Proje Kataloğu (PDF)", desc: "Daire tipleri, kat planları, sosyal alanlar ve konum.", access: "acik", status: "yayimlandi", href: "/mia-park-ocean-katalog.pdf" },
+    ],
+  },
+  {
     title: "Kurumsal ve Hukuki",
     items: [
       { title: "Kooperatif Anasözleşmesi", desc: "Kooperatifin kuruluş, yönetim ve ortaklık esasları.", access: "uye", status: "hazirlaniyor" },
-      { title: "Ticaret Sicili / MERSİS Kaydı", desc: "Kooperatifin resmi tescil bilgileri.", access: "acik", status: "hazirlaniyor" },
+      { title: "Ticaret Sicili / MERSİS Kaydı", desc: "S.S. Yahya Kaptan Birlik Yapı Kooperatifi · MERSİS No: 0928116116500001", access: "acik", status: "yayimlandi" },
       { title: "Yetki Belgeleri", desc: "Temsil ve imza yetkilerine ilişkin belgeler.", access: "uye", status: "hazirlaniyor" },
     ],
   },

@@ -3,6 +3,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ContactForm } from "@/components/sections/ContactForm";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/iletisim/" },
   title: "İletişim",
   description:
     "MİA PARK OCEAN satış ofisi ile iletişime geçin. Telefon, WhatsApp, e-posta ve İzmit / Kocaeli adres bilgileri. Dairenizi birlikte seçelim.",

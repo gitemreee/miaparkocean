@@ -7,6 +7,9 @@ import { mpoPolicyNote } from "@/data/articles";
 import { site } from "@/data/site";
 import { allArticles, getArticle, relatedArticles, categoryTitle } from "@/lib/kb";
 
+// Kontrol listeleri yönetime hitap ediyor; alıcıya dönük yeniden yazılana kadar kapalı.
+const SHOW_CHECKLIST: boolean = false;
+
 export function generateStaticParams() {
   return allArticles.map((a) => ({ slug: a.slug }));
 }
@@ -85,14 +88,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <section key={s.heading} id={`s-${i}`} className="scroll-mt-28">
               <h2 className="text-2xl text-ocean">{s.heading}</h2>
               {s.body.map((p) => (
-                <p key={p.slice(0, 24)} className="mt-3 text-base leading-relaxed text-ocean/75">{p}</p>
+                <p key={p.slice(0, 24)} className="mt-3 break-words text-base leading-relaxed text-ocean/75">{p}</p>
               ))}
             </section>
           ))}
         </div>
 
-        {/* Kontrol listesi */}
-        {a.checklist && a.checklist.length > 0 && (
+        {/* Kontrol listesi — maddeler yönetime yönelik yazıldığı için ziyaretçiye gösterilmez;
+            alıcıya dönük ("üye olmadan önce şunları sorun") yeniden yazılınca açılabilir. */}
+        {SHOW_CHECKLIST && a.checklist && a.checklist.length > 0 && (
           <div className="mt-12 rounded-2xl bg-gradient-ocean p-5 md:p-8">
             <h2 className="text-xl text-cream">Uygulama Kontrol Listesi</h2>
             <ul className="mt-5 space-y-3">

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDays, Clock, MapPin, Phone, Globe, ArrowRight, Waves, Dumbbell, Flame, Baby, Car } from "lucide-react";
-import { launchEvent } from "@/data/event";
+import { launchEvent, eventIsPast } from "@/data/event";
 import { contact, contractor, site } from "@/data/site";
 import { RsvpForm } from "@/components/sections/RsvpForm";
 import { WaveEdge } from "@/components/ui/Wave";
 
 export const metadata: Metadata = {
-  title: "Davetiye — MİA PARK OCEAN Lansman & Basın Toplantısı",
+  alternates: { canonical: "/davetiye/" },
+  title: "Davetiye — Lansman & Basın Toplantısı",
   description: `${launchEvent.dateLabel} ${launchEvent.timeLabel} · ${launchEvent.venue}, ${launchEvent.city}. MİA PARK OCEAN lansman ve basın toplantısı davetiyesi.`,
   // Listelenmemiş / gizli sayfa: QR ile paylaşılır, arama motorlarına kapalıdır.
   robots: { index: false, follow: false },
@@ -40,6 +41,9 @@ const eventJsonLd = {
 };
 
 export default function DavetiyePage() {
+  // Statik derleme anında hesaplanır: etkinlik geçtiyse davet yerine teşekkür + güncel kampanya gösterilir.
+  const past = eventIsPast();
+  const phone = contact.phones[0];
   return (
     <div className="min-h-screen text-ink">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
@@ -47,7 +51,7 @@ export default function DavetiyePage() {
       {/* ---------- Üst: okyanus gradyanı + logodaki dalga ---------- */}
       <header className="section-dark wave-clip-end relative">
         <div className="container-luxe relative z-10 pb-28 pt-16 text-center md:pb-36 md:pt-20">
-          <span className="pill pill-light mx-auto w-fit tracking-[0.28em]">{launchEvent.kicker.toUpperCase()}</span>
+          <span className="pill pill-light mx-auto w-fit tracking-[0.28em]">{past ? "LANSMANIMIZ GERÇEKLEŞTİ" : launchEvent.kicker.toUpperCase()}</span>
 
           <h1 className="mx-auto mt-8 max-w-3xl text-balance font-display text-[2.1rem] leading-[1.08] text-white sm:text-5xl md:text-[3.5rem]">
             {launchEvent.project}
@@ -56,7 +60,9 @@ export default function DavetiyePage() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-ice/80 md:text-lg">
-            Sizleri bu özel günde aramızda görmekten mutluluk duyarız.
+            {past
+              ? `${launchEvent.dateLabel} tarihindeki lansmanımıza katılan tüm misafirlerimize teşekkür ederiz.`
+              : "Sizleri bu özel günde aramızda görmekten mutluluk duyarız."}
           </p>
         </div>
 
@@ -97,12 +103,20 @@ export default function DavetiyePage() {
         </div>
 
         <div className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-3">
-          <a href={launchEvent.venueMaps} target="_blank" rel="noopener noreferrer" className="btn-base btn-outline px-6 py-3 text-sm">
-            <MapPin className="h-4 w-4" /> Yol Tarifi Al
-          </a>
-          <a href={`tel:${launchEvent.host.phone}`} className="btn-base btn-outline px-6 py-3 text-sm">
-            <Phone className="h-4 w-4" /> {launchEvent.host.name} · {launchEvent.host.phoneLabel}
-          </a>
+          {past ? (
+            <a href={phone.href} className="btn-base btn-outline px-6 py-3 text-sm">
+              <Phone className="h-4 w-4" /> Bilgi ve Satış · {phone.label}
+            </a>
+          ) : (
+            <>
+              <a href={launchEvent.venueMaps} target="_blank" rel="noopener noreferrer" className="btn-base btn-outline px-6 py-3 text-sm">
+                <MapPin className="h-4 w-4" /> Yol Tarifi Al
+              </a>
+              <a href={`tel:${launchEvent.host.phone}`} className="btn-base btn-outline px-6 py-3 text-sm">
+                <Phone className="h-4 w-4" /> {launchEvent.host.name} · {launchEvent.host.phoneLabel}
+              </a>
+            </>
+          )}
         </div>
       </section>
 
@@ -110,12 +124,17 @@ export default function DavetiyePage() {
       <section className="container-luxe mt-16 md:mt-24">
         <div className="mx-auto max-w-2xl text-center">
           <div className="mx-auto h-[3px] w-12 rounded-full bg-gradient-surf" aria-hidden="true" />
-          <h2 className="mt-6 font-display text-3xl leading-tight text-ink md:text-4xl">Değerli Konuğumuz,</h2>
-          <p className="mt-6 text-pretty text-[1.05rem] leading-relaxed text-ink/70">{launchEvent.invitationText}</p>
+          <h2 className="mt-6 font-display text-3xl leading-tight text-ink md:text-4xl">{past ? "Teşekkür ederiz" : "Değerli Konuğumuz,"}</h2>
+          <p className="mt-6 text-pretty text-[1.05rem] leading-relaxed text-ink/70">
+            {past
+              ? "MİA PARK OCEAN'ı lansmanda sizlere tanıttık. Projeyi daha yakından tanımak, daire tiplerini incelemek ve güncel kampanyadan yararlanmak için satış ekibimiz hizmetinizde."
+              : launchEvent.invitationText}
+          </p>
         </div>
       </section>
 
-      {/* ---------- Program ---------- */}
+      {/* ---------- Program (yalnızca etkinlik öncesi) ---------- */}
+      {!past && (
       <section className="section-mint mt-16 py-16 md:mt-24 md:py-20">
         <div className="container-luxe">
           <div className="mx-auto max-w-2xl text-center">
@@ -140,18 +159,39 @@ export default function DavetiyePage() {
           </ol>
         </div>
       </section>
+      )}
 
-      {/* ---------- Katılım formu ---------- */}
+      {/* ---------- Katılım formu / etkinlik sonrası güncel kampanya ---------- */}
       <section className="container-luxe mt-16 md:mt-24">
         <div className="mx-auto max-w-2xl">
-          <RsvpForm />
+          {past ? (
+            <div className="card-luxe p-7 text-center md:p-10">
+              <span className="eyebrow text-accent">Güncel Kampanya</span>
+              <h2 className="mt-4 font-display text-3xl leading-tight text-ink md:text-4xl">
+                1 milyon TL peşinatla <span className="gilded">yeni evinize taşının</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-lg text-pretty leading-relaxed text-ink/65">
+                Kalanı 60 ay sabit taksit. Faiz, banka, kredi, kefil ve ara ödeme yok; ev ve araç takası kabul edilir.
+              </p>
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                <a href={phone.href} className="btn-base btn-ocean btn-shine px-7 py-3.5 text-sm">
+                  <Phone className="h-4 w-4" /> {phone.label}
+                </a>
+                <a href={contact.whatsapp.href} target="_blank" rel="noopener noreferrer" className="btn-base btn-outline px-7 py-3.5 text-sm">
+                  {contact.whatsapp.label}
+                </a>
+              </div>
+            </div>
+          ) : (
+            <RsvpForm />
+          )}
         </div>
       </section>
 
       {/* ---------- Proje kısa tanıtım ---------- */}
       <section className="container-luxe mt-16 md:mt-24">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="eyebrow text-accent">Tanıtılacak Proje</span>
+          <span className="eyebrow text-accent">{past ? "Proje" : "Tanıtılacak Proje"}</span>
           <h2 className="mt-4 font-display text-3xl leading-tight text-ink md:text-4xl">
             {launchEvent.project} · <span className="gilded">{launchEvent.region}</span>
           </h2>
@@ -180,7 +220,7 @@ export default function DavetiyePage() {
         <div className="container-luxe relative z-10 py-12 text-center">
           <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-6">
             <div>
-              <div className="eyebrow text-ice/60">{contractor.role}</div>
+              <div className="eyebrow text-white/80">{contractor.role}</div>
               <a
                 href={contractor.url}
                 target="_blank"
@@ -191,7 +231,7 @@ export default function DavetiyePage() {
               </a>
             </div>
             <div>
-              <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>
+              <div className="eyebrow text-white/80">Tek Yetkili Satıcı</div>
               <a
                 href={contact.websiteHref}
                 target="_blank"
@@ -204,8 +244,8 @@ export default function DavetiyePage() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm text-ice/75">
-            <a href={`tel:${launchEvent.host.phone}`} className="inline-flex items-center gap-2 hover:text-white">
-              <Phone className="h-4 w-4" /> {launchEvent.host.phoneLabel}
+            <a href={past ? phone.href : `tel:${launchEvent.host.phone}`} className="inline-flex items-center gap-2 hover:text-white">
+              <Phone className="h-4 w-4" /> {past ? phone.label : launchEvent.host.phoneLabel}
             </a>
             <a href={site.url} className="inline-flex items-center gap-2 hover:text-white">
               <Globe className="h-4 w-4" /> {site.domain}

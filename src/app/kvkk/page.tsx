@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { site, contact } from "@/data/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/kvkk/" },
   title: "KVKK Aydınlatma Metni",
   description: "6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında MİA PARK OCEAN aydınlatma metni.",
   robots: { index: false, follow: true },
@@ -18,7 +19,8 @@ const sections = [
   {
     h: "2. İşlenen Kişisel Veriler",
     p: [
-      "İletişim formu ve satış görüşmeleri aracılığıyla; ad-soyad, telefon numarası, e-posta adresi, ilgilendiğiniz daire tipi ve tarafımıza ilettiğiniz mesaj içeriği gibi kimlik ve iletişim verileriniz işlenmektedir.",
+      "İletişim formu, belge talep formu ve satış görüşmeleri aracılığıyla; ad-soyad, telefon numarası, e-posta adresi, ilgilendiğiniz daire tipi ve tarafımıza ilettiğiniz mesaj içeriği gibi kimlik ve iletişim verileriniz işlenmektedir.",
+      "Etkinlik katılım formu aracılığıyla ayrıca kurum/yayın adı ve katılımcı sayısı bilgileri işlenir.",
     ],
   },
   {
@@ -30,13 +32,14 @@ const sections = [
   {
     h: "4. Hukuki Sebep",
     p: [
-      "Verileriniz; KVKK m.5 uyarınca açık rızanıza dayanılarak ve/veya bir hakkın tesisi, ilgili kişinin temel hak ve özgürlüklerine zarar vermemek kaydıyla veri sorumlusunun meşru menfaati hukuki sebeplerine dayanılarak işlenir.",
+      "Verileriniz KVKK m.5 kapsamında şu hukuki sebeplere dayanılarak işlenir: açık rızanız (m.5/1); bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması (m.5/2-c); veri sorumlusunun hukuki yükümlülüğünü yerine getirmesi (m.5/2-ç); bir hakkın tesisi, kullanılması veya korunması (m.5/2-e); temel hak ve özgürlüklerinize zarar vermemek kaydıyla veri sorumlusunun meşru menfaati (m.5/2-f).",
     ],
   },
   {
     h: "5. Verilerin Aktarımı",
     p: [
       "Kişisel verileriniz; yalnızca yukarıdaki amaçlarla sınırlı olmak üzere, proje geliştiricisi kooperatif, yetkili satış ekibi ve yasal yükümlülükler kapsamında yetkili kamu kurum ve kuruluşları ile paylaşılabilir. Verileriniz, açık rızanız olmaksızın pazarlama amacıyla üçüncü taraflara satılmaz.",
+      "Yurt dışına aktarım: İnternet sitesindeki formlar Netlify Inc. (ABD) altyapısı üzerinden iletilir; WhatsApp üzerinden yazdığınız mesajlar Meta Platforms (WhatsApp) altyapısında işlenir; konum haritaları, onay vermeniz halinde Google LLC tarafından sunulur. Bu aktarımlar KVKK m.9 kapsamında, ilgili hizmetin kullanılmasına ilişkin açık rızanıza dayanılarak gerçekleştirilir.",
     ],
   },
   {
@@ -46,10 +49,16 @@ const sections = [
     ],
   },
   {
-    h: "7. İlgili Kişi Olarak Haklarınız",
+    h: "7. Saklama Süresi",
     p: [
-      "KVKK m.11 kapsamında; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, işlenme amacını öğrenme, eksik veya yanlış işlenmişse düzeltilmesini, KVKK'da öngörülen şartlarda silinmesini/yok edilmesini isteme ve işlemenin hukuka aykırılığı halinde zararın giderilmesini talep etme haklarına sahipsiniz.",
-      `Taleplerinizi ${contact.email} adresi üzerinden veya satış ofisimize yazılı başvuru ile iletebilirsiniz.`,
+      "Kişisel verileriniz, işlenme amacının gerektirdiği süre boyunca ve ilgili mevzuatta öngörülen zamanaşımı süreleri kadar saklanır; bu sürelerin sonunda silinir, yok edilir veya anonim hale getirilir.",
+    ],
+  },
+  {
+    h: "8. İlgili Kişi Olarak Haklarınız",
+    p: [
+      "KVKK m.11 kapsamında; (a) kişisel verilerinizin işlenip işlenmediğini öğrenme, (b) işlenmişse buna ilişkin bilgi talep etme, (c) işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme, (ç) yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme, (d) eksik veya yanlış işlenmişse düzeltilmesini isteme, (e) KVKK m.7'de öngörülen şartlar çerçevesinde silinmesini veya yok edilmesini isteme, (f) (d) ve (e) bentleri uyarınca yapılan işlemlerin verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme, (g) işlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle aleyhinize bir sonucun ortaya çıkmasına itiraz etme ve (ğ) kanuna aykırı işlenmesi sebebiyle zarara uğramanız halinde zararın giderilmesini talep etme haklarına sahipsiniz.",
+      `Başvurularınızı, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ'e uygun olarak yazılı şekilde satış ofisimize iletebilir veya ${contact.email} adresine gönderebilirsiniz. Başvurunuz en geç 30 gün içinde ücretsiz olarak sonuçlandırılır.`,
     ],
   },
 ];
@@ -80,10 +89,7 @@ export default function KvkkPage() {
           ))}
         </div>
 
-        <p className="mt-12 text-xs leading-relaxed text-ocean/45">
-          Bu metin genel bilgilendirme amaçlıdır ve proje belgeleri kesinleştikçe güncellenecektir. Nihai KVKK
-          aydınlatma ve açık rıza süreçleri yetkili uzmanlarca onaylanmalıdır.
-        </p>
+        <p className="mt-12 text-xs leading-relaxed text-ocean/45">Son güncelleme: 29 Ekim 2026</p>
       </div>
     </div>
   );

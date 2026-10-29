@@ -12,6 +12,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { faq } from "@/data/faq";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/kooperatif/" },
   title: "Neden Kooperatif? — Güvence ve Denetim",
   description:
     "Kooperatif modeli devlet gözetiminde, 1163 ve 7339 sayılı kanunlarla güvence altında. KOOPBİS / e-Devlet şeffaflığı, Bakanlık temsilcisi ve çok katmanlı denetim.",

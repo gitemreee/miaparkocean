@@ -5,7 +5,8 @@ import { contact, contractor, socials } from "@/data/site";
 import { WaveEdge } from "@/components/ui/Wave";
 
 export const metadata: Metadata = {
-  title: "Basın Açıklaması — MİA PARK OCEAN",
+  alternates: { canonical: "/basin-aciklamasi/" },
+  title: "Basın Açıklaması",
   description: "MİA PARK OCEAN lansman ve basın toplantısı açıklaması.",
   // Listelenmemiş / gizli sayfa: arama motorlarına kapalı, menüde/sitemap'te yok.
   robots: { index: false, follow: false },
@@ -47,7 +48,7 @@ export default function BasinAciklamasiPage() {
 
       {/* Başlık — ortalanmış hoş geldin girişi (3 satır) */}
       <header className="container-luxe max-w-4xl pt-12 text-center md:pt-16">
-        <span className="eyebrow text-accent">Lansman &amp; Basın Toplantısı</span>
+        <span className="eyebrow text-accent">Lansman &amp; Basın Toplantısı · 21 Ağustos 2026</span>
         <h1 className="mx-auto mt-5 max-w-4xl font-display text-[2.05rem] leading-[1.12] tracking-tight text-ink sm:text-[2.9rem] md:text-[3.25rem]">
           İzmit&apos;in Yeni İncisi
           <br />
@@ -63,11 +64,15 @@ export default function BasinAciklamasiPage() {
 
       {/* Konuşma metni */}
       <article className="container-luxe mt-12 max-w-3xl space-y-6 pb-20 text-[1.02rem] leading-relaxed text-ink/80">
+        <p className="text-sm text-ink/55">
+          <span className="font-semibold text-ink/75">İzmit, 21 Ağustos 2026 —</span> Aşağıdaki konuşma, MİA PARK OCEAN lansman ve
+          basın toplantısında S.S. Yahya Kaptan Birlik Yapı Kooperatifi adına yapılmıştır.
+        </p>
         <p className="font-medium text-ink">Değerli Basın Mensupları ve Kıymetli Konuklar,</p>
         <p>
-          Bugün burada, Kocaeli&apos;mize değer katacak, yaşam standartlarını yeniden belirleyecek vizyon projemiz Mia
-          Park Ocean&apos;ı sizlere tanıtmaktan büyük bir gurur ve heyecan duyuyoruz. Yahya Kaptan Birlik Yapı Kooperatifi
-          olarak, şehrimizin en prestijli noktalarından biri olan Mia bölgesinde, doğayla iç içe ama bir o kadar da
+          Bugün burada, Kocaeli&apos;mize değer katacak, yaşam standartlarını yeniden belirleyecek vizyon projemiz MİA
+          PARK OCEAN&apos;ı sizlere tanıtmaktan büyük bir gurur ve heyecan duyuyoruz. S.S. Yahya Kaptan Birlik Yapı Kooperatifi
+          olarak, şehrimizin en prestijli noktalarından biri olan MİA Bölgesi&apos;nde, doğayla iç içe ama bir o kadar da
           şehrin tam merkezinde yepyeni bir yaşam alanı inşa ediyoruz.
         </p>
 
@@ -79,10 +84,10 @@ export default function BasinAciklamasiPage() {
           ediyoruz.
         </p>
         <p>
-          Modern mimarisiyle Kocaeli&apos;nin silüetine değer katacak Mia Park Ocean, eşsiz deniz ve şehir manzaralı
+          Modern mimarisiyle Kocaeli&apos;nin silüetine değer katacak MİA PARK OCEAN, eşsiz deniz ve şehir manzaralı
           daireleriyle ferah bir yaşam vaat ediyor. Toplamda 600 rezidanstan oluşan projemizde; her ihtiyaca ve bütçeye
-          uygun 1+0, 1+1, 1+1 bahçe loft ve 2+1 daire seçeneklerimiz bulunuyor. Özellikle giriş katlarımızda tasarladığımız, her birinin
-          kendine ait özel bahçesi bulunan loft dairelerimiz, müstakil ev konforunu rezidans ayrıcalığıyla birleştiriyor.
+          uygun 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks seçeneklerimiz bulunuyor. Özellikle giriş katlarımızda tasarladığımız, her birinin
+          kendine ait özel bahçesi bulunan loft ve dubleks dairelerimiz, müstakil ev konforunu rezidans ayrıcalığıyla birleştiriyor.
         </p>
 
         <h2 className="pt-4 font-display text-2xl text-ink">
@@ -110,16 +115,24 @@ export default function BasinAciklamasiPage() {
 
         <h2 className="pt-4 font-display text-2xl text-ink">Faiz Yok, Ara Ödeme Yok: 2 Yılda Teslim!</h2>
         <p>
-          Yahya Kaptan Birlik Yapı Kooperatifi olarak, herkesin bu prestijli projede yer alabilmesi için çok özel bir
+          S.S. Yahya Kaptan Birlik Yapı Kooperatifi olarak, herkesin bu prestijli projede yer alabilmesi için çok özel bir
           finansal model geliştirdik. Ev sahibi olmak veya yatırım yapmak isteyen vatandaşlarımızı ağır banka
           yüklerinden kurtarıyor; çok uygun ödeme koşullarıyla, faizsiz ve ara ödemesiz bir sistem sunuyoruz. Üstelik bu
           dev projeyi sadece 2 yıl içerisinde tamamlayarak sahiplerine teslim etmeyi taahhüt ediyoruz.
         </p>
         <p>
-          Mia Park Ocean, yalnızca bir konut projesi değil; Kocaeli için yeni bir vizyon, kârlı bir yatırım ve mutlu
+          MİA PARK OCEAN, yalnızca bir konut projesi değil; Kocaeli için yeni bir vizyon, kârlı bir yatırım ve mutlu
           yarınların teminatıdır. Projemizin şehrimize, kooperatif üyelerimize ve gelecekteki tüm sakinlerimize hayırlı
-          olmasını diliyor, lansmanımıza katılımlarınızdan dolayı hepinize teşekkürlerimi sunuyorum.
+          olmasını diliyor, lansmanımıza katılımlarınızdan dolayı hepinize teşekkürlerimizi sunuyoruz.
         </p>
+
+        <aside className="mt-10 rounded-2xl border border-accent/20 bg-paper-2 px-6 py-5 text-[0.95rem]">
+          <span className="eyebrow text-accent">Güncel Kampanya · Ekim 2026</span>
+          <p className="mt-2 text-ink/75">
+            <span className="font-semibold text-ink">1 milyon TL peşinat</span>, kalanı 60 ay sabit taksit. Faiz, banka, kredi,
+            kefil ve ara ödeme yok; ev ve araç takası kabul edilir. Bilgi: <a href="tel:4441058" className="font-semibold text-accent">444 10 58</a>
+          </p>
+        </aside>
       </article>
 
       {/* Alt: iletişim + logolar */}

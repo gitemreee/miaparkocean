@@ -76,7 +76,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <PageHero
-        eyebrow={`${loc.parent} · ${typeLabel}`}
+        eyebrow={loc.type === "il" ? "Komşu İl" : `${loc.parent} · ${typeLabel}`}
         title={
           <>
             {loc.name}
@@ -250,7 +250,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           <span className="eyebrow text-ice/60">{loc.fullName}</span>
           <h2 className="mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight text-cream md:text-4xl">
             {loc.name}
-            {loc.abl} gelin, daireleri yerinde görün
+            {loc.abl} gelin, projeyi satış ofisimizde yakından tanıyın
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-pretty leading-relaxed text-ice/75">
             Satış ofisimiz İzmit merkezde, Ömerağa Mahallesi&apos;nde. Randevu oluşturun, daire tiplerini ve resmî

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { site, contact } from "@/data/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/cerez-politikasi/" },
   title: "Çerez Politikası",
   description:
     "MİA PARK OCEAN internet sitesinde kullanılan çerezler, türleri ve çerez tercihlerinizi nasıl yönetebileceğinize dair bilgilendirme.",
@@ -19,15 +20,14 @@ const sections = [
   {
     h: "2. Hangi Çerezleri Kullanıyoruz?",
     p: [
-      "Zorunlu çerezler: Sitenin temel işlevleri ve güvenliği için gereklidir; bunlar olmadan sayfa düzgün çalışmaz. Çerez tercihinizi hatırlamak için kullandığımız kayıt da bu kapsamdadır.",
-      "İşlevsel çerezler: Tercihlerinizi (örneğin çerez onayınızı) hatırlayarak siteyi tekrar ziyaretinizde daha akıcı bir deneyim sunar.",
-      "Üçüncü taraf çerezleri: Sitemizde konum gösterimi için Google Haritalar gibi harici servisler kullanıldığında, bu servisler kendi çerezlerini yerleştirebilir.",
+      "Zorunlu kayıtlar: Sitenin temel işlevleri için gereklidir. Çerez tercihinizi hatırlamak için tarayıcınızın yerel depolamasına (localStorage) küçük bir kayıt yazılır; reklam veya takip amacı taşımaz.",
+      "Üçüncü taraf çerezleri: Konum bölümlerindeki Google Haritalar yalnızca çerezleri kabul etmeniz ya da haritanın yanındaki \"Haritayı göster\" düğmesine basmanız halinde yüklenir; yüklendiğinde Google kendi çerezlerini kullanabilir. Çerezleri reddederseniz harita yüklenmez.",
     ],
   },
   {
     h: "3. Üçüncü Taraf Servisleri",
     p: [
-      "Bölge ve konum bölümlerinde harita gösterimi için Google Haritalar hizmetinden yararlanıyoruz. Bu içerik yüklendiğinde Google, kendi politikaları çerçevesinde çerez kullanabilir. İletişim formu gönderimleri ise altyapı sağlayıcımız üzerinden işlenir.",
+      "Bölge ve konum bölümlerinde harita gösterimi için Google Haritalar (Google LLC) hizmetinden yararlanıyoruz. İletişim ve belge talep formları Netlify (Netlify Inc.) altyapısı üzerinden iletilir; WhatsApp bağlantıları Meta Platforms (WhatsApp) hizmetini açar. Bu servislerin veri işleme koşulları KVKK Aydınlatma Metni'nde açıklanmıştır.",
     ],
   },
   {
@@ -40,7 +40,7 @@ const sections = [
   {
     h: "5. İletişim",
     p: [
-      `Çerez kullanımı ve kişisel verilerinizle ilgili sorularınız için ${contact.email} adresinden bize ulaşabilirsiniz. Kişisel verilerinizin işlenmesine ilişkin ayrıntılar için KVKK Aydınlatma Metni'ni inceleyebilirsiniz.`,
+      `Çerez kullanımı ve kişisel verilerinizle ilgili sorularınız için veri sorumlusu ${site.seller}'a ${contact.email} adresinden veya ${contact.phones[0].label} numarasından ulaşabilirsiniz.`,
     ],
   },
 ];
@@ -74,7 +74,7 @@ export default function CerezPolitikasiPage() {
         </div>
 
         <p className="mt-12 text-xs leading-relaxed text-ocean/45">
-          Bu metin genel bilgilendirme amaçlıdır ve proje süreçleri ilerledikçe güncellenebilir. Ayrıntılı bilgi için{" "}
+          Son güncelleme: 29 Ekim 2026. Kişisel verilerinizin işlenmesine ilişkin ayrıntılar için{" "}
           <Link href="/kvkk" className="text-bronze underline underline-offset-2">
             KVKK Aydınlatma Metni
           </Link>{" "}

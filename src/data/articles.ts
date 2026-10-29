@@ -37,7 +37,7 @@ export const kbCategories: { key: KbCategoryKey; title: string; desc: string }[]
 
 // Kesinleşmemiş süreçler için standart proje politikası notu.
 export const mpoPolicyNote =
-  "Mia Park Ocean uygulaması (proje politikası olarak öngörülmektedir): Bu konuya ilişkin süreç, belge veya karar üye portalında erişilebilir olacak; sorumlu birim, işlem süresi ve itiraz yöntemi açıkça belirtilecektir. Nihai uygulama, anasözleşme ve genel kurul kararlarıyla kesinleşir.";
+  "MİA PARK OCEAN'da bu konuya ilişkin belgeler yayımlandıkça Belgeler sayfasında paylaşılır; sorularınız için 444 10 58'den bize ulaşabilirsiniz. Nihai uygulama, kooperatif anasözleşmesi ve genel kurul kararlarıyla belirlenir.";
 
 export const articles: Article[] = [
   {
@@ -46,14 +46,14 @@ export const articles: Article[] = [
     tier: "article",
     title: "Kooperatif Modeli Nedir?",
     metaDescription:
-      "Mia Park Ocean kooperatif modelinin nasıl çalıştığını, ortakların projeye nasıl katıldığını ve karar süreçlerinin nasıl yönetildiğini öğrenin.",
+      "MİA PARK OCEAN kooperatif modelinin nasıl çalıştığını, ortakların projeye nasıl katıldığını ve karar süreçlerinin nasıl yönetildiğini öğrenin.",
     intro:
       "Kooperatif modeli; kişilerin ortak ekonomik ve sosyal ihtiyaçlarını karşılıklı yardım, dayanışma ve demokratik yönetim yoluyla karşılamak üzere oluşturdukları kurumsal bir yapıdır.",
     sections: [
       {
-        heading: "Mia Park Ocean açısından modelin anlamı",
+        heading: "MİA PARK OCEAN açısından modelin anlamı",
         body: [
-          "Mia Park Ocean'da üyeler yalnızca ödeme yapan müşteriler değil, kooperatifin ortaklarıdır. Projenin bütçesi, yönetim organları, temel yatırım kararları ve denetim süreçleri anasözleşme, mevzuat ve genel kurul kararları çerçevesinde yürütülür.",
+          "MİA PARK OCEAN'da üyeler yalnızca ödeme yapan müşteriler değil, kooperatifin ortaklarıdır. Projenin bütçesi, yönetim organları, temel yatırım kararları ve denetim süreçleri anasözleşme, mevzuat ve genel kurul kararları çerçevesinde yürütülür.",
           "Kooperatif tüzel kişiliği; arsa edinimi, sözleşmeler, banka hesapları, ruhsat süreçleri ve proje harcamalarının tek bir kurumsal yapı altında yönetilmesini sağlar. Yönetim kurulu günlük işleri yürütür; en yetkili karar organı ise ortakların oluşturduğu genel kuruldur.",
         ],
       },
@@ -116,7 +116,6 @@ export const articles: Article[] = [
       "Her büyük satın almada en az üç karşılaştırılabilir teklif alın.",
       "Üyelere maliyet tahmini ile satış fiyatı arasındaki farkı açık anlatın.",
       "Yönetim ve denetim raporlarını periyodik yayımlayın.",
-      "Avantaj söylemini garanti veya kesin tasarruf vaadine dönüştürmeyin.",
     ],
   },
   {
@@ -228,7 +227,7 @@ export const articles: Article[] = [
       {
         heading: "Dış denetim",
         body: [
-          "Mevzuatta belirlenen kriterleri taşıyan kooperatifler dış denetime tabidir. Mia Park Ocean yasal eşiğe girmese dahi güven politikasının parçası olarak gönüllü bağımsız denetim yaptırabilir. Dış denetçinin seçimi ve görevlendirilmesi güncel mevzuata uygun yürütülmelidir.",
+          "Mevzuatta belirlenen kriterleri taşıyan kooperatifler dış denetime tabidir. Yapı ruhsatı alınmış ve 100'den fazla ortağı bulunan yapı kooperatifleri bu kapsamdadır; 600 daireli MİA PARK OCEAN da bağımsız dış denetime tabi olacak ölçektedir. Dış denetçinin seçimi ve görevlendirilmesi güncel mevzuata uygun yürütülmelidir.",
         ],
       },
       {
@@ -268,9 +267,9 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Mia Park Ocean Üye Portalı ile tamamlayıcı yapı",
+        heading: "MİA PARK OCEAN Üye Portalı ile tamamlayıcı yapı",
         body: [
-          "Mia Park Ocean'a özel portalda bütçe, tahsilat özeti, gerçekleşen maliyet, teknik ilerleme, hakediş özeti, genel kurul kararları, tapu ve ruhsat belgeleri, teslim takvimi ve soru-cevap kayıtlarının bulunması planlanmaktadır. Portal, KOOPBİS'in yerine geçmez; proje bazlı şeffaflığı güçlendirir.",
+          "MİA PARK OCEAN'a özel portalda bütçe, tahsilat özeti, gerçekleşen maliyet, teknik ilerleme, hakediş özeti, genel kurul kararları, tapu ve ruhsat belgeleri, teslim takvimi ve soru-cevap kayıtlarının bulunması planlanmaktadır. Portal, KOOPBİS'in yerine geçmez; proje bazlı şeffaflığı güçlendirir.",
         ],
       },
     ],
@@ -359,7 +358,7 @@ export const articles: Article[] = [
     tier: "article",
     title: "İnşaat Süreci Nasıl Denetlenir?",
     metaDescription:
-      "Mia Park Ocean inşaatının hakediş, kalite kontrol, malzeme onayı ve ilerleme raporlarıyla nasıl denetlenebileceğini öğrenin.",
+      "MİA PARK OCEAN inşaatının hakediş, kalite kontrol, malzeme onayı ve ilerleme raporlarıyla nasıl denetlenebileceğini öğrenin.",
     intro: "Şantiyede gerçekleşen iş ile yapılan ödeme aynı doğrulama zincirine bağlanmalıdır.",
     sections: [
       {
@@ -413,7 +412,7 @@ export const articles: Article[] = [
       {
         heading: "Güvenli devir belgesi",
         body: [
-          "Mia Park Ocean'ın “Üyelik Mali ve Hukuki Durum Belgesi” düzenlemesi planlanmaktadır. Belgede üyelik numarası, tahsis bilgisi, toplam tahakkuk, ödeme, borç, gecikme, temlik veya haciz kaydı ve devam eden uyuşmazlıklar yer alır.",
+          "MİA PARK OCEAN'ın “Üyelik Mali ve Hukuki Durum Belgesi” düzenlemesi planlanmaktadır. Belgede üyelik numarası, tahsis bilgisi, toplam tahakkuk, ödeme, borç, gecikme, temlik veya haciz kaydı ve devam eden uyuşmazlıklar yer alır.",
         ],
       },
     ],
@@ -485,7 +484,7 @@ export const articles: Article[] = [
       {
         heading: "Vergi iletişimi",
         body: [
-          "Web sitesinde “tamamen vergiden muaf” gibi kesin ifadeler kullanılmaz. En doğru yaklaşım, vergisel uygulamaların güncel mevzuat ve proje işlemleri doğrultusunda yetkili mali müşavirlerce yönetildiğini belirtmektir.",
+          "Kooperatiflerde vergi uygulamaları işlemin türüne ve güncel mevzuata göre değişir; bu nedenle kesin bir muafiyetten söz edilemez. Vergisel konular, proje işlemleri doğrultusunda yetkili mali müşavirlerce yönetilir.",
         ],
       },
     ],
@@ -493,7 +492,6 @@ export const articles: Article[] = [
       "YMM/SMMM vergi görüşü alın.",
       "Ortak dışı işlemleri ayrı izleyin.",
       "Arsa, ruhsat ve teslim modelini vergi planıyla birlikte değerlendirin.",
-      "Eski tarihli internet içeriklerine dayanarak vergi vaadi vermeyin.",
     ],
   },
   {
@@ -510,7 +508,7 @@ export const articles: Article[] = [
         heading: "KOOPBİS nedir ve neyi amaçlar?",
         body: [
           "KOOPBİS (Kooperatif Bilgi Sistemi); kooperatiflerin, üst kuruluşların ve bunların ortaklarının kooperatifçilik hizmetlerine elektronik ortamda eriştiği merkezi bir sistemdir. Amaç, kooperatife ilişkin temel bilgilerin düzenli, güncel ve erişilebilir biçimde tutulmasıdır.",
-          "S.S. Yahya Kaptan Birlik Yapı Kooperatifi de faaliyetlerini KOOPBİS kaydıyla yürütür; böylece Mia Park Ocean ortakları, kooperatife ait bilgilere e-Devlet üzerinden ulaşabilir.",
+          "S.S. Yahya Kaptan Birlik Yapı Kooperatifi de faaliyetlerini KOOPBİS kaydıyla yürütür; böylece MİA PARK OCEAN ortakları, kooperatife ait bilgilere e-Devlet üzerinden ulaşabilir.",
         ],
       },
       {
@@ -580,7 +578,7 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Mia Park Ocean açısından anlamı",
+        heading: "MİA PARK OCEAN açısından anlamı",
         body: [
           "S.S. Yahya Kaptan Birlik Yapı Kooperatifi bir yapı kooperatifidir. Yönetmelik, inşaat ruhsatı alınmış ve ortak sayısı 50 ve üzeri olan yapı kooperatiflerini doğrudan kapsama aldığından, bu tür bir projede yönetim ve denetim organlarının eğitim yükümlülüğü öne çıkar.",
           "Eğitimli organlar; şeffaf raporlama, doğru genel kurul yönetimi ve mevzuata uygun karar alma açısından ortaklara güvence sağlar.",
@@ -638,7 +636,7 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Mia Park Ocean açısından anlamı",
+        heading: "MİA PARK OCEAN açısından anlamı",
         body: [
           "Çok ortaklı bir projede elektronik katılım, farklı şehirlerde bulunan ortakların dahi genel kurul kararlarına erişimini kolaylaştırabilir. S.S. Yahya Kaptan Birlik Yapı Kooperatifi için elektronik katılım imkânı, ortakların söz ve oy hakkını güçlendiren bir şeffaflık aracı olarak değerlendirilir.",
         ],
@@ -684,7 +682,7 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Mia Park Ocean açısından anlamı",
+        heading: "MİA PARK OCEAN açısından anlamı",
         body: [
           "S.S. Yahya Kaptan Birlik Yapı Kooperatifi bir yapı kooperatifidir. Yönetmelik, yapı ruhsatı alınmış ve ortak sayısı 100'den fazla olan yapı kooperatiflerini dış denetim kapsamına aldığından, bu eşik çok ortaklı yapı projeleri için doğrudan önem taşır.",
           "Dış denetim, ortakların yatırımının bağımsız gözle incelenmesini sağlayarak proje güven çerçevesini güçlendirir.",
@@ -751,9 +749,9 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Mia Park Ocean açısından anlamı",
+        heading: "MİA PARK OCEAN açısından anlamı",
         body: [
-          "S.S. Yahya Kaptan Birlik Yapı Kooperatifi'nin genel kurulları da bu usul kuralları ve Bakanlık temsilcisi gözetimi çerçevesinde yapılır. Böylece Mia Park Ocean ortakları, kararların şeffaf ve denetlenebilir bir zeminde alındığını bilerek karar süreçlerine katılır.",
+          "S.S. Yahya Kaptan Birlik Yapı Kooperatifi'nin genel kurulları da bu usul kuralları ve Bakanlık temsilcisi gözetimi çerçevesinde yapılır. Böylece MİA PARK OCEAN ortakları, kararların şeffaf ve denetlenebilir bir zeminde alındığını bilerek karar süreçlerine katılır.",
         ],
       },
       {

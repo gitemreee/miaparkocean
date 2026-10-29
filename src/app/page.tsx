@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
 import { Stats } from "@/components/sections/Stats";
 import { Intro } from "@/components/sections/Intro";
@@ -17,6 +18,10 @@ import { Faq } from "@/components/sections/Faq";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { faq } from "@/data/faq";
 import { graph, faqJsonLd, developerJsonLd } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // Proje ve satıcı düğümleri layout'ta site geneli yayınlanır; burada yalnızca
 // ana sayfaya özel SSS ve yapımcı bilgisi eklenir.

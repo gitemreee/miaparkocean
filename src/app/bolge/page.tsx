@@ -7,6 +7,7 @@ import { Demographics } from "@/components/sections/Demographics";
 import { ContactForm } from "@/components/sections/ContactForm";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/bolge/" },
   title: "İzmit MİA Bölgesi — Değer Kazanan Lokasyon",
   description:
     "İzmit MİA Bölgesi: D100'e 1 dk, TEM'e 5 dk, şehir merkezi ve hastaneye 5 dk. Gelişen ulaşım aksı ve güçlü konut talebiyle değer kazanan yatırım bölgesi.",

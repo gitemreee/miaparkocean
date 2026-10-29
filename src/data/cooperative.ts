@@ -68,13 +68,13 @@ export const legalAssurance = {
     "Bu bölüm genel bilgilendirme amaçlıdır; güncel mevzuat ve kooperatif ana sözleşmesi esastır.",
 };
 
-// Mia Park Ocean Güvence ve Denetim Sistemi — 14 kontrol (proje politikası çerçevesi).
+// MİA PARK OCEAN Güvence ve Denetim Sistemi — 14 kontrol (proje politikası çerçevesi).
 // Yasal asgari yükümlülüklerin üzerine kurulması öngörülen kurumsal güven çerçevesidir.
 export const trustSystem = {
-  title: "Mia Park Ocean Güvence ve Denetim Sistemi",
+  title: "MİA PARK OCEAN Güvence ve Denetim Sistemi",
   lead:
-    "Aşağıdaki çerçeve, yasal asgari yükümlülüklerin üzerine kurulması öngörülen, projeye özel bir kurumsal güven modelidir. Hayata geçirilen unsurlar web sitesinde yayımlanır.",
-  status: "Proje politikası olarak öngörülmektedir",
+    "Yasal asgari yükümlülüklerin üzerine kurulan, projeye özel bir kurumsal güven modeli. Hayata geçirilen her unsur Belgeler sayfasında yayımlanır.",
+  status: "Proje politikası",
   controls: [
     { n: 1, title: "Kurumsal Banka Hesabı", text: "Bütün tahsilatların yalnızca kooperatif adına açılan banka hesabına yapılması; kişisel hesap ve elden ödeme yasağı." },
     { n: 2, title: "Yetki Matrisi", text: "Talep, teknik onay, mali kontrol ve banka ödeme yetkilerinin farklı kişiler arasında dağıtılması." },
@@ -84,7 +84,7 @@ export const trustSystem = {
     { n: 6, title: "Teknik Hakediş Kontrolü", text: "Yüklenici ödemelerinin bağımsız mühendislik onayına bağlanması." },
     { n: 7, title: "Satın Alma Rekabeti", text: "Belirli eşik üzerindeki alımlarda en az üç teklif ve karşılaştırma tutanağı." },
     { n: 8, title: "İlişkili Taraf Bildirimi", text: "Yönetici, denetçi veya yakınlarının taraf olduğu işlemlerin beyanı ve karar sürecinden çekilme." },
-    { n: 9, title: "Belge Merkezi", text: "Tapu, ruhsat, proje, genel kurul, rapor ve sözleşme özetlerinin üye portalında yayımlanması." },
+    { n: 9, title: "Belge Merkezi", text: "Tapu, ruhsat, proje, genel kurul, rapor ve sözleşme özetlerinin Belgeler sayfasında, erişim seviyesiyle birlikte yayımlanması." },
     { n: 10, title: "İnşaat İlerleme Paneli", text: "Planlanan-gerçekleşen ilerleme, hakediş ve teslim tahmininin aylık güncellenmesi." },
     { n: 11, title: "Kura ve Tahsis Güvenliği", text: "Önceden ilan edilen yönerge, bağımsız gözlem, tutanak ve itiraz süreci." },
     { n: 12, title: "Etik ve İhbar Hattı", text: "Gizli bildirim, kayıt numarası, bağımsız inceleme ve misilleme yasağı." },

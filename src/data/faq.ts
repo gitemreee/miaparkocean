@@ -98,7 +98,7 @@ export const faq: FaqItem[] = [
     category: "kooperatif",
     question: "Üyeler hesapları görebilir mi?",
     answer:
-      "Üyeler kanun ve anasözleşme kapsamında temel mali tabloları ve raporları inceleyebilir. Mia Park Ocean ayrıca proje bazlı üye portalı üzerinden daha geniş şeffaflık sağlamayı hedefler.",
+      "Üyeler kanun ve anasözleşme kapsamında temel mali tabloları ve raporları inceleyebilir. MİA PARK OCEAN ayrıca proje belgelerini Belgeler sayfasında yayımlayarak daha geniş şeffaflık sağlamayı hedefler.",
   },
   {
     category: "kooperatif",

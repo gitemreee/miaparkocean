@@ -78,7 +78,7 @@ export function Valuation() {
                 ))}
               </div>
 
-              <p className="mt-4 text-[0.65rem] leading-relaxed text-white/35">{valuation.projectionNote}</p>
+              <p className="mt-4 text-xs leading-relaxed text-white/65">{valuation.projectionNote}</p>
             </div>
           </Reveal>
         </div>

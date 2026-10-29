@@ -7,6 +7,7 @@ import { kbCategories } from "@/data/articles";
 import { articlesByCategory } from "@/lib/kb";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/bilgi-merkezi/" },
   title: "Bilgi Merkezi — Kooperatif Rehberi",
   description:
     "Kooperatif modeli, üyelik ve üye hakları, güven ve denetim, finansman, arsa-ruhsat-inşaat ve vergi konularında kapsamlı rehber ve makaleler.",
@@ -44,14 +45,15 @@ export default function BilgiMerkeziPage() {
 
                 <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {items.map((a, i) => (
-                    <Reveal key={a.slug} delay={(i % 3) * 0.06}>
-                      <Link
+                    // Uzun ızgarada kart başına görünme animasyonu yok: içerik hemen görünür
+                    <Link
+                        key={a.slug}
                         href={`/bilgi-merkezi/${a.slug}`}
                         className="card-luxe group flex h-full flex-col p-5 md:p-6"
                       >
                         <div className="flex items-center gap-2">
                           <FileText className="h-4 w-4 text-bronze" />
-                          <span className="eyebrow text-[0.56rem] text-ocean/45">
+                          <span className="eyebrow text-[0.66rem] text-ocean/60">
                             {a.tier === "article" ? "Makale" : "Rehber"}
                           </span>
                         </div>
@@ -60,7 +62,6 @@ export default function BilgiMerkeziPage() {
                           Oku <ArrowRight className="h-4 w-4" />
                         </span>
                       </Link>
-                    </Reveal>
                   ))}
                 </div>
               </div>

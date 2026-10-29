@@ -3,6 +3,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { GalleryGrid } from "@/components/sections/GalleryGrid";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/galeri/" },
   title: "Galeri",
   description:
     "MİA PARK OCEAN görsel galerisi: dış mekân, sosyal alanlar, iç mekân tasarımları ve kat planları.",

@@ -25,7 +25,7 @@ export const launchEvent = {
   host: { name: "Gül Hanım", phoneLabel: "0534 859 26 72", phone: "+905348592672", wa: "905348592672" },
 
   invitationText:
-    "İzmit'in yeni incisi MİA PARK OCEAN'ın lansmanına davetlisiniz. Ocean Gayrimenkul güvencesiyle, İzmit MİA Bölgesi'nde hayata geçecek projemizi; modern mimarisi, depreme dayanıklı yapısı ve tasarrufa dayalı faizsiz finansman modeliyle sizlere tanıtmaktan mutluluk duyacağız.",
+    "İzmit'in yeni incisi MİA PARK OCEAN'ın lansmanına davetlisiniz. S.S. Yahya Kaptan Birlik Yapı Kooperatifi'nin geliştirdiği, Tilda İnşaat'ın inşa ettiği ve tek yetkili satıcısı Ocean Gayrimenkul olan projemizi; modern mimarisi, depreme dayanıklı yapısı ve tasarrufa dayalı faizsiz finansman modeliyle sizlere tanıtmaktan mutluluk duyacağız.",
 
   programme: [
     { time: "10:00", title: "Karşılama ve ikram" },
@@ -35,6 +35,9 @@ export const launchEvent = {
     { time: "12:15", title: "Kokteyl ve birebir görüşmeler" },
   ],
 } as const;
+
+/** Etkinlik bittikten sonra davetiye sayfası "lansman gerçekleşti" moduna geçer (QR'lar aynı adrese gider). */
+export const eventIsPast = () => Date.now() > Date.parse(launchEvent.endsAt);
 
 /** QR kodlarının işaret ettiği adresler. */
 export const qrTargets = {

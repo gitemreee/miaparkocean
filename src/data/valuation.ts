@@ -6,9 +6,9 @@ export const regionLabel = "MİA Bölgesi (Sanayi Mah.)";
 
 export const valuation = {
   eyebrow: "Bölge Değerleme",
-  title: "MİA Bölgesi'nde değer katlanıyor",
-  lead: "MİA Bölgesi (Sanayi Mah.) güçlü bir değer artışı yaşıyor. Bugün aldığınız daire, yıllık %25 büyüme öngörüsüyle 5 yılda değerini katlıyor.",
-  source: "Bölge: MİA Bölgesi (Sanayi Mah.) · İzmit / Kocaeli · Endeksa bölge verilerine dayalı",
+  title: "MİA Bölgesi'nde değer artış öngörüsü",
+  lead: "MİA Bölgesi (Sanayi Mah.) güçlü bir değer artışı yaşıyor. Yıllık %25 artış varsayımıyla bugünkü m² değeri 5 yılda yaklaşık 3 katına çıkabilir (öngörü).",
+  source: "m² verisi: Endeksa, 2026 · 5 yıllık projeksiyon: %25 yıllık artış varsayımı",
   asOf: "2026",
 
   // Dev başlık — güncel m² değeri
@@ -21,7 +21,7 @@ export const valuation = {
   changes: [
     { value: "%25", label: "Yıllık Değer Artışı", note: "öngörülen bileşik büyüme" },
     { value: "+%205", label: "5 Yılda Toplam Artış", note: "%25 yıllık bileşik" },
-    { value: "×3", label: "5 Yıl Sonra Değer", note: "89.000 → 271.606 ₺/m²" },
+    { value: "≈×3", label: "5 Yıl Sonra (Öngörü)", note: "89.000 → 271.606 ₺/m²" },
   ],
 
   // 5 yıllık projeksiyon — 89.000 ₺, yıllık %25 büyüme (bar yükseklikleri değere orantılı)
@@ -40,12 +40,12 @@ export const valuation = {
 // MİA Bölgesi demografisi — Endeksa bölge (İzmit) verileri
 export const demographics = {
   eyebrow: "Bölge Demografisi",
-  title: "MİA Bölgesi'nin insan haritası",
-  lead: "Bölgenin genç ve dinamik bir nüfusu var; bu da konut talebini sürekli canlı tutuyor.",
+  title: "İzmit'in insan haritası",
+  lead: "İzmit'in genç ve dinamik bir nüfusu var; bu da konut talebini sürekli canlı tutuyor.",
   source: "Kaynak: Endeksa · İzmit / Kocaeli (bölge verileri)",
   tiles: [
-    { value: "380.831", label: "Bölge Nüfusu", note: "İzmit geneli · kişi" },
-    { value: "783,82", label: "Nüfus Yoğunluğu", note: "kişi/km²" },
+    { value: "380.831", label: "İzmit Nüfusu", note: "kişi" },
+    { value: "≈784", label: "Nüfus Yoğunluğu", note: "kişi/km²" },
     { value: "%85", label: "Genç + Orta Yaş", note: "genç %34,6 · orta %50,5" },
     { value: "%50,8", label: "Kadın Nüfus", note: "erkek %49,2" },
   ],

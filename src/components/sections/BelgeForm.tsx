@@ -79,8 +79,8 @@ export function BelgeForm() {
         <FileText className="h-5 w-5" />
         <span className="eyebrow">Belge Talep Formu</span>
       </div>
-      <h3 className="mt-3 text-2xl text-ink">Bilgilerinizi bırakın, belgeleri size gönderelim</h3>
-      <p className="mt-2 text-sm text-ink/55">Aşağıdaki alanları doldurun; talebiniz bize ulaşsın, en kısa zamanda dönüş yapalım.</p>
+      <h3 className="mt-3 text-2xl text-ink">Belge talebi bırakın</h3>
+      <p className="mt-2 text-sm text-ink/55">Hazırlanan belgeler yayımlandıkça ve üyeye özel belgeler için size dönüş yapalım.</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <Field label="Ad Soyad *" error={errors.ad}>

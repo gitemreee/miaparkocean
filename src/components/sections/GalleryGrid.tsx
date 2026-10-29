@@ -56,20 +56,23 @@ export function GalleryGrid({ images = allImages, showFilter = false }: GalleryG
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+      {/* Sabit satır yüksekliği: geniş görseller 2×2 hücre kaplar, ızgarada boşluk kalmaz. */}
+      <div className="grid grid-flow-dense auto-rows-[9rem] grid-cols-2 gap-3 sm:auto-rows-[12rem] md:auto-rows-[13rem] md:grid-cols-3 md:gap-4 lg:auto-rows-[15.5rem]">
         {filtered.map((img, i) => (
           <button
             key={img.src}
             type="button"
             onClick={() => setLightbox(i)}
-            className={`group relative overflow-hidden rounded-2xl ${img.wide ? "col-span-2" : ""}`}
+            className={`group relative overflow-hidden rounded-2xl ${img.wide ? "col-span-2 row-span-2" : ""}`}
           >
-            <div className={`${img.wide ? "aspect-[16/9]" : "aspect-[4/3]"}`}>
+            <div className={`h-full ${img.category === "plan" ? "bg-white" : ""}`}>
               <SmartImage
                 src={img.src}
                 alt={img.alt}
-                sizes="(max-width: 768px) 50vw, 33vw"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes={img.wide ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 50vw, 33vw"}
+                className={`h-full w-full transition-transform duration-700 group-hover:scale-105 ${
+                  img.category === "plan" ? "object-contain p-2" : "object-cover"
+                }`}
               />
             </div>
             <div className="absolute inset-0 bg-ocean/0 transition-colors duration-300 group-hover:bg-ocean/20" />
