@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, Globe, Instagram, Facebook, Youtube } from "lucide-react";
-import { site, contact, socials, nav, secondaryNav } from "@/data/site";
+import { site, contact, contractor, socials, nav, secondaryNav } from "@/data/site";
 import { YkbLogo } from "./YkbLogo";
 import { WaveEdge } from "@/components/ui/Wave";
 
@@ -53,12 +53,12 @@ export function Footer() {
               İzmit MİA Bölgesi'nde 600 daireden oluşan modern yaşam projesi. Tasarrufa dayalı faizsiz finansman, 60 ay vade ve %0 faiz ile.
             </p>
 
-            {/* Yapımcı ve satıcı yan yana: etiketler aynı hizada başlar,
+            {/* Yapımcı, müteahhit ve satıcı yan yana: etiketler aynı hizada başlar,
                 logolar eşit yükseklikte bir bantta ortalanır. Optik ağırlıkları
                 denk olsun diye YKB (dar ve dikey) biraz daha büyük durur. */}
-            <div className="mt-8 grid max-w-md grid-cols-2 gap-x-6 sm:gap-x-10">
-              <div className="border-r border-cream/15 pr-6 sm:pr-10">
-                <div className="eyebrow text-logo-light">Yapımcı</div>
+            <div className="mt-8 grid max-w-xl grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-x-8">
+              <div className="border-r border-cream/15 pr-6 sm:pr-8">
+                <div className="eyebrow text-logo-light sm:min-h-[2.6em]">Yapımcı</div>
                 <a
                   href="https://ykbkoop.com"
                   target="_blank"
@@ -69,8 +69,28 @@ export function Footer() {
                   <YkbLogo className="h-14 w-auto text-cream" />
                 </a>
               </div>
+              <div className="sm:border-r sm:border-cream/15 sm:pr-8">
+                <div className="eyebrow text-logo-light sm:min-h-[2.6em]">{contractor.role}</div>
+                <a
+                  href={contractor.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${contractor.name} — ${contractor.domain}`}
+                  className="mt-4 flex h-14 items-center transition-opacity hover:opacity-80"
+                >
+                  <img src={contractor.logoWhite} alt={contractor.name} className="h-8 w-auto" width={148} height={32} />
+                </a>
+                <a
+                  href={contractor.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-block text-xs text-cream/70 transition-colors hover:text-white"
+                >
+                  {contractor.domain}
+                </a>
+              </div>
               <div>
-                <div className="eyebrow text-logo-light">{site.sellerRole}</div>
+                <div className="eyebrow text-logo-light sm:min-h-[2.6em]">{site.sellerRole}</div>
                 <a
                   href="https://oceangayrimenkul41.com"
                   target="_blank"
@@ -155,7 +175,13 @@ export function Footer() {
         <div className="gold-rule mt-14" />
         <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-cream/65 sm:flex-row">
           <span>© {new Date().getFullYear()} MİA PARK OCEAN · {site.developer}</span>
-          <span>Tek Yetkili Satıcı: {site.seller}</span>
+          <span>
+            {contractor.role}:{" "}
+            <a href={contractor.url} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+              {contractor.name}
+            </a>{" "}
+            · Tek Yetkili Satıcı: {site.seller}
+          </span>
         </div>
       </div>
     </footer>

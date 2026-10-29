@@ -3,9 +3,10 @@ import { YkbLogo } from "./YkbLogo";
 import { KoopbisLogo } from "./KoopbisLogo";
 import { TicaretBakanligiLogo } from "./TicaretBakanligiLogo";
 import { LogoImage } from "./LogoImage";
+import { contractor } from "@/data/site";
 
 // Footer üstü "Resmî Kayıt ve Denetim" güven şeridi.
-// Gerçek logolar (KOOPBİS, T.C. Ticaret Bakanlığı, YKB, Ocean) + resmî belge linkleri.
+// Gerçek logolar (KOOPBİS, T.C. Ticaret Bakanlığı, YKB, Tilda, Ocean) + resmî belge linkleri.
 const OFFICIAL_DOCS = [
   {
     label: "1163 Sayılı Kooperatifler Kanunu (PDF)",
@@ -34,7 +35,7 @@ export function RegistryBadges() {
           </p>
         </div>
 
-        <div className="mx-auto mt-9 grid max-w-4xl grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
+        <div className="mx-auto mt-9 grid max-w-5xl grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
           {/* KOOPBİS */}
           <div className="flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:min-w-[9.5rem]">
             <span className="flex h-10 items-center">
@@ -64,6 +65,20 @@ export function RegistryBadges() {
             </span>
             <span className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-ink/45">Yapımcı Kooperatif</span>
           </div>
+
+          {/* Müteahhit — Tilda İnşaat */}
+          <a
+            href={contractor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${contractor.name} — ${contractor.domain}`}
+            className="flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-colors hover:border-accent/40 sm:min-w-[9.5rem]"
+          >
+            <span className="flex h-10 items-center">
+              <img src={contractor.logo} alt={contractor.name} width={148} height={32} className="h-[1.35rem] w-auto" />
+            </span>
+            <span className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-ink/45">{contractor.role}</span>
+          </a>
 
           {/* Tek Yetkili Satıcı — Ocean */}
           <div className="flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:min-w-[9.5rem]">

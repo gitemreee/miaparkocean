@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Waves, Dumbbell, Flame, Baby, Car, Phone, Globe, Instagram, ShieldCheck } from "lucide-react";
-import { contact, socials } from "@/data/site";
+import { contact, contractor, socials } from "@/data/site";
 import { WaveEdge } from "@/components/ui/Wave";
 
 export const metadata: Metadata = {
@@ -153,11 +153,18 @@ export default function BasinAciklamasiPage() {
                 className="h-auto w-[168px]"
               />
               <img src="/ykb-logo.webp" alt="S.S. Yahya Kaptan Birlik Yapı Kooperatifi" className="h-[4.5rem] w-auto" />
+              <a href={contractor.url} target="_blank" rel="noopener noreferrer" aria-label={contractor.name}>
+                <img src={contractor.logo} alt={contractor.name} className="h-8 w-auto" width={186} height={40} />
+              </a>
               <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" className="h-11 w-auto" width={160} height={36} />
             </div>
 
             <p className="mt-8 text-xs leading-relaxed text-ink/45">
-              Yapımcı: S.S. Yahya Kaptan Birlik Yapı Kooperatifi · Tek Yetkili Satıcı: Ocean Gayrimenkul ·
+              Yapımcı: S.S. Yahya Kaptan Birlik Yapı Kooperatifi · {contractor.role}: {contractor.name} (
+              <a href={contractor.url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+                {contractor.domain}
+              </a>
+              ) · Tek Yetkili Satıcı: Ocean Gayrimenkul ·
               {" "}
               <Link href="/" className="text-accent hover:underline">
                 miaparkocean.com

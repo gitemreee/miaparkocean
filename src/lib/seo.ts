@@ -7,11 +7,12 @@
  * bilgisi bulunca içeriği daha güvenilir şekilde alıntılar.
  */
 
-import { site, contact } from "@/data/site";
+import { site, contact, contractor } from "@/data/site";
 import { units } from "@/data/units";
 
 const ORG_ID = `${site.url}#seller`;
 const DEV_ID = `${site.url}#developer`;
+const CONTRACTOR_ID = `${site.url}#contractor`;
 const PROJECT_ID = `${site.url}#project`;
 
 export const abs = (path = "") => `${site.url}${path.startsWith("/") ? path : `/${path}`}`;
@@ -45,6 +46,16 @@ export const developerJsonLd = {
   url: "https://ykbkoop.com",
   description:
     "T.C. Ticaret Bakanlığı KOOPBİS sistemine kayıtlı yapı kooperatifi. 1163 sayılı Kooperatifler Kanunu kapsamında faaliyet gösterir.",
+};
+
+/** Müteahhit firma — Organization */
+export const contractorJsonLd = {
+  "@type": "Organization",
+  "@id": CONTRACTOR_ID,
+  name: contractor.name,
+  url: contractor.url,
+  logo: abs(contractor.logo),
+  description: `${site.name} projesinin müteahhit firması.`,
 };
 
 /** Projenin kendisi — ApartmentComplex */

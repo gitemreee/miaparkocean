@@ -100,7 +100,7 @@ export const cooperativeOrg = {
   paragraphs: [
     "S.S. Yahya Kaptan Birlik Yapı Kooperatifi, 2021 yılında İzmit / Kocaeli'de kuruldu. Amacı basit: ortaklarını modern, nitelikli konuta maliyetine yakın bir fiyatla kavuşturmak.",
     "Kooperatif şeffaflıkla, düzenli genel kurullarla ve KOOPBİS kaydıyla yönetilir. Ortaklar kooperatifle ilgili bilgilere e-Devlet üzerinden ulaşabilir.",
-    "MİA PARK OCEAN'ın satışı ise tek yetkili satıcı Ocean Gayrimenkul tarafından yürütülür.",
+    "Projenin inşaatını müteahhit firma Tilda İnşaat (tildainsaat.com) yürütür; satışı ise tek yetkili satıcı Ocean Gayrimenkul tarafından yapılır.",
   ],
   facts: [
     { label: "Kuruluş Yılı", value: "2021" },

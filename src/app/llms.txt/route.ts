@@ -1,4 +1,4 @@
-import { site, contact } from "@/data/site";
+import { site, contact, contractor } from "@/data/site";
 import { locations } from "@/data/locations";
 import { units } from "@/data/units";
 import { faq } from "@/data/faq";
@@ -33,13 +33,14 @@ export function GET() {
 
   const body = `# ${site.name}
 
-> ${site.region}, ${site.city}'de S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen ${totalUnits} daireli konut projesi. Tasarrufa dayalı, faizsiz kooperatif finansman modeliyle satılmaktadır. Tek yetkili satıcı: ${site.seller}.
+> ${site.region}, ${site.city}'de S.S. Yahya Kaptan Birlik Yapı Kooperatifi tarafından geliştirilen ${totalUnits} daireli konut projesi. İnşaatı müteahhit ${contractor.name} yürütür. Tasarrufa dayalı, faizsiz kooperatif finansman modeliyle satılmaktadır. Tek yetkili satıcı: ${site.seller}.
 
 ## Proje Künyesi
 
 - **Proje adı:** ${site.name}
 - **Konum:** ${site.region}, ${site.city} (40.736667, 29.944889)
 - **Yapımcı:** ${site.developer} — T.C. Ticaret Bakanlığı KOOPBİS sistemine kayıtlı yapı kooperatifi
+- **Müteahhit:** ${contractor.name} — ${contractor.url}
 - **Tek yetkili satıcı:** ${site.seller}
 - **Yapı:** 4 blok, zemin + 7 kat (8 kat), toplam ${totalUnits} daire
 - **Arazi:** yaklaşık 10 dönüm

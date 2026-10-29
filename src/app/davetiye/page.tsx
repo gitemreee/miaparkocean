@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDays, Clock, MapPin, Phone, Globe, ArrowRight, Waves, Dumbbell, Flame, Baby, Car } from "lucide-react";
 import { launchEvent } from "@/data/event";
-import { contact, site } from "@/data/site";
+import { contact, contractor, site } from "@/data/site";
 import { RsvpForm } from "@/components/sections/RsvpForm";
 import { WaveEdge } from "@/components/ui/Wave";
 
@@ -178,15 +178,30 @@ export default function DavetiyePage() {
         <WaveEdge flip fill={false} className="h-[52px] md:h-[84px]" />
 
         <div className="container-luxe relative z-10 py-12 text-center">
-          <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>
-          <a
-            href={contact.websiteHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center rounded-xl bg-white px-6 py-4 transition-transform duration-300 hover:scale-[1.03]"
-          >
-            <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" width={168} height={38} className="h-9 w-auto" />
-          </a>
+          <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-6">
+            <div>
+              <div className="eyebrow text-ice/60">{contractor.role}</div>
+              <a
+                href={contractor.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex h-[4.25rem] items-center rounded-xl bg-white px-6 transition-transform duration-300 hover:scale-[1.03]"
+              >
+                <img src={contractor.logo} alt={contractor.name} width={186} height={40} className="h-9 w-auto" />
+              </a>
+            </div>
+            <div>
+              <div className="eyebrow text-ice/60">Tek Yetkili Satıcı</div>
+              <a
+                href={contact.websiteHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex h-[4.25rem] items-center rounded-xl bg-white px-6 transition-transform duration-300 hover:scale-[1.03]"
+              >
+                <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" width={168} height={38} className="h-9 w-auto" />
+              </a>
+            </div>
+          </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm text-ice/75">
             <a href={`tel:${launchEvent.host.phone}`} className="inline-flex items-center gap-2 hover:text-white">
@@ -194,6 +209,9 @@ export default function DavetiyePage() {
             </a>
             <a href={site.url} className="inline-flex items-center gap-2 hover:text-white">
               <Globe className="h-4 w-4" /> {site.domain}
+            </a>
+            <a href={contractor.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white">
+              <Globe className="h-4 w-4" /> {contractor.domain}
             </a>
           </div>
 

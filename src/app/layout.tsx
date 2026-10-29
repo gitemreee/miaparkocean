@@ -9,7 +9,7 @@ import { CookieConsent } from "@/components/layout/CookieConsent";
 import { SiteFrame } from "@/components/layout/SiteFrame";
 import { site, contact } from "@/data/site";
 import { verification } from "@/data/verification";
-import { graph, sellerJsonLd, projectJsonLd } from "@/lib/seo";
+import { graph, sellerJsonLd, projectJsonLd, contractorJsonLd } from "@/lib/seo";
 
 // Fraunces: logodaki serif kelime markasıyla akraba, ama 100-900 ağırlık
 // skalası ve optik boyut ekseni var. Marcellus tek ağırlıklıydı; başlıklar
@@ -92,7 +92,7 @@ export const viewport: Viewport = {
 };
 
 // Site geneli kimlik — tüm sayfalarda yayınlanır, iç sayfalar @id ile referans verir.
-const siteJsonLd = graph(sellerJsonLd, projectJsonLd, {
+const siteJsonLd = graph(sellerJsonLd, contractorJsonLd, projectJsonLd, {
   "@type": "WebSite",
   "@id": `${site.url}#website`,
   url: site.url,

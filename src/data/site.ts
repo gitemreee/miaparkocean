@@ -15,6 +15,16 @@ export const site = {
   sellerRole: "Tek Yetkili Satıcı",
 } as const;
 
+// Müteahhit firma: projenin inşaatını yürütür. Logo dosyaları public/tilda-logo(-white).webp.
+export const contractor = {
+  name: "Tilda İnşaat",
+  role: "Müteahhit",
+  domain: "tildainsaat.com",
+  url: "https://tildainsaat.com",
+  logo: "/tilda-logo.webp",
+  logoWhite: "/tilda-logo-white.webp",
+} as const;
+
 export const contact = {
   phones: [
     // İlk numara genel çağrı merkezi; başlıkta, KVKK metninde ve yapısal veride ilk sırada kullanılır.
