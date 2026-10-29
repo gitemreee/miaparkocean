@@ -7,10 +7,10 @@ export const payment = {
   title: "Banka yok. Faiz yok.",
   accent: "Kefil yok.",
   lead:
-    "Tasarruf esaslı, faizsiz bir modelle ev sahibi olursunuz; bankaya da kefile de gerek yok. Peşinatın ardından ödemeniz 60 aya kadar sabit taksitlere bölünür, ara ödeme çıkmaz ve taksitiniz baştan sona değişmez.",
+    "Tasarruf esaslı, faizsiz bir modelle ev sahibi olursunuz; bankaya da kefile de gerek yok. 1 milyon TL peşinatın ardından ödemeniz 60 aya kadar sabit taksitlere bölünür, ara ödeme çıkmaz ve taksitiniz baştan sona değişmez. Ev ve araç takası da kabul edilir.",
   // Öne çıkan sayı bloğu
   headline: {
-    downPayment: "Avantajlı Peşinat",
+    downPayment: "1 Milyon TL Peşinat",
     installments: "60",
     installmentsLabel: "Ay Sabit Taksit",
     interest: "%0",

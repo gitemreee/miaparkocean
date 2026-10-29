@@ -19,7 +19,13 @@ export const faq: FaqItem[] = [
     category: "proje",
     question: "Ödeme planı nasıl işliyor?",
     answer:
-      "Proje, tasarrufa dayalı faizsiz finansman yaklaşımıyla; avantajlı peşinat ve 60 aya varan sabit taksit imkânıyla sunulur. Size özel güncel plan için satış ekibimizle görüşebilirsiniz.",
+      "Proje, tasarrufa dayalı faizsiz finansman yaklaşımıyla sunulur: 1 milyon TL peşinat, kalanı 60 aya varan sabit taksit. Faiz, banka kredisi, kefil ve ara ödeme yoktur. Size özel plan için 444 10 58'den satış ekibimize ulaşabilirsiniz.",
+  },
+  {
+    category: "proje",
+    question: "Ev veya aracımı takas olarak verebilir miyim?",
+    answer:
+      "Evet, ev ve araç takası kabul edilmektedir. Takasın değerlendirilmesi ve ödemenize nasıl yansıyacağı için 444 10 58'den satış ekibimizle görüşebilirsiniz.",
   },
   {
     category: "proje",

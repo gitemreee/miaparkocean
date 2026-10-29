@@ -23,7 +23,7 @@ export function Intro() {
             </div>
             <div className="absolute -bottom-6 -right-4 hidden w-64 rounded-2xl bg-gradient-ocean p-6 text-white shadow-[var(--shadow-luxe)] sm:block">
               <div className="font-display text-2xl font-bold leading-tight">
-                3 Farklı<br />Yaşam Konsepti
+                4 Farklı<br />Yaşam Tipi
               </div>
               <div className="mt-2 text-sm text-white/70">Brüt 28 m²'den 100 m²'ye kadar</div>
             </div>

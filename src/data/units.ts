@@ -59,7 +59,7 @@ export const units: Unit[] = [
       "Geniş balkon",
       "Modern mutfak tasarımı",
       "Yüksek kaliteli iç mekân",
-      "Yatırım için ideal seçenek",
+      "Ayrı yatak odası",
     ],
     highlights: [
       { title: "Geniş Yaşam Alanı", text: "Ferahlık hissettiren açık plan tasarım." },
@@ -95,7 +95,7 @@ export const units: Unit[] = [
       { title: "Bahçeye Direkt Çıkış", text: "Yaşam alanından bir adımda bahçeye; iç ve dış mekân tek parça." },
       { title: "Ayrı Yatak Odası", text: "Yatak odasının ayrılması düzenli ve konforlu bir kullanım sağlar." },
     ],
-    image: "/images/unit-2plus1-c.webp",
+    image: "/images/loft-living.webp",
     planImage: "/images/unit-1plus1-plan.webp",
     interiorImages: ["/images/unit-2plus1-c.webp", "/images/unit-1plus1-b.webp", "/images/unit-2plus1-b.webp"],
   },

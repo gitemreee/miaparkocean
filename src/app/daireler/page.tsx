@@ -11,7 +11,7 @@ import { faq } from "@/data/faq";
 export const metadata: Metadata = {
   title: "Daire Tipleri — 1+0, 1+1, 1+1 Bahçe Loft, 2+1 Bahçe Dubleks",
   description:
-    "MİA PARK OCEAN daire tipleri: 1+0 (28 m²), 1+1 (50 m²) ve 2+1 Bahçe Dubleks (100 m²). Kat planları, özellikler ve fiyat avantajları.",
+    "MİA PARK OCEAN daire tipleri: 1+0 (28 m²), 1+1 (50 m²), 1+1 Bahçe Loft (50 m²) ve 2+1 Bahçe Dubleks (100 m²). Kat planları, özellikler, 1 milyon TL peşinat ve 60 ay sabit taksit.",
 };
 
 export default function DairelerPage() {
@@ -20,7 +20,7 @@ export default function DairelerPage() {
       <PageHero
         eyebrow="Daire Tipleri"
         title={<>Yaşam tarzınıza <span className="gilded">uygun daire</span></>}
-        lead="1+0 stüdyodan 2+1 bahçe dublekse üç farklı daire tipi var. Her biri, günlük hayatınızı rahatça sürdürebileceğiniz akıllı planlarla hazırlandı."
+        lead="1+0 stüdyodan 2+1 bahçe dublekse dört farklı daire tipi var. Her biri, günlük hayatınızı rahatça sürdürebileceğiniz akıllı planlarla hazırlandı."
         image="/images/interior-living.webp"
       />
 
@@ -44,6 +44,11 @@ export default function DairelerPage() {
               </Link>
             </Reveal>
           ))}
+        </div>
+        <div className="container-luxe mt-4 text-center md:mt-6">
+          <a href="/daire-sec/" className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline">
+            Dijital Daire Maketi: daireleri proje görseli üzerinde seçin ve odaları gezin →
+          </a>
         </div>
       </section>
 

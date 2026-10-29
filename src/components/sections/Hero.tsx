@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Ban, Percent, UserRoundX, CalendarClock } from "lucide-react";
+import { ArrowRight, Wallet, Percent, CalendarClock, ArrowLeftRight } from "lucide-react";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { WaveEdge } from "@/components/ui/Wave";
 
@@ -27,10 +27,10 @@ const slides: Slide[] = [
 ];
 
 const perks = [
-  { icon: Ban, title: "Bankasız", text: "Krediye gerek yok" },
-  { icon: Percent, title: "Faizsiz", text: "%0 faiz, vade farkı yok" },
-  { icon: UserRoundX, title: "Kefilsiz", text: "Kefil aranmaz" },
-  { icon: CalendarClock, title: "60 Ay Vade", text: "Sabit taksit imkânı" },
+  { icon: Wallet, title: "1 Milyon TL Peşinat", text: "Peşinatla hemen başlayın" },
+  { icon: CalendarClock, title: "60 Ay Sabit Taksit", text: "Ara ödeme yok" },
+  { icon: Percent, title: "Faizsiz", text: "Banka, kredi ve kefil yok" },
+  { icon: ArrowLeftRight, title: "Takas İmkânı", text: "Ev ve araç takası" },
 ];
 
 export function Hero() {
@@ -134,11 +134,11 @@ export function Hero() {
           </div>
 
           <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-ice/85 md:mt-6 md:text-lg">
-            Bankaya, faize ya da kefile gerek kalmadan; tasarruf esaslı faizsiz finansmanla ev sahibi olun.
+            1 milyon TL peşinatla yeni evinize taşının; kalanı 60 ay sabit taksitle, bankasız ve faizsiz ödeyin.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-2.5 md:mt-8 md:gap-3">
-            <Link href="/iletisim" className="btn-base btn-jade btn-shine group px-6 py-3 text-sm md:px-8 md:py-4">
+            <Link href="/daireler" className="btn-base btn-jade btn-shine group px-6 py-3 text-sm md:px-8 md:py-4">
               Dairenizi Seçin
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>

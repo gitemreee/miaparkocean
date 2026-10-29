@@ -251,6 +251,10 @@
     color: transparent;
     font-weight: 700;
   }
+  /* İç sayfa başlıkları koyu fotoğraf üstünde: koyu gradyan kaybolur, açık sürüm kullanılır */
+  .page-hero .gilded {
+    background-image: linear-gradient(94deg, #ffffff 0%, #ddf7fa 34%, #b8e4ec 62%, #92d1df 100%);
+  }
 
   /* ---------- Etiketler ---------- */
   .eyebrow {

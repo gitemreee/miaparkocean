@@ -4,14 +4,14 @@
 export const processIntro = {
   eyebrow: "Nasıl İşliyor?",
   title: "Peşinattan tapuya, şeffaf bir süreç",
-  lead: "Avantajlı peşinatla başlarsınız, kalanı 60 aya kadar sabit taksitlerle ödersiniz. Her aşamayı da KOOPBİS ve inşaat ilerleme panelinden adım adım takip edebilirsiniz.",
+  lead: "1 milyon TL peşinatla başlarsınız, kalanı 60 aya kadar sabit taksitlerle ödersiniz. Kooperatif kayıtlarını e-Devlet ve KOOPBİS üzerinden izleyebilir, inşaatın ilerleyişini düzenli raporlardan takip edebilirsiniz.",
 };
 
 export const processSteps = [
   {
     icon: "Wallet",
     title: "Peşinat",
-    text: "Avantajlı bir peşinatla başlarsınız, kalan tutarı 60 aya kadar taksitlendirirsiniz.",
+    text: "1 milyon TL peşinatla başlarsınız; ev veya aracınızı takasta değerlendirebilir, kalan tutarı 60 aya kadar taksitlendirirsiniz.",
   },
   {
     icon: "CalendarClock",
@@ -21,7 +21,7 @@ export const processSteps = [
   {
     icon: "HardHat",
     title: "İnşaat & Takip",
-    text: "Ödemelerinizi ve inşaatın her aşamasını KOOPBİS ile inşaat ilerleme panelinden görebilirsiniz.",
+    text: "Kooperatif kayıtları KOOPBİS'te, inşaatın ilerleyişi düzenli raporlarda; inşaatı müteahhit firma Tilda İnşaat yürütür.",
   },
   {
     icon: "KeyRound",

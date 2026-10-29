@@ -62,8 +62,8 @@ export function Payment() {
                   <div className="eyebrow mt-1.5 text-[0.52rem] text-ink/55 md:mt-2 md:text-[0.58rem]">Ay Sabit Taksit</div>
                 </div>
                 <div className="px-2 py-4 text-center md:px-4 md:py-6">
-                  <div className="font-display text-lg leading-tight text-ink md:text-3xl">Avantajlı</div>
-                  <div className="eyebrow mt-1.5 text-[0.52rem] text-ink/55 md:mt-2 md:text-[0.58rem]">Peşinat</div>
+                  <div className="font-display text-lg leading-tight text-ink md:text-3xl">1 Milyon</div>
+                  <div className="eyebrow mt-1.5 text-[0.52rem] text-ink/55 md:mt-2 md:text-[0.58rem]">TL Peşinat</div>
                 </div>
               </div>
             </Reveal>

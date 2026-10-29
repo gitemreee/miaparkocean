@@ -80,8 +80,8 @@ export function RegistryBadges() {
             <span className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-ink/45">{contractor.role}</span>
           </a>
 
-          {/* Tek Yetkili Satıcı — Ocean */}
-          <div className="flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:min-w-[9.5rem]">
+          {/* Tek Yetkili Satıcı — Ocean (mobilde tek kalmasın diye iki sütuna yayılır) */}
+          <div className="col-span-2 flex h-[5.75rem] flex-1 flex-col items-center justify-center gap-1.5 rounded-2xl border border-ink/12 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:min-w-[9.5rem]">
             <span className="flex h-10 items-center">
               <img src="/ocean-logo.webp" alt="Ocean Gayrimenkul" width={160} height={36} className="h-6 w-auto" />
             </span>

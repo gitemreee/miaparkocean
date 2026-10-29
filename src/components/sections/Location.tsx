@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ConsentMap } from "@/components/ui/ConsentMap";
 import { MapPin, Navigation, ExternalLink, ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -6,7 +7,7 @@ import { Icon } from "@/components/ui/Icon";
 import { LocationShowcase } from "./LocationShowcase";
 import { distances, locationIntro, locationTags, mapConfig } from "@/data/location";
 
-export function Location() {
+export function Location({ showRegionLink = true }: { showRegionLink?: boolean } = {}) {
   return (
     <section id="lokasyon" className="surface-paper py-14 md:py-28">
       <div className="container-luxe">
@@ -60,14 +61,9 @@ export function Location() {
                 </div>
                 <span className="hidden text-xs text-cream/50 sm:block">{mapConfig.plusCode}</span>
               </div>
-              <iframe
-                src={mapConfig.embed}
-                title="MİA PARK OCEAN konum haritası"
-                className="h-[360px] w-full md:h-[420px]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
+              <div className="h-[360px] w-full md:h-[420px]">
+                <ConsentMap src={mapConfig.embed} title="MİA PARK OCEAN konum haritası" />
+              </div>
               <div className="grid grid-cols-2 gap-px bg-bronze/20">
                 <a
                   href={mapConfig.googleDirections}
@@ -89,14 +85,16 @@ export function Location() {
             </div>
           </Reveal>
         </div>
-        <Reveal delay={0.15}>
-          <div className="mt-8 text-center">
-            <Link href="/bolge" className="btn-base btn-outline px-6 py-3 text-sm">
-              Bölge analizi, değerleme ve demografi
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </Reveal>
+        {showRegionLink && (
+          <Reveal delay={0.15}>
+            <div className="mt-8 text-center">
+              <Link href="/bolge" className="btn-base btn-outline px-6 py-3 text-sm">
+                Bölge analizi, değerleme ve demografi
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </Reveal>
+        )}
       </div>
     </section>
   );

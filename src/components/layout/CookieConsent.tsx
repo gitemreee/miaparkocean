@@ -25,6 +25,8 @@ export function CookieConsent() {
     } catch {
       // sessizce geç
     }
+    // Onaya bağlı içerikler (Google Haritalar) tercihi hemen uygulasın
+    window.dispatchEvent(new Event("mpo-consent"));
     setVisible(false);
   }
 

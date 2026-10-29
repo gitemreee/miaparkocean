@@ -90,11 +90,16 @@ export function PressCoverage() {
 
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {pressItems.map((item, i) => (
-            <Reveal key={item.url} delay={(i % 3) * 0.07}>
+            // Mobilde ilk üç haber; sayfa ekranlarca uzamasın
+            <Reveal key={item.url} delay={(i % 3) * 0.07} className={i >= 3 ? "hidden md:block" : undefined}>
               <PressCard item={item} />
             </Reveal>
           ))}
         </div>
+        <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-ink/55">
+          Haberlerde geçen fiyat bilgileri Ağustos 2026 lansman dönemine aittir. Güncel kampanya:{" "}
+          <span className="font-semibold text-ink">1 milyon TL peşinat, 60 ay sabit taksit</span>, ev ve araç takası.
+        </p>
       </div>
     </section>
   );

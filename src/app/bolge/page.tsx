@@ -22,7 +22,7 @@ export default function BolgePage() {
         image="/images/street-corner.webp"
       />
       <Region />
-      <Location />
+      <Location showRegionLink={false} />
       <Valuation />
       <Demographics />
       <ContactForm />

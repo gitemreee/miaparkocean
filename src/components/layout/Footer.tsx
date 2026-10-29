@@ -173,7 +173,7 @@ export function Footer() {
         </div>
 
         <div className="gold-rule mt-14" />
-        <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-cream/65 sm:flex-row">
+        <div className="mt-6 flex flex-col items-center justify-between gap-3 text-center text-xs text-cream/65 sm:flex-row sm:text-left">
           <span>© {new Date().getFullYear()} MİA PARK OCEAN · {site.developer}</span>
           <span>
             {contractor.role}:{" "}

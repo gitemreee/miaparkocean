@@ -21,7 +21,7 @@ const daireSub: SubItem[] = [
 const submenus: Record<string, SubItem[]> = {
   "/daireler": daireSub,
   "/kooperatif": [
-    { label: "Neden Kooperatif", href: "/kooperatif#neden-kooperatif" },
+    { label: "Kooperatifin Avantajları", href: "/kooperatif#neden-kooperatif" },
     { label: "Yasal Güvence", href: "/kooperatif#guvence" },
     { label: "Güven ve Denetim Sistemi", href: "/kooperatif#guvence-sistemi" },
     { label: "Kooperatif Kurumu", href: "/kooperatif#kooperatif-hakkinda" },
@@ -29,7 +29,7 @@ const submenus: Record<string, SubItem[]> = {
   "/bilgi-merkezi": [
     { label: "Kooperatif Modeli", href: "/bilgi-merkezi#model" },
     { label: "Üyelik ve Üye Hakları", href: "/bilgi-merkezi#uyelik" },
-    { label: "Güven ve Denetim", href: "/bilgi-merkezi#guven" },
+    { label: "Denetim Rehberi", href: "/bilgi-merkezi#guven" },
     { label: "Finansman ve Maliyet", href: "/bilgi-merkezi#finansman" },
     { label: "Arsa, Ruhsat ve İnşaat", href: "/bilgi-merkezi#insaat" },
     { label: "Vergi ve Hukuki Bilgilendirme", href: "/bilgi-merkezi#vergi" },
@@ -206,20 +206,29 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex xl:gap-5">
-          <a href={contact.phones[0].href} className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-ink/80 transition-colors hover:text-accent xl:inline-flex">
+          <a href={contact.phones[0].href} className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-ink/80 transition-colors hover:text-accent">
             <Phone className="h-4 w-4 text-accent" /> {contact.phones[0].label}
           </a>
-          <Link href="/iletisim" className="inline-flex items-center whitespace-nowrap rounded-full bg-accent px-5 py-2.5 text-[0.85rem] font-semibold text-white transition-colors hover:bg-accent-600 xl:px-6 xl:text-sm">
+          <Link href="/daireler" className="inline-flex items-center whitespace-nowrap rounded-full bg-accent px-5 py-2.5 text-[0.85rem] font-semibold text-white transition-colors hover:bg-accent-600 xl:px-6 xl:text-sm">
             Dairenizi Seçin
           </Link>
         </div>
 
-        <button type="button" onClick={() => setOpen((v) => !v)} className="text-ink lg:hidden" aria-label={open ? "Menüyü kapat" : "Menüyü aç"} aria-expanded={open}>
-          {open ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <a
+            href={contact.phones[0].href}
+            aria-label={`${contact.phones[0].label} numarasını arayın`}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white transition-colors hover:bg-accent-600"
+          >
+            <Phone className="h-[18px] w-[18px]" />
+          </a>
+          <button type="button" onClick={() => setOpen((v) => !v)} className="text-ink" aria-label={open ? "Menüyü kapat" : "Menüyü aç"} aria-expanded={open}>
+            {open ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
+          </button>
+        </div>
       </div>
 
-      <div className={`lg:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`} aria-hidden={!open}>
+      <div className={`lg:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`} aria-hidden={!open} inert={!open}>
         <div className={`border-t border-ink/10 bg-paper transition-[max-height,opacity] duration-500 ${open ? "max-h-[85vh] overflow-y-auto opacity-100" : "max-h-0 overflow-hidden opacity-0"}`}>
           <nav className="container-luxe flex flex-col py-2">
             {nav.map((item) => {
@@ -272,10 +281,13 @@ export function Header() {
               );
             })}
             <div className="mt-3 flex flex-col gap-2.5 pb-3">
+              <a href={contact.phones[0].href} className="btn-base btn-ocean inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm">
+                <Phone className="h-4 w-4" /> {contact.phones[0].label} · Hemen Arayın
+              </a>
               <a href={contact.whatsapp.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-ink/25 px-5 py-2.5 text-sm font-medium text-ink">
                 {contact.whatsapp.label}
               </a>
-              <Link href="/iletisim" onClick={() => setOpen(false)} className="btn-base btn-jade px-5 py-2.5 text-sm">
+              <Link href="/daireler" onClick={() => setOpen(false)} className="btn-base btn-jade px-5 py-2.5 text-sm">
                 Dairenizi Seçin
               </Link>
             </div>

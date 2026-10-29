@@ -12,7 +12,7 @@ export function UnitTypes() {
         <SectionHeading
           eyebrow="Daire Tipleri"
           title={<>Size <span className="gilded">uygun daireyi</span> seçin</>}
-          lead="1+0 stüdyodan bahçeli 2+1 dublekse kadar dört farklı daire; ihtiyacınıza ve bütçenize göre seçebileceğiniz dört yaşam biçimi."
+          lead="1+0 stüdyodan bahçeli 2+1 dublekse kadar dört farklı daire tipi; ihtiyacınıza ve bütçenize göre seçin."
         />
 
         <div className="mt-10 grid grid-cols-2 items-stretch gap-3 md:mt-14 md:gap-6 lg:grid-cols-4">
@@ -66,7 +66,7 @@ export function UnitTypes() {
 
         <Reveal delay={0.15}>
           <p className="mt-8 text-center text-sm text-ink/55">
-            Tüm daireler <span className="font-semibold text-ink">60 aya varan · sıfır faiz</span> ödeme imkânıyla. Kefil yok, banka yok, faiz yok.
+            Tüm dairelerde <span className="font-semibold text-ink">1 milyon TL peşinat · 60 ay sabit taksit</span>. Faiz, banka, kefil ve ara ödeme yok; ev ve araç takası kabul edilir.
           </p>
         </Reveal>
       </div>

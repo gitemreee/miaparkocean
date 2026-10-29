@@ -87,7 +87,7 @@ export function UnitDetail({ unit, index }: { unit: Unit; index: number }) {
 
           <Reveal delay={0.25}>
             <Link
-              href="/iletisim"
+              href={`/iletisim?tip=${unit.slug}#iletisim`}
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-bronze px-8 py-4 text-sm font-medium text-cream transition-colors hover:bg-bronze-300"
             >
               Bu Daireyi Seç <ArrowRight className="h-4 w-4" />

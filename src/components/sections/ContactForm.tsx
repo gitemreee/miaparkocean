@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Phone, Mail, MapPin, MessageCircle, Check, Navigation } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -21,6 +21,14 @@ export function ContactForm() {
   const [kvkk, setKvkk] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  // "Bu Daireyi Seç" bağlantısından gelindiyse daire tipini önceden seç (?tip=<slug>)
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get("tip");
+    const u = units.find((x) => x.slug === slug);
+    if (u) setValues((v) => ({ ...v, tip: `${u.type} (${u.area})` }));
+  }, []);
 
   const set = (k: keyof typeof values) => (e: { target: { value: string } }) =>
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -39,15 +47,19 @@ export function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     // Netlify Forms'a arka planda gönder (site Netlify'de ise yakalanır)
+    let ok = false;
     try {
-      await fetch("/", {
+      const res = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({ "form-name": "iletisim", ...values, kvkk: "onaylandı" }),
       });
+      ok = res.ok;
     } catch {
-      /* host Netlify değilse sessiz geç; WhatsApp yedeği devrede */
+      ok = false;
     }
+    // Gönderim başarısızsa talep kaybolmasın: kullanıcıya açıkça söyle, WhatsApp / telefon yedeği göster
+    setFailed(!ok);
     setSent(true);
   };
 
@@ -73,10 +85,20 @@ export function ContactForm() {
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-bronze/15">
                     <Check className="h-8 w-8 text-bronze" strokeWidth={2} />
                   </span>
-                  <h3 className="mt-6 text-2xl text-ocean">Talebiniz alındı</h3>
+                  <h3 className="mt-6 text-2xl text-ocean">{failed ? "Talebiniz iletilemedi" : "Talebiniz alındı"}</h3>
                   <p className="mt-3 max-w-sm text-sm leading-relaxed text-ocean/70">
-                    Teşekkürler {values.ad.split(" ")[0]}. Satış ekibimiz en kısa sürede sizinle iletişime geçecek.
-                    Daha hızlı yanıt için WhatsApp'tan da yazabilirsiniz.
+                    {failed ? (
+                      <>
+                        Bağlantı sorunu nedeniyle formu iletemedik. Lütfen{" "}
+                        <a href={contact.phones[0].href} className="font-semibold text-ocean underline">{contact.phones[0].label}</a>{" "}
+                        numarasını arayın ya da aşağıdan WhatsApp'tan yazın.
+                      </>
+                    ) : (
+                      <>
+                        Teşekkürler {values.ad.split(" ")[0]}. Satış ekibimiz en kısa sürede sizinle iletişime geçecek.
+                        Daha hızlı yanıt için WhatsApp'tan da yazabilirsiniz.
+                      </>
+                    )}
                   </p>
                   <a
                     href={waHref}
@@ -217,7 +239,7 @@ export function ContactForm() {
                   </li>
                 </ul>
                 <a
-                  href={mapConfig.googleDirections}
+                  href={contact.address.googleMaps}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-6 inline-flex items-center gap-2 rounded-full border border-ink/20 px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-accent hover:border-accent hover:text-white"
