@@ -164,7 +164,7 @@ export const locations: Location[] = [
     faq: [
       {
         q: "MİA PARK OCEAN satış ofisi nerede?",
-        a: "Satış ofisi İzmit merkezde, Ömerağa Mahallesi Abdurrahman Yüksel Caddesi Bana Bak Apartmanı No:15/4 adresindedir. Randevu için 0540 028 00 41 numarasından ulaşabilirsiniz.",
+        a: "Satış ofisi İzmit merkezde, Ömerağa Mahallesi Abdurrahman Yüksel Caddesi Bana Bak Apartmanı No:15/4 adresindedir. Randevu için 444 10 58 veya 0540 028 00 41 numarasından ulaşabilirsiniz.",
       },
       {
         q: "Ömerağa'dan projeye nasıl gidilir?",
@@ -776,7 +776,7 @@ export const locations: Location[] = [
       },
       {
         q: "Randevu almadan satış ofisine gidebilir miyim?",
-        a: "Randevu alınması, size ayrılan sürede daire tiplerini ve belgeleri detaylı incelemeniz açısından önerilir. 0540 028 00 41 veya WhatsApp üzerinden randevu oluşturabilirsiniz.",
+        a: "Randevu alınması, size ayrılan sürede daire tiplerini ve belgeleri detaylı incelemeniz açısından önerilir. 444 10 58, 0540 028 00 41 veya WhatsApp üzerinden randevu oluşturabilirsiniz.",
       },
     ],
     nearby: ["izmit-yahya-kaptan", "kocaeli-derince", "izmit-alikahya", "kocaeli-korfez"],

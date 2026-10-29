@@ -17,6 +17,8 @@ export const site = {
 
 export const contact = {
   phones: [
+    // İlk numara genel çağrı merkezi; başlıkta, KVKK metninde ve yapısal veride ilk sırada kullanılır.
+    { label: "444 10 58", href: "tel:4441058" },
     { label: "0540 028 00 41", href: "tel:+905400280041" },
     { label: "0541 128 40 41", href: "tel:+905411284041" },
   ],
