@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-"İlk Evine 1 Milyon TL Peşinat ile Sahip Ol" kreatifi — farklı en-boy oranları (2x çizilir).
+Lacivert/altın kartlı sunucu kreatifleri — farklı en-boy oranları (2x çizilir).
+
+  ilk-evine            yeni kitle (soğuk): "İlk Evine 1 Milyon TL Peşinat ile Sahip Ol" — 5 oran
+  hatirlatma-*         daha önce reklamı görenler (yeniden pazarlama) — 9x16, 4x5, 1x1
 
   9x16   1080x1920  Story / Reels / TikTok
   4x5    1080x1350  Instagram / Facebook akış
@@ -49,19 +52,19 @@ body {{ width:{w}px; height:{h}px; overflow:hidden; position:relative; font-fami
 """
 
 
-def baslik(x, y, hiza, b1, b2, b3, etiket, genislik=None):
+def baslik(x, y, hiza, b1, b2, b3, etiket, genislik=None, m=None):
     """Üç satır başlık + MİA PARK OCEAN · İZMİT etiketi. b*: (yazı boyutu, satır arası üst boşluk)."""
     g = f"width:{genislik}px;" if genislik else ""
     return f"""
   <div class="a" style="left:{x}px;top:{y}px;{g}text-align:{hiza}">
-    <div class="k tek" style="font-size:{b1}px;color:{LACI}">İlk Evine</div>
-    <div class="k tek" style="margin-top:{round(b2 * .14)}px;font-size:{b2}px;color:{ALTIN}">1 MİLYON TL</div>
-    <div class="k tek" style="margin-top:{round(b2 * .1)}px;font-size:{b3}px;color:{LACI}">Peşinat ile Sahip Ol</div>
+    <div class="k tek" style="font-size:{b1}px;color:{LACI}">{m['b1']}</div>
+    <div class="k tek" style="margin-top:{round(b2 * .14)}px;font-size:{round(b2 * m.get('b2_olcek', 1))}px;color:{ALTIN}">{m['b2']}</div>
+    <div class="k tek" style="margin-top:{round(b2 * .1)}px;font-size:{b3}px;color:{LACI}">{m['b3']}</div>
     <div class="tek" style="margin-top:{round(etiket * .9)}px;font-size:{etiket}px;font-weight:600;letter-spacing:.2em;color:#4a5878">MİA PARK OCEAN · İZMİT</div>
   </div>"""
 
 
-def kart(x, y, gen, b, kirmizi_kaydir):
+def kart(x, y, gen, b, kirmizi_kaydir, m):
     """Lacivert/altın fiyat kartı + kırmızı hap + 'faiz yok · kefil yok'. b: ana yazı boyutu."""
     return f"""
   <div class="a" style="left:{x}px;top:{y}px;width:{gen}px">
@@ -75,10 +78,10 @@ def kart(x, y, gen, b, kirmizi_kaydir):
     </div>
     <div style="margin:{round(b * .4)}px 0 0 {kirmizi_kaydir}px;width:{gen - 2 * kirmizi_kaydir}px;padding:{round(b * .27)}px 0;border-radius:{round(b * .3)}px;
          background:{KIRMIZI};color:#fff;text-align:center;font-size:{round(b * .41)}px;font-weight:800;line-height:1.25;
-         box-shadow:0 {round(b * .2)}px {round(b * .42)}px rgba(225,38,47,.35)">BANKA YOK<br>ARA ÖDEME YOK</div>
+         box-shadow:0 {round(b * .2)}px {round(b * .42)}px rgba(225,38,47,.35)">{m["hap"]}</div>
     <div style="margin-top:{round(b * .26)}px;text-align:center"><span class="tek" style="display:inline-block;padding:{round(b * .16)}px {round(b * .4)}px;
          border-radius:999px;background:#fff;font-size:{round(b * .36)}px;font-weight:800;letter-spacing:.06em;color:{LACI};
-         box-shadow:0 {round(b * .12)}px {round(b * .3)}px rgba(10,30,70,.25)">FAİZ YOK · KEFİL YOK</span></div>
+         box-shadow:0 {round(b * .12)}px {round(b * .3)}px rgba(10,30,70,.25)">{m["alt"]}</span></div>
   </div>"""
 
 
@@ -94,21 +97,21 @@ def iletisim_dikey(w, y, logo, tel, wa):
     <span class="tek" style="font-size:{round(wa * .9)}px;font-weight:600;letter-spacing:.06em;opacity:.9">miaparkocean.com</span></div>"""
 
 
-def dikey(w, h, p):
+def dikey(w, h, p, m):
     """9x16 · 4x5 · 1x1: ortalı başlık, solda sunucu, sağda kart, altta lacivert bant."""
     return f"""
   <img class="a" src="{RENDER}" style="left:0;top:{p['r_top']}px;width:{w}px;height:{h - p['r_top']}px;object-fit:cover;object-position:{p['r_pos']};
        -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 30%)">
   <div class="a" style="left:0;top:0;width:{w}px;height:{p['beyaz']}px;background:linear-gradient(180deg,#fff 55%,rgba(255,255,255,0))"></div>
-  {baslik(0, p['b_top'], 'center', *p['b'], genislik=w)}
+  {baslik(0, p['b_top'], 'center', *p['b'], genislik=w, m=m)}
   <div class="a" style="left:0;top:{p['bant']}px;width:{w}px;height:{h - p['bant']}px;background:linear-gradient(180deg,rgba(20,48,107,0) 0%,rgba(20,48,107,.9) 36%,{LACI} 62%)"></div>
-  <img class="a" src="{SUNUCU}" style="left:{p['s_x']}px;top:{p['s_y']}px;height:{p['s_h']}px;filter:drop-shadow(0 20px 30px rgba(10,30,60,.25))">
-  {kart(p['k_x'], p['k_y'], p['k_w'], p['k_b'], p['k_kay'])}
+  <img class="a" src="{m['sunucu']}" style="left:{p['s_x']}px;top:{p['s_y']}px;height:{p['s_h']}px;filter:drop-shadow(0 20px 30px rgba(10,30,60,.25))">
+  {kart(p['k_x'], p['k_y'], p['k_w'], p['k_b'], p['k_kay'], m)}
   {iletisim_dikey(w, p['i_y'], *p['i'])}
 """
 
 
-def yatay(w, h, p):
+def yatay(w, h, p, m):
     """1.91x1 · 16x9: solda başlık, ortada sunucu, sağda kart; altta lacivert şerit."""
     bh = p['bant_h']
     return f"""
@@ -116,11 +119,11 @@ def yatay(w, h, p):
   <div class="a" style="left:0;top:0;width:{round(w * .62)}px;height:{round(h * p['beyaz'])}px;
        background:linear-gradient(90deg,#fff 0%,#fff 58%,rgba(255,255,255,0) 100%);
        -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%)"></div>
-  {baslik(p['b_x'], p['b_y'], 'left', *p['b'])}
+  {baslik(p['b_x'], p['b_y'], 'left', *p['b'], m=m)}
   <div class="a" style="left:0;top:{h - bh}px;width:{w}px;height:{bh}px;background:{LACI}"></div>
   <div class="a" style="left:0;top:{h - bh - round(bh * .6)}px;width:{w}px;height:{round(bh * .6)}px;background:linear-gradient(180deg,rgba(20,48,107,0),rgba(20,48,107,.55))"></div>
-  <img class="a" src="{SUNUCU}" style="left:{p['s_x']}px;top:{p['s_y']}px;height:{p['s_h']}px;filter:drop-shadow(0 20px 30px rgba(10,30,60,.25))">
-  {kart(p['k_x'], p['k_y'], p['k_w'], p['k_b'], p['k_kay'])}
+  <img class="a" src="{m['sunucu']}" style="left:{p['s_x']}px;top:{p['s_y']}px;height:{p['s_h']}px;filter:drop-shadow(0 20px 30px rgba(10,30,60,.25))">
+  {kart(p['k_x'], p['k_y'], p['k_w'], p['k_b'], p['k_kay'], m)}
   <div class="a" style="left:{p['b_x']}px;top:{h - bh}px;height:{bh}px;display:flex;align-items:center;gap:{round(p['logo'] * .5)}px">
     <img src="{TILDA}" style="height:{p['logo']}px"><span style="width:2px;height:{round(p['logo'] * 1.3)}px;background:rgba(255,255,255,.55)"></span>
     <img src="{MIA}" style="height:{round(p['logo'] * 1.45)}px"></div>
@@ -156,15 +159,32 @@ BICIMLER = [
 ]
 
 
+# Kreatifler: "yeni" = soğuk kitle (ilk kez görenler), "hatirlatma" = daha önce reklamı görenler / etkileşenler.
+KREATIFLER = [
+    ("ilk-evine", dict(b1="İlk Evine", b2="1 MİLYON TL", b3="Peşinat ile Sahip Ol", hap="BANKA YOK<br>ARA ÖDEME YOK",
+                       alt="FAİZ YOK · KEFİL YOK", sunucu=SUNUCU), None),
+    ("hatirlatma-akliniz", dict(b1="Aklınız Hâlâ", b2="MİA PARK OCEAN'DA", b2_olcek=.68, b3="mı?",
+                                hap="ÖDEME PLANINIZ İÇİN<br>HEMEN ARAYIN", alt="FAİZ YOK · BANKA YOK",
+                                sunucu=F("signage-source", "aile", "sunucu-kesik.png")), ("9x16", "4x5", "1x1")),
+    ("hatirlatma-daireniz", dict(b1="Yeni Daireniz", b2="SİZİ BEKLİYOR", b2_olcek=.92, b3="1 Milyon TL Peşinatla",
+                                 hap="DAİRENİZİ SEÇİN<br>YERİNİZİ AYIRTIN", alt="60 AY · ARA ÖDEME YOK",
+                                 sunucu=SUNUCU), ("9x16", "4x5", "1x1")),
+]
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     gecici = tempfile.mkdtemp(prefix="oranlar-")
     isler = []
-    for ad, w, h, fn, p in BICIMLER:
-        hp = os.path.join(gecici, ad + ".html")
-        open(hp, "w", encoding="utf-8").write(
-            f'<!doctype html><html><head><meta charset="utf-8"><style>{css(w, h)}</style></head><body>{fn(w, h, p)}</body></html>')
-        isler.append(dict(html=hp, w=w, h=h, dsf=2, dilim=w, cikti=os.path.join(gecici, ad), ad=ad))
+    for kad, m, oranlar in KREATIFLER:
+        for ad, w, h, fn, p in BICIMLER:
+            if oranlar and ad not in oranlar:
+                continue
+            ad = f"{kad}-{ad}"
+            hp = os.path.join(gecici, ad + ".html")
+            open(hp, "w", encoding="utf-8").write(
+                f'<!doctype html><html><head><meta charset="utf-8"><style>{css(w, h)}</style></head><body>{fn(w, h, p, m)}</body></html>')
+            isler.append(dict(html=hp, w=w, h=h, dsf=2, dilim=w, cikti=os.path.join(gecici, ad), ad=ad))
     jp = os.path.join(gecici, "isler.json")
     json.dump(isler, open(jp, "w"))
     npm = subprocess.run(["npm", "root", "-g"], capture_output=True, text=True).stdout.strip()
@@ -172,7 +192,7 @@ def main():
                    env={**os.environ, "NODE_PATH": npm}, stdout=subprocess.DEVNULL)
     for is_ in isler:
         im = Image.open(json.load(open(is_["cikti"] + ".json"))[0]).convert("RGB")
-        yol = os.path.join(OUT, f"mia-ilk-evine-{is_['ad']}.jpg")
+        yol = os.path.join(OUT, f"mia-{is_['ad']}.jpg")
         im.save(yol, quality=93)
         print("  →", os.path.relpath(yol, ROOT), im.size)
 
