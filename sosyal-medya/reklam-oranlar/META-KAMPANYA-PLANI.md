@@ -8,7 +8,6 @@ Her şey önce **DURAKLATILMIŞ** kurulur; kontrol edildikten sonra yayına alı
 | Kampanya | Dosyalar | Yerleşim |
 |---|---|---|
 | Yeni kitle | `mia-ilk-evine-9x16.jpg` · `-4x5.jpg` · `-1x1.jpg` | 9:16 Story/Reels, 4:5 Akış, 1:1 diğer |
-| Yeni kitle (yedek) | `../reklam-referans/mia-story-4-ic-yeni-nesil-1-1.jpg`, `mia-story-6-gece-cam-bant.jpg` | Story/Reels |
 | Yeniden pazarlama | `mia-hatirlatma-akliniz-*.jpg` · `mia-hatirlatma-daireniz-*.jpg` (9x16, 4x5, 1x1) | Story/Reels + Akış |
 | Google / bağlantı | `mia-ilk-evine-191x1.jpg` · `-16x9.jpg` | Meta'da gerekmez |
 
@@ -42,16 +41,16 @@ Her reklamda 9:16, 4:5 ve 1:1 dosyaları aynı reklamın "yerleşime göre görs
 ## Reklam metinleri
 
 **Yeni kitle — ana metin**
-> İzmit MİA Bölgesi'nde ilk evinize 1 milyon TL peşinatla sahip olun. 🏡
+> İzmit MİA Bölgesi'nde ilk evinize 699.000 TL'den başlayan peşinatla sahip olun. 🏡
 > ✔ 60 ay sabit taksit ✔ Banka yok ✔ Faiz yok ✔ Ara ödeme yok
 > 1+0, 1+1, 1+1 bahçe loft ve 2+1 bahçe dubleks seçenekleri.
 > 📞 444 10 58 · WhatsApp 0540 028 00 41
 
-Başlık: `1 Milyon TL Peşinatla Ev Sahibi Olun` · Açıklama: `60 ay sabit taksit · faizsiz` · Buton: **Daha Fazla Bilgi Al**
+Başlık: `699.000 TL Peşinatla Ev Sahibi Olun` · Açıklama: `60 ay sabit taksit · faizsiz` · Buton: **Daha Fazla Bilgi Al**
 
 **Yeniden pazarlama — ana metin**
 > Aklınız hâlâ MİA PARK OCEAN'da mı? Size uygun ödeme planını birlikte çıkaralım.
-> 1 milyon TL peşinat, kalanı 60 ay sabit taksit. Banka, faiz ve ara ödeme yok.
+> 699.000 TL'den başlayan peşinat, kalanı 60 ay sabit taksit. Banka, faiz ve ara ödeme yok.
 > 📞 444 10 58 · WhatsApp 0540 028 00 41
 
 Başlık: `Dairenizi Seçin, Yerinizi Ayırtın` · Buton: **Hemen Ara** / **Daha Fazla Bilgi Al**

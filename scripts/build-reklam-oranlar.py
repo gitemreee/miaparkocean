@@ -2,7 +2,7 @@
 """
 Lacivert/altın kartlı sunucu kreatifleri — farklı en-boy oranları (2x çizilir).
 
-  ilk-evine            yeni kitle (soğuk): "İlk Evine 1 Milyon TL Peşinat ile Sahip Ol" — 5 oran
+  ilk-evine            yeni kitle (soğuk): "İlk Evine 699.000 TL Peşinat ile Sahip Ol" — 5 oran
   hatirlatma-*         daha önce reklamı görenler (yeniden pazarlama) — 9x16, 4x5, 1x1
 
   9x16   1080x1920  Story / Reels / TikTok
@@ -70,8 +70,8 @@ def kart(x, y, gen, b, kirmizi_kaydir, m):
   <div class="a" style="left:{x}px;top:{y}px;width:{gen}px">
     <div style="border-radius:{round(b * .33)}px;overflow:hidden;box-shadow:0 {round(b * .3)}px {round(b * .6)}px rgba(10,30,70,.35)">
       <div style="background:{LACI};padding:{round(b * .38)}px 0 {round(b * .3)}px;text-align:center;color:#fff">
-        <div class="k tek" style="font-size:{b}px">1 MİLYON TL</div>
-        <div class="tek" style="margin-top:{round(b * .12)}px;font-size:{round(b * .4)}px;font-weight:800;letter-spacing:.06em">PEŞİNAT</div>
+        <div class="k tek" style="font-size:{b}px">699.000<span style="font-size:{round(b * .36)}px;letter-spacing:0;margin-left:{round(b * .1)}px">TL'DEN</span></div>
+        <div class="tek" style="margin-top:{round(b * .12)}px;font-size:{round(b * .4)}px;font-weight:800;letter-spacing:.06em">BAŞLAYAN PEŞİNAT</div>
       </div>
       <div style="height:{max(3, round(b * .07))}px;background:#fff"></div>
       <div class="k tek" style="background:{ALTIN};padding:{round(b * .32)}px 0 {round(b * .3)}px;text-align:center;font-size:{round(b * .62)}px;color:{LACI}">60 AY SABİT TAKSİT</div>
@@ -161,12 +161,12 @@ BICIMLER = [
 
 # Kreatifler: "yeni" = soğuk kitle (ilk kez görenler), "hatirlatma" = daha önce reklamı görenler / etkileşenler.
 KREATIFLER = [
-    ("ilk-evine", dict(b1="İlk Evine", b2="1 MİLYON TL", b3="Peşinat ile Sahip Ol", hap="BANKA YOK<br>ARA ÖDEME YOK",
+    ("ilk-evine", dict(b1="İlk Evine", b2="699.000 TL", b3="Peşinat ile Sahip Ol", hap="BANKA YOK<br>ARA ÖDEME YOK",
                        alt="FAİZ YOK · KEFİL YOK", sunucu=SUNUCU), None),
     ("hatirlatma-akliniz", dict(b1="Aklınız Hâlâ", b2="MİA PARK OCEAN'DA", b2_olcek=.68, b3="mı?",
                                 hap="ÖDEME PLANINIZ İÇİN<br>HEMEN ARAYIN", alt="FAİZ YOK · BANKA YOK",
                                 sunucu=F("signage-source", "aile", "sunucu-kesik.png")), ("9x16", "4x5", "1x1")),
-    ("hatirlatma-daireniz", dict(b1="Yeni Daireniz", b2="SİZİ BEKLİYOR", b2_olcek=.92, b3="1 Milyon TL Peşinatla",
+    ("hatirlatma-daireniz", dict(b1="Yeni Daireniz", b2="SİZİ BEKLİYOR", b2_olcek=.92, b3="699.000 TL Peşinatla",
                                  hap="DAİRENİZİ SEÇİN<br>YERİNİZİ AYIRTIN", alt="60 AY · ARA ÖDEME YOK",
                                  sunucu=SUNUCU), ("9x16", "4x5", "1x1")),
 ]
