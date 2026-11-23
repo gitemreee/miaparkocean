@@ -8,7 +8,7 @@ Referans tarzı satış reklamları (story 1080x1920, 2x çizilir).
   · ic      — krem zemin, iç mekân görseli, iki parçalı fiyat hapı, üç özellik
   · gece    — gece render'ı, küçük harfli başlık, cam üç sütunlu fiyat bandı
 
-Metin: 1 Milyon TL peşinat · 60 ay sabit taksit · banka/faiz/ara ödeme yok.
+Metin: 699.000 TL peşinat · 60 ay sabit taksit · banka/faiz/ara ödeme yok.
 İletişim: 444 10 58 · WhatsApp 0540 028 00 41. Logolar: Tilda İnşaat + MİA PARK OCEAN.
 
     python3.13 scripts/build-reklam-referans.py
@@ -169,7 +169,7 @@ def gece():
        background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
        box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.35);color:#fff">
     <div class="tek" style="text-align:center;font-family:Jost;font-size:26px;font-weight:400;color:rgba(255,255,255,.85)">MİA PARK OCEAN · İzmit MİA Bölgesi</div>
-    <div style="margin-top:16px;display:flex">{sutun('₺1.000.000', 'PEŞİNAT')}{cizgi}{sutun('60 AY', 'SABİT TAKSİT')}{cizgi}{sutun('%0', 'FAİZ')}</div>
+    <div style="margin-top:16px;display:flex">{sutun('₺699.000', 'PEŞİNAT')}{cizgi}{sutun('60 AY', 'SABİT TAKSİT')}{cizgi}{sutun('%0', 'FAİZ')}</div>
   </div>
 
   <div class="a m tek" style="top:1660px;font-family:Jost;font-size:30px;font-weight:500;letter-spacing:.2em;color:rgba(255,255,255,.8)">HEMEN ARAYIN</div>
@@ -187,25 +187,25 @@ GORSELLER = [
     ("1-sunucu-ilk-evine", sunucu(
         "file://" + os.path.join(S4K, "entrance-gate.jpg"), "13% 50%",
         "file://" + os.path.join(AILE, "sunucu2-kesik.png"), "left:-70px;top:600px;height:1320px",
-        "İlk Evine", "1 MİLYON TL", "Peşinat ile Sahip Ol",
-        "1 MİLYON TL", "PEŞİNAT", "60 AY SABİT TAKSİT", "BANKA YOK", "ARA ÖDEME YOK")),
+        "İlk Evine", "699.000 TL", "Peşinat ile Sahip Ol",
+        "699.000 TL", "PEŞİNAT", "60 AY SABİT TAKSİT", "BANKA YOK", "ARA ÖDEME YOK")),
     ("2-sunucu-kiraciliga-son", sunucu(
-        "file://" + os.path.join(S4K, "4k", "orta-giris-genis-8k.png"), "11% 50%",
+        "file://" + os.path.join(S4K, "entrance-gate.jpg"), "40% 50%",
         "file://" + os.path.join(AILE, "sunucu-kesik.png"), "left:-40px;top:590px;height:1330px",
-        "Kiracılığa Son!", "EV SAHİBİ OL", "1 Milyon TL Peşinatla",
+        "Kiracılığa Son!", "EV SAHİBİ OL", "699.000 TL Peşinatla",
         "%0 FAİZ", "BANKASIZ · KEFİLSİZ", "60 AY SABİT TAKSİT", "ARA ÖDEME YOK", "KREDİ YOK")),
     ("3-aile-yeni-yuva", sunucu(
         "file://" + os.path.join(S4K, "courtyard-pools.jpg"), "50% 50%",
         "file://" + os.path.join(AILE, "aile2-kesik.png"), "left:-30px;top:1010px;height:700px",
-        "Ailenize", "YENİ BİR YUVA", "1 Milyon TL Peşinatla",
-        "1 MİLYON TL", "PEŞİNAT", "60 AY SABİT TAKSİT", "BANKA YOK", "FAİZ YOK", kart_left=470)),
+        "Ailenize", "YENİ BİR YUVA", "699.000 TL Peşinatla",
+        "699.000 TL", "PEŞİNAT", "60 AY SABİT TAKSİT", "BANKA YOK", "FAİZ YOK", kart_left=470)),
     ("4-ic-yeni-nesil-1-1", ic(
         IC("05-1plus1-salon.webp"), "İZMİT", "MİA PARK OCEAN", "YENİ NESİL 1+1", "MODERN YAŞAM",
-        "SADECE", "1 MİLYON TL", "PEŞİNAT", "60 AY", "0 FAİZ",
+        "SADECE", "699.000 TL", "PEŞİNAT", "60 AY", "0 FAİZ",
         [("havuz", "Süs<br>Havuzları"), ("otopark", "Kapalı<br>Otopark"), ("park", "Çocuk<br>Parkı")])),
     ("5-ic-bahce-loft", ic(
         IC("09-loft-salon.webp"), "İZMİT", "MİA PARK OCEAN", "BAHÇELİ 1+1 LOFT", "AYRICALIKLI YAŞAM",
-        "SADECE", "1 MİLYON TL", "PEŞİNAT", "60 AY", "SABİT",
+        "SADECE", "699.000 TL", "PEŞİNAT", "60 AY", "SABİT",
         [("bahce", "Özel<br>Bahçe"), ("havuz", "Süs<br>Havuzları"), ("otopark", "Kapalı<br>Otopark")])),
     ("6-gece-cam-bant", gece()),
 ]
