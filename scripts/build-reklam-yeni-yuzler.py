@@ -42,7 +42,9 @@ PETROL = ("#0b4a5a", "#f29a2e")
 YESIL = ("#124a3a", "#d4a94a")
 
 # İnsan fotoğrafları: en/boy oranı (kırpılmış PNG)
-INSAN = {"cift-koli": .77, "aile-dort": .962, "genc-kadin": .528, "olgun-cift": .787, "genc-aile": .634, "sirtta-cift": .576}
+INSAN = {"cift-koli": .77, "aile-dort": .962, "genc-kadin": .528, "olgun-cift": .787, "genc-aile": .634, "sirtta-cift": .576,
+         "orta-erkek": .748, "orta-aile": 1.302, "orta-kadin": .559, "dusunen-erkek": .473, "orta-cift": .816, "genc-erkek": .744}
+AYLIK = "AYDA 29.900 TL'DEN BAŞLAYAN TAKSİT"
 
 # Biçim sabitleri. b: (giriş, ana satır, üçüncü satır, etiket) yazı boyutları.
 BICIM = {
@@ -69,9 +71,28 @@ KREATIFLER = [
     dict(ad="5-her-yere-yakin", insan="genc-aile", yuk=(800, 1070), taraf="sol", kay=(-10, -30), renk=PETROL,
          zemin=FOTO("17-drone-yalniz-site.jpg"), pos="50% 46%",
          b1="Yeni Eviniz", b2="HER YERE YAKIN", olcek=.88, b3="D-100'e 1 dk · Merkeze 5 dk", b3_olcek=.8, hap="BANKA YOK<br>FAİZ YOK", serit="60 AY SABİT TAKSİT"),
-    dict(ad="6-60-ay-sabit-taksit", insan="sirtta-cift", yuk=(790, 980), taraf="sag", kay=(-10, -90), renk=YESIL,
-         zemin=FOTO("23-giris-avlu-gun-batimi.jpg"), pos="50% 40%",
+    dict(ad="6-60-ay-sabit-taksit", insan="genc-erkek", yuk=(760, 1000), taraf="sag", kay=(-90, -150), renk=YESIL,
+         zemin=FOTO("21-yoldan-gunesli.jpg"), pos="50% 55%",
          b1="Banka Yok, Faiz Yok", b2="60 AY SABİT TAKSİT", olcek=.74, b3="699.000 TL Peşinatla", hap="KEFİL YOK<br>ARA ÖDEME YOK", serit="BANKASIZ · FAİZSİZ"),
+    # --- 2. seri: taksit ve "kira öder gibi" mesajları, orta yaş yüzler ---
+    dict(ad="7-kira-oder-gibi", insan="orta-cift", yuk=(730, 900), taraf="sol", kay=(-40, -150), renk=LACI,
+         zemin=SRC("entrance-gate.jpg"), pos="70% 50%",
+         b1="Kira Öder Gibi", b2="EV SAHİBİ OLUN", olcek=.9, b3="60 Ay Sabit Taksitle", hap="ARA ÖDEME YOK<br>BANKA YOK", serit="60 AY SABİT TAKSİT"),
+    dict(ad="8-29900-ile-ne-alinir", insan="dusunen-erkek", yuk=(800, 1070), taraf="sag", kay=(40, 20), renk=PETROL,
+         zemin=FOTO("20-giris-gunesli.jpg"), pos="50% 42%",
+         b1="Ayda 29.900 TL ile", b2="NE ALABİLİRSİNİZ?", olcek=.78, b3="MİA PARK OCEAN'da Ev!", hap="ARA ÖDEME YOK<br>FAİZ YOK", serit="60 AY SABİT TAKSİT"),
+    dict(ad="9-60-ay-sabit-taksitle", insan="orta-aile", yuk=(470, 600), taraf="sol", kay=(-30, -110), renk=YESIL,
+         zemin=SRC("courtyard-pools.jpg"), pos="50% 50%", alt_kay=(40, 30),
+         b1="60 Ay Sabit Taksitle", b2="EV SAHİBİ OLUN", olcek=.9, b3="Ara Ödeme Yok", hap="BANKA YOK<br>FAİZ YOK", serit="60 AY SABİT TAKSİT"),
+    dict(ad="10-ara-odeme-yok", insan="orta-erkek", yuk=(740, 980), taraf="sag", kay=(-50, -110), renk=LACI,
+         zemin=FOTO("16-avlu-gunesli-kahve.jpg"), pos="50% 68%",
+         b1="Ara Ödeme Yok", b2="60 AY SABİT TAKSİT", olcek=.74, b3="MİA PARK OCEAN'da", hap="BANKA YOK<br>KEFİL YOK", serit="699.000 TL PEŞİNAT", ust=("AYDA", "29.900", "TL'DEN", "BAŞLAYAN TAKSİT"), alt=None),
+    dict(ad="11-kiraya-degil", insan="orta-kadin", yuk=(790, 1000), taraf="sol", kay=(20, -20), renk=PETROL,
+         zemin=FOTO("18-arka-bahce-gunduz.jpg"), pos="50% 55%",
+         b1="Kiraya Değil", b2="EVİNİZE ÖDEYİN", olcek=.9, b3="60 Ay Sabit Taksitle", hap="ARA ÖDEME YOK<br>KEFİL YOK", serit="60 AY SABİT TAKSİT"),
+    dict(ad="12-banka-sart-degil", insan="olgun-cift", yuk=(730, 920), taraf="sag", kay=(-30, -150), renk=YESIL,
+         zemin=FOTO("21-yoldan-gunesli.jpg"), pos="50% 55%",
+         b1="Ev Almak İçin", b2="BANKA ŞART DEĞİL", olcek=.78, b3="60 Ay Sabit Taksit", hap="ARA ÖDEME YOK<br>FAİZ YOK", serit="60 AY SABİT TAKSİT"),
 ]
 
 
@@ -89,12 +110,19 @@ body {{ width:{W}px; height:{h}px; overflow:hidden; position:relative; font-fami
 
 def kart(x, y, gen, b, m):
     koyu, vurgu = m["renk"]
+    u = m.get("ust", ("", "699.000", "TL'DEN", "BAŞLAYAN PEŞİNAT"))
+    onek = (f'<div class="tek" style="font-size:{round(b * .34)}px;font-weight:800;letter-spacing:.2em;margin-bottom:{round(b * .08)}px;color:{vurgu}">{u[0]}</div>'
+            if u[0] else "")
+    aylik = m.get("alt", AYLIK)
+    alt = (f'<div style="position:relative;z-index:3;margin-top:{round(b * .26)}px;text-align:center"><span class="tek" style="display:inline-block;padding:{round(b * .17)}px {round(b * .3)}px;'
+           f'border-radius:999px;background:#fff;font-size:{round(b * .3)}px;font-weight:800;letter-spacing:.03em;color:{koyu};'
+           f'box-shadow:0 {round(b * .12)}px {round(b * .3)}px rgba(10,30,50,.25)">{aylik}</span></div>') if aylik else ""
     return f"""
   <div class="a" style="left:{x}px;top:{y}px;width:{gen}px">
     <div style="border-radius:{round(b * .33)}px;overflow:hidden;box-shadow:0 {round(b * .3)}px {round(b * .6)}px rgba(10,30,50,.35)">
       <div style="background:{koyu};padding:{round(b * .38)}px 0 {round(b * .3)}px;text-align:center;color:#fff">
-        <div class="k tek" style="font-size:{b}px">699.000<span style="font-size:{round(b * .36)}px;letter-spacing:0;margin-left:{round(b * .1)}px">TL'DEN</span></div>
-        <div class="tek" style="margin-top:{round(b * .12)}px;font-size:{round(b * .4)}px;font-weight:800;letter-spacing:.06em">BAŞLAYAN PEŞİNAT</div>
+        {onek}<div class="k tek" style="font-size:{b}px">{u[1]}<span style="font-size:{round(b * .36)}px;letter-spacing:0;margin-left:{round(b * .1)}px">{u[2]}</span></div>
+        <div class="tek" style="margin-top:{round(b * .12)}px;font-size:{round(b * .4)}px;font-weight:800;letter-spacing:.06em">{u[3]}</div>
       </div>
       <div style="height:{max(3, round(b * .07))}px;background:#fff"></div>
       <div class="k tek" style="background:{vurgu};padding:{round(b * .32)}px 0 {round(b * .3)}px;text-align:center;font-size:{round(b * .6)}px;color:{koyu}">{m['serit']}</div>
@@ -102,6 +130,7 @@ def kart(x, y, gen, b, m):
     <div style="margin:{round(b * .4)}px {round(gen * .13)}px 0;padding:{round(b * .27)}px 0;border-radius:{round(b * .3)}px;
          background:{KIRMIZI};color:#fff;text-align:center;font-size:{round(b * .41)}px;font-weight:800;line-height:1.25;
          box-shadow:0 {round(b * .2)}px {round(b * .42)}px rgba(225,38,47,.35)">{m['hap']}</div>
+    {alt}
   </div>"""
 
 
@@ -133,7 +162,7 @@ def sayfa(oran, m):
   </div>
 
   {kart(k_x, p['k_y'], p['k_w'], p['k_b'], m)}
-  <img class="a" src="{F('signage-source', 'insanlar', m['insan'] + '.png')}" style="left:{a_x}px;top:{p['alt'] - a_h}px;height:{a_h}px;
+  <img class="a" src="{F('signage-source', 'insanlar', m['insan'] + '.png')}" style="left:{a_x}px;top:{p['alt'] + m.get('alt_kay', (0, 0))[i] - a_h}px;height:{a_h}px;
        filter:drop-shadow(0 20px 30px rgba(10,30,50,.3))">
   <div class="a" style="left:0;top:{p['bant']}px;width:{W}px;height:{h - p['bant']}px;
        background:linear-gradient(180deg,rgba({r},{g},{bl},0) 0%,rgba({r},{g},{bl},.92) 36%,{koyu} 60%)"></div>
