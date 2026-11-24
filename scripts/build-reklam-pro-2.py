@@ -187,7 +187,7 @@ def a4(story):
   {logolar(KOYU, 250, 84, 34)}
   {baslik_blok(374, "Ev sahibi olmak", [f"artık çok {vurgu('kolay', AKSAN, AKSAN)}"], KOYU, True, KOYU)}
   <div class="a" style="left:72px;top:696px;width:528px;height:824px;border-radius:264px 264px 0 0;overflow:hidden;z-index:1;
-       clip-path:polygon(0 0,100% 0,100% 700px,400px 700px,400px 100%,0 100%)">
+       clip-path:polygon(0 0,100% 0,100% 734px,376px 734px,376px 100%,0 100%)">
     <img class="a" src="{foto}" style="left:0;top:-114px;width:528px"></div>
   {kisi(SUNUCU1, 1000, "left:504px;top:640px", ayna=True, kirp=640 + 1000 - 1400)}
   {fiyat_karo(448, 1440, 560, AKSAN, KOYU, True, h, rakam=114)}
@@ -241,7 +241,7 @@ def a5(story):
   {logolar(KOYU, 250, 84, 34)}
   {baslik_blok(374, "Yeni eviniz", ["her yere", vurgu('yakın', AKSAN)], KOYU, True, KOYU)}
   {liste(72, 792, 368, 116, 66, 28, 30, 128)}
-  {kart(480, 776, 520, -400, (176, 262, 80))}
+  {kart(480, 792, 504, -416, (176, 246, 80))}
   {kisi(SUNUCU2, 880, "left:632px;top:600px", ayna=True, kirp=600 + 880 - 1400)}
   {yatay_karo(1296, 156, 24, 88, 25, 36)}
   {hap(1472, KOYU, "#FFFFFF", h=104)}
