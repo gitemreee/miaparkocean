@@ -49,7 +49,16 @@ ROOT = eski.ROOT
 OUT = os.path.join(ROOT, "baski", "brosur-akordiyon-80x30")
 KAYNAK = os.path.join(OUT, "kaynak")
 F, V = eski.F, eski.V
-LACI, LACI2, ALTIN, CAM, KREM = "#102b5c", "#0a1d42", "#c9a55b", "#27bfd6", "#fbf8f2"
+# Marka renkleri: brand-source/mia-brand.css ve sitenin globals.css'i. Düz turkuaz, altın, pembe yok.
+DERIN, PETROL, OKYANUS, AQUA, BUZ = "#04283a", "#095678", "#1a7496", "#92d1df", "#ddf7fa"
+LACI, LACI2, ALTIN, KREM = PETROL, DERIN, AQUA, "#f2f9fb"
+METAL = ("linear-gradient(110deg,#075878 0%,#1a7496 10%,#48abc5 20%,#b8e4ec 31%,#f1fcfd 38%,#6ebdd0 49%,"
+         "#2c94b4 58%,#095678 68%,#48abc5 79%,#ddf7fa 90%,#2c94b4 100%)")
+DERIN_G = "linear-gradient(178deg,#12688c 0%,#0d5b7d 18%,#095678 40%,#06455f 70%,#04283a 100%)"
+YUZEY_G = "linear-gradient(145deg,#04283a 0%,#06405a 26%,#095678 54%,#12688c 80%,#1a7496 100%)"
+LOGO_ORAN = 0.7
+LOGO = "file://" + os.path.join(ROOT, "baski", "brosur-akordiyon-80x30", "kaynak", "logo-mia.png")      # asıl metalik logo
+DALGA = "file://" + os.path.join(ROOT, "public", "brand", "wave.png")                                   # marka dalgası
 TASMA, PANEL, BOY, N = 3, 200, 300, 4
 GEN = N * PANEL + 2 * TASMA          # 806
 YUK = BOY + 2 * TASMA                # 306
@@ -95,12 +104,15 @@ def ikon(ad, s=6, renk=LACI, kalinlik=1.6):
 
 FONT = lambda ad: os.path.join(ROOT, "brand-source", "fonts", ad)
 CSS = f"""
-@font-face {{ font-family: Mont; src: url("file://{FONT('Montserrat-var.ttf')}"); font-weight: 100 900; }}
+@font-face {{ font-family: Mn; src: url("file://{FONT('Manrope-400.ttf')}"); font-weight: 400; }}
+@font-face {{ font-family: Mn; src: url("file://{FONT('Manrope-600.ttf')}"); font-weight: 600; }}
+@font-face {{ font-family: Mn; src: url("file://{FONT('Manrope-700.ttf')}"); font-weight: 700; }}
+@font-face {{ font-family: Fr; src: url("file://{FONT('Fraunces-500.ttf')}"); font-weight: 500; }}
 @font-face {{ font-family: Fr; src: url("file://{FONT('Fraunces-600.ttf')}"); font-weight: 600; }}
 @font-face {{ font-family: Fr; src: url("file://{FONT('Fraunces-700.ttf')}"); font-weight: 700; }}
 @page {{ size: {GEN}mm {YUK}mm; margin: 0; }}
 * {{ margin:0; padding:0; box-sizing:border-box; }}
-html, body {{ font-family:Mont,sans-serif; -webkit-font-smoothing:antialiased; color:{LACI};
+html, body {{ font-family:Mn,sans-serif; -webkit-font-smoothing:antialiased; color:{LACI};
               -webkit-print-color-adjust:exact; print-color-adjust:exact; }}
 .sayfa {{ position:relative; width:{GEN}mm; height:{YUK}mm; overflow:hidden; page-break-after:always; background:#fff; }}
 .sayfa:last-child {{ page-break-after:auto; }}
@@ -138,10 +150,10 @@ def tip_kutusu(panel, y, tip, ad):
 def fiyat_seridi(panel, y, pesin, ayda):
     hucre = lambda et, deger, ek="": (f'<div style="flex:1;padding-left:6mm"><div class="tek" style="font-size:6.6pt;font-weight:700;letter-spacing:.24em;color:{ALTIN}">{et}</div>'
                                       f'<div class="tek" style="margin-top:.9mm;font-size:16pt;font-weight:800;line-height:1;color:#fff">{deger}<span style="font-size:9pt;font-weight:700;margin-left:1.2mm">TL</span>{ek}</div></div>')
-    return (f'<div class="a" style="left:{X(panel, 14)}mm;top:{y}mm;width:{PANEL - 28}mm;height:17mm;border-radius:3mm;background:{LACI};display:flex;align-items:center;'
-            f'box-shadow:0 1.4mm 3.6mm rgba(10,29,66,.25)">'
-            + hucre("PEŞİNAT", pesin) + f'<span style="width:.3mm;height:10mm;background:rgba(201,165,91,.6)"></span>' + hucre("AYLIK TAKSİT", ayda)
-            + f'<div class="tek" style="margin-right:5mm;padding:2.2mm 3.6mm 2mm;border-radius:99mm;background:{ALTIN};color:{LACI2};font-size:9pt;font-weight:800;letter-spacing:.06em">60 AY</div></div>')
+    return (f'<div class="a" style="left:{X(panel, 14)}mm;top:{y}mm;width:{PANEL - 28}mm;height:17mm;border-radius:3mm;background:{YUZEY_G};display:flex;align-items:center;'
+            f'box-shadow:0 1.4mm 3.6mm rgba(4,40,58,.25)">'
+            + hucre("PEŞİNAT", pesin) + f'<span style="width:.3mm;height:10mm;background:rgba(146,209,223,.6)"></span>' + hucre("AYLIK TAKSİT", ayda)
+            + f'<div class="tek" style="margin-right:5mm;padding:2.2mm 3.6mm 2mm;border-radius:99mm;background:{BUZ};color:{DERIN};font-size:9pt;font-weight:800;letter-spacing:.06em">60 AY</div></div>')
 
 
 def ozellik_listesi(x, y, maddeler, ara=11.0):
@@ -153,11 +165,11 @@ def ic_sol():
     k = lambda ad: "file://" + os.path.join(KAYNAK, ad)
     return (baslik_daire(0)
             + tip_kutusu(0, 31, "1+0", "Stüdyo")
-            + f'<img class="a" src="{k("plan-1-0.png")}" style="left:{X(0, 8)}mm;top:55mm;width:112mm;height:66mm;object-fit:contain">'
+            + f'<img class="a" src="{k("plan-1-0-m.png")}" style="left:{X(0, 8)}mm;top:55mm;width:112mm;height:66mm;object-fit:contain">'
             + ozellik_listesi(X(0, 126), 64, [("koltuk", "Yaşam Alanı"), ("mutfak", "Amerikan Mutfak"), ("banyo", "Banyo"), ("balkon", "Balkon")])
             + fiyat_seridi(0, 124, FIYAT[0][2], FIYAT[0][3])
             + tip_kutusu(0, 150, "1+1", "Daire")
-            + f'<img class="a" src="{k("plan-1-1.png")}" style="left:{X(0, 8)}mm;top:173mm;width:112mm;height:66mm;object-fit:contain">'
+            + f'<img class="a" src="{k("plan-1-1-m.png")}" style="left:{X(0, 8)}mm;top:173mm;width:112mm;height:66mm;object-fit:contain">'
             + ozellik_listesi(X(0, 126), 178, [("koltuk", "Salon"), ("mutfak", "Amerikan Mutfak"), ("yatak", "Yatak Odası"), ("banyo", "Banyo"), ("balkon", "Balkon")], 10.4)
             + fiyat_seridi(0, 241, FIYAT[1][2], FIYAT[1][3]))
 
@@ -169,10 +181,10 @@ def ic_sag():
     maddeler = [("filiz", "Özel<br>Bahçe"), ("koltuk", "Geniş<br>Yaşam Alanı"), ("yatak", "2 Yatak<br>Odası"), ("banyo", "2 Banyo"), ("merdiven", "Dubleks<br>Konforu")]
     ikonlar = "".join(f'<div style="flex:1;text-align:center"><div style="display:flex;justify-content:center">{ikon(ik, 9.6, LACI, 1.35)}</div>'
                       f'<div style="margin-top:2mm;font-size:9.2pt;font-weight:600;line-height:1.3;color:{LACI}">{t}</div></div>' for ik, t in maddeler)
-    yok = "".join(f'<span class="tek" style="display:flex;align-items:center;gap:1.8mm">{eski.tik(4.2, ALTIN, LACI2)}{t}</span>' for t in ("Banka yok", "Faiz yok", "Kefil yok", "Ara ödeme yok"))
+    yok = "".join(f'<span class="tek" style="display:flex;align-items:center;gap:1.8mm">{eski.tik(4.2, PETROL, "#fff")}{t}</span>' for t in ("Banka yok", "Faiz yok", "Kefil yok", "Ara ödeme yok"))
     return (baslik_daire(3)
             + tip_kutusu(3, 31, "2+1", "Bahçe Dubleks")
-            + plan(6, "plan-2-1-alt.png", "ALT KAT") + plan(102, "plan-2-1-ust.png", "ÜST KAT")
+            + plan(6, "plan-2-1-alt-m.png", "ALT KAT") + plan(102, "plan-2-1-ust-m.png", "ÜST KAT")
             + f'<div class="a" style="left:{X(3, 12)}mm;top:158mm;width:{PANEL - 24}mm;display:flex;align-items:flex-start">{ikonlar}</div>'
             + fiyat_seridi(3, 184, FIYAT[2][2], FIYAT[2][3])
             + f'<div class="a" style="left:{X(3, 14)}mm;top:209mm;width:{PANEL - 28}mm;text-align:center;font-size:11pt;font-weight:600;letter-spacing:.34em;line-height:1.75;color:{LACI}">'
@@ -183,31 +195,32 @@ def ic_sag():
 
 
 def ic_orta():
-    sol, sag, orta = X(1), X(3), X(2)                       # 203, 603, 403 (kırım)
-    # Başlık kırıma bölünmesin diye iki parça: "MİA PARK" kırımın solunda, "OCEAN" sağında.
-    baslik = (f'<div class="a tek" style="right:{GEN - orta + 4.5}mm;top:13mm;font-size:54pt;font-weight:800;letter-spacing:-.01em;line-height:1;color:#fff">MİA PARK</div>'
-              f'<div class="a tek" style="left:{orta + 4.5}mm;top:13mm;font-size:54pt;font-weight:800;letter-spacing:-.01em;line-height:1;color:{CAM}">OCEAN</div>'
-              f'<svg class="a" style="left:{orta - 62}mm;top:34.5mm;width:124mm;height:9mm" viewBox="0 0 124 9"><path d="M2 5c18-5 34 4 56 0s40-6 64 1" fill="none" stroke="{CAM}" stroke-width="1.5" stroke-linecap="round"/>'
-              f'<path d="M22 7.6c16-3 30 1.6 44-.4s26-3 40-.2" fill="none" stroke="#fff" stroke-width=".7" stroke-linecap="round" opacity=".8"/></svg>'
-              f'<div class="a tek" style="right:{GEN - orta + 5.5}mm;top:48mm;font-size:11.5pt;font-weight:600;letter-spacing:.36em;color:#fff">MODERN YAŞAM</div>'
-              f'<div class="a" style="left:{orta - 1.1}mm;top:50.2mm;width:2.2mm;height:2.2mm;border-radius:50%;background:{ALTIN}"></div>'
-              f'<div class="a tek" style="left:{orta + 7}mm;top:48mm;font-size:11.5pt;font-weight:600;letter-spacing:.36em;color:#fff">DOĞRU YATIRIM</div>')
-    kose = lambda x, yon: (f'<svg class="a" style="left:{x}mm;top:11mm;width:26mm;height:34mm" viewBox="0 0 26 34"><path d="{"M26 1H1v32" if yon == "sol" else "M0 1h25v32"}" '
-                           f'fill="none" stroke="{ALTIN}" stroke-width=".7"/></svg>')
-    baslik += kose(orta - 152, "sol") + kose(orta + 126, "sag")
+    sol, orta = X(1), X(2)                                   # 203, 403 (kırım)
+    lw = 88
+    lh = lw * LOGO_ORAN
+    baslik = (f'<img class="a" src="{LOGO}" style="left:{orta - lw / 2}mm;top:9mm;width:{lw}mm">'
+              f'<div class="a tek" style="right:{GEN - orta + 5.5}mm;top:{13 + lh}mm;font-size:11pt;font-weight:600;letter-spacing:.36em;color:{PETROL}">MODERN YAŞAM</div>'
+              f'<div class="a" style="left:{orta - 1.1}mm;top:{15.3 + lh}mm;width:2.2mm;height:2.2mm;border-radius:50%;background:{OKYANUS}"></div>'
+              f'<div class="a tek" style="left:{orta + 7}mm;top:{13 + lh}mm;font-size:11pt;font-weight:600;letter-spacing:.36em;color:{PETROL}">DOĞRU YATIRIM</div>')
+    kose = lambda x, yon: (f'<svg class="a" style="left:{x}mm;top:12mm;width:28mm;height:44mm" viewBox="0 0 28 44"><path d="{"M28 1H1v42" if yon == "sol" else "M0 1h27v42"}" '
+                           f'fill="none" stroke="{OKYANUS}" stroke-width=".6"/></svg>')
+    baslik += kose(orta - 150, "sol") + kose(orta + 122, "sag")
     # Görseldeki olanaklar: (x, ikon, iki satır yazı, çizginin indiği y)
     isaret = [(250, "katman", "Modern<br>Cephe Tasarımı", 176), (312, "balkon", "Geniş<br>Balkonlar", 186), (366, "gunes", "Mimari<br>LED Aydınlatma", 152),
-              (424, "dalga", "Süs<br>Havuzları", 209), (487, "agac", "Peyzaj ve<br>Yeşil Alanlar", 131), (556, "kahve", "Kafe ve<br>Ticari Alanlar", 228)]
+              (440, "dalga", "Süs<br>Havuzları", 209), (494, "agac", "Peyzaj ve<br>Yeşil Alanlar", 131), (556, "kahve", "Kafe ve<br>Ticari Alanlar", 228)]
     cagri = ""
+    y0 = 20 + lh
     for x, ik, yazi, y2 in isaret:
-        cagri += (f'<div class="a" style="left:{x - 24}mm;top:60mm;width:48mm;text-align:center;color:#fff">'
-                  f'<div style="display:flex;justify-content:center">{ikon(ik, 11, "#fff", 1.25)}</div>'
-                  f'<div style="margin-top:1.4mm;font-size:10pt;font-weight:600;line-height:1.26;text-shadow:0 .3mm 1.6mm rgba(6,20,50,.55)">{yazi}</div></div>'
-                  f'<div class="a" style="left:{x - .15}mm;top:84.5mm;width:.3mm;height:{y2 - 84.5}mm;background:rgba(255,255,255,.92)"></div>'
-                  f'<div class="a" style="left:{x - 1.1}mm;top:{y2 - 1.1}mm;width:2.2mm;height:2.2mm;border-radius:50%;background:#fff;box-shadow:0 0 0 .7mm rgba(255,255,255,.35)"></div>')
+        cagri += (f'<div class="a" style="left:{x - 24}mm;top:{y0}mm;width:48mm;display:flex;flex-direction:column;align-items:center">'
+                  f'<div style="width:12.5mm;height:12.5mm;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;'
+                  f'box-shadow:0 1mm 3mm rgba(4,40,58,.25);border:.3mm solid {AQUA}">{ikon(ik, 7.2, PETROL, 1.5)}</div>'
+                  f'<div style="margin-top:1.6mm;padding:1.3mm 2.8mm 1.1mm;border-radius:2mm;background:rgba(255,255,255,.94);text-align:center;'
+                  f'font-size:9.4pt;font-weight:700;line-height:1.24;color:{PETROL};box-shadow:0 1mm 3mm rgba(4,40,58,.2)">{yazi}</div></div>'
+                  f'<div class="a" style="left:{x - .15}mm;top:{y0 + 26}mm;width:.3mm;height:{y2 - y0 - 26}mm;background:rgba(255,255,255,.95);box-shadow:0 0 .6mm rgba(4,40,58,.5)"></div>'
+                  f'<div class="a" style="left:{x - 1.3}mm;top:{y2 - 1.3}mm;width:2.6mm;height:2.6mm;border-radius:50%;background:#fff;border:.5mm solid {PETROL}"></div>')
     return (f'<div class="a" style="left:{sol}mm;top:0;width:{2 * PANEL}mm;height:{YUK}mm;overflow:hidden">'
             f'<img src="file://{os.path.join(KAYNAK, "ana-gorsel.jpg")}" style="position:absolute;left:-2%;top:0;width:104%;height:100%;object-fit:cover;object-position:50% 40%">'
-            f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,29,66,.94) 0,rgba(12,36,84,.72) 17%,rgba(14,44,100,.18) 34%,rgba(14,44,100,0) 44%)"></div></div>'
+            f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,{KREM} 0,rgba(242,249,251,.97) 19%,rgba(242,249,251,.55) 27%,rgba(242,249,251,0) 37%)"></div></div>'
             + baslik + cagri)
 
 
@@ -232,15 +245,11 @@ def ic_bant():
 
 
 def dalgalar():
-    """Alt kenar: yan panellerde turkuaz ve lacivert dalga, ortada lacivert bant; hepsi tek altın çizgiyle bağlanır."""
-    y0 = 246
-    yol_lacivert = (f"M0,{YUK - y0} L0,46 C60,26 140,54 {KIRIM[0]},16 Q{KIRIM[1]},7 {KIRIM[2]},16 C{GEN - 140},54 {GEN - 60},26 {GEN},46 L{GEN},{YUK - y0} Z")
-    yol_altin = f"M0,46 C60,26 140,54 {KIRIM[0]},16 Q{KIRIM[1]},7 {KIRIM[2]},16 C{GEN - 140},54 {GEN - 60},26 {GEN},46"
-    cam_sol = f"M0,30 C50,12 120,44 {KIRIM[0]},10 L{KIRIM[0]},60 L0,60 Z"
-    cam_sag = f"M{GEN},30 C{GEN - 50},12 {GEN - 120},44 {KIRIM[2]},10 L{KIRIM[2]},60 L{GEN},60 Z"
-    return (f'<svg class="a" style="left:0;top:{y0}mm;width:{GEN}mm;height:{YUK - y0}mm" viewBox="0 0 {GEN} {YUK - y0}" preserveAspectRatio="none">'
-            f'<path d="{cam_sol}" fill="{CAM}" opacity=".9"/><path d="{cam_sag}" fill="{CAM}" opacity=".9"/>'
-            f'<path d="{yol_lacivert}" fill="{LACI2}"/><path d="{yol_altin}" fill="none" stroke="{ALTIN}" stroke-width=".8"/></svg>')
+    """Alt kenar: orta iki panelde koyu petrol bant; yan panellerde markanın kendi dalga görseli (yeniden çizilmez)."""
+    dh = (KIRIM[0] + 14) * 446 / 2332
+    return (f'<div class="a" style="left:{X(1)}mm;top:262mm;width:{2 * PANEL}mm;height:{YUK - 262}mm;background:{DERIN_G}"></div>'
+            f'<img class="a" src="{DALGA}" style="left:-8mm;top:{YUK - dh + 4}mm;width:{KIRIM[0] + 14}mm">'
+            f'<img class="a" src="{DALGA}" style="left:{KIRIM[2] - 6}mm;top:{YUK - dh + 4}mm;width:{GEN - KIRIM[2] + 14}mm;transform:scaleX(-1)">')
 
 
 def ic_yuz():
@@ -277,7 +286,7 @@ def harita_uret(yol):
             im.paste(Image.open(os.path.join(rd.ONBELLEK, f"{z}-{x}-{y}.jpg")).convert("RGB"), (round(x * 256 - x0), round(y * 256 - y0)))
     g = np.asarray(im.convert("L"), np.float32) / 255
     g = np.clip((g - .06) / .62, 0, 1) ** .85
-    duraklar = np.array([[9, 24, 56], [18, 52, 98], [52, 104, 142], [168, 205, 214]], np.float32)       # koyu deniz → açık yerleşim
+    duraklar = np.array([[4, 40, 58], [9, 86, 120], [44, 148, 180], [184, 228, 236]], np.float32)       # koyu deniz → açık yerleşim
     t = g * 3
     i = np.clip(t.astype(int), 0, 2)
     f = (t - i)[..., None]
@@ -305,23 +314,23 @@ def dis_harita(harita_jpg):
                                              f'stroke-width="{kal}" stroke-linecap="round" stroke-linejoin="round" {kesik}/>')
     h = (f'<div class="a" style="left:{sol}mm;top:0;width:{2 * PANEL}mm;height:{YUK}mm;overflow:hidden">'
          f'<img src="file://{harita_jpg}" style="position:absolute;left:0;top:0;width:100%;height:100%">'
-         f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,29,66,.72) 0,rgba(10,29,66,0) 22%,rgba(10,29,66,0) 80%,rgba(10,29,66,.6) 100%)"></div></div>'
+         f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,40,58,.78) 0,rgba(4,40,58,0) 24%,rgba(4,40,58,0) 78%,rgba(4,40,58,.65) 100%)"></div></div>'
          f'<svg class="a" style="left:0;top:0;width:{GEN}mm;height:{YUK}mm;overflow:hidden" viewBox="0 0 {GEN} {YUK}">'
          f'<defs><clipPath id="hk"><rect x="{sol}" y="0" width="{2 * PANEL}" height="{YUK}"/></clipPath></defs><g clip-path="url(#hk)">'
-         + cizgi(rd.HAT_KUZEY, "#ffffff", 1.1) + cizgi(rd.HAT_GUNEY, "#f2c764", 1.4, 'stroke-dasharray="3.2 2.2"') + '</g></svg>')
+         + cizgi(rd.HAT_KUZEY, AQUA, 1.2) + cizgi(rd.HAT_GUNEY, "#ffffff", 1.5, 'stroke-dasharray="3.2 2.2"') + '</g></svg>')
     for ad, sure, la, lo, taraf, dy in YAKIN:
         x, y = konum(la, lo)
         yer = f"right:{GEN - x + 3.4:.1f}mm" if taraf == "sol" else f"left:{x + 3.4:.1f}mm"
-        h += (f'<div class="a" style="left:{x - 1.6:.1f}mm;top:{y - 1.6:.1f}mm;width:3.2mm;height:3.2mm;border-radius:50%;background:#fff;border:.8mm solid {ALTIN}"></div>'
+        h += (f'<div class="a" style="left:{x - 1.6:.1f}mm;top:{y - 1.6:.1f}mm;width:3.2mm;height:3.2mm;border-radius:50%;background:#fff;border:.8mm solid {PETROL}"></div>'
               f'<div class="a tek" style="top:{y + dy - 3.6:.1f}mm;{yer};display:flex;border-radius:1.8mm;overflow:hidden;box-shadow:0 1mm 2.6mm rgba(4,12,30,.5)">'
               f'<span style="background:#fff;color:{LACI};font-size:8.6pt;font-weight:700;padding:1.6mm 2.6mm 1.4mm">{ad}</span>'
-              f'<span style="background:{ALTIN};color:{LACI2};font-size:8.6pt;font-weight:800;padding:1.6mm 2.2mm 1.4mm">{sure}</span></div>')
-    lg = 30
-    h += (f'<div class="a" style="left:{px - 2.6:.1f}mm;top:{py - 2.6:.1f}mm;width:5.2mm;height:5.2mm;border-radius:50%;background:{LACI};border:1mm solid {ALTIN};box-shadow:0 0 0 .8mm rgba(255,255,255,.9)"></div>'
-          f'<div class="a" style="left:{px - lg / 2 - 3:.1f}mm;top:{py + 6.4:.1f}mm">'
-          f'<div style="position:absolute;left:{lg / 2 + 3 - 2.2:.1f}mm;top:-1.9mm;width:4.4mm;height:4.4mm;background:{LACI};border-left:.5mm solid {ALTIN};border-top:.5mm solid {ALTIN};transform:rotate(45deg)"></div>'
-          f'<div style="position:relative;padding:3mm 3mm 2.4mm;border-radius:3mm;background:{LACI};border:.5mm solid {ALTIN};box-shadow:0 2mm 5mm rgba(0,0,0,.5)">'
-          f'<img src="{V("mia-beyaz.svg")}" style="display:block;width:{lg}mm"></div></div>')
+              f'<span style="background:{PETROL};color:#fff;font-size:8.6pt;font-weight:700;padding:1.6mm 2.2mm 1.4mm">{sure}</span></div>')
+    lg = 34
+    h += (f'<div class="a" style="left:{px - 2.6:.1f}mm;top:{py - 2.6:.1f}mm;width:5.2mm;height:5.2mm;border-radius:50%;background:{PETROL};border:1mm solid #fff;box-shadow:0 0 0 .8mm rgba(4,40,58,.55)"></div>'
+          f'<div class="a" style="left:{px - lg / 2 - 3.5:.1f}mm;top:{py + 6.4:.1f}mm">'
+          f'<div style="position:absolute;left:{lg / 2 + 3.5 - 2.2:.1f}mm;top:-1.9mm;width:4.4mm;height:4.4mm;background:#fff;border-left:.4mm solid {AQUA};border-top:.4mm solid {AQUA};transform:rotate(45deg)"></div>'
+          f'<div style="position:relative;padding:3mm 3.5mm 2.6mm;border-radius:3mm;background:#fff;border:.4mm solid {AQUA};box-shadow:0 2mm 5mm rgba(0,0,0,.45)">'
+          f'<img src="{LOGO}" style="display:block;width:{lg}mm"></div></div>')
     # Konum paneli başlığı ve açıklamalar (sağdaki harita paneli)
     bx = X(2, 12)
     gosterge = lambda renk, ad, durum, kesik=False: (f'<div style="display:flex;align-items:center;gap:2.6mm"><span style="width:11mm;height:0;border-top:1mm {"dashed" if kesik else "solid"} {renk}"></span>'
@@ -330,8 +339,8 @@ def dis_harita(harita_jpg):
     h += (f'<div class="a" style="left:{bx}mm;top:13mm;color:#fff"><div class="ust tek" style="font-size:8pt;color:{ALTIN}">Konum</div>'
           f'<div class="fr tek" style="margin-top:1.8mm;font-size:23pt;line-height:1.08">Her yere<br>dakikalar içinde</div>'
           f'<div style="margin-top:2.6mm;font-size:8.4pt;font-weight:500;line-height:1.5;max-width:92mm;opacity:.92">İzmit MİA Bölgesi: sahile, alışveriş merkezlerine, hastaneye ve ana yollara dakikalar içinde.</div></div>'
-          f'<div class="a" style="left:{X(2, 100)}mm;top:246mm;display:flex;flex-direction:column;gap:2.4mm;padding:4.4mm 5mm 4mm;border-radius:3mm;background:rgba(10,29,66,.82);border:.25mm solid rgba(201,165,91,.6)">'
-          + gosterge("#f2c764", "GÜNEY METRO HATTI", "PLANLANAN", True) + gosterge("#ffffff", "KÖRFEZRAY", "YAPIM AŞAMASINDA")
+          f'<div class="a" style="left:{X(2, 100)}mm;top:246mm;display:flex;flex-direction:column;gap:2.4mm;padding:4.4mm 5mm 4mm;border-radius:3mm;background:rgba(4,40,58,.86);border:.25mm solid rgba(146,209,223,.6)">'
+          + gosterge("#ffffff", "GÜNEY METRO HATTI", "PLANLANAN", True) + gosterge(AQUA, "KÖRFEZRAY", "YAPIM AŞAMASINDA")
           + f'<div class="tek" style="margin-top:1mm;font-size:8.4pt;font-weight:600;color:#fff">D-100 Karayolu <b style="color:{ALTIN}">1 dk</b> &nbsp;·&nbsp; TEM Otoyolu <b style="color:{ALTIN}">5 dk</b></div></div>'
           f'<div class="a tek" style="left:{KIRIM[1] + 6}mm;top:{YUK - 9}mm;width:{PANEL - 12}mm;text-align:right;font-size:5pt;font-weight:500;color:rgba(255,255,255,.7)">'
           f'Uydu görüntüsü: Copernicus Sentinel-2 (2016) · EOX, CC BY 4.0. Metro güzergâhları yaklaşıktır.</div>')
@@ -342,19 +351,19 @@ def dis_fiyat():
     x, w = X(1, 13), PANEL - 26
     satir = ""
     for i, (tip, ad, pesin, ayda) in enumerate(FIYAT):
-        hucre = lambda et, deger: (f'<div style="width:50mm"><div class="tek" style="font-size:7pt;font-weight:700;letter-spacing:.22em;color:{ALTIN}">{et}</div>'
+        hucre = lambda et, deger: (f'<div style="width:50mm"><div class="tek" style="font-size:7pt;font-weight:700;letter-spacing:.22em;color:{OKYANUS}">{et}</div>'
                                    f'<div class="tek" style="margin-top:1.4mm;font-size:19pt;font-weight:800;line-height:1;color:{LACI}">{deger}<span style="font-size:10pt;margin-left:1.2mm">TL</span></div></div>')
-        satir += (f'<div style="display:flex;align-items:center;padding:11.5mm 0;{"border-top:.25mm solid rgba(201,165,91,.55);" if i else ""}">'
+        satir += (f'<div style="display:flex;align-items:center;padding:11.5mm 0;{"border-top:.25mm solid rgba(146,209,223,.7);" if i else ""}">'
                   f'<div style="width:54mm"><div class="fr tek" style="font-size:31pt;line-height:1;color:{LACI}">{tip}</div>'
                   f'<div class="tek" style="margin-top:1.6mm;font-size:10.5pt;font-weight:600;color:{LACI}">{ad}</div></div>'
                   + hucre("PEŞİNAT", pesin) + hucre("AYLIK TAKSİT", ayda) + "</div>")
     yok = "".join(f'<div class="tek" style="display:flex;align-items:center;gap:2.2mm;font-size:9.4pt;font-weight:700;color:#fff">{eski.tik(4.6, ALTIN, LACI2)}{t}</div>'
                   for t in ("Banka yok", "Faiz yok", "Kefil yok", "Ara ödeme yok", "Ara zam yok", "Vade farkı yok"))
     return (f'<div class="a" style="left:{x}mm;top:15mm;width:{w}mm;height:276mm;border-radius:5mm;background:#fff;box-shadow:0 3mm 9mm rgba(4,12,30,.5);overflow:hidden">'
-            f'<div style="padding:10mm 11mm 0"><div class="ust tek" style="font-size:8pt;color:{ALTIN}">Fiyat ve Ödeme Planı</div>'
+            f'<div style="padding:10mm 11mm 0"><div class="ust tek" style="font-size:8pt;color:{OKYANUS}">Fiyat ve Ödeme Planı</div>'
             f'<div class="fr" style="margin-top:2.2mm;font-size:23pt;line-height:1.1;color:{LACI}">60 ay sabit taksitle<br>ev sahibi olun</div>'
             f'<div style="margin-top:6mm">{satir}</div></div>'
-            f'<div style="position:absolute;left:0;right:0;bottom:0;height:98mm;background:{LACI};padding:9mm 11mm 0">'
+            f'<div style="position:absolute;left:0;right:0;bottom:0;height:98mm;background:{YUZEY_G};padding:9mm 11mm 0">'
             f'<div class="tek" style="font-size:19pt;font-weight:800;letter-spacing:.04em;color:{ALTIN}">60 AY SABİT TAKSİT</div>'
             f'<div style="margin-top:1.6mm;font-size:8.8pt;font-weight:500;line-height:1.5;color:#fff;opacity:.92">Peşinatınızı ödeyin, kalanını 60 ay boyunca değişmeyen taksitlerle tamamlayın.</div>'
             f'<div style="margin-top:6mm;display:grid;grid-template-columns:1fr 1fr;gap:3.6mm 4mm">{yok}</div>'
@@ -364,50 +373,51 @@ def dis_fiyat():
 
 def dis_on_kapak():
     x = KIRIM[2]
-    return (f'<div class="a" style="left:{x}mm;top:0;width:{GEN - x}mm;height:{YUK}mm;overflow:hidden;background:{LACI2}">'
-            f'<img src="file://{os.path.join(KAYNAK, "kapak.jpg")}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 58%">'
-            f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,29,66,.9) 0,rgba(10,29,66,.35) 30%,rgba(10,29,66,0) 46%,rgba(10,29,66,0) 60%,rgba(10,29,66,.94) 80%,{LACI2} 100%)"></div></div>'
-            f'<div class="a" style="left:{x}mm;top:24mm;width:{PANEL}mm;display:flex;justify-content:center"><img src="{V("mia-beyaz.svg")}" style="width:56mm"></div>'
-            f'<div class="a tek" style="left:{x}mm;top:72mm;width:{PANEL}mm;text-align:center;font-size:10pt;font-weight:600;letter-spacing:.36em;padding-left:.36em;color:#fff">MODERN YAŞAM <span style="color:{ALTIN}">•</span> DOĞRU YATIRIM</div>'
+    lw = 100
+    return (f'<div class="a" style="left:{x}mm;top:0;width:{GEN - x}mm;height:{YUK}mm;overflow:hidden;background:{DERIN}">'
+            f'<img src="file://{os.path.join(KAYNAK, "kapak.jpg")}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%">'
+            f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,{KREM} 0,rgba(242,249,251,.97) 26%,rgba(242,249,251,.5) 34%,rgba(242,249,251,0) 42%,'
+            f'rgba(4,40,58,0) 58%,rgba(4,40,58,.8) 72%,rgba(4,40,58,.97) 84%,{DERIN} 100%)"></div></div>'
+            f'<img class="a" src="{LOGO}" style="left:{x + (PANEL - lw) / 2}mm;top:20mm;width:{lw}mm">'
+            f'<div class="a tek" style="left:{x}mm;top:{27 + lw * LOGO_ORAN}mm;width:{PANEL}mm;text-align:center;font-size:10pt;font-weight:600;letter-spacing:.36em;padding-left:.36em;color:{PETROL}">'
+            f'MODERN YAŞAM <span style="color:{OKYANUS}">•</span> DOĞRU YATIRIM</div>'
             f'<div class="a" style="left:{x}mm;top:226mm;width:{PANEL}mm;text-align:center;color:#fff">'
-            f'<div class="ust tek" style="font-size:8pt;color:{ALTIN};padding-left:.3em">İzmit · MİA Bölgesi</div>'
-            f'<div class="tek" style="margin-top:3mm;font-size:27pt;font-weight:800;letter-spacing:.02em;line-height:1">60 AY SABİT TAKSİT</div>'
-            f'<div class="tek" style="margin-top:3mm;font-size:11pt;font-weight:500">699.000 TL\'den başlayan peşinat</div>'
-            f'<div style="margin:5mm auto 0;width:24mm;height:.3mm;background:{ALTIN}"></div>'
+            f'<div class="ust tek" style="font-size:8pt;color:{AQUA};padding-left:.3em">İzmit · MİA Bölgesi</div>'
+            f'<div class="tek" style="margin-top:3mm;font-size:27pt;font-weight:700;letter-spacing:.02em;line-height:1">60 AY SABİT TAKSİT</div>'
+            f'<div class="tek" style="margin-top:3mm;font-size:11pt;font-weight:600">699.000 TL\'den başlayan peşinat</div>'
+            f'<div style="margin:5mm auto 0;width:24mm;height:.4mm;background:{METAL}"></div>'
             f'<div style="margin-top:4.6mm;display:flex;align-items:center;justify-content:center;gap:2.6mm">{eski.ikon("tel", 6.4, "#fff", 2)}'
-            f'<span class="tek" style="font-size:20pt;font-weight:800;letter-spacing:.03em">444 10 58</span></div></div>')
+            f'<span class="tek" style="font-size:20pt;font-weight:700;letter-spacing:.03em">444 10 58</span></div></div>')
 
 
 def dis_arka_kapak(qr, ykb):
-    satir = lambda i, t: f'<div style="display:flex;align-items:flex-start;gap:3.6mm;font-size:10pt;font-weight:600;color:{LACI};line-height:1.45">{i}<span>{t}</span></div>'
-    logo = lambda etiket, img: (f'<div style="flex:1;text-align:center"><div class="tek" style="font-size:6pt;font-weight:700;letter-spacing:.16em;color:#7a8499">{etiket}</div>'
+    satir = lambda i, t: f'<div style="display:flex;align-items:flex-start;gap:3.6mm;font-size:10pt;font-weight:600;color:{PETROL};line-height:1.45">{i}<span>{t}</span></div>'
+    logo = lambda etiket, img: (f'<div style="flex:1;text-align:center"><div class="tek" style="font-size:6pt;font-weight:700;letter-spacing:.16em;color:#52717e">{etiket}</div>'
                                 f'<div style="height:20mm;display:flex;align-items:center;justify-content:center;margin-top:1.6mm">{img}</div></div>')
-    w = KIRIM[0]
-    return (f'<div class="a" style="left:0;top:0;width:{w}mm;height:{YUK}mm;background:#fff;overflow:hidden">'
-            f'<div style="position:absolute;left:-14%;right:-14%;top:-30mm;height:138mm;border-radius:0 0 50% 50%;overflow:hidden;background:{LACI2}">'
-            f'<img src="file://{os.path.join(KAYNAK, "kapak.jpg")}" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%;filter:blur(1.2mm)">'
-            f'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,29,66,.96) 35%,rgba(16,43,92,.9) 100%)"></div></div></div>'
-            f'<div class="a" style="left:{TASMA}mm;top:14mm;width:{PANEL}mm;display:flex;justify-content:center"><img src="{V("mia-beyaz.svg")}" style="width:36mm"></div>'
-            f'<div class="a" style="left:{TASMA}mm;top:46mm;width:{PANEL}mm;text-align:center;color:#fff">'
-            f'<div class="fr tek" style="font-size:15pt;font-weight:600;font-style:italic;color:{ALTIN}">Sizi bekliyoruz</div>'
-            f'<div class="tek" style="margin-top:2mm;font-size:40pt;font-weight:800;letter-spacing:.01em;line-height:1">444 10 58</div>'
+    lw = 74
+    return (f'<div class="a" style="left:0;top:0;width:{KIRIM[0]}mm;height:{YUK}mm;background:linear-gradient(180deg,#fff 0,{KREM} 100%)"></div>'
+            f'<img class="a" src="{LOGO}" style="left:{X(0, (PANEL - lw) / 2)}mm;top:15mm;width:{lw}mm">'
+            f'<div class="a" style="left:{X(0, 16)}mm;top:{24 + lw * LOGO_ORAN}mm;width:{PANEL - 32}mm;border-radius:5mm;background:{YUZEY_G};padding:7mm 0 6.4mm;text-align:center;color:#fff;'
+            f'box-shadow:0 2.4mm 6mm rgba(4,40,58,.3)">'
+            f'<div class="fr tek" style="font-size:15pt;font-weight:600;font-style:italic;color:{AQUA}">Sizi bekliyoruz</div>'
+            f'<div class="tek" style="margin-top:2mm;font-size:40pt;font-weight:700;letter-spacing:.01em;line-height:1">444 10 58</div>'
             f'<div style="margin-top:3.4mm;display:flex;align-items:center;justify-content:center;gap:2.4mm">{eski.WA.format(s=6.4)}'
             f'<span class="tek" style="font-size:15pt;font-weight:700;letter-spacing:.03em">0540 028 00 41</span></div></div>'
-            f'<div class="a" style="left:{X(0, 18)}mm;top:124mm;width:{PANEL - 36}mm">'
-            f'<div class="ust tek" style="font-size:8pt;color:{ALTIN}">Satış Ofisi</div>'
-            f'<div style="margin-top:4mm;display:flex;flex-direction:column;gap:3.4mm">'
-            + satir(ikon("pin", 6, LACI), "Ömerağa Mah. Abdurrahman Yüksel Cad.<br>Bana Bak Ap. No:15/4 İzmit / Kocaeli")
-            + satir(ikon("tel", 6, LACI), "0541 128 40 41") + satir(ikon("kure", 6, LACI), "miaparkocean.com") + satir(ikon("insta", 6, LACI), "@miaparkocean")
+            f'<div class="a" style="left:{X(0, 18)}mm;top:{82 + lw * LOGO_ORAN}mm;width:{PANEL - 36}mm">'
+            f'<div class="ust tek" style="font-size:8pt;color:{OKYANUS}">Satış Ofisi</div>'
+            f'<div style="margin-top:4mm;display:flex;flex-direction:column;gap:3.2mm">'
+            + satir(ikon("pin", 6, PETROL), "Ömerağa Mah. Abdurrahman Yüksel Cad.<br>Bana Bak Ap. No:15/4 İzmit / Kocaeli")
+            + satir(ikon("tel", 6, PETROL), "0541 128 40 41") + satir(ikon("kure", 6, PETROL), "miaparkocean.com") + satir(ikon("insta", 6, PETROL), "@miaparkocean")
             + f'</div></div>'
-            f'<div class="a" style="left:{X(0, 18)}mm;top:187mm;width:{PANEL - 36}mm;border-radius:4mm;background:{KREM};border:.3mm solid rgba(201,165,91,.6);padding:5mm;display:flex;align-items:center;gap:6mm">'
-            f'<img src="file://{qr}" style="width:36mm;height:36mm;flex:none">'
-            f'<div><div class="fr" style="font-size:13pt;color:{LACI};line-height:1.15">Projeyi telefonunuzdan inceleyin</div>'
-            f'<div style="margin-top:2mm;font-size:8pt;font-weight:500;line-height:1.45;color:#3b4763">Kamerayı kodun üzerine tutun; daire tipleri, kat planları ve galeri karşınızda.</div></div></div>'
-            f'<div class="a" style="left:{X(0, 14)}mm;top:243mm;width:{PANEL - 28}mm;display:flex;align-items:flex-start;gap:2mm">'
-            + logo("YAPIMCI", f'<img src="file://{ykb}" style="height:20mm">') + logo("MÜTEAHHİT", f'<img src="{V("tilda.svg")}" style="width:38mm">')
-            + logo("TEK YETKİLİ SATICI", f'<img src="{V("ocean-lacivert.svg")}" style="width:32mm">')
+            f'<div class="a" style="left:{X(0, 18)}mm;top:196mm;width:{PANEL - 36}mm;border-radius:4mm;background:#fff;border:.3mm solid {AQUA};padding:5mm;display:flex;align-items:center;gap:6mm">'
+            f'<img src="file://{qr}" style="width:34mm;height:34mm;flex:none">'
+            f'<div><div class="fr" style="font-size:13pt;font-weight:600;color:{PETROL};line-height:1.15">Projeyi telefonunuzdan inceleyin</div>'
+            f'<div style="margin-top:2mm;font-size:8pt;font-weight:400;line-height:1.45;color:#29505f">Kamerayı kodun üzerine tutun; daire tipleri, kat planları ve galeri karşınızda.</div></div></div>'
+            f'<div class="a" style="left:{X(0, 14)}mm;top:249mm;width:{PANEL - 28}mm;display:flex;align-items:flex-start;gap:2mm">'
+            + logo("YAPIMCI", f'<img src="file://{ykb}" style="height:19mm">') + logo("MÜTEAHHİT", f'<img src="{V("tilda.svg")}" style="width:36mm">')
+            + logo("TEK YETKİLİ SATICI", f'<img src="{V("ocean-lacivert.svg")}" style="width:30mm">')
             + f'</div>'
-            f'<div class="a" style="left:{X(0, 16)}mm;top:276mm;width:{PANEL - 32}mm;font-size:5.6pt;font-weight:500;line-height:1.5;color:#7a8499;text-align:center">'
+            f'<div class="a" style="left:{X(0, 16)}mm;top:281mm;width:{PANEL - 32}mm;font-size:5.6pt;font-weight:400;line-height:1.5;color:#52717e;text-align:center">'
             f'Yapımcı: S.S. Yahya Kaptan Birlik Yapı Kooperatifi · Müteahhit: Tilda İnşaat · Tek Yetkili Satıcı: Ocean Gayrimenkul. '
             f'Görseller tanıtım amaçlıdır; uygulamada değişiklik olabilir.</div>')
 
@@ -447,18 +457,71 @@ const { chromium } = require("playwright");
 """
 
 
+def rgb_hsv(a):
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    mx, mn = a.max(-1), a.min(-1)
+    d = mx - mn + 1e-9
+    h = np.where(mx == r, ((g - b) / d) % 6, np.where(mx == g, (b - r) / d + 2, (r - g) / d + 4)) * 60
+    return np.stack([h, np.where(mx > 0, (mx - mn) / (mx + 1e-9), 0), mx], -1)
+
+
+def hsv_rgb(x):
+    h, s, v = x[..., 0] / 60, x[..., 1], x[..., 2]
+    c = v * s
+    k = c * (1 - np.abs(h % 2 - 1))
+    m = v - c
+    i = np.floor(h).astype(int) % 6
+    z = np.zeros_like(h)
+    r = np.choose(i, [c, k, z, z, k, c]); g = np.choose(i, [k, c, c, k, z, z]); b = np.choose(i, [z, z, k, c, c, k])
+    return np.stack([r + m, g + m, b + m], -1)
+
+
+def markaya_cek(im, gok=True):
+    """Pembe-lila-mor tonları (çiçekler, yastıklar) soluk beyaza çeker; gökyüzü mavisini marka petrol-mavisine yaklaştırır.
+    Pembe ailesi: yeşil kanal en düşük, kırmızı ve mavi ondan yüksek (turuncu, ten ve ahşapta mavi en düşüktür, etkilenmez)."""
+    a = np.asarray(im.convert("RGB"), np.float32) / 255
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    pembe = np.clip((np.minimum(r, b) - g + .004) / .03, 0, 1) * np.clip((r - .2) / .15, 0, 1) * np.clip((r - g) / .04, 0, 1)
+    if gok:
+        # Altın saat ışığı pembeyi somon/gül rengine kaydırır (mavi en düşük kanal olur); bunları tonla yakala:
+        # 282°–372° (12°) arası tam, 22°'ye kadar söner. Turuncu, ahşap ve ten (25°+) etkilenmez.
+        x0 = rgb_hsv(a)
+        mesafe = np.abs(((x0[..., 0] - 327 + 180) % 360) - 180)
+        pembe = np.maximum(pembe, np.clip((55 - mesafe) / 10, 0, 1) * np.clip((x0[..., 1] - .1) / .1, 0, 1))
+    gri = (r * .3 + g * .59 + b * .11)[..., None]
+    beyaz = np.clip(gri * 1.08 + .04, 0, 1) * np.array([.97, .99, 1.0], np.float32)       # hafif soğuk beyaz
+    a = a * (1 - pembe[..., None]) + beyaz * pembe[..., None]
+    if gok:
+        x = rgb_hsv(a)
+        h = x[..., 0]
+        mavi = np.clip(1 - np.abs(h - 218) / 26, 0, 1)                                 # 192–244° gökyüzü
+        x[..., 0] = h - (h - 200) * .55 * mavi
+        x[..., 1] *= 1 - .14 * mavi
+        a = hsv_rgb(x)
+    return Image.fromarray((np.clip(a, 0, 1) * 255 + .5).astype(np.uint8))
+
+
 def hazirla(g):
     """Kaynak görselleri baskıya hazırlar: ana görsel JPEG, palmiye beyazı saydam, kapak kırpılıp büyütülür."""
-    ana = Image.open(os.path.join(KAYNAK, "ana-gorsel.png")).convert("RGB")
+    global LOGO_ORAN
+    ana = markaya_cek(Image.open(os.path.join(KAYNAK, "ana-gorsel.png")))
     ana.save(os.path.join(KAYNAK, "ana-gorsel.jpg"), quality=93, subsampling=0)
+    for ad in ("plan-1-0", "plan-1-1", "plan-2-1-alt", "plan-2-1-ust"):                 # planlardaki pembe yastık/halılar
+        p = Image.open(os.path.join(KAYNAK, ad + ".png")).convert("RGBA")
+        m = markaya_cek(p, gok=False).convert("RGBA")
+        m.putalpha(p.getchannel("A"))
+        m.save(os.path.join(KAYNAK, ad + "-m.png"))
+    lg = Image.open(os.path.join(ROOT, "public", "brand", "logo-mia-2026.png")).convert("RGBA")
+    lg = lg.crop(lg.getchannel("A").point(lambda v: 255 if v > 12 else 0).getbbox())
+    lg.save(os.path.join(KAYNAK, "logo-mia.png"))
+    LOGO_ORAN = lg.height / lg.width
     p = np.asarray(Image.open(os.path.join(KAYNAK, "palmiye.png")).convert("RGB"), np.float32)
     alfa = np.clip((250 - p.min(axis=2)) * 5.0, 0, 255)
     Image.fromarray(np.dstack([p, alfa]).astype(np.uint8), "RGBA").save(os.path.join(KAYNAK, "palmiye-saydam.png"))
-    k = Image.open(os.path.join(ROOT, "film-source", "higgsfield-kare", "06-aksam.jpg")).convert("RGB")
+    k = ana                                                            # ön kapak: aynı gündüz görselinin orta kesiti (gün batımı yok)
     hedef = (GEN - KIRIM[2]) / YUK                                    # kapak paneli oranı (taşmalı)
     w = round(k.height * hedef)
-    k = k.crop(((k.width - w) // 2, 0, (k.width - w) // 2 + w, k.height)) if w <= k.width else k
-    k = k.resize((round(k.width * 1.5), round(k.height * 1.5)), Image.LANCZOS).filter(ImageFilter.UnsharpMask(1.2, 40, 2))
+    k = k.crop(((k.width - w) // 2, 0, (k.width - w) // 2 + w, k.height))
     k.save(os.path.join(KAYNAK, "kapak.jpg"), quality=92)
     qr = os.path.join(g, "qr.svg")
     segno.make("https://miaparkocean.com/", error="q").save(qr, scale=10, border=1, dark=LACI2, light=None)
