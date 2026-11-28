@@ -76,17 +76,25 @@ SESLENDIRME = [
     "Bir artı sıfır, altı yüz doksan dokuz bin lira peşinatla.",
     "Bir artı bir, dokuz yüz doksan dokuz bin lira peşinatla.",
     "İki artı bir, iki milyon lira peşinatla.",
-    "Ayda yirmi dokuz bin dokuz yüz liradan başlayan, altmış ay sabit taksit.",
-    "Banka yok! Faiz yok! Kefil yok! Ara ödeme yok!",
-    "Hemen arayın: dört yüz kırk dört, on, elli sekiz.",
+    "Geniş peyzaj alanları, dekoratif süs havuzları, yürüyüş ve dinlenme yolları.",
+    "Kapalı otopark, yedi yirmi dört güvenlik.",
+    "Yarı olimpik kapalı yüzme havuzu, fitnes salonu, sauna, Türk hamamı ve çocuk oyun parkı.",
+    "Altmış ay sabit taksitle ev sahibi olun. Hemen arayın: dört yüz kırk dört, on, elli sekiz.",
 ]
 # (sahne, en az süre, seslendirme no, seslendirmeden sonraki pay, seslendirmenin sahne içindeki gecikmesi)
 # pay None ise sahne seslendirmeye göre uzamaz (satır sonraki sahneye taşabilir).
 SAHNE = [
     ("uydu", 3.6, 1, None, 1.0), ("yakin", 7.2, 2, None, 2.3), ("sokak", 3.6, 3, .7, .45), ("yapim", 7.0, 4, None, 1.4),
     ("drone", 3.0, None, None, 0), ("iceri", 2.2, None, None, 0), ("d10", 3.9, 5, .2, .15), ("d11", 3.9, 6, .2, .15),
-    ("d21", 3.5, 7, .2, .15), ("balkon", 3.4, 8, .2, .15), ("avlu", 4.6, 9, .5, .2), ("kapanis", 5.6, 10, 1.3, .2),
+    ("d21", 3.5, 7, .2, .15), ("ozl1", 4.2, 8, .3, .25), ("ozl2", 3.0, 9, .3, .25), ("ozl3", 5.5, 10, .45, .25),
+    ("kapanis", 5.6, 11, 1.3, .2),
 ]
+# Site özellikleri: (ekrandaki yazı, maddenin seslendirme satırı içinde başladığı an — satır süresine oran)
+OZELLIK = {
+    "ozl1": [("Geniş peyzaj alanları", 0.0), ("Dekoratif süs havuzları", .33), ("Yürüyüş ve dinlenme yolları", .68)],
+    "ozl2": [("Kapalı otopark", 0.0), ("7/24 güvenlik", .33)],
+    "ozl3": [("Yarı olimpik kapalı yüzme havuzu", 0.0), ("Fitness salonu", .35), ("Sauna", .53), ("Türk hamamı", .67), ("Çocuk oyun parkı", .82)],
+}
 # "Banka yok! Faiz yok! Kefil yok! Ara ödeme yok!" satırında her "yok"un başladığı an (satır süresine oran)
 DAMGA_ORAN = (0.0, .22, .485, .735)
 
@@ -316,6 +324,19 @@ def ikili(y, ust, alt, g, ust_boy=84, alt_boy=50):
       </div></div>"""
 
 
+def ozellikler(sahne, vo):
+    """Site özellikleri: seslendirme her maddeyi söylerken o satır belirir (lacivert şerit + altın onay işareti)."""
+    g0 = VO_BAS.get(vo, T[sahne] + .3) - T[sahne]
+    uz = vo_sure(vo) or 4.0
+    satir = ""
+    for i, (metin, oran) in enumerate(OZELLIK[sahne]):
+        satir += f"""<div class="a pat" style="--g:{max(.05, g0 + oran * uz - .12):.2f};left:54px;top:{470 + i * 116}px;transform-origin:0 50%;display:flex;align-items:center;gap:20px;
+            padding:17px 34px 15px 18px;border-radius:50px;background:rgba({int(KOYU[1:3], 16)},{int(KOYU[3:5], 16)},{int(KOYU[5:7], 16)},.94);box-shadow:0 14px 30px rgba(8,20,45,.4)">
+          <svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="29" fill="{VURGU}"/><path d="M16 30l9 9 17-19" fill="none" stroke="{KOYU}" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="tek" style="font-size:43px;font-weight:800;color:#fff;white-space:nowrap">{metin}</span></div>"""
+    return satir
+
+
 def hap(x, y, gen, metin, boy, g, renk=KIRMIZI, yazi="#fff", sinif="pat"):
     return (f'<div class="a tek {sinif}" style="--g:{g:.2f};left:{x}px;top:{y}px;width:{gen}px;padding:{round(boy * .62)}px 0;'
             f'border-radius:{round(boy * .72)}px;background:{renk};color:{yazi};text-align:center;font-size:{boy}px;font-weight:800;'
@@ -464,8 +485,7 @@ def html():
         + blok(T["d10"], SURE["d10"], fiyat_karti("1+0 DAİRELER", "699.000", "29.900", SURE["d10"]))
         + blok(T["d11"], SURE["d11"], fiyat_karti("1+1 DAİRELER", "999.000", "39.900", SURE["d11"]))
         + blok(T["d21"], SURE["d21"], fiyat_karti("2+1 DAİRELER", "2.000.000", "50.000", SURE["d21"]))
-        + blok(T["balkon"], SURE["balkon"], ikili(880, "AYDA 29.900 TL'DEN", "60 AY SABİT TAKSİT", .25, 64, 70))
-        + blok(T["avlu"], SURE["avlu"], damgalar(VO_BAS.get(9, T["avlu"] + .2) - T["avlu"], vo_sure(9) or 3.6))
+        + "".join(blok(T[ad], SURE[ad], ozellikler(ad, vo)) for ad, vo in (("ozl1", 8), ("ozl2", 9), ("ozl3", 10)))
         + blok(T["kapanis"], SURE["kapanis"], kapanis, "sahne son")
     )
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{yy.css(H)}
@@ -518,8 +538,9 @@ ZEMIN = [
     ("d10", "07-1-0-salon", 0.2, 1.15),
     ("d11", "09-1-1-salon", 0.2, 1.15),
     ("d21", "11-2-1-salon", 0.2, 1.15),
-    ("balkon", "08-1-0-balkon", 0.3, 1.1),
-    ("avlu", "04-avlu", 0.2, 1.0),
+    ("ozl1", "04-avlu", 0.0, "sigdir"),
+    ("ozl2", "02-yoldan-giris", 0.3, 1.0),
+    ("ozl3", "23-tepeden-suzulme", 0.0, "sigdir"),
     ("kapanis", "06-aksam", 0.0, 1.0, (1.5, 640)),
 ]
 
@@ -548,7 +569,8 @@ def zemin(gecici):
         carpan = (sure + .06) / var if hiz == "sigdir" else max(1 / hiz, (sure + .06) / var)
         z, ust = kirp[0] if kirp else (1.0, 0)
         girdi += ["-ss", f"{kbas:.3f}", "-i", yol]
-        f.append(f"[{i}:v]setpts={carpan:.4f}*PTS,fps={FPS},scale={round(W * z / 2) * 2}:{round(H * z / 2) * 2}:flags=lanczos,"
+        kare = (f"minterpolate=fps={FPS}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1" if carpan > 1.02 else f"fps={FPS}")   # yavaşlatmada takılma olmasın
+        f.append(f"[{i}:v]setpts={carpan:.4f}*PTS,{kare},scale={round(W * z / 2) * 2}:{round(H * z / 2) * 2}:flags=lanczos,"
                  f"crop={W}:{H}:(iw-{W})/2:{round(ust * z)},{son_ek}")
     onceki = "v0"
     for i in range(1, len(ZEMIN)):
@@ -593,6 +615,29 @@ def vurus(sure=.7):
     return np.stack([g, g], axis=1).astype(np.float32)
 
 
+def muzik_uzat(ham, hedef):
+    """Müzik filmden kısaysa ortasındaki bir bölümü ritme oturan bir uzunlukta yineleyerek uzatır (parça değişmez)."""
+    while len(ham) < hedef:
+        adim = SR // 100
+        mono = ham.mean(axis=1)
+        enerji = np.sqrt((mono[:len(mono) // adim * adim].reshape(-1, adim) ** 2).mean(axis=1))
+        vuru = np.maximum(np.diff(enerji, prepend=enerji[0]), 0)             # vuruş zarfı
+        t1 = int(len(vuru) * .72)                                            # atlama anı: parçanın oturduğu bölüm
+        pencere = vuru[t1 - 1500:t1]
+        en_iyi, L = -1, 900
+        for aday in range(700, 1300):                                        # 7–13 sn geriye
+            onceki = vuru[t1 - 1500 - aday:t1 - aday]
+            k = float(np.corrcoef(pencere, onceki)[0, 1])
+            if k > en_iyi:
+                en_iyi, L = k, aday
+        j, geri, x = t1 * adim, L * adim, int(.08 * SR)
+        print(f"  müzik {L / 100:.2f} sn'lik bölüm yinelenerek uzatıldı (ritim benzerliği {en_iyi:.2f})")
+        egri = np.linspace(0, 1, x, dtype=np.float32)[:, None]
+        gecis = ham[j:j + x] * np.sqrt(1 - egri) + ham[j - geri:j - geri + x] * np.sqrt(egri)
+        ham = np.concatenate([ham[:j], gecis, ham[j - geri + x:]])
+    return ham
+
+
 def ses(yol):
     n = int(TOPLAM * SR)
     konusma = np.zeros((n, 2), np.float32)
@@ -604,7 +649,7 @@ def ses(yol):
             konusma[j:j + len(a)] += a[:n - j]
     m = np.zeros((n, 2), np.float32)
     if os.path.exists(MUZIK):
-        ham = ses_oku(MUZIK)[:n]
+        ham = muzik_uzat(ses_oku(MUZIK), n + 2 * SR)[:n]
         m[:len(ham)] = ham
         m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.20 if SESLI else 0.5)
         zarf = np.clip(kayan(np.abs(konusma).max(axis=1), int(.25 * SR)) / 0.12, 0, 1)
@@ -623,10 +668,8 @@ def ses(yol):
     koy(M0 + T_A - .1, vinlama(1.0, .7, .2, 400, 5000), .1)                    # yakın yerlere yaklaşma
     koy(M0 + T_DALIS - .3, vinlama(1.3, .8, .2, 400, 5000), .18)               # projeye dalış
     koy(T["iceri"] - .1, vinlama(SURE["iceri"] + .2, SURE["iceri"] - .5, .3, 300, 4000), .12)   # balkondan içeri
-    for ad in ("yapim", "d10", "d11", "d21", "kapanis"):
+    for ad in ("yapim", "d10", "d11", "d21", "ozl1", "kapanis"):
         koy(T[ad] - .02, vurus(), .22)
-    for i, oran in enumerate(DAMGA_ORAN):
-        koy(VO_BAS.get(9, T["avlu"] + .2) + oran * (vo_sure(9) or 3.6) + .04, vurus(.8), .34)
     miks = np.tanh((konusma + m + efekt) * 1.1) * 0.9
     with wave.open(yol, "wb") as f:
         f.setnchannels(2), f.setsampwidth(2), f.setframerate(SR)
