@@ -79,7 +79,7 @@ SESLENDIRME = [
     "Geniş peyzaj alanları, dekoratif süs havuzları, yürüyüş ve dinlenme yolları.",
     "Kapalı otopark, yedi yirmi dört güvenlik.",
     "Yarı olimpik kapalı yüzme havuzu, fitnes salonu, sauna, Türk hamamı ve çocuk oyun parkı.",
-    "Altmış ay sabit taksitle ev sahibi olun. Hemen arayın: dört yüz kırk dört, on, elli sekiz.",
+    "Altmış ay sabit taksitle ev sahibi olmak için hemen arayın: dört yüz kırk dört, on, elli sekiz.",
 ]
 # (sahne, en az süre, seslendirme no, seslendirmeden sonraki pay, seslendirmenin sahne içindeki gecikmesi)
 # pay None ise sahne seslendirmeye göre uzamaz (satır sonraki sahneye taşabilir).
@@ -465,16 +465,15 @@ def html():
     kapanis = f"""
       <div class="a gir" style="--g:.05;left:0;top:0;width:{W}px;height:{H}px;background:linear-gradient(180deg,rgba({r},{g},{b},0) 0,rgba({r},{g},{b},0) 54%,
            rgba({r},{g},{b},.92) 61%,{KOYU} 65%)"></div>
-      <div class="a k tek pat" style="--g:.5;left:0;top:1150px;width:{W}px;text-align:center;font-size:158px;color:#fff">444 10 58</div>
-      <div class="a pat" style="--g:1.1;left:0;top:1334px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:18px">{yy.WA.format(s=56)}
+      <div class="a tek gir" style="--g:.3;left:0;top:1160px;width:{W}px;text-align:center;font-size:34px;font-weight:800;color:{VURGU}">60 ay sabit taksitle ev sahibi olmak için hemen arayın</div>
+      <div class="a k tek pat" style="--g:.6;left:0;top:1205px;width:{W}px;text-align:center;font-size:158px;color:#fff">444 10 58</div>
+      <div class="a pat" style="--g:1.2;left:0;top:1388px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:18px">{yy.WA.format(s=56)}
         <span class="k tek" style="font-size:54px;color:#fff">0540 028 00 41</span></div>
-      <div class="a tek gir" style="--g:1.7;left:0;top:1420px;width:{W}px;text-align:center;font-size:31px;font-weight:700;color:{VURGU}">60 ay sabit taksitle ev sahibi olmanın tam zamanı!</div>
-      <div class="a gir" style="--g:2.1;left:0;top:1484px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:24px">
+      <div class="a gir" style="--g:1.8;left:0;top:1482px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:24px">
         <span class="tek" style="font-size:21px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.85)">TEK YETKİLİ SATIŞ</span>
         <img src="{VEK('ocean-beyaz.svg')}" style="height:60px"></div>"""
     sahneler = (
         blok(M0 + .15, T_ZOOM - 1.1, baslik(450, "İZMİT'TE", "YENİ BİR YAŞAM<br>YÜKSELİYOR", .15, 88))
-        + blok(T["sokak"] + .1, SURE["sokak"] - .1, ikili(410, "KİRA ÖDER GİBİ", "EV SAHİBİ OLUN", .2, 80, 80))
         + blok(M0, T_ZOOM, cog)
         + blok(M0, T_HARITA - .1, hat)
         + blok(M0, T_HARITA - .1, igne)
