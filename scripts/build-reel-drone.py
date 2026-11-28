@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 """
-Reklam Reels'i — "Uydudan eve" (1080x1920, ~46 sn, 24 fps).
+Reklam Reels'i — "Uydudan eve" (1080x1920, ~41 sn, 24 fps, seslendirmeli + müzikli).
 
 Kurgu (sahne süreleri seslendirme kayıtlarının uzunluğundan türetilir):
     uydu     Uzaydan yaklaşma: Karadeniz/Marmara → İzmit Körfezi → projenin tam konumu
-    yakin    Yakın yerler: gerçek koordinatlarla çizgiler ve dakika etiketleri
-    giris    Projeye dalış: girişe inen drone çekimi
-    d10      1+0 daire içi + fiyat kartı
-    d11      1+1 daire içi + fiyat kartı
-    d21      2+1 daire içi + fiyat kartı
+    yakin    Yakın yerler + planlanan Güney Metro hattı
+    giris    Karşıdan projeye yaklaşan drone çekimi
+    yapim    Yapım aşaması (hızlandırılmış)
+    d10/d11/d21  Daire içleri + fiyat kartları
     balkon   Balkondan bakış + 60 ay sabit taksit
     avlu     Avlu + dört "YOK" etiketi
     kapanis  Akşam girişi: logo, 444 10 58, WhatsApp, tek yetkili satış
 
-SES — Higgsfield ile üretilir, dosyalar buraya konur (yoksa video sessiz TASLAK çıkar):
-    film-source/ses/yeni/vo-1.wav … vo-9.wav   seslendirme satırları (aşağıdaki SESLENDIRME)
-    film-source/muzik/reel-muzik.mp3           müzik (aşağıdaki MUZIK_KOMUTU)
+Higgsfield ile üretilenler (komutlar aşağıda):
+    film-source/higgsfield-kare/   dikey kareler (gpt_image_2_6; müşterinin render'ları referans)
+    film-source/higgsfield-klip/   bu karelerden çekimler (seedance_2_0, 1080p)
+    film-source/ses/yeni/vo-1..8.wav   seslendirme (elevenlabs_v4, "Landon")
+    film-source/muzik/reel-muzik.mp3   müzik (elevenlabs_music_v2_5)
 
-Kaynaklar:
+Diğer kaynaklar:
   • Uydu görüntüsü: Sentinel-2 cloudless 2016, EOX IT Services GmbH — CC BY 4.0
     ("Contains modified Copernicus Sentinel data 2016"). Videoda künye yazılıdır.
     Konum: Google Maps'ten alınan proje koordinatı (src/data/location.ts).
   • Yakın yerlerin koordinatları OpenStreetMap'ten (Photon), süreler src/data/location.ts'ten.
-  • Çekimler film-source/clips (projenin kendi render'larından), fotoğraf sosyal-medya/bitmis-fotograflar.
 
     python3 scripts/build-reel-drone.py
 """
@@ -49,28 +49,35 @@ spec.loader.exec_module(yy)
 ROOT, F, KIRMIZI = yy.ROOT, yy.F, yy.KIRMIZI
 OUT = os.path.join(ROOT, "sosyal-medya", "instagram-reel")
 ONBELLEK = os.path.join(ROOT, "film-source", ".kare-onbellek", "uydu")
-KLIP = lambda ad: os.path.join(ROOT, "film-source", "clips", ad + ".mp4")
+HF = os.path.join(ROOT, "film-source", "higgsfield-klip")
+
+
+def KLIP(ad):
+    yol = os.path.join(HF, ad + ".mp4")
+    return yol if os.path.exists(yol) else os.path.join(ROOT, "film-source", "clips", ad + ".mp4")
+
+
 SES_KLASOR = os.path.join(ROOT, "film-source", "ses", "yeni")
 MUZIK = os.path.join(ROOT, "film-source", "muzik", "reel-muzik.mp3")
 VEK = lambda ad: F("public", "brand", "vektor", ad)
 W, H, FPS, SR = 1080, 1920, 24, 44100
 KOYU, VURGU = yy.LACI
-GECIS = 0.35
-VO_GIRIS = 0.35
+GECIS = 0.3
+VO_GIRIS = 0.2
+VO_HIZ = 1.06
 
 # ---------------------------------------------------------------- Higgsfield komutları
 # Seslendirme: ElevenLabs (elevenlabs_v4), erkek, tok ve sakin sinema fragmanı anlatıcısı; her satır ayrı kayıt.
 # Sayılar yazıyla, marka "Mia Park Oşın" okunacak biçimde yazılır.
 SESLENDIRME = [
-    "Kocaeli'de, İzmit Körfezi'nin kıyısında yeni bir hayat başlıyor.",
-    "Sahile iki, şehir merkezine beş dakika. Her şey bir adım ötenizde.",
+    "Kocaeli'de, İzmit Körfezi'nin kıyısında yeni bir hayat yükseliyor.",
+    "Sahile iki dakika. Planlanan Güney Metro hattının güzergâhında.",
     "Mia Park Oşın.",
-    "Bir artı sıfır daireler: altı yüz doksan dokuz bin lira peşinat, ayda yirmi dokuz bin dokuz yüz lira.",
-    "Bir artı bir daireler: dokuz yüz doksan dokuz bin lira peşinat, ayda otuz dokuz bin dokuz yüz lira.",
-    "İki artı bir daireler: iki milyon lira peşinat, ayda elli bin lira.",
-    "Üstelik tam altmış ay sabit taksit.",
-    "Banka yok. Faiz yok. Kefil yok. Ara ödeme yok.",
-    "Mia Park Oşın. Hemen arayın: dört yüz kırk dört, on, elli sekiz.",
+    "Bir artı sıfır daireler, altı yüz doksan dokuz bin lira peşinatla.",
+    "Bir artı bir daireler, dokuz yüz doksan dokuz bin lira peşinatla.",
+    "İki artı bir daireler, iki milyon lira peşinatla.",
+    "Ayda yirmi dokuz bin dokuz yüz liradan başlayan, altmış ay sabit taksit. Banka yok. Faiz yok.",
+    "Hemen arayın: dört yüz kırk dört, on, elli sekiz.",
 ]
 MUZIK_KOMUTU = ("Powerful cinematic trailer music for a premium real estate launch commercial. Starts with a deep sub boom and a rising "
                 "whoosh, then driving modern percussion, punchy hybrid orchestral hits, bold brass and staccato strings, confident and "
@@ -82,9 +89,9 @@ CEKIM_KOMUTU = ("Cinematic continuous drone descent in one take: the camera dive
                 "courtyard, golden hour light, photorealistic, smooth stabilized motion, no text.")
 
 # ---------------------------------------------------------------- zaman çizelgesi
-# (sahne, en az süre, seslendirme no, seslendirmeden sonraki pay)
-SAHNE = [("uydu", 6.0, 1, 1.1), ("yakin", 5.6, 2, .9), ("giris", 2.6, 3, .9), ("d10", 6.2, 4, .6), ("d11", 6.2, 5, .6),
-         ("d21", 5.0, 6, .6), ("balkon", 3.2, 7, .5), ("avlu", 4.6, 8, .6), ("kapanis", 6.0, 9, 1.8)]
+# (sahne, en az süre, seslendirme no, seslendirmeden sonraki pay) — pay None ise sahne seslendirmeye göre uzamaz
+SAHNE = [("uydu", 4.4, 1, .3), ("yakin", 4.4, 2, .3), ("giris", 2.5, 3, .8), ("yapim", 3.6, None, None), ("d10", 4.0, 4, .25),
+         ("d11", 4.0, 5, .25), ("d21", 3.4, 6, .25), ("balkon", 3.3, 7, None), ("avlu", 3.7, None, None), ("kapanis", 5.6, 8, 1.4)]
 
 
 def vo_yol(i):
@@ -95,14 +102,14 @@ def vo_sure(i):
     if not os.path.exists(vo_yol(i)):
         return 0.0
     with wave.open(vo_yol(i)) as w:
-        return w.getnframes() / w.getframerate()
+        return w.getnframes() / w.getframerate() / VO_HIZ
 
 
 SESLI = all(os.path.exists(vo_yol(i)) for i in range(1, len(SESLENDIRME) + 1))
 SURE, T = {}, {}
 _t = 0.0
 for _ad, _en_az, _vo, _pay in SAHNE:
-    SURE[_ad] = max(_en_az, round((VO_GIRIS + vo_sure(_vo) + _pay) * FPS) / FPS if SESLI else 0)
+    SURE[_ad] = max(_en_az, round((VO_GIRIS + vo_sure(_vo) + _pay) * FPS) / FPS if SESLI and _vo and _pay is not None else 0)
     T[_ad] = _t
     _t += SURE[_ad]
 TOPLAM = _t
@@ -111,7 +118,7 @@ TOPLAM = _t
 LAT, LON = 40.736667, 29.944889          # proje (Google Maps koordinatı)
 SX, SY = 500, 1080                        # projenin ekrandaki yeri
 Z0, Z1 = 6.6, 12.9                        # yaklaşmanın başı ve sonu (harita yakınlığı)
-T_ZOOM, T_DALIS, T_HARITA = SURE["uydu"] - .5, T["giris"] - .7, T["giris"]
+T_ZOOM, T_DALIS, T_HARITA = SURE["uydu"] - .4, T["giris"] - .6, T["giris"]
 LW, LH, LMIN, LMAX = 3584, 5120, 7, 14
 UYDU = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"
 
@@ -209,7 +216,7 @@ def bulut_dokusu():
 
 
 def bulut(t, doku):
-    p = (t - .05) / 2.6
+    p = (t - .05) / (T_ZOOM * .55)
     if not 0 < p < 1:
         return None
     s = 1 + 7 * p ** 1.7
@@ -284,7 +291,7 @@ def hap(x, y, gen, metin, boy, g, renk=KIRMIZI, yazi="#fff", sinif="pat"):
 def fiyat_karti(tip, pesin, ayda, sure):
     """Seslendirmeyle sırayla açılan fiyat kartı: tip → peşinat → aylık → 60 ay."""
     x, gen = 200, 680
-    g = (.3, .22 * sure, .56 * sure, .78 * sure)
+    g = (.15, .14 * sure, .42 * sure, .62 * sure)
     return (hap(x + 150, 1010, gen - 300, tip, 34, g[0], "#fff", KOYU)
             + f"""<div class="a pat" style="--g:{g[1]:.2f};left:{x}px;top:1098px;width:{gen}px;height:202px;border-radius:26px 26px 0 0;background:{KOYU};
                    text-align:center;color:#fff;box-shadow:0 18px 40px rgba(8,20,45,.4);display:flex;flex-direction:column;justify-content:center">
@@ -324,7 +331,7 @@ def yakin_yerler():
     for i, (ad, sure, lat, lon, taraf) in enumerate(YAKIN):
         px, py = mpx(lat, lon, Z1)
         x, y = SX + px - sx, SY + py - sy
-        g = T["yakin"] + .8 + i * .5
+        g = T["yakin"] + .5 + i * .4
         cizgi += (f'<line class="ciz" style="--g:{g:.2f}" x1="{SX}" y1="{SY}" x2="{x:.1f}" y2="{y:.1f}" pathLength="1" stroke="#fff" stroke-width="4" '
                   f'stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>')
         nokta += (f'<div class="a pat" style="--g:{g + .35:.2f};left:{x - 13:.1f}px;top:{y - 13:.1f}px;width:26px;height:26px;border-radius:50%;'
@@ -337,7 +344,8 @@ def yakin_yerler():
     igne = f"""<svg class="a dus" style="--g:{g0:.2f};left:{SX - 44}px;top:{SY - 112}px;width:88px;height:114px" viewBox="0 0 88 114">
         <path d="M44 112C44 112 6 66 6 42a38 38 0 1 1 76 0c0 24-38 70-38 70z" fill="{KIRMIZI}" stroke="#fff" stroke-width="5"/><circle cx="44" cy="42" r="15" fill="#fff"/></svg>"""
     ad = hap(SX - 215, SY + 24, 430, "MİA PARK OCEAN", 38, g0 + .35, "#fff", KOYU)
-    alt = hap(SX - 250, SY + 118, 500, "SAHİLE 2 DK · D-100'E 1 DK", 30, T["yakin"] + .5)
+    alt = (hap(SX - 250, SY + 118, 500, "SAHİLE 2 DK · D-100'E 1 DK", 30, T["yakin"] + .3)
+           + hap(SX - 400, SY + 200, 800, "PLANLANAN GÜNEY METRO HATTI GÜZERGÂHINDA", 28, T["yakin"] + 2.3, KOYU, "#fff"))
     adim = 0.05
     n = round((T_HARITA + .3 - T_ZOOM) / adim)
     kare = "".join(f"{100 * k / n:.3f}%{{transform:scale({olcek(T_ZOOM + k * adim):.5f})}}" for k in range(n + 1))
@@ -351,35 +359,37 @@ def html():
     harita_stil, harita = yakin_yerler()
     cog_stil, cog = cografya()
     r, g, b = (int(KOYU[j:j + 2], 16) for j in (1, 3, 5))
-    adim = (max(vo_sure(8), 3.6) - .3) / 4
-    yoklar = "".join(hap(70 + (i % 2) * 484, 1110 + (i // 2) * 150, 456, m, 46, VO_GIRIS + .1 + i * adim)
+    yoklar = "".join(hap(70 + (i % 2) * 484, 1110 + (i // 2) * 150, 456, m, 46, .5 + i * .45)
                      for i, m in enumerate(["BANKA YOK", "FAİZ YOK", "KEFİL YOK", "ARA ÖDEME YOK"]))
     kapanis = f"""
       <div class="a gir" style="--g:.05;left:0;top:0;width:{W}px;height:{H}px;background:linear-gradient(180deg,rgba({r},{g},{b},.72) 0,rgba({r},{g},{b},.12) 24%,
            rgba({r},{g},{b},.06) 44%,rgba({r},{g},{b},.9) 55%,{KOYU} 62%)"></div>
       <img class="a gir" src="{VEK('mia-beyaz.svg')}" style="--g:.3;left:{W // 2 - 190}px;top:300px;width:380px">
-      <div class="a tek gir" style="--g:1.3;left:0;top:1056px;width:{W}px;text-align:center;font-size:32px;font-weight:700;letter-spacing:.42em;color:#fff">HEMEN ARAYIN</div>
-      <div class="a cizgi" style="--g:1.4;left:{W // 2 - 75}px;top:1116px;width:150px;height:5px;background:{VURGU}"></div>
-      <div class="a k tek pat" style="--g:1.6;left:0;top:1140px;width:{W}px;text-align:center;font-size:164px;color:#fff">444 10 58</div>
-      <div class="a pat" style="--g:2.3;left:0;top:1342px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:18px">{yy.WA.format(s=58)}
+      <div class="a tek gir" style="--g:.6;left:0;top:1036px;width:{W}px;text-align:center;font-size:32px;font-weight:700;letter-spacing:.42em;color:#fff">HEMEN ARAYIN</div>
+      <div class="a cizgi" style="--g:.7;left:{W // 2 - 75}px;top:1094px;width:150px;height:5px;background:{VURGU}"></div>
+      <div class="a k tek pat" style="--g:.9;left:0;top:1114px;width:{W}px;text-align:center;font-size:164px;color:#fff">444 10 58</div>
+      <div class="a pat" style="--g:1.6;left:0;top:1308px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:18px">{yy.WA.format(s=58)}
         <span class="k tek" style="font-size:56px;color:#fff">0540 028 00 41</span></div>
-      <div class="a gir" style="--g:3.0;left:0;top:1462px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:30px">
+      <div class="a tek gir" style="--g:2.2;left:0;top:1406px;width:{W}px;text-align:center;font-size:31px;font-weight:700;color:{VURGU}">60 ay sabit taksitle ev sahibi olmanın tam zamanı!</div>
+      <div class="a gir" style="--g:2.6;left:0;top:1474px;width:{W}px;display:flex;align-items:center;justify-content:center;gap:30px">
         <div class="tek" style="font-size:22px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.85);line-height:1.5;text-align:right">TEK YETKİLİ<br>SATIŞ</div>
-        <img src="{VEK('ocean-beyaz.svg')}" style="height:78px"><span style="width:2px;height:70px;background:rgba(255,255,255,.5)"></span>
-        <img src="{VEK('tilda-beyaz.svg')}" style="height:46px"></div>"""
+        <img src="{VEK('ocean-beyaz.svg')}" style="height:74px"><span style="width:2px;height:66px;background:rgba(255,255,255,.5)"></span>
+        <img src="{VEK('tilda-beyaz.svg')}" style="height:44px"></div>"""
     sahneler = (
         blok(0, T_ZOOM, cog)
-        + blok(.2, T_ZOOM - 1.9, baslik(330, "KOCAELİ · İZMİT", "YENİ BİR HAYAT<br>BAŞLIYOR", .2, 92))
+        + blok(.15, T_ZOOM - 1.5, baslik(330, "KOCAELİ · İZMİT", "YENİ BİR HAYAT<br>YÜKSELİYOR", .15, 92))
         + blok(0, T_HARITA - .1, harita)
-        + blok(T["yakin"] + .1, SURE["yakin"] - .2, ikili(1340, "HER YERE YAKIN", "İZMİT MİA BÖLGESİ", .1, 72, 46))
         + blok(T_HARITA - .12, .95, f'<div class="a" style="left:0;top:0;width:{W}px;height:{H}px;background:#fff"></div>', "flas")
-        + blok(T["giris"] + .15, SURE["giris"] - .15, baslik(1130, "İZMİT MİA BÖLGESİ", "MİA PARK OCEAN", .2, 88))
+        + blok(T["giris"] + .15, SURE["giris"] - .15, baslik(330, "İZMİT MİA BÖLGESİ", "MİA PARK OCEAN", .15, 88))
+        + blok(T["yapim"], SURE["yapim"], baslik(330, "TİLDA İNŞAAT İLE", "ADIM ADIM<br>YÜKSELİYOR", .15, 88))
         + blok(T["d10"], SURE["d10"], fiyat_karti("1+0 DAİRELER", "699.000", "29.900", SURE["d10"]))
         + blok(T["d11"], SURE["d11"], fiyat_karti("1+1 DAİRELER", "999.000", "39.900", SURE["d11"]))
         + blok(T["d21"], SURE["d21"], fiyat_karti("2+1 DAİRELER", "2.000.000", "50.000", SURE["d21"]))
-        + blok(T["balkon"], SURE["balkon"], ikili(1130, "ÜSTELİK TAM", "60 AY SABİT TAKSİT", .3, 76, 70))
-        + blok(T["avlu"], SURE["avlu"], ikili(320, "MİA PARK OCEAN'DA", "BANKASIZ EV SAHİBİ OLUN", .2, 70, 46) + yoklar)
+        + blok(T["balkon"], SURE["balkon"], ikili(1130, "AYDA 29.900 TL'DEN", "60 AY SABİT TAKSİT", .3, 64, 70))
+        + blok(T["avlu"], SURE["avlu"], ikili(320, "MİA PARK OCEAN'DA", "BANKASIZ EV SAHİBİ OLUN", .15, 70, 46) + yoklar)
         + blok(T["kapanis"], SURE["kapanis"], kapanis, "sahne son")
+        + blok(T_HARITA + .4, T["kapanis"] - T_HARITA - .4, f'''<div class="a tek" style="left:0;top:1596px;width:{W}px;text-align:center;font-size:19px;
+            font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.85);{GOLGE}">Görseller temsilidir.</div>''')
     )
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{yy.css(H)}
 body {{ background:transparent; }}
@@ -412,26 +422,31 @@ body {{ background:transparent; }}
 
 
 # ---------------------------------------------------------------- zemin görüntüsü
-# (sahne, tür, kaynak, kaynakta başlangıç sn, kaydırma başı, kaydırma sonu) — klip sahneye sığmazsa yavaşlatılır
-FOTO = os.path.join(ROOT, "sosyal-medya", "bitmis-fotograflar", "15-balkondan-gunesli.jpg")
+# (sahne, tür, kaynak, kaynakta başlangıç sn, sıkıştır[, (büyütme, kaynakta üst kenar)])
+# sıkıştır: çekimin tamamı sahneye sığacak biçimde hızlandırılır
 ZEMIN = [
-    ("uydu", "harita", None, 0, 0, 0),
-    ("giris", "klip", "13-giris-drone", 0.4, .50, .50),
-    ("d10", "klip", "09-daire-1plus0", 0.0, .34, .60),
-    ("d11", "klip", "10-daire-1plus1", 0.0, .28, .60),
-    ("d21", "klip", "11-bahce-loft", 0.0, .30, .46),
-    ("balkon", "foto", FOTO, 0, 0, 0),
-    ("avlu", "klip", "04-avlu-suzulme", 1.4, .55, .86),
-    ("kapanis", "klip", "01-gunduz-gece", 0.6, .50, .50),
+    ("uydu", "harita", None, 0, False),
+    ("giris", "klip", "01-karsidan-yaklasma", 0.6, False),
+    ("yapim", "klip", "17-yapim-asamasi", 0.0, True),
+    ("d10", "klip", "07-1-0-salon", 0.0, False),
+    ("d11", "klip", "09-1-1-salon", 0.0, False),
+    ("d21", "klip", "11-2-1-salon", 0.0, False),
+    ("balkon", "klip", "08-1-0-balkon", 0.0, False),
+    ("avlu", "klip", "04-avlu", 0.0, False),
+    ("kapanis", "klip", "06-aksam", 0.0, False, (1.4, 549)),
 ]
-KLIP_SURE = 8.0
+
+
+def klip_sure(yol):
+    return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", yol],
+                                capture_output=True, text=True).stdout)
 
 
 def zemin(gecici):
     harita = os.path.join(gecici, "harita.mp4")
     harita_videosu(harita, T_HARITA + GECIS)
     girdi, f, bas_list = [], [], []
-    for i, (ad, tur, kaynak, kbas, p0, p1) in enumerate(ZEMIN):
+    for i, (ad, tur, kaynak, kbas, sikistir, *kirp) in enumerate(ZEMIN):
         bas = T[ad]
         son = T[ZEMIN[i + 1][0]] if i + 1 < len(ZEMIN) else TOPLAM
         sure = son - bas + (GECIS / 2 if i else 0) + (GECIS / 2 if i + 1 < len(ZEMIN) else 0)
@@ -440,16 +455,14 @@ def zemin(gecici):
         if tur == "harita":
             girdi += ["-i", harita]
             f.append(f"[{i}:v]{son_ek}")
-        elif tur == "foto":
-            n = round(sure * FPS)
-            girdi += ["-loop", "1", "-framerate", str(FPS), "-t", f"{sure:.3f}", "-i", kaynak]
-            f.append(f"[{i}:v]scale=2160:-2:flags=lanczos,crop=2160:3840:0:'(ih-3840)*.5',"
-                     f"zoompan=z='1+.09*on/{n}':x='iw/2-(iw/zoom/2)':y='ih*.56-(ih/zoom)*.56':d=1:s={W}x{H}:fps={FPS},{son_ek}")
         else:
-            yavas = max(1.0, (sure + .1) / (KLIP_SURE - kbas))
-            girdi += ["-ss", f"{kbas:.3f}", "-i", KLIP(kaynak)]
-            f.append(f"[{i}:v]setpts={yavas:.4f}*PTS,fps={FPS},scale=-2:{H}:flags=lanczos,"
-                     f"crop={W}:{H}:'(iw-{W})*({p0}+({p1 - p0:.3f})*t/{sure:.3f})':0,unsharp=5:5:.55,eq=brightness=.02:saturation=1.08,{son_ek}")
+            yol = KLIP(kaynak)
+            oran = (sure + .08) / (klip_sure(yol) - kbas - .08)
+            hiz = oran if sikistir else max(1.0, oran)
+            girdi += ["-ss", f"{kbas:.3f}", "-i", yol]
+            z, ust = kirp[0] if kirp else (1.0, 0)
+            f.append(f"[{i}:v]setpts={hiz:.4f}*PTS,fps={FPS},scale={round(W * z / 2) * 2}:{round(H * z / 2) * 2}:flags=lanczos,"
+                     f"crop={W}:{H}:(iw-{W})/2:{round(ust * z)},eq=saturation=1.05,{son_ek}")
     onceki = "v0"
     for i in range(1, len(ZEMIN)):
         f.append(f"[{onceki}][v{i}]xfade=transition=fade:duration={GECIS}:offset={bas_list[i] - GECIS / 2:.3f}[x{i}]")
@@ -487,7 +500,9 @@ def ses(yol):
     konusma = np.zeros((n, 2), np.float32)
     if SESLI:
         for ad, _, vo, _ in SAHNE:
-            a = ses_oku(vo_yol(vo))
+            if not vo:
+                continue
+            a = ses_oku(vo_yol(vo), f"atempo={VO_HIZ}")
             a *= 0.9 / np.abs(a).max()
             j = int((T[ad] + VO_GIRIS) * SR)
             konusma[j:j + len(a)] += a[:n - j]
@@ -495,14 +510,14 @@ def ses(yol):
     if os.path.exists(MUZIK):
         ham = ses_oku(MUZIK)[:n]
         m[:len(ham)] = ham
-        m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.24 if SESLI else 0.5)
+        m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.3 if SESLI else 0.5)
         zarf = np.clip(kayan(np.abs(konusma).max(axis=1), int(.25 * SR)) / 0.12, 0, 1)
-        m *= (1.0 - 0.6 * kayan(zarf, int(.3 * SR)))[:, None]     # seslendirme varken müzik kısılır
+        m *= (1.0 - 0.52 * kayan(zarf, int(.3 * SR)))[:, None]     # seslendirme varken müzik kısılır
         a, z = int(.15 * SR), int(2.4 * SR)
         m[:a] *= np.linspace(0, 1, a, dtype=np.float32)[:, None]
         m[-z:] *= (np.linspace(1, 0, z, dtype=np.float32) ** 1.4)[:, None]
     efekt = np.zeros((n, 2), np.float32)
-    for bas, v, kazanc in [(0.0, vinlama(T_ZOOM + .5, T_ZOOM - .4, .35), .10), (T_DALIS - .3, vinlama(1.6, .95, .22, 400, 5000), .22)]:
+    for bas, v, kazanc in [(0.0, vinlama(T_ZOOM + .5, T_ZOOM - .4, .35), .08), (T_DALIS - .3, vinlama(1.6, .95, .22, 400, 5000), .22)]:
         j = int(bas * SR)
         efekt[j:j + len(v)] += v * kazanc
     miks = np.tanh((konusma + m + efekt) * 1.1) * 0.9
