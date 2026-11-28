@@ -64,16 +64,15 @@ W, H, FPS, SR = 1080, 1920, 24, 44100
 KOYU, VURGU = yy.LACI
 GUNEY, KUZEY = "#e0218a", "#2fbf71"
 GECIS = 0.25
-VO_HIZ = 1.04
+VO_HIZ = 1.0
 
 # ---------------------------------------------------------------- seslendirme ve zaman çizelgesi
 # Sayılar yazıyla, marka "Mia Park Oşın" okunacak biçimde yazılır. Her satır ayrı kayıttır.
 SESLENDIRME = [
-    "Kocaeli'de, İzmit Körfezi'nin kıyısında yeni bir hayat başlıyor.",
+    "İzmit'te yeni bir yaşam yükseliyor.",
     "Planlanan Güney Metro hattının güzergâhında.",
-    "Kira öder gibi ev sahibi olmak artık mümkün.",
+    "Kira öder gibi, ev sahibi olun!",
     "Mia Park Oşın, Tilda İnşaat ile adım adım yükseliyor.",
-    "Buyurun, yeni evinize.",
     "Bir artı sıfır, altı yüz doksan dokuz bin lira peşinatla.",
     "Bir artı bir, dokuz yüz doksan dokuz bin lira peşinatla.",
     "İki artı bir, iki milyon lira peşinatla.",
@@ -84,9 +83,9 @@ SESLENDIRME = [
 # (sahne, en az süre, seslendirme no, seslendirmeden sonraki pay, seslendirmenin sahne içindeki gecikmesi)
 # pay None ise sahne seslendirmeye göre uzamaz (satır sonraki sahneye taşabilir).
 SAHNE = [
-    ("uydu", 3.6, 1, None, 1.1), ("yakin", 7.2, 2, None, 2.3), ("sokak", 3.2, 3, .3, .25), ("yapim", 7.0, 4, None, .5),
-    ("drone", 3.0, None, None, 0), ("iceri", 2.7, 5, None, .6), ("d10", 3.9, 6, .2, .15), ("d11", 3.9, 7, .2, .15),
-    ("d21", 3.5, 8, .2, .15), ("balkon", 3.4, 9, .2, .15), ("avlu", 4.6, 10, .5, .2), ("kapanis", 5.6, 11, 1.3, .2),
+    ("uydu", 3.6, 1, None, 1.0), ("yakin", 7.2, 2, None, 2.3), ("sokak", 3.6, 3, .7, .45), ("yapim", 7.0, 4, None, 1.4),
+    ("drone", 3.0, None, None, 0), ("iceri", 2.2, None, None, 0), ("d10", 3.9, 5, .2, .15), ("d11", 3.9, 6, .2, .15),
+    ("d21", 3.5, 7, .2, .15), ("balkon", 3.4, 8, .2, .15), ("avlu", 4.6, 9, .5, .2), ("kapanis", 5.6, 10, 1.3, .2),
 ]
 # "Banka yok! Faiz yok! Kefil yok! Ara ödeme yok!" satırında her "yok"un başladığı an (satır süresine oran)
 DAMGA_ORAN = (0.0, .22, .485, .735)
@@ -145,7 +144,7 @@ COGRAFYA = [
     ("İSTANBUL", 41.02, 28.97, 7.2, 10.0, 34),
     ("MARMARA DENİZİ", 40.68, 28.2, 7.4, 9.6, 30),
     ("BURSA", 40.19, 29.06, 7.6, 9.8, 30),
-    ("KOCAELİ", 40.93, 29.92, 8.6, 10.6, 44),
+    ("İZMİT", 40.82, 29.95, 8.6, 10.0, 42),
     ("SAPANCA GÖLÜ", 40.715, 30.26, 9.8, 11.5, 26),
     ("İZMİT KÖRFEZİ", 40.735, 29.74, 10.0, 11.6, 30),
 ]
@@ -447,8 +446,8 @@ def html():
         <span class="tek" style="font-size:21px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.85)">TEK YETKİLİ SATIŞ</span>
         <img src="{VEK('ocean-beyaz.svg')}" style="height:60px"></div>"""
     sahneler = (
-        blok(M0 + .15, T_ZOOM - 1.1, baslik(450, "KOCAELİ · İZMİT", "YENİ BİR HAYAT<br>BAŞLIYOR", .15, 88))
-        + blok(T["sokak"] + .1, SURE["sokak"] - .1, baslik(450, "İZMİT · MİA BÖLGESİ", "KİRA ÖDER GİBİ<br>EV SAHİBİ OLUN", .2, 88))
+        blok(M0 + .15, T_ZOOM - 1.1, baslik(450, "İZMİT'TE", "YENİ BİR YAŞAM<br>YÜKSELİYOR", .15, 88))
+        + blok(T["sokak"] + .1, SURE["sokak"] - .1, ikili(410, "KİRA ÖDER GİBİ", "EV SAHİBİ OLUN", .2, 80, 80))
         + blok(M0, T_ZOOM, cog)
         + blok(M0, T_HARITA - .1, hat)
         + blok(M0, T_HARITA - .1, igne)
@@ -460,7 +459,7 @@ def html():
         + blok(T["d11"], SURE["d11"], fiyat_karti("1+1 DAİRELER", "999.000", "39.900", SURE["d11"]))
         + blok(T["d21"], SURE["d21"], fiyat_karti("2+1 DAİRELER", "2.000.000", "50.000", SURE["d21"]))
         + blok(T["balkon"], SURE["balkon"], ikili(880, "AYDA 29.900 TL'DEN", "60 AY SABİT TAKSİT", .25, 64, 70))
-        + blok(T["avlu"], SURE["avlu"], damgalar(VO_BAS.get(10, T["avlu"] + .2) - T["avlu"], vo_sure(10) or 3.6))
+        + blok(T["avlu"], SURE["avlu"], damgalar(VO_BAS.get(9, T["avlu"] + .2) - T["avlu"], vo_sure(9) or 3.6))
         + blok(T["kapanis"], SURE["kapanis"], kapanis, "sahne son")
     )
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{yy.css(H)}
@@ -593,7 +592,7 @@ def ses(yol):
     konusma = np.zeros((n, 2), np.float32)
     if SESLI:
         for vo, bas in VO_BAS.items():
-            a = ses_oku(vo_yol(vo), f"atempo={VO_HIZ}" if VO_HIZ != 1 else None)
+            a = ses_oku(vo_yol(vo), "highpass=f=60,equalizer=f=3200:t=q:w=1.2:g=2.5" + (f",atempo={VO_HIZ}" if VO_HIZ != 1 else ""))
             a *= 0.80 / np.abs(a).max()
             j = int(bas * SR)
             konusma[j:j + len(a)] += a[:n - j]
@@ -601,11 +600,11 @@ def ses(yol):
     if os.path.exists(MUZIK):
         ham = ses_oku(MUZIK)[:n]
         m[:len(ham)] = ham
-        m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.28 if SESLI else 0.5)
+        m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.20 if SESLI else 0.5)
         zarf = np.clip(kayan(np.abs(konusma).max(axis=1), int(.25 * SR)) / 0.12, 0, 1)
         m *= (1.0 - 0.47 * kayan(zarf, int(.3 * SR)))[:, None]     # seslendirme varken müzik kısılır
-        a, z = int(.03 * SR), int(2.4 * SR)
-        m[:a] *= np.linspace(0, 1, a, dtype=np.float32)[:, None]
+        a, z = int(3.2 * SR), int(2.4 * SR)                       # müzik yavaşça açılır
+        m[:a] *= (np.linspace(0, 1, a, dtype=np.float32) ** 1.6)[:, None]
         m[-z:] *= (np.linspace(1, 0, z, dtype=np.float32) ** 1.4)[:, None]
     efekt = np.zeros((n, 2), np.float32)
 
@@ -621,7 +620,7 @@ def ses(yol):
     for ad in ("yapim", "d10", "d11", "d21", "kapanis"):
         koy(T[ad] - .02, vurus(), .22)
     for i, oran in enumerate(DAMGA_ORAN):
-        koy(VO_BAS.get(10, T["avlu"] + .2) + oran * (vo_sure(10) or 3.6) + .04, vurus(.8), .34)
+        koy(VO_BAS.get(9, T["avlu"] + .2) + oran * (vo_sure(9) or 3.6) + .04, vurus(.8), .34)
     miks = np.tanh((konusma + m + efekt) * 1.1) * 0.9
     with wave.open(yol, "wb") as f:
         f.setnchannels(2), f.setsampwidth(2), f.setframerate(SR)
