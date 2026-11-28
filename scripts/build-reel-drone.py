@@ -132,7 +132,7 @@ UYDU = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/
 YAKIN = [
     ("Sahil", "2 dk", 40.7367, 29.9395, "sol", 0, .0),
     ("41 Burda AVM", "2 dk", 40.75675, 29.94756, "sol", 0, .25),
-    ("İzmit Outlet Center", "2 dk", 40.75548, 29.94690, "sag", -64, .5),
+    ("İzmit Outlet", "2 dk", 40.75548, 29.94690, "sol", 62, .5),             # 41 Burda'nın hemen yanında: etiketi onun altında
     ("Symbol AVM", "7 dk", 40.75787, 29.97956, "sag", 60, .85),
     ("Şehir Merkezi", "5 dk", 40.77211, 29.95056, "sol", 0, 1.1),
     ("Şehir Hastanesi", "5 dk", 40.78309, 29.96064, "sag", 0, 1.35),
@@ -163,7 +163,7 @@ HAT_KUZEY = [_harita_pikseli(*p) for p in [
     (740, 178), (800, 174), (855, 152), (903, 153), (940, 96), (1015, 80), (1045, 120), (1035, 160), (1047, 200),
     (1108, 212), (1207, 246), (1275, 270), (1362, 298), (1428, 330), (1480, 355)]]
 # (ad, harita pikseli, yazının noktaya göre kayması)
-YER_ADI = [("GÖLCÜK", (260, 525), (0, 44)), ("BAŞİSKELE", (835, 563), (70, 46)), ("İZMİT", (903, 153), (-10, -46)),
+YER_ADI = [("GÖLCÜK", (260, 525), (0, 44)), ("BAŞİSKELE", (835, 563), (305, 40)), ("İZMİT", (903, 153), (-10, -46)),
            ("KARTEPE", (1480, 355), (-20, -46))]
 
 
@@ -432,9 +432,15 @@ def html():
     cog_stil, cog = cografya()
     r, g, b = (int(KOYU[j:j + 2], 16) for j in (1, 3, 5))
     g0 = T_ZOOM - .9
-    igne = f"""<svg class="a dus" style="--g:{g0:.2f};left:{SX - 44}px;top:{SY - 112}px;width:88px;height:114px" viewBox="0 0 88 114">
-        <path d="M44 112C44 112 6 66 6 42a38 38 0 1 1 76 0c0 24-38 70-38 70z" fill="{KIRMIZI}" stroke="#fff" stroke-width="5"/><circle cx="44" cy="42" r="15" fill="#fff"/></svg>"""
-    igne += hap(SX - 215, SY + 24, 430, "MİA PARK OCEAN", 38, g0 + .3, "#fff", KOYU)
+    # Proje haritada konum iğnesiyle değil, kendi logosuyla gösterilir: nokta tam konumda, logo rozeti hemen altında.
+    lg, pay = 196, 18
+    lh = round(lg * 3288 / 4764)
+    igne = (f'<div class="a pat" style="--g:{g0:.2f};left:{SX - 19}px;top:{SY - 19}px;width:38px;height:38px;border-radius:50%;'
+            f'background:{KOYU};border:7px solid {VURGU};box-shadow:0 0 0 5px rgba(255,255,255,.9),0 8px 20px rgba(0,0,0,.5)"></div>')
+    igne += f"""<div class="a pat" style="--g:{g0 + .22:.2f};left:{SX - lg // 2 - pay}px;top:{SY + 40}px;transform-origin:50% 0">
+        <div style="position:absolute;left:{lg // 2 + pay - 15}px;top:-13px;width:30px;height:30px;background:{KOYU};border-left:5px solid {VURGU};border-top:5px solid {VURGU};transform:rotate(45deg)"></div>
+        <div style="position:relative;padding:{pay}px {pay}px {pay - 4}px;border-radius:24px;background:{KOYU};border:5px solid {VURGU};box-shadow:0 18px 40px rgba(0,0,0,.55)">
+          <img src="{VEK('mia-beyaz.svg')}" style="display:block;width:{lg}px;height:{lh}px"></div></div>"""
     kapanis = f"""
       <div class="a gir" style="--g:.05;left:0;top:0;width:{W}px;height:{H}px;background:linear-gradient(180deg,rgba({r},{g},{b},0) 0,rgba({r},{g},{b},0) 54%,
            rgba({r},{g},{b},.92) 61%,{KOYU} 65%)"></div>
