@@ -3,9 +3,9 @@
 Reklam filmi — "Kira öder gibi ev sahibi olun" (1080x1920, ~50 sn, 24 fps, seslendirmeli + müzikli).
 
 Kurgu (sahne süreleri seslendirme kayıtlarının uzunluğundan türetilir):
-    sokak    KANCA: kaldırımda yürüyen çift projeyi işaret eder
     uydu     Uzaydan İzmit Körfezi'ne iniş
-    yakin    A: raylı sistem hatları (planlanan Güney Metro + Körfezray) · B: yakın yerler
+    yakin    A: raylı sistem hatları (planlanan Güney Metro + Körfezray) · B: yaklaşırken beliren yakın yerler
+    sokak    Kaldırımda yürüyen çift projeyi işaret eder
     yapim    Yapım aşaması (hızlandırılmış çekim)
     drone    Karşıdan yaklaşıp sola yönelen drone
     iceri    Drone balkondan daireye girer
@@ -69,8 +69,9 @@ VO_HIZ = 1.04
 # ---------------------------------------------------------------- seslendirme ve zaman çizelgesi
 # Sayılar yazıyla, marka "Mia Park Oşın" okunacak biçimde yazılır. Her satır ayrı kayıttır.
 SESLENDIRME = [
-    "Her ay kira ödüyorsunuz. Peki karşılığında ne kalıyor?",
-    "İzmit'te; planlanan Güney Metro hattının güzergâhında. Sahile ve İzmit Outlet'e iki dakika.",
+    "Kocaeli'de, İzmit Körfezi'nin kıyısında yeni bir hayat başlıyor.",
+    "Planlanan Güney Metro hattının güzergâhında.",
+    "Kira öder gibi ev sahibi olmak artık mümkün.",
     "Mia Park Oşın, Tilda İnşaat ile adım adım yükseliyor.",
     "Buyurun, yeni evinize.",
     "Bir artı sıfır, altı yüz doksan dokuz bin lira peşinatla.",
@@ -83,9 +84,9 @@ SESLENDIRME = [
 # (sahne, en az süre, seslendirme no, seslendirmeden sonraki pay, seslendirmenin sahne içindeki gecikmesi)
 # pay None ise sahne seslendirmeye göre uzamaz (satır sonraki sahneye taşabilir).
 SAHNE = [
-    ("sokak", 3.2, 1, .25, .15), ("uydu", 3.3, 2, None, .6), ("yakin", 6.5, None, None, 0), ("yapim", 7.0, 3, None, .5),
-    ("drone", 3.0, None, None, 0), ("iceri", 2.7, 4, None, .6), ("d10", 3.9, 5, .2, .15), ("d11", 3.9, 6, .2, .15),
-    ("d21", 3.5, 7, .2, .15), ("balkon", 3.4, 8, .2, .15), ("avlu", 4.6, 9, .5, .2), ("kapanis", 5.6, 10, 1.3, .2),
+    ("uydu", 3.6, 1, None, 1.1), ("yakin", 7.2, 2, None, 2.3), ("sokak", 3.2, 3, .3, .25), ("yapim", 7.0, 4, None, .5),
+    ("drone", 3.0, None, None, 0), ("iceri", 2.7, 5, None, .6), ("d10", 3.9, 6, .2, .15), ("d11", 3.9, 7, .2, .15),
+    ("d21", 3.5, 8, .2, .15), ("balkon", 3.4, 9, .2, .15), ("avlu", 4.6, 10, .5, .2), ("kapanis", 5.6, 11, 1.3, .2),
 ]
 # "Banka yok! Faiz yok! Kefil yok! Ara ödeme yok!" satırında her "yok"un başladığı an (satır süresine oran)
 DAMGA_ORAN = (0.0, .22, .485, .735)
@@ -121,20 +122,22 @@ Z0, Z1 = 7.2, 12.0                        # yaklaşmanın başı ve sonu (harita
 ZB = 0.85                                 # yakın yerler için ek yakınlaşma (2^ZB kat)
 M0 = T["uydu"]
 T_ZOOM = SURE["uydu"] - .1                # iniş biter, hatlar çizilir
-T_A = T_ZOOM + 2.3                        # yakın yerlere yaklaşma başlar
+T_A = T_ZOOM + 3.2                        # yakın yerlere yaklaşma başlar
 T_B = T_A + .8
 T_HARITA = SURE["uydu"] + SURE["yakin"]
 T_DALIS = T_HARITA - .5
 LW, LH, LMIN, LMAX = 3584, 5120, 8, 14
 UYDU = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"
 
-# (ad, süre, enlem, boylam, etiketin tarafı)
+# (ad, süre, enlem, boylam, etiketin tarafı, etiketin dikey kayması, yaklaşma başladıktan kaç sn sonra belirir)
 YAKIN = [
-    ("İzmit Outlet", "2 dk", 40.75548, 29.94690, "sol"),
-    ("Symbol AVM", "7 dk", 40.75787, 29.97956, "sag"),
-    ("Şehir Merkezi", "5 dk", 40.77211, 29.95056, "sol"),
-    ("Şehir Hastanesi", "5 dk", 40.78309, 29.96064, "sag"),
-    ("Kocaeli Üniversitesi", "10 dk", 40.81874, 29.92291, "sag"),
+    ("Sahil", "2 dk", 40.7367, 29.9395, "sol", 0, .0),
+    ("41 Burda AVM", "2 dk", 40.75675, 29.94756, "sol", 0, .25),
+    ("İzmit Outlet Center", "2 dk", 40.75548, 29.94690, "sag", -64, .5),
+    ("Symbol AVM", "7 dk", 40.75787, 29.97956, "sag", 60, .85),
+    ("Şehir Merkezi", "5 dk", 40.77211, 29.95056, "sol", 0, 1.1),
+    ("Şehir Hastanesi", "5 dk", 40.78309, 29.96064, "sag", 0, 1.35),
+    ("Kocaeli Üniversitesi", "10 dk", 40.81874, 29.92291, "sag", 0, 1.6),
 ]
 # Yaklaşırken görünen coğrafi adlar: (ad, enlem, boylam, göründüğü yakınlık aralığı, punto)
 COGRAFYA = [
@@ -402,27 +405,31 @@ def hatlar():
 
 
 def yakin_yerler():
-    """B bölümü: yaklaşma bittikten sonra, gerçek konumlara çizgiler ve dakika etiketleri (haritayla büyümez)."""
-    zb = Z1 + math.log2(1.04 * 2 ** ZB)
-    cizgi, nokta, etiket = "", "", ""
-    for i, (ad, sure, lat, lon, taraf) in enumerate(YAKIN):
-        x, y = ekran(lat, lon, zb)
-        g = .15 + i * .32
-        cizgi += (f'<line class="ciz" style="--g:{g:.2f}" x1="{SX}" y1="{SY}" x2="{x:.1f}" y2="{y:.1f}" pathLength="1" stroke="#fff" stroke-width="4" '
-                  f'stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>')
-        nokta += (f'<div class="a pat" style="--g:{g + .3:.2f};left:{x - 13:.1f}px;top:{y - 13:.1f}px;width:26px;height:26px;border-radius:50%;'
-                  f'background:#fff;border:6px solid {KIRMIZI}"></div>')
-        yer = f"right:{W - x + 26:.1f}px;transform-origin:100% 50%" if taraf == "sol" else f"left:{x + 26:.1f}px;transform-origin:0 50%"
-        etiket += f"""<div class="a pat" style="--g:{g + .35:.2f};top:{y - 31:.1f}px;{yer};display:flex;border-radius:16px;overflow:hidden;box-shadow:0 12px 26px rgba(8,20,45,.45)">
-            <span class="tek" style="background:#fff;color:{KOYU};font-size:30px;font-weight:800;padding:14px 18px 13px">{ad}</span>
-            <span class="k tek" style="background:{VURGU};color:{KOYU};font-size:30px;padding:15px 16px 12px">{sure}</span></div>"""
-    alt = hap(SX - 250, SY + 118, 500, "SAHİLE 2 DK · D-100'E 1 DK", 30, .5)
-    return blok(M0 + T_B + .05, T_DALIS - T_B + .1,
-                f'<svg class="a" style="left:0;top:0" width="{W}" height="{H}">{cizgi}</svg>{nokta}{etiket}{alt}')
+    """Yakın yerler: harita yaklaşırken birer birer belirir ve haritaya sabitlenmiş gibi onunla birlikte kayar."""
+    stil, govde = "", ""
+    t0 = T_A - .1
+    n = round((T_HARITA - t0) * FPS)
+    for i, (ad, sure, lat, lon, taraf, dy, belirme) in enumerate(YAKIN):
+        kare = ""
+        for k in range(n + 1):
+            t = t0 + k / FPS
+            x, y = ekran(lat, lon, kamera(t)[0])
+            o = max(0.0, min(1.0, (T_DALIS + .2 - t) / .2))
+            kare += f"{100 * k / n:.3f}%{{transform:translate({x:.1f}px,{y:.1f}px);opacity:{o:.2f}}}"
+        stil += f"@keyframes poi{i}{{{kare}}}\n"
+        g = M0 + T_A + belirme
+        yer = "right:26px;transform-origin:100% 50%" if taraf == "sol" else "left:26px;transform-origin:0 50%"
+        govde += f"""<div class="a" style="left:0;top:0;width:0;height:0;--s:0;animation:poi{i} {n / FPS:.3f}s linear {M0 + t0:.3f}s both">
+            <div class="a pat" style="--g:{g:.2f};left:-13px;top:-13px;width:26px;height:26px;border-radius:50%;background:#fff;border:6px solid {KIRMIZI}"></div>
+            <div class="a pat" style="--g:{g + .08:.2f};top:{dy - 31}px;{yer};display:flex;border-radius:16px;overflow:hidden;box-shadow:0 12px 26px rgba(8,20,45,.45)">
+              <span class="tek" style="background:#fff;color:{KOYU};font-size:29px;font-weight:800;padding:14px 16px 13px">{ad}</span>
+              <span class="k tek" style="background:{VURGU};color:{KOYU};font-size:29px;padding:15px 14px 12px">{sure}</span></div></div>"""
+    return stil, govde
 
 
 def html():
     hat_stil, hat = hatlar()
+    poi_stil, poi = yakin_yerler()
     cog_stil, cog = cografya()
     r, g, b = (int(KOYU[j:j + 2], 16) for j in (1, 3, 5))
     g0 = T_ZOOM - .9
@@ -440,11 +447,12 @@ def html():
         <span class="tek" style="font-size:21px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.85)">TEK YETKİLİ SATIŞ</span>
         <img src="{VEK('ocean-beyaz.svg')}" style="height:60px"></div>"""
     sahneler = (
-        blok(T["sokak"] + .1, SURE["sokak"] - .1, baslik(450, "İZMİT · MİA BÖLGESİ", "KİRA ÖDER GİBİ<br>EV SAHİBİ OLUN", .2, 88))
+        blok(M0 + .15, T_ZOOM - 1.1, baslik(450, "KOCAELİ · İZMİT", "YENİ BİR HAYAT<br>BAŞLIYOR", .15, 88))
+        + blok(T["sokak"] + .1, SURE["sokak"] - .1, baslik(450, "İZMİT · MİA BÖLGESİ", "KİRA ÖDER GİBİ<br>EV SAHİBİ OLUN", .2, 88))
         + blok(M0, T_ZOOM, cog)
         + blok(M0, T_HARITA - .1, hat)
         + blok(M0, T_HARITA - .1, igne)
-        + yakin_yerler()
+        + poi
         + blok(M0 + T_HARITA - .12, .9, f'<div class="a" style="left:0;top:0;width:{W}px;height:{H}px;background:#fff"></div>', "flas")
         + blok(T["yapim"] + .2, SURE["yapim"] - .2, baslik(450, "TİLDA İNŞAAT İLE", "ADIM ADIM<br>YÜKSELİYOR", .2, 88))
         + blok(T["drone"] + .1, SURE["drone"] - .1, baslik(450, "İZMİT MİA BÖLGESİ", "MİA PARK OCEAN", .15, 88))
@@ -452,7 +460,7 @@ def html():
         + blok(T["d11"], SURE["d11"], fiyat_karti("1+1 DAİRELER", "999.000", "39.900", SURE["d11"]))
         + blok(T["d21"], SURE["d21"], fiyat_karti("2+1 DAİRELER", "2.000.000", "50.000", SURE["d21"]))
         + blok(T["balkon"], SURE["balkon"], ikili(880, "AYDA 29.900 TL'DEN", "60 AY SABİT TAKSİT", .25, 64, 70))
-        + blok(T["avlu"], SURE["avlu"], damgalar(VO_BAS.get(9, T["avlu"] + .2) - T["avlu"], vo_sure(9) or 3.6))
+        + blok(T["avlu"], SURE["avlu"], damgalar(VO_BAS.get(10, T["avlu"] + .2) - T["avlu"], vo_sure(10) or 3.6))
         + blok(T["kapanis"], SURE["kapanis"], kapanis, "sahne son")
     )
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{yy.css(H)}
@@ -480,6 +488,7 @@ body {{ background:transparent; }}
 @keyframes cizgi {{ from{{opacity:0;transform:scaleX(0)}} to{{opacity:1;transform:none}} }}
 @keyframes damga {{ 0%{{opacity:0;transform:scale(2.3)}} 55%{{opacity:1;transform:scale(.96)}} 100%{{opacity:1;transform:scale(1)}} }}
 {hat_stil}
+{poi_stil}
 {cog_stil}
 </style></head><body>
   {blok(M0, T_HARITA, f'''<div class="a" style="left:0;top:0;width:{W}px;height:{H}px;background:radial-gradient(ellipse 75% 62% at 50% 54%,rgba(4,12,30,0) 55%,rgba(4,12,30,.5) 100%)"></div>
@@ -496,8 +505,8 @@ body {{ background:transparent; }}
 # (sahne, kaynak, kaynakta başlangıç sn, hız[, (büyütme, kaynakta üst kenar)])
 # hız: 1.2 = %20 hızlı. "sigdir" = çekimin tamamı sahneye sığacak biçimde hızlanır/yavaşlar.
 ZEMIN = [
-    ("sokak", "20-sokak-cift", 0.2, 1.15),
     ("uydu", None, 0, 1),
+    ("sokak", "20-sokak-cift", 0.2, 1.15),
     ("yapim", "17-yapim-asamasi", 0.0, "sigdir"),
     ("drone", "22-drone-sola", 0.3, 1.15),
     ("iceri", "21-balkondan-iceri", 0.2, "sigdir"),
@@ -585,17 +594,17 @@ def ses(yol):
     if SESLI:
         for vo, bas in VO_BAS.items():
             a = ses_oku(vo_yol(vo), f"atempo={VO_HIZ}" if VO_HIZ != 1 else None)
-            a *= 0.9 / np.abs(a).max()
+            a *= 0.80 / np.abs(a).max()
             j = int(bas * SR)
             konusma[j:j + len(a)] += a[:n - j]
     m = np.zeros((n, 2), np.float32)
     if os.path.exists(MUZIK):
         ham = ses_oku(MUZIK)[:n]
         m[:len(ham)] = ham
-        m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.3 if SESLI else 0.5)
+        m *= 0.5 / np.sqrt((m ** 2).mean() + 1e-9) * (0.28 if SESLI else 0.5)
         zarf = np.clip(kayan(np.abs(konusma).max(axis=1), int(.25 * SR)) / 0.12, 0, 1)
-        m *= (1.0 - 0.52 * kayan(zarf, int(.3 * SR)))[:, None]     # seslendirme varken müzik kısılır
-        a, z = int(.15 * SR), int(2.4 * SR)
+        m *= (1.0 - 0.47 * kayan(zarf, int(.3 * SR)))[:, None]     # seslendirme varken müzik kısılır
+        a, z = int(.03 * SR), int(2.4 * SR)
         m[:a] *= np.linspace(0, 1, a, dtype=np.float32)[:, None]
         m[-z:] *= (np.linspace(1, 0, z, dtype=np.float32) ** 1.4)[:, None]
     efekt = np.zeros((n, 2), np.float32)
@@ -612,7 +621,7 @@ def ses(yol):
     for ad in ("yapim", "d10", "d11", "d21", "kapanis"):
         koy(T[ad] - .02, vurus(), .22)
     for i, oran in enumerate(DAMGA_ORAN):
-        koy(VO_BAS.get(9, T["avlu"] + .2) + oran * (vo_sure(9) or 3.6) + .04, vurus(.8), .34)
+        koy(VO_BAS.get(10, T["avlu"] + .2) + oran * (vo_sure(10) or 3.6) + .04, vurus(.8), .34)
     miks = np.tanh((konusma + m + efekt) * 1.1) * 0.9
     with wave.open(yol, "wb") as f:
         f.setnchannels(2), f.setsampwidth(2), f.setframerate(SR)
