@@ -71,7 +71,7 @@ VO_HIZ = 1.0
 SESLENDIRME = [
     "İzmit'te yeni bir yaşam yükseliyor.",
     "Planlanan Güney Metro hattının güzergâhında.",
-    "Kira öder gibi, ev sahibi olun!",
+    "Ev sahibi olmak, artık çok kolay.",          # "kira" kelimesi seslendirmede iyi çıkmadığı için yalnızca ekranda yazıyor
     "Mia Park Oşın, Tilda İnşaat ile adım adım yükseliyor.",
     "Bir artı sıfır, altı yüz doksan dokuz bin lira peşinatla.",
     "Bir artı bir, dokuz yüz doksan dokuz bin lira peşinatla.",
